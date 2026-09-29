@@ -1,8 +1,8 @@
 #pragma once
 #define _CRT_SECURE_NO_WARNINGS
 
-#include "k2EnginePreCompile.h"
+#include "k2EngineLowPreCompile.h"
 using namespace nsK2EngineLow;
-using namespace nsK2Engine;
+
 #include "BalloonEngine.h"
 using namespace nsBalloonEngine;

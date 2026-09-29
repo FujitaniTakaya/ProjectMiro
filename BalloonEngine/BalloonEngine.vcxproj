@@ -149,10 +149,11 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);K2_DEBUG</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
       <PrecompiledHeaderFile>BalloonEnginePreCompile.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(Platform)\$(Configuration)\$(TargetName).pch</PrecompiledHeaderOutputFile>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <LanguageStandard>Default</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -170,10 +171,11 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);K2_DEBUG</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
       <PrecompiledHeaderFile>BalloonEnginePreCompile.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(Platform)\$(Configuration)\$(TargetName).pch</PrecompiledHeaderOutputFile>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <LanguageStandard>Default</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -185,10 +187,11 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
       <PrecompiledHeaderFile>BalloonEnginePreCompile.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(Platform)\$(Configuration)\$(TargetName).pch</PrecompiledHeaderOutputFile>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <LanguageStandard>Default</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -197,12 +200,25 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Preview|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="graphics\DualBlur.cpp" />
+    <ClCompile Include="graphics\IRenderObject.cpp" />
+    <ClCompile Include="graphics\Light.cpp" />
+    <ClCompile Include="graphics\ModelRender.cpp" />
+    <ClCompile Include="graphics\RenderingEngine.cpp" />
+    <ClCompile Include="graphics\SpriteRender.cpp" />
     <ClCompile Include="math\LightColor.cpp" />
     <ClCompile Include="math\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BalloonEngine.h" />
     <ClInclude Include="BalloonEnginePreCompile.h" />
+    <ClInclude Include="graphics\DualBlur.h" />
+    <ClInclude Include="graphics\IRenderObject.h" />
+    <ClInclude Include="graphics\Light.h" />
+    <ClInclude Include="graphics\ModelRender.h" />
+    <ClInclude Include="graphics\RenderingEngine.h" />
+    <ClInclude Include="graphics\ShadowRef.h" />
+    <ClInclude Include="graphics\SpriteRender.h" />
     <ClInclude Include="math\LightColor.h" />
     <ClInclude Include="math\Transform.h" />
   </ItemGroup>

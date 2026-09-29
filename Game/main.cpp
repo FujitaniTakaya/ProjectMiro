@@ -36,6 +36,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//Gameクラスのオブジェクトを作成。
 	NewGO<Game>(0, "game");
 
+	RenderingEngine::Get().Initialize();
+
 	//////////////////////////////////////
 	// 初期化を行うコードを書くのはここまで！！！
 	//////////////////////////////////////
@@ -46,10 +48,14 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		if (g_pad[0]->IsTrigger(enButtonA) ){
 			g_pad[0]->SetVibration(/*durationSec=*/0.5f, /*normalizedPower=*/1.0f);
 		}
-		K2Engine::GetInstance()->Execute();
+		g_engine->BeginFrame();		// フレームの開始。
+		g_engine->ExecuteUpdate();	// 全ゲームオブジェクトの更新。
+		g_engine->ExecuteRender();	// 全ゲームオブジェクトの描画。
+		RenderingEngine::Get().Execute();	// BalloonEngineの描画。
+		g_engine->EndFrame();		// フレームの終了。
 	}
 
-	K2Engine::DeleteInstance();
+	FinalizeGame();
 
 #ifdef _DEBUG
 	ReportLiveObjects();
