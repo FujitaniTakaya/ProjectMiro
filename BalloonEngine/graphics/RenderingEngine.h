@@ -72,8 +72,17 @@ namespace nsBalloonEngine
         // 描画
         //=======================================================================
     public:
-        /** @brief 初期化関数 */
-        void Initialize();
+        /**
+         * @brief 初期化関数
+         * @details BALLOON_IMGUI_ENABLED が定義されている場合は、ImGuiもここで初期化する。
+         * @param hwnd ウィンドウハンドル。nullptrの場合は自動で探す。(ImGui用)
+         */
+        void Initialize(HWND hwnd = nullptr);
+        /**
+         * @brief 終了関数
+         * @note  グラフィックスエンジンを破棄する前に呼ぶこと。
+         */
+        void Finalize();
         /** @brief 描画関数 */
         void Execute();
         /**

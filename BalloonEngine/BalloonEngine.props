@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  BalloonEngine.props
+
+  BalloonEngine を使うプロジェクト(Game など)が Import する設定ファイル。
+  include パス、ライブラリパス、C++17、リンクするライブラリ、シェーダーのコピーをまとめている。
+
+  【前提】このファイルのあるフォルダ(BalloonEngine)と同じ階層に、次のフォルダがあること。
+    - k2EngineLow
+    - exlib (ビルドした .lib の出力先。無ければビルド時に作られる)
+
+  【使い方】Game.vcxproj の Microsoft.Cpp.props の Import より後ろに、次の1行を追加する。
+    <Import Project="..\BalloonEngine\BalloonEngine.props" />
+  詳しくは BalloonEngine/README.md を参照。
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup Label="BalloonEngineMacros">
+    <BalloonEngineDir>$(MSBuildThisFileDirectory)</BalloonEngineDir>
+    <K2EngineLowDir>$(BalloonEngineDir)..\k2EngineLow\</K2EngineLowDir>
+    <BalloonExLibDir>$(BalloonEngineDir)..\exlib\$(Platform)\$(Configuration)\</BalloonExLibDir>
+    <!-- シェーダーのコピー先。変えたい場合は、この props の Import より前に定義する。 -->
+    <BalloonShaderOutDir Condition="'$(BalloonShaderOutDir)' == ''">$(ProjectDir)Assets\shader\balloon\</BalloonShaderOutDir>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Platform)' == 'x64'">
+    <IncludePath>$(BalloonEngineDir);$(BalloonEngineDir)ThirdParty\imgui;$(BalloonEngineDir)ThirdParty\imgui\backends;$(K2EngineLowDir);$(K2EngineLowDir)ExEngine\;$(K2EngineLowDir)ExEngine\bulletPhysics\src;$(K2EngineLowDir)ExEngine\effekseer\install_msvc2019\include\Effekseer;$(K2EngineLowDir)ExEngine\effekseer\install_msvc2019\include\EffekseerRendererDX12;$(K2EngineLowDir)ExEngine\Photon;$(IncludePath)</IncludePath>
+    <LibraryPath>$(BalloonExLibDir);$(K2EngineLowDir)ExEngine\DirectXTK\Bin\Desktop_2019_Win10\$(Platform)\$(Configuration)\;$(K2EngineLowDir)ExEngine\effekseer\install_msvc2019\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <!-- Release 以外では ImGui を有効にする。Game側のImGuiのコードは #ifdef BALLOON_IMGUI_ENABLED で囲むこと。 -->
+    <ClCompile Condition="'$(Configuration)' != 'Release'">
+      <PreprocessorDefinitions>BALLOON_IMGUI_ENABLED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>k2EngineLow.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <!-- BalloonEngine のシェーダーを、実行ファイルから読める場所(Assets\shader\balloon)へコピーする。 -->
+  <Target Name="BalloonCopyShaders" AfterTargets="Build" Condition="'$(ConfigurationType)' == 'Application'">
+    <ItemGroup>
+      <BalloonShaderFiles Include="$(BalloonEngineDir)shader\**\*.*" />
+    </ItemGroup>
+    <Copy
+      SourceFiles="@(BalloonShaderFiles)"
+      DestinationFiles="@(BalloonShaderFiles->'$(BalloonShaderOutDir)%(RecursiveDir)%(Filename)%(Extension)')"
+      SkipUnchangedFiles="true" />
+  </Target>
+
+</Project>

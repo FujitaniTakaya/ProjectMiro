@@ -10,6 +10,8 @@
 #include "math/LightColor.h"
 #include "math/Transform.h"
 
+#include "imgui.h"
+
 #include "graphics/IRenderObject.h"
 #include "graphics/ShadowRef.h"
 #include "graphics/Light.h"

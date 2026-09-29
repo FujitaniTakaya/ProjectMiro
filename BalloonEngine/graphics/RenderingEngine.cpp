@@ -6,6 +6,8 @@
 
 #include "RenderingEngine.h"
 
+#include "ImGuiRenderer.h"
+
 
 namespace nsBalloonEngine
 {
@@ -30,7 +32,7 @@ namespace nsBalloonEngine
     {}
 
 
-    void RenderingEngine::Initialize()
+    void RenderingEngine::Initialize(HWND hwnd)
     {
         m_rendering3dObjects.reserve(DRAW_OBUJECT_MAX);
         m_deferredRendering3dObjects.reserve(DRAW_OBUJECT_MAX);
@@ -74,6 +76,25 @@ namespace nsBalloonEngine
         // デファードレンダリングを初期化
         //========================================================================
         InitializeDeferredRendering();
+
+
+#ifdef BALLOON_IMGUI_ENABLED
+        //========================================================================
+        // ImGuiを初期化
+        //========================================================================
+        // NOTE: Execute() の最後でImGuiを描画し、続けて次フレームのNewFrame()を呼ぶため、
+        //       初回フレーム分のNewFrame()はここで呼んでおく。
+        ImGuiRenderer::Get().Initialize(hwnd);
+        ImGuiRenderer::Get().NewFrame();
+#endif // BALLOON_IMGUI_ENABLED
+    }
+
+
+    void RenderingEngine::Finalize()
+    {
+#ifdef BALLOON_IMGUI_ENABLED
+        ImGuiRenderer::Get().Finalize();
+#endif // BALLOON_IMGUI_ENABLED
     }
 
 
@@ -502,6 +523,17 @@ namespace nsBalloonEngine
             m_copyBlurToFrameBufferSprite.Update(g_vec3Zero, g_quatIdentity, g_vec3One);
             m_copyBlurToFrameBufferSprite.Draw(rc);
         }
+
+
+#ifdef BALLOON_IMGUI_ENABLED
+        //========================================================================
+        // ImGuiを描画
+        //========================================================================
+        // NOTE: バックバッファが描画先の状態で、最終合成の後・EndFrameの前でなければならない。
+        //       描画後、続けて次フレームのNewFrame()を呼ぶ。(Update内でImGui::Begin()を使えるようにするため)
+        ImGuiRenderer::Get().Render();
+        ImGuiRenderer::Get().NewFrame();
+#endif // BALLOON_IMGUI_ENABLED
     }
 
 

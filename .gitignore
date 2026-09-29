@@ -442,3 +442,9 @@ ASALocalRun/
 /Sample/Sample_25/Game/Assets/modelData/preset
 /Sample/Sample_24/Game/Assets/modelData/preset
 /Sample/Sample_24/Game/Assets/shader
+
+# BalloonEngine
+# BalloonEngine/shader からビルド時にコピーされる生成物。
+Game/Assets/shader/balloon/
+# ImGuiのウィンドウ配置の保存ファイル。
+imgui.ini

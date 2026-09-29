@@ -22,6 +22,12 @@ bool Game::Start()
 
 void Game::Update()
 {
+#ifdef BALLOON_IMGUI_ENABLED
+	ImGui::Begin("Parameter");
+	ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
+	ImGui::End();
+#endif // BALLOON_IMGUI_ENABLED
+
 	// g_renderingEngine->DisableRaytracing();
 	m_modelRender.Update();
 	// カメラ(BalloonEngineのGameCameraと同じ値。)

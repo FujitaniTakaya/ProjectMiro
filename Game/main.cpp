@@ -55,6 +55,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		g_engine->EndFrame();		// フレームの終了。
 	}
 
+	RenderingEngine::Get().Finalize();	// ImGuiなどの終了処理。エンジンを破棄する前に呼ぶ。
 	FinalizeGame();
 
 #ifdef _DEBUG
