@@ -1,9 +1,5 @@
 #pragma once
 
-#include "Level3DRender/LevelRender.h"
-
-class Player;
-
 class Game : public IGameObject
 {
 public:
@@ -15,6 +11,7 @@ public:
 
 private:
 	ModelRender m_modelRender;
+	ModelRender m_bgModelRender;
 	Vector3 m_pos;
 };
 

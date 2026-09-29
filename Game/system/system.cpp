@@ -1,10 +1,11 @@
 #include "stdafx.h"
 #include "system.h"
-#include "graphics/GraphicsEngine.h"
-#include "graphics/RenderingEngine.h"
-#include "sound/SoundEngine.h"
 
 HWND			g_hWnd = NULL;				//ウィンドウハンドル。
+
+// 唯一の低レベルエンジン。
+// K2EngineLow::Init()でグローバルのg_engineがこのオブジェクトを指すようになる。
+static K2EngineLow* g_k2EngineLow = nullptr;
 
 ///////////////////////////////////////////////////////////////////
 //メッセージプロシージャ。
@@ -80,14 +81,30 @@ void InitGame(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, in
 {
 	//ウィンドウを初期化。
 	InitWindow(hInstance, hPrevInstance, lpCmdLine, nCmdShow, appName);
-	//k2エンジンの初期化。
-	K2Engine::InitData initData;
-	initData.isSoftShadow = true;
-	initData.frameBufferWidth = FRAME_BUFFER_W;
-	initData.frameBufferHeight = FRAME_BUFFER_H;
-	initData.hwnd = g_hWnd;
-	K2Engine::CreateInstance(initData);
+	// 低レベルエンジンの初期化。
+	g_k2EngineLow = new K2EngineLow;
+
+	// レイトレーシングは使わないが、GraphicsEngine::Initがレイトレエンジンを初期化するため、
+	// ダミーのリソースを渡しておく。
+	static int dummyExpandShaderResource = 0;
+	raytracing::InitData raytracingInitData;
+	raytracingInitData.m_expandShaderResource = &dummyExpandShaderResource;
+	raytracingInitData.m_expandShaderResourceSize = sizeof(dummyExpandShaderResource);
+
+	g_k2EngineLow->Init(g_hWnd, FRAME_BUFFER_W, FRAME_BUFFER_H, raytracingInitData);
+
+	// 3Dカメラの初期位置。
+	g_camera3D->SetPosition({ 0.0f, 100.0f, -200.0f });
+	g_camera3D->SetTarget({ 0.0f, 50.0f, 0.0f });
 }
+
+//ゲームの終了処理。
+void FinalizeGame()
+{
+	delete g_k2EngineLow;
+	g_k2EngineLow = nullptr;
+}
+
 //ウィンドウメッセージをディスパッチ。falseが返ってきたら、ゲーム終了。
 bool DispatchWindowMessage()
 {
