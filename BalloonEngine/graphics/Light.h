@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file Light.h
  * @brief ライト関連
  */

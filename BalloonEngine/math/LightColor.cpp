@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file LightColor.cpp
  * @brief ライトの色情報を保持するクラスの実装
  */

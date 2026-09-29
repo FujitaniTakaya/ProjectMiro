@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file IRenderObject.h
  * @brief 描画オブジェクトインターフェースクラス
  */

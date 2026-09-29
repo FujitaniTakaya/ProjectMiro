@@ -9,6 +9,7 @@ k2EngineLow の上に作った自作の描画エンジン(静的ライブラリ)
 |---|---|
 | 描画 | `RenderingEngine`(デファードレンダリング、シャドウ、ブルーム、被写界深度)、`ModelRender`、`SpriteRender`、`Light` |
 | ImGui | 内蔵済み(`ThirdParty/imgui`)。Game側の設定は不要 |
+| パラメータ調整UI | `ui/ParameterUI`。ライト、ブルーム、被写界深度などを実行中に調整できる(F1で表示・非表示) |
 | シェーダー | `shader/`(ビルド時に Game の `Assets/shader/balloon/` へ自動コピー) |
 | 設定 | `BalloonEngine.props`(include パス、ライブラリ、C++17、シェーダーのコピー) |
 
@@ -75,6 +76,7 @@ k2EngineLow の上に作った自作の描画エンジン(静的ライブラリ)
 #endif
 ```
 
+- パラメータ調整UI(`BalloonEngine` という名前のウィンドウ)は、ImGui が有効なとき自動で表示されます。Game側のウィンドウには、別の名前を付けてください。
 - ImGui は **Release 以外**で有効です(`BALLOON_IMGUI_ENABLED` が定義される)。
 - Release では ImGui が初期化されないので、`ImGui::` を呼ぶコードは必ず `#ifdef BALLOON_IMGUI_ENABLED` で囲むこと。
 - ImGui のウィンドウ配置は、実行フォルダの `imgui.ini` に保存されます(gitignore 済み)。

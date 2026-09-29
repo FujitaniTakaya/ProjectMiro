@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file RenderingEngine.cpp
  * @brief 描画エンジンクラスの実装
  */
@@ -531,6 +531,7 @@ namespace nsBalloonEngine
         //========================================================================
         // NOTE: バックバッファが描画先の状態で、最終合成の後・EndFrameの前でなければならない。
         //       描画後、続けて次フレームのNewFrame()を呼ぶ。(Update内でImGui::Begin()を使えるようにするため)
+        ParameterUI::Get().Draw();
         ImGuiRenderer::Get().Render();
         ImGuiRenderer::Get().NewFrame();
 #endif // BALLOON_IMGUI_ENABLED

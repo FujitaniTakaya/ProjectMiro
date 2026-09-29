@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file ImGuiRenderer.h
  * @brief ImGuiの初期化・フレーム処理・描画を担当するクラスの宣言
  * @details RenderingEngine が内部から呼ぶ。Game側が直接触る必要はない。

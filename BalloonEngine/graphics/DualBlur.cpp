@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file DualBlur.cpp
  * @brief デュアルブラーの実装
  */

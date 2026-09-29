@@ -4,6 +4,9 @@
     <Filter Include="graphics">
       <UniqueIdentifier>{3b9d5f21-8a64-4c0e-b1d7-6e2f4a9c8d53}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ui">
+      <UniqueIdentifier>{5e2a7c14-9b3d-4f68-a1c0-d47e83b6f925}</UniqueIdentifier>
+    </Filter>
     <Filter Include="math">
       <UniqueIdentifier>{7c1e3a52-4d0b-4b8e-9f36-2a5d6e8b1c47}</UniqueIdentifier>
     </Filter>
@@ -19,6 +22,7 @@
     <ClCompile Include="graphics\SpriteRender.cpp"><Filter>graphics</Filter></ClCompile>
     <ClCompile Include="math\LightColor.cpp"><Filter>math</Filter></ClCompile>
     <ClCompile Include="math\Transform.cpp"><Filter>math</Filter></ClCompile>
+    <ClCompile Include="ui\ParameterUI.cpp"><Filter>ui</Filter></ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BalloonEngine.h" />
@@ -33,5 +37,6 @@
     <ClInclude Include="graphics\SpriteRender.h"><Filter>graphics</Filter></ClInclude>
     <ClInclude Include="math\LightColor.h"><Filter>math</Filter></ClInclude>
     <ClInclude Include="math\Transform.h"><Filter>math</Filter></ClInclude>
+    <ClInclude Include="ui\ParameterUI.h"><Filter>ui</Filter></ClInclude>
   </ItemGroup>
 </Project>

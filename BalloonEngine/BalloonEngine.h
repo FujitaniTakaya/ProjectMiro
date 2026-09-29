@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file BalloonEngine.h
  * @brief BalloonEngineの公開ヘッダー
  * @details Game側はこのヘッダーをインクルードして使う。
@@ -19,4 +19,6 @@
 #include "graphics/RenderingEngine.h"
 #include "graphics/ModelRender.h"
 #include "graphics/SpriteRender.h"
+
+#include "ui/ParameterUI.h"
 // clang-format on

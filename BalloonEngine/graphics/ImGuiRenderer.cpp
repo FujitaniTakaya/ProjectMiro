@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file ImGuiRenderer.cpp
  * @brief ImGuiの初期化・フレーム処理・描画を担当するクラスの実装
  */

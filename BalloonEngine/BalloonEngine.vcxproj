@@ -43,21 +43,21 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Preview|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
@@ -70,7 +70,7 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -197,47 +197,11 @@
     </ClCompile>
     <ClCompile Include="graphics\DualBlur.cpp" />
     <ClCompile Include="graphics\ImGuiRenderer.cpp" />
-    <ClCompile Include="graphics\ImGuiRenderer.cpp" />
     <ClCompile Include="graphics\IRenderObject.cpp" />
     <ClCompile Include="graphics\Light.cpp" />
     <ClCompile Include="graphics\ModelRender.cpp" />
     <ClCompile Include="graphics\RenderingEngine.cpp" />
     <ClCompile Include="graphics\SpriteRender.cpp" />
-    <ClCompile Include="ThirdParty\imgui\imgui.cpp">
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <DebugInformationFormat>OldStyle</DebugInformationFormat>
-      <WarningLevel>Level3</WarningLevel>
-    </ClCompile>
-    <ClCompile Include="ThirdParty\imgui\imgui_draw.cpp">
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <DebugInformationFormat>OldStyle</DebugInformationFormat>
-      <WarningLevel>Level3</WarningLevel>
-    </ClCompile>
-    <ClCompile Include="ThirdParty\imgui\imgui_tables.cpp">
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <DebugInformationFormat>OldStyle</DebugInformationFormat>
-      <WarningLevel>Level3</WarningLevel>
-    </ClCompile>
-    <ClCompile Include="ThirdParty\imgui\imgui_widgets.cpp">
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <DebugInformationFormat>OldStyle</DebugInformationFormat>
-      <WarningLevel>Level3</WarningLevel>
-    </ClCompile>
-    <ClCompile Include="ThirdParty\imgui\imgui_demo.cpp">
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <DebugInformationFormat>OldStyle</DebugInformationFormat>
-      <WarningLevel>Level3</WarningLevel>
-    </ClCompile>
-    <ClCompile Include="ThirdParty\imgui\backends\imgui_impl_dx12.cpp">
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <DebugInformationFormat>OldStyle</DebugInformationFormat>
-      <WarningLevel>Level3</WarningLevel>
-    </ClCompile>
-    <ClCompile Include="ThirdParty\imgui\backends\imgui_impl_win32.cpp">
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <DebugInformationFormat>OldStyle</DebugInformationFormat>
-      <WarningLevel>Level3</WarningLevel>
-    </ClCompile>
     <ClCompile Include="ThirdParty\imgui\imgui.cpp">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DebugInformationFormat>OldStyle</DebugInformationFormat>
@@ -268,12 +232,12 @@
     </ClCompile>
     <ClCompile Include="math\LightColor.cpp" />
     <ClCompile Include="math\Transform.cpp" />
+    <ClCompile Include="ui\ParameterUI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BalloonEngine.h" />
     <ClInclude Include="BalloonEnginePreCompile.h" />
     <ClInclude Include="graphics\DualBlur.h" />
-    <ClInclude Include="graphics\ImGuiRenderer.h" />
     <ClInclude Include="graphics\ImGuiRenderer.h" />
     <ClInclude Include="graphics\IRenderObject.h" />
     <ClInclude Include="graphics\Light.h" />
@@ -283,6 +247,7 @@
     <ClInclude Include="graphics\SpriteRender.h" />
     <ClInclude Include="math\LightColor.h" />
     <ClInclude Include="math\Transform.h" />
+    <ClInclude Include="ui\ParameterUI.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

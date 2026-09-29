@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file ShadowRef.h
  * @brief シャドウマップの枚数に関する定数。
  * @note  Light.h と RenderingEngine.h の両方から参照されるため、

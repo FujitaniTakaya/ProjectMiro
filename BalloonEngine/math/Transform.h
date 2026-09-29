@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file Transform.h
  * @brief 変換情報を保持するクラスの宣言
  */

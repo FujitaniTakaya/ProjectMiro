@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file SpriteRender.cpp
  * @brief スプライト描画クラスの実装
  */

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file DualBlur.h
  * @brief デュアルブラーの宣言
  */

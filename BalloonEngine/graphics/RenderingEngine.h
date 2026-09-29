@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file RenderingEngine.h
  * @brief 描画エンジンクラスの宣言
  */
