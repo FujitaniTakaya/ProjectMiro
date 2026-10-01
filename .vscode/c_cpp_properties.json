@@ -1,0 +1,35 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/Game",
+                "${workspaceFolder}/Game/Json",
+                "${workspaceFolder}/BalloonEngine",
+                "${workspaceFolder}/BalloonEngine/ThirdParty/imgui",
+                "${workspaceFolder}/BalloonEngine/ThirdParty/imgui/backends",
+                "${workspaceFolder}/k2EngineLow",
+                "${workspaceFolder}/k2EngineLow/ExEngine",
+                "${workspaceFolder}/k2EngineLow/ExEngine/bulletPhysics/src",
+                "${workspaceFolder}/k2EngineLow/ExEngine/effekseer/install_msvc2019/include/Effekseer",
+                "${workspaceFolder}/k2EngineLow/ExEngine/effekseer/install_msvc2019/include/EffekseerRendererDX12",
+                "${workspaceFolder}/k2EngineLow/ExEngine/Photon",
+                "C:/Program Files/Microsoft Visual Studio/2026/VC/Tools/MSVC/14.51.36231/include",
+                "C:/Program Files (x86)/Windows Kits/10/Include/10.0.26100.0/ucrt",
+                "C:/Program Files (x86)/Windows Kits/10/Include/10.0.26100.0/um",
+                "C:/Program Files (x86)/Windows Kits/10/Include/10.0.26100.0/shared"
+            ],
+            "defines": [
+                "_DEBUG",
+                "_CONSOLE",
+                "UNICODE",
+                "_UNICODE",
+                "BALLOON_IMGUI_ENABLED"
+            ],
+            "compilerPath": "C:/Program Files/Microsoft Visual Studio/2026/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/cl.exe",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "windows-msvc-x64"
+        }
+    ],
+    "version": 4
+}
