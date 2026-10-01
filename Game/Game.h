@@ -1,17 +1,23 @@
 #pragma once
+#include "IObject.h"
 
-class Game : public IGameObject
+
+namespace app
 {
-public:
-	Game() {}
-	~Game() {}
-	bool Start();
-	void Update();
-	void Render(RenderContext& rc);
+	class Game : public IObject
+	{
+	public:
+		Game() {}
+		~Game() {}
 
-private:
-	ModelRender m_modelRender;
-	ModelRender m_bgModelRender;
-	Vector3 m_pos;
-};
+	protected:
+		void Start() override;
+		void Update() override;
+		void Render(RenderContext& rc) override;
 
+	private:
+		ModelRender m_modelRender;
+		ModelRender m_bgModelRender;
+		Vector3 m_pos;
+	};
+}

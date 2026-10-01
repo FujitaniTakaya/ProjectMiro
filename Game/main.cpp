@@ -4,7 +4,7 @@
 #include<InitGUID.h>
 #include<dxgidebug.h>
 
-#include "Game.h"
+#include "Application.h"
 
 
 
@@ -33,10 +33,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	// ここから初期化を行うコードを記述する。
 	//////////////////////////////////////
 
-	//Gameクラスのオブジェクトを作成。
-	NewGO<Game>(0, "game");
-
 	RenderingEngine::Get().Initialize();
+
+	// アプリケーションを作成。NewGOは使わず、アプリ側の処理はApplicationが持つ。
+	// NOTE: RenderingEngineの初期化後に作ること。
+	auto application = std::make_unique<app::Application>();
 
 	//////////////////////////////////////
 	// 初期化を行うコードを書くのはここまで！！！
@@ -49,11 +50,16 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 			g_pad[0]->SetVibration(/*durationSec=*/0.5f, /*normalizedPower=*/1.0f);
 		}
 		g_engine->BeginFrame();		// フレームの開始。
-		g_engine->ExecuteUpdate();	// 全ゲームオブジェクトの更新。
-		g_engine->ExecuteRender();	// 全ゲームオブジェクトの描画。
+		application->PreUpdate();	// ExecuteUpdateの前の更新。(サウンド・エフェクトの回収。必ず前に呼ぶ。)
+		g_engine->ExecuteUpdate();	// パッド・サウンド・エフェクトの更新。
+		application->Update();		// アプリ側の更新。
+		g_engine->ExecuteRender();	// NewGOしたオブジェクト(サウンド・エフェクト)の描画。
+		application->Render(g_graphicsEngine->GetRenderContext());	// アプリ側の描画。
 		RenderingEngine::Get().Execute();	// BalloonEngineの描画。
 		g_engine->EndFrame();		// フレームの終了。
 	}
+
+	application.reset();	// アプリケーションを破棄。エンジンを破棄する前に行う。
 
 	RenderingEngine::Get().Finalize();	// ImGuiなどの終了処理。エンジンを破棄する前に呼ぶ。
 	FinalizeGame();
