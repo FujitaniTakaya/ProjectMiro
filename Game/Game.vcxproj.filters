@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<?xml version='1.0' encoding='utf-8'?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <ItemGroup>
     <Filter Include="system">
       <UniqueIdentifier>{22dd8095-74f9-46df-81a1-36675a040b1f}</UniqueIdentifier>
@@ -7,8 +7,14 @@
     <Filter Include="Source">
       <UniqueIdentifier>{512228ed-3f41-49e4-90b1-f59f8830cb1c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Sound">
+      <UniqueIdentifier>{689c5a59-2cfe-41b7-a953-f7112ecf1266}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source\Effect">
       <UniqueIdentifier>{3b62b8db-37c8-43e5-ad47-f363307b38a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Util">
+      <UniqueIdentifier>{fb3d6a2e-5c1a-4e7b-9d84-2a6f0c13e7b5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -19,8 +25,26 @@
     </ClCompile>
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Source\Sound\SoundManager.cpp">
+      <Filter>Source\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Sound\SoundGroup.cpp">
+      <Filter>Source\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Sound\BGMGroup.cpp">
+      <Filter>Source\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Sound\SoundVolume.cpp">
+      <Filter>Source\Sound</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Effect\EffectManager.cpp">
       <Filter>Source\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Sound\VolumeFader.cpp">
+      <Filter>Source\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Sound\SoundDebugUI.cpp">
+      <Filter>Source\Sound</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -29,13 +53,37 @@
       <Filter>system</Filter>
     </ClInclude>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Source\Util\CRC32.h">
+      <Filter>Source\Util</Filter>
+    </ClInclude>
     <ClInclude Include="Game.h" />
     <ClInclude Include="IObject.h" />
+    <ClInclude Include="Source\Sound\SoundManager.h">
+      <Filter>Source\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Sound\SoundHandle.h">
+      <Filter>Source\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Sound\SoundGroup.h">
+      <Filter>Source\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Sound\BGMGroup.h">
+      <Filter>Source\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Sound\SoundVolume.h">
+      <Filter>Source\Sound</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Effect\EffectManager.h">
       <Filter>Source\Effect</Filter>
     </ClInclude>
     <ClInclude Include="Source\Effect\EffectHandle.h">
       <Filter>Source\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Sound\VolumeFader.h">
+      <Filter>Source\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Sound\SoundDebugUI.h">
+      <Filter>Source\Sound</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

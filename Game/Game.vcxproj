@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<?xml version='1.0' encoding='utf-8'?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -227,16 +227,30 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Preview|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="system\system.cpp" />
+    <ClCompile Include="Source\Sound\SoundManager.cpp" />
+    <ClCompile Include="Source\Sound\SoundGroup.cpp" />
+    <ClCompile Include="Source\Sound\BGMGroup.cpp" />
+    <ClCompile Include="Source\Sound\SoundVolume.cpp" />
     <ClCompile Include="Source\Effect\EffectManager.cpp" />
+    <ClCompile Include="Source\Sound\VolumeFader.cpp" />
+    <ClCompile Include="Source\Sound\SoundDebugUI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="IObject.h" />
+    <ClInclude Include="Source\Util\CRC32.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="system\system.h" />
+    <ClInclude Include="Source\Sound\SoundManager.h" />
+    <ClInclude Include="Source\Sound\SoundHandle.h" />
+    <ClInclude Include="Source\Sound\SoundGroup.h" />
+    <ClInclude Include="Source\Sound\BGMGroup.h" />
+    <ClInclude Include="Source\Sound\SoundVolume.h" />
     <ClInclude Include="Source\Effect\EffectManager.h" />
     <ClInclude Include="Source\Effect\EffectHandle.h" />
+    <ClInclude Include="Source\Sound\VolumeFader.h" />
+    <ClInclude Include="Source\Sound\SoundDebugUI.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BalloonEngine\BalloonEngine.vcxproj">

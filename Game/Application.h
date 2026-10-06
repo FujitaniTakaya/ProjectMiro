@@ -11,6 +11,7 @@ namespace app
 {
 	/** 前方宣言 */
 	class Game;
+	class SoundDebugUI;
 
 
 	/**
@@ -26,9 +27,9 @@ namespace app
 	public:
 		/**
 		 * @brief エンジンの更新(g_engine->ExecuteUpdate())の前に行う更新
-		 * @details SoundManager / EffectManager が保持しているSoundSource・EffectEmitterの回収を行う。
-		 *          これらは再生が終わると自分で DeleteGO して、実際の delete は次の ExecuteUpdate の冒頭で行われる。
-		 *          ExecuteUpdate の後に回収すると、解放済みのポインタに触れてしまうため、必ずその前に呼ぶ。
+		 * @details SoundManagerとEffectManagerが保持している、再生が終わった音・エフェクトの回収を行う。
+		 *          再生が終わった音・エフェクトはエンジンが自分でDeleteGOし、実際のdeleteは次のExecuteUpdateの冒頭で行われる。
+		 *          ExecuteUpdateの後に回収すると解放済みのポインタに触れうるので、必ずその前に呼ぶ。
 		 */
 		void PreUpdate();
 
@@ -50,5 +51,8 @@ namespace app
 	private:
 		/** ゲーム */
 		std::unique_ptr<Game> m_game;
+
+		/** サウンドの音量調整用UI */
+		std::unique_ptr<SoundDebugUI> m_soundDebugUI;
 	};
 }

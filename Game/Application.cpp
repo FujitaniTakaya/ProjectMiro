@@ -5,8 +5,9 @@
 #include "stdafx.h"
 
 #include "Application.h"
-#include "Source/Effect/EffectManager.h"
 #include "Game.h"
+#include "Source/Effect/EffectManager.h"
+#include "Source/Sound/SoundDebugUI.h"
 #include "Source/Sound/SoundManager.h"
 
 
@@ -14,19 +15,21 @@ namespace app
 {
 	Application::Application()
 	{
-		// NOTE: Gameが Start() の中でマネージャーを使えるよう、マネージャーを先に作る。
 		SoundManager::CreateInstance();
 		EffectManager::CreateInstance();
 
 		m_game = std::make_unique<Game>();
 		m_game->StartWrapper();
+
+		m_soundDebugUI = std::make_unique<SoundDebugUI>();
 	}
 
 
 	Application::~Application()
 	{
-		// 作った順の逆に破棄する。(Gameの破棄中にマネージャーを使えるように)
+		m_soundDebugUI.reset();
 		m_game.reset();
+
 		EffectManager::DestroyInstance();
 		SoundManager::DestroyInstance();
 	}
@@ -42,6 +45,8 @@ namespace app
 	void Application::Update()
 	{
 		m_game->UpdateWrapper();
+
+		m_soundDebugUI->Draw();
 	}
 
 
