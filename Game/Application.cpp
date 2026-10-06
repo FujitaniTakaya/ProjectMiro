@@ -35,14 +35,13 @@ namespace app
 	void Application::PreUpdate()
 	{
 		SoundManager::Get().Update();
-		EffectManager::Get().CollectFinished();
+		EffectManager::Get().Update();
 	}
 
 
 	void Application::Update()
 	{
 		m_game->UpdateWrapper();
-		EffectManager::Get().UpdateFollow();
 	}
 
 

@@ -171,6 +171,15 @@ namespace nsBalloonEngine
 
 
     private:
+        /**
+         * @brief エフェクトの描画を実行する。
+         * @details EffectEngine::Draw()を、メインレンダーターゲットに対して呼ぶ。
+         *          深度はG-Bufferのものを使うので、エフェクトはデファードで描いたモデルに遮蔽される。
+         */
+        void ExecuteEffect(RenderContext& rc);
+
+
+    private:
         /** @brief ブルームを初期化する。 */
         void InitializeBloom();
 
