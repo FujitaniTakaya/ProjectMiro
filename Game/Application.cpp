@@ -8,6 +8,7 @@
 #include "Game.h"
 #include "Source/Effect/EffectManager.h"
 #include "Source/Parameter/HotReloadManager.h"
+#include "Source/Parameter/ParamHolder.h"
 #include "Source/Sound/SoundDebugUI.h"
 #include "Source/Sound/SoundManager.h"
 
@@ -18,6 +19,7 @@ namespace app
 	{
 		SoundManager::CreateInstance();
 		EffectManager::CreateInstance();
+		ParamHolder::CreateInstance();
 
 		m_game = std::make_unique<Game>();
 		m_game->StartWrapper();
@@ -31,6 +33,7 @@ namespace app
 		m_soundDebugUI.reset();
 		m_game.reset();
 
+		ParamHolder::DestroyInstance();
 		EffectManager::DestroyInstance();
 		SoundManager::DestroyInstance();
 	}

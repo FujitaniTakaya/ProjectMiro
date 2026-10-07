@@ -61,6 +61,12 @@
     <ClCompile Include="Source\Parameter\HotReloadManager.cpp">
       <Filter>Source\Parameter</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Parameter\ParamHolder.cpp">
+      <Filter>Source\Parameter</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Parameter\ParamList.cpp">
+      <Filter>Source\Parameter</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -110,6 +116,12 @@
       <Filter>Source\Parameter</Filter>
     </ClInclude>
     <ClInclude Include="Source\Parameter\HotReloadManager.h">
+      <Filter>Source\Parameter</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Parameter\ParamHolder.h">
+      <Filter>Source\Parameter</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Parameter\ParamList.h">
       <Filter>Source\Parameter</Filter>
     </ClInclude>
   </ItemGroup>
