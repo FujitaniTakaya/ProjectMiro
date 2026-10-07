@@ -7,6 +7,7 @@
 #include "Application.h"
 #include "Game.h"
 #include "Source/Effect/EffectManager.h"
+#include "Source/Parameter/HotReloadManager.h"
 #include "Source/Sound/SoundDebugUI.h"
 #include "Source/Sound/SoundManager.h"
 
@@ -37,6 +38,7 @@ namespace app
 
 	void Application::PreUpdate()
 	{
+		HotReloadManager::Get().Update();
 		SoundManager::Get().Update();
 		EffectManager::Get().Update();
 	}

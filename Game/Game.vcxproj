@@ -243,6 +243,7 @@
     <ClCompile Include="Source\Parameter\ParamLoader.cpp" />
     <ClCompile Include="Source\Parameter\JsonLoader.cpp" />
     <ClCompile Include="Source\Parameter\JsonView.cpp" />
+    <ClCompile Include="Source\Parameter\HotReloadManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -263,6 +264,7 @@
     <ClInclude Include="Source\Parameter\ParamLoader.h" />
     <ClInclude Include="Source\Parameter\JsonLoader.h" />
     <ClInclude Include="Source\Parameter\JsonView.h" />
+    <ClInclude Include="Source\Parameter\HotReloadManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BalloonEngine\BalloonEngine.vcxproj">

@@ -58,6 +58,9 @@
     <ClCompile Include="Source\Parameter\JsonView.cpp">
       <Filter>Source\Parameter</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Parameter\HotReloadManager.cpp">
+      <Filter>Source\Parameter</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -104,6 +107,9 @@
       <Filter>Source\Parameter</Filter>
     </ClInclude>
     <ClInclude Include="Source\Parameter\JsonView.h">
+      <Filter>Source\Parameter</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Parameter\HotReloadManager.h">
       <Filter>Source\Parameter</Filter>
     </ClInclude>
   </ItemGroup>
