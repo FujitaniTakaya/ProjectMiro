@@ -67,6 +67,9 @@
     <ClCompile Include="Source\Parameter\ParamList.cpp">
       <Filter>Source\Parameter</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Parameter\ParamDebugUI.cpp">
+      <Filter>Source\Parameter</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -122,6 +125,9 @@
       <Filter>Source\Parameter</Filter>
     </ClInclude>
     <ClInclude Include="Source\Parameter\ParamList.h">
+      <Filter>Source\Parameter</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Parameter\ParamDebugUI.h">
       <Filter>Source\Parameter</Filter>
     </ClInclude>
   </ItemGroup>

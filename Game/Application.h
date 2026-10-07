@@ -11,6 +11,7 @@ namespace app
 {
 	/** 前方宣言 */
 	class Game;
+	class ParamDebugUI;
 	class SoundDebugUI;
 
 
@@ -54,5 +55,8 @@ namespace app
 
 		/** サウンドの音量調整用UI */
 		std::unique_ptr<SoundDebugUI> m_soundDebugUI;
+
+		/** パラメーターの状態確認用UI */
+		std::unique_ptr<ParamDebugUI> m_paramDebugUI;
 	};
 }

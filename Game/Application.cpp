@@ -8,6 +8,7 @@
 #include "Game.h"
 #include "Source/Effect/EffectManager.h"
 #include "Source/Parameter/HotReloadManager.h"
+#include "Source/Parameter/ParamDebugUI.h"
 #include "Source/Parameter/ParamHolder.h"
 #include "Source/Sound/SoundDebugUI.h"
 #include "Source/Sound/SoundManager.h"
@@ -25,11 +26,13 @@ namespace app
 		m_game->StartWrapper();
 
 		m_soundDebugUI = std::make_unique<SoundDebugUI>();
+		m_paramDebugUI = std::make_unique<ParamDebugUI>();
 	}
 
 
 	Application::~Application()
 	{
+		m_paramDebugUI.reset();
 		m_soundDebugUI.reset();
 		m_game.reset();
 
@@ -52,6 +55,7 @@ namespace app
 		m_game->UpdateWrapper();
 
 		m_soundDebugUI->Draw();
+		m_paramDebugUI->Draw();
 	}
 
 
