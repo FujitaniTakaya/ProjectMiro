@@ -1,0 +1,2 @@
+# サードパーティ製ヘッダー(nlohmann/json)のため、整形しない。
+DisableFormat: true

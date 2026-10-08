@@ -111,9 +111,10 @@ namespace nsBalloonEngine
         //  2. ジオメトリ(G-Buffer)生成
         //  3. ライティング計算(デファード本体)
         //  4. フォワード
-        //  5. ポストプロセス
-        //  6. コピー
-        //  7. 2D, imgui
+        //  5. エフェクト
+        //  6. ポストプロセス
+        //  7. コピー
+        //  8. 2D, imgui
 
 
         //========================================================================
@@ -134,6 +135,12 @@ namespace nsBalloonEngine
         //========================================================================
         // フォワードレンダリング描画
         ExecuteForwardRendering(rc);
+
+
+        //========================================================================
+        // エフェクト描画
+        // NOTE: ブルームより前に描くことで、エフェクトもブルームの対象にする。
+        ExecuteEffect(rc);
 
 
         //========================================================================
@@ -386,6 +393,27 @@ namespace nsBalloonEngine
             obj->Draw(rc);
         }
         m_rendering3dObjects.clear();
+
+        rc.WaitUntilFinishDrawingToRenderTarget(m_mainRenderTarget);
+    }
+
+
+    void RenderingEngine::ExecuteEffect(RenderContext& rc)
+    {
+        // フォワード描画でメインRTは描画を終えているので、描画先として設定し直す。
+        // NOTE: 深度はメインRT自身ではなく、G-Bufferのものを使う。
+        //       デファードで描いたモデルの深度はG-Bufferにあり、メインRTの深度にはフォワードのものしか入らないため。
+        //       デファードのオブジェクトが無いフレームは、G-Bufferがクリアされず前のフレームのまま残る。
+        //       (デファードライティングの結果も同じG-Bufferを使っているので、画面に映るものとは食い違わない。)
+        rc.WaitUntilToPossibleSetRenderTarget(m_mainRenderTarget);
+        rc.SetRenderTarget(
+            m_mainRenderTarget.GetRTVCpuDescriptorHandle(),
+            GetRenderTarget(RTType::Albedo).GetDSVCpuDescriptorHandle());
+        rc.SetViewportAndScissor(g_graphicsEngine->GetFrameBufferViewport());
+
+        // NOTE: EffectEngine::Update()(K2EngineLow::ExecuteUpdate()から呼ばれる)で開始したコマンドリストを、
+        //       Draw()が終了する。毎フレーム必ず1回呼ぶこと。
+        EffectEngine::GetInstance()->Draw();
 
         rc.WaitUntilFinishDrawingToRenderTarget(m_mainRenderTarget);
     }

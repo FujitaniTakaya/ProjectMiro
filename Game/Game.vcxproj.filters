@@ -1,8 +1,41 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<?xml version='1.0' encoding='utf-8'?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <ItemGroup>
     <Filter Include="system">
       <UniqueIdentifier>{22dd8095-74f9-46df-81a1-36675a040b1f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source">
+      <UniqueIdentifier>{512228ed-3f41-49e4-90b1-f59f8830cb1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Sound">
+      <UniqueIdentifier>{689c5a59-2cfe-41b7-a953-f7112ecf1266}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Effect">
+      <UniqueIdentifier>{3b62b8db-37c8-43e5-ad47-f363307b38a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Util">
+      <UniqueIdentifier>{fb3d6a2e-5c1a-4e7b-9d84-2a6f0c13e7b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Parameter">
+      <UniqueIdentifier>{8e6a3b1e-fa67-4258-abc8-bc76442299ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\MoveBehavior">
+      <UniqueIdentifier>{f7824a57-33ba-471a-9087-dbe5a6bb122a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Controller">
+      <UniqueIdentifier>{b9648993-d119-4996-930f-eb812f9bbc22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Scene">
+      <UniqueIdentifier>{057297d9-885f-4873-9323-d48e480bb930}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\UI">
+      <UniqueIdentifier>{ccfd5d3b-29a8-49b4-af33-4a858678ac03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Timer">
+      <UniqueIdentifier>{1ee8722d-6fcc-4b64-b91a-3123e4cf7c5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\UI\Animation">
+      <UniqueIdentifier>{6f764930-7919-4301-a109-012775e70728}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -11,13 +44,229 @@
     <ClCompile Include="system\system.cpp">
       <Filter>system</Filter>
     </ClCompile>
+    <ClCompile Include="Application.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Source\Sound\SoundManager.cpp">
+      <Filter>Source\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Sound\SoundGroup.cpp">
+      <Filter>Source\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Sound\BGMGroup.cpp">
+      <Filter>Source\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Sound\SoundVolume.cpp">
+      <Filter>Source\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Effect\EffectManager.cpp">
+      <Filter>Source\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Sound\VolumeFader.cpp">
+      <Filter>Source\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Sound\SoundDebugUI.cpp">
+      <Filter>Source\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Parameter\ParamLoader.cpp">
+      <Filter>Source\Parameter</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Parameter\JsonLoader.cpp">
+      <Filter>Source\Parameter</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Parameter\JsonView.cpp">
+      <Filter>Source\Parameter</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Parameter\HotReloadManager.cpp">
+      <Filter>Source\Parameter</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Parameter\ParamHolder.cpp">
+      <Filter>Source\Parameter</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Parameter\ParamList.cpp">
+      <Filter>Source\Parameter</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Parameter\ParamDebugUI.cpp">
+      <Filter>Source\Parameter</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\MoveBehavior\StateMachineBase.cpp">
+      <Filter>Source\MoveBehavior</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Controller\AIController.cpp">
+      <Filter>Source\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Controller\PlayerController.cpp">
+      <Filter>Source\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\MoveBehavior\ControllerSlot.cpp">
+      <Filter>Source\MoveBehavior</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Util\RandomDevice.cpp">
+      <Filter>Source\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Util\Curve.cpp">
+      <Filter>Source\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\Fade.cpp">
+      <Filter>Source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\SceneManager.cpp">
+      <Filter>Source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI\Layout.cpp">
+      <Filter>Source\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI\UIParts.cpp">
+      <Filter>Source\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI\UISprite.cpp">
+      <Filter>Source\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Timer\Timer.cpp">
+      <Filter>Source\Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Timer\TimerManager.cpp">
+      <Filter>Source\Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI\Animation\UIAnimation.cpp">
+      <Filter>Source\UI\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI\Animation\UIAnimationParameter.cpp">
+      <Filter>Source\UI\Animation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="system\system.h">
       <Filter>system</Filter>
     </ClInclude>
+    <ClInclude Include="Application.h" />
+    <ClInclude Include="Source\Util\CRC32.h">
+      <Filter>Source\Util</Filter>
+    </ClInclude>
     <ClInclude Include="Game.h" />
+    <ClInclude Include="IObject.h" />
+    <ClInclude Include="Source\Sound\SoundManager.h">
+      <Filter>Source\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Sound\SoundHandle.h">
+      <Filter>Source\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Sound\SoundGroup.h">
+      <Filter>Source\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Sound\BGMGroup.h">
+      <Filter>Source\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Sound\SoundVolume.h">
+      <Filter>Source\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Effect\EffectManager.h">
+      <Filter>Source\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Effect\EffectHandle.h">
+      <Filter>Source\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Sound\VolumeFader.h">
+      <Filter>Source\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Sound\SoundDebugUI.h">
+      <Filter>Source\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Parameter\ParamLoader.h">
+      <Filter>Source\Parameter</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Parameter\JsonLoader.h">
+      <Filter>Source\Parameter</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Parameter\JsonView.h">
+      <Filter>Source\Parameter</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Parameter\HotReloadManager.h">
+      <Filter>Source\Parameter</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Parameter\ParamHolder.h">
+      <Filter>Source\Parameter</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Parameter\ParamList.h">
+      <Filter>Source\Parameter</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Parameter\ParamDebugUI.h">
+      <Filter>Source\Parameter</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MoveBehavior\StateMachineBase.h">
+      <Filter>Source\MoveBehavior</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Controller\AIController.h">
+      <Filter>Source\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Controller\AIControllerConfig.h">
+      <Filter>Source\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Controller\PlayerController.h">
+      <Filter>Source\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MoveBehavior\CharacterInput.h">
+      <Filter>Source\MoveBehavior</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MoveBehavior\ControllerContext.h">
+      <Filter>Source\MoveBehavior</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MoveBehavior\ControllerSlot.h">
+      <Filter>Source\MoveBehavior</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MoveBehavior\IController.h">
+      <Filter>Source\MoveBehavior</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Util\RandomDevice.h">
+      <Filter>Source\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Util\Curve.h">
+      <Filter>Source\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene\Fade.h">
+      <Filter>Source\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene\IScene.h">
+      <Filter>Source\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene\SceneManager.h">
+      <Filter>Source\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\Layout.h">
+      <Filter>Source\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\Menu.h">
+      <Filter>Source\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\SystemPacket.h">
+      <Filter>Source\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\UIParts.h">
+      <Filter>Source\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\UISprite.h">
+      <Filter>Source\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Timer\Timer.h">
+      <Filter>Source\Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Timer\TimerHandle.h">
+      <Filter>Source\Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Timer\TimerManager.h">
+      <Filter>Source\Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\Animation\UIAnimation.h">
+      <Filter>Source\UI\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\Animation\UIAnimationFactory.h">
+      <Filter>Source\UI\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\Animation\UIAnimationParameter.h">
+      <Filter>Source\UI\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Parameter\HotReloadHandle.h">
+      <Filter>Source\Parameter</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

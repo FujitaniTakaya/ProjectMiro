@@ -230,6 +230,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <DebugInformationFormat>OldStyle</DebugInformationFormat>
     </ClCompile>
+    <ClCompile Include="math\HierarchicalTransform.cpp" />
     <ClCompile Include="math\LightColor.cpp" />
     <ClCompile Include="math\Transform.cpp" />
     <ClCompile Include="ui\ParameterUI.cpp" />
@@ -245,6 +246,7 @@
     <ClInclude Include="graphics\RenderingEngine.h" />
     <ClInclude Include="graphics\ShadowRef.h" />
     <ClInclude Include="graphics\SpriteRender.h" />
+    <ClInclude Include="math\HierarchicalTransform.h" />
     <ClInclude Include="math\LightColor.h" />
     <ClInclude Include="math\Transform.h" />
     <ClInclude Include="ui\ParameterUI.h" />

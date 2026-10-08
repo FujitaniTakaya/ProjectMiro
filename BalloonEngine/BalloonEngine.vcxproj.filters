@@ -20,6 +20,7 @@
     <ClCompile Include="graphics\ModelRender.cpp"><Filter>graphics</Filter></ClCompile>
     <ClCompile Include="graphics\RenderingEngine.cpp"><Filter>graphics</Filter></ClCompile>
     <ClCompile Include="graphics\SpriteRender.cpp"><Filter>graphics</Filter></ClCompile>
+    <ClCompile Include="math\HierarchicalTransform.cpp"><Filter>math</Filter></ClCompile>
     <ClCompile Include="math\LightColor.cpp"><Filter>math</Filter></ClCompile>
     <ClCompile Include="math\Transform.cpp"><Filter>math</Filter></ClCompile>
     <ClCompile Include="ui\ParameterUI.cpp"><Filter>ui</Filter></ClCompile>
@@ -35,6 +36,7 @@
     <ClInclude Include="graphics\RenderingEngine.h"><Filter>graphics</Filter></ClInclude>
     <ClInclude Include="graphics\ShadowRef.h"><Filter>graphics</Filter></ClInclude>
     <ClInclude Include="graphics\SpriteRender.h"><Filter>graphics</Filter></ClInclude>
+    <ClInclude Include="math\HierarchicalTransform.h"><Filter>math</Filter></ClInclude>
     <ClInclude Include="math\LightColor.h"><Filter>math</Filter></ClInclude>
     <ClInclude Include="math\Transform.h"><Filter>math</Filter></ClInclude>
     <ClInclude Include="ui\ParameterUI.h"><Filter>ui</Filter></ClInclude>
