@@ -57,7 +57,7 @@ namespace app
         /**
          * @brief イージングを適用する
          * @param type イージングの種類
-         * @param t 進行度。0.0f～1.0f
+         * @param t 進行度。0.0f〜1.0f
          * @return イージング後の進行度。t=0で0、t=1で1になる。
          */
         inline float ApplyEasing(const EasingType type, const float t)
@@ -164,7 +164,7 @@ namespace app
         /**
          * @brief Curveの時間管理
          * @details 再生・停止・ループ・繰り返し回数・終了後の動作をまとめて持つ。
-         *          値の補間はしない。進行度(0.0f～1.0f)を返すだけ。
+         *          値の補間はしない。進行度(0.0f〜1.0f)を返すだけ。
          */
         class CurveTimer
         {
@@ -283,7 +283,7 @@ namespace app
 
             /**
              * @brief 進行度を取得する
-             * @return 0.0f～1.0f。PingPongの復路は1.0fから0.0fへ戻る
+             * @return 0.0f〜1.0f。PingPongの復路は1.0fから0.0fへ戻る
              */
             float GetProgress() const
             {
@@ -332,7 +332,7 @@ namespace app
 
             /** 時間の間隔(秒) */
             float m_duration;
-            /** 現在の周の経過時間(秒)。0～1周の長さ */
+            /** 現在の周の経過時間(秒)。0〜1周の長さ */
             float m_elapsed;
             /** 繰り返す回数。InfiniteRepeatで無限 */
             uint16_t m_repeatCount;
@@ -393,25 +393,46 @@ namespace app
 
 
             /** 再生する。終了済みなら頭から再生し直す */
-            void Play() { m_timer.Play(); }
+            void Play()
+            {
+                m_timer.Play();
+            }
 
             /** 止める。Play()で続きから再生できる */
-            void Stop() { m_timer.Stop(); }
+            void Stop()
+            {
+                m_timer.Stop();
+            }
 
             /** 頭に戻して止める */
-            void Reset() { m_timer.Reset(); }
+            void Reset()
+            {
+                m_timer.Reset();
+            }
 
             /** 更新 */
-            void Update(const float deltaTime) { m_timer.Update(deltaTime); }
+            void Update(const float deltaTime)
+            {
+                m_timer.Update(deltaTime);
+            }
 
             /** 終了後の動作を設定する */
-            void SetEndBehavior(const EndBehavior endBehavior) { m_timer.SetEndBehavior(endBehavior); }
+            void SetEndBehavior(const EndBehavior endBehavior)
+            {
+                m_timer.SetEndBehavior(endBehavior);
+            }
 
             /** 再生中か取得する */
-            bool IsPlaying() const { return m_timer.IsPlaying(); }
+            bool IsPlaying() const
+            {
+                return m_timer.IsPlaying();
+            }
 
             /** 直近の再生が最後まで終わったか取得する */
-            bool IsFinished() const { return m_timer.IsFinished(); }
+            bool IsFinished() const
+            {
+                return m_timer.IsFinished();
+            }
 
 
             /** 現在の値を取得する */
@@ -490,25 +511,46 @@ namespace app
 
 
             /** 再生する。終了済みなら頭から再生し直す */
-            void Play() { m_timer.Play(); }
+            void Play()
+            {
+                m_timer.Play();
+            }
 
             /** 止める。Play()で続きから再生できる */
-            void Stop() { m_timer.Stop(); }
+            void Stop()
+            {
+                m_timer.Stop();
+            }
 
             /** 頭に戻して止める */
-            void Reset() { m_timer.Reset(); }
+            void Reset()
+            {
+                m_timer.Reset();
+            }
 
             /** 更新 */
-            void Update(const float deltaTime) { m_timer.Update(deltaTime); }
+            void Update(const float deltaTime)
+            {
+                m_timer.Update(deltaTime);
+            }
 
             /** 終了後の動作を設定する */
-            void SetEndBehavior(const EndBehavior endBehavior) { m_timer.SetEndBehavior(endBehavior); }
+            void SetEndBehavior(const EndBehavior endBehavior)
+            {
+                m_timer.SetEndBehavior(endBehavior);
+            }
 
             /** 再生中か取得する */
-            bool IsPlaying() const { return m_timer.IsPlaying(); }
+            bool IsPlaying() const
+            {
+                return m_timer.IsPlaying();
+            }
 
             /** 直近の再生が最後まで終わったか取得する */
-            bool IsFinished() const { return m_timer.IsFinished(); }
+            bool IsFinished() const
+            {
+                return m_timer.IsFinished();
+            }
 
 
             /** 現在の値(座標)を取得する */

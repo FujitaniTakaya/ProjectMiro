@@ -3,14 +3,17 @@
  * @brief パッド(キーボード)の入力から、キャラクターへの入力を作るController
  */
 #include "stdafx.h"
+
 #include "PlayerController.h"
+
+#include <algorithm>
 
 
 namespace app
 {
     namespace
     {
-        /** XInputのスティックの最大値(-32768～32767を-1.0f～1.0fにするための除数) */
+        /** XInputのスティックの最大値(-32768〜32767を-1.0f〜1.0fにするための除数) */
         constexpr float RAW_STICK_MAX = 32767.0f;
         /** 生のスティックの遊び(これ以下は、エンジンのスティックの値を使う) */
         constexpr float RAW_DEAD_ZONE = 0.1f;
@@ -18,7 +21,7 @@ namespace app
         constexpr float MOVE_THRESHOLD = 0.1f;
         /** この倒し具合以下なら忍び足、それより倒すと走り */
         constexpr float SNEAK_THRESHOLD = 0.9f;
-    }
+    } // namespace
 
 
     PlayerController::PlayerController(const int padIndex)
@@ -116,4 +119,4 @@ namespace app
 
         return input;
     }
-}
+} // namespace app

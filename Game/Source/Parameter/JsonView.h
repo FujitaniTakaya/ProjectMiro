@@ -51,7 +51,9 @@ namespace app
         friend class JsonLoader;
         friend class ParamLoader;
 
-        explicit JsonView(const void* node) : m_node(node) {}
+        explicit JsonView(const void* node)
+            : m_node(node)
+        {}
 
         /** 参照先のnlohmann::json */
         const void* m_node;

@@ -3,9 +3,12 @@
  * @brief jsonファイルの読み込みに使用する
  */
 #include "stdafx.h"
+
 #include "JsonLoader.h"
 
 #include <fstream>
+#include <utility>
+
 #include "Json/json.hpp"
 
 
@@ -34,7 +37,10 @@ namespace app
         std::ifstream file(filePath);
 
         // ファイルが開けなかった場合は、読み込み失敗
-        if (!file.is_open()) return false;
+        if (!file.is_open())
+        {
+            return false;
+        }
 
         nlohmann::json jsonTemp;
 
@@ -61,4 +67,4 @@ namespace app
     {
         return JsonView(&m_impl->json);
     }
-}
+} // namespace app

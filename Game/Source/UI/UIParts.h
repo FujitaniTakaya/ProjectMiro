@@ -7,12 +7,14 @@
  *          パーツにはUIAnimationを登録できる。登録したアニメーションは、パーツのUpdate()で更新される。
  */
 #pragma once
-#include "UISprite.h"
-#include "Animation/UIAnimation.h"
-
 #include <algorithm>
+#include <cstdint>
 #include <memory>
+#include <utility>
 #include <vector>
+
+#include "Animation/UIAnimation.h"
+#include "UISprite.h"
 
 
 namespace app

@@ -3,6 +3,7 @@
  * @brief イージング付きの補間(Curve)と二次ベジェ曲線
  */
 #include "stdafx.h"
+
 #include "Curve.h"
 
 
@@ -14,7 +15,7 @@ namespace app
         {
             /** 一度のUpdateで数える周回数の上限。uint16_tに収まる値 */
             constexpr float MAX_CYCLES = 65535.0f;
-        }
+        } // namespace
 
 
         void CurveTimer::OnPeriodElapsed()

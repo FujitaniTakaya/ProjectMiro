@@ -5,8 +5,11 @@
 #include "stdafx.h"
 
 #include "UIAnimation.h"
-#include "UIAnimationParameter.h"
+
+#include <utility>
+
 #include "Source/UI/UIParts.h"
+#include "UIAnimationParameter.h"
 
 
 namespace app

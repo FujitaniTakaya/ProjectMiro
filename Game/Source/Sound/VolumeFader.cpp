@@ -6,6 +6,9 @@
 
 #include "VolumeFader.h"
 
+#include <algorithm>
+#include <cmath>
+
 
 namespace app
 {

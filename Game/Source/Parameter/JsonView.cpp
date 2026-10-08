@@ -3,6 +3,7 @@
  * @brief jsonの要素を読み取り専用で参照する
  */
 #include "stdafx.h"
+
 #include "JsonView.h"
 
 #include "Json/json.hpp"
@@ -17,7 +18,7 @@ namespace app
         {
             return *static_cast<const nlohmann::json*>(node);
         }
-    }
+    } // namespace
 
 
     size_t JsonView::Size() const
@@ -48,4 +49,4 @@ namespace app
     {
         return JsonView(&*ToJson(m_node).find(key));
     }
-}
+} // namespace app

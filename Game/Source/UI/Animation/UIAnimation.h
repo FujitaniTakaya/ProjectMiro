@@ -7,11 +7,11 @@
  *              ui->FindAnimation(Hash32("slideIn"))->PlayAnimation();
  */
 #pragma once
-#include "Source/Util/Curve.h"
-
 #include <cstdint>
 #include <functional>
 #include <vector>
+
+#include "Source/Util/Curve.h"
 
 
 namespace app

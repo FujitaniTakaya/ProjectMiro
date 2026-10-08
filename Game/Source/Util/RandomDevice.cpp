@@ -3,7 +3,10 @@
  * @brief 乱数を生成するクラス
  */
 #include "stdafx.h"
+
 #include "RandomDevice.h"
+
+#include <algorithm>
 
 
 namespace app
@@ -16,7 +19,7 @@ namespace app
             constexpr float PERCENT_MIN = 0.0f;
             /** パーセントの最大値 */
             constexpr float PERCENT_MAX = 100.0f;
-        }
+        } // namespace
 
 
         int RandomDevice::Random(const int min, const int max)

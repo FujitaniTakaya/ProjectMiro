@@ -6,6 +6,8 @@
 
 #include "SoundVolume.h"
 
+#include <algorithm>
+
 
 namespace app
 {

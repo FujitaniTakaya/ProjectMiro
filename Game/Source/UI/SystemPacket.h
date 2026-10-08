@@ -3,7 +3,9 @@
  * @brief LayoutとMenuをまとめて扱うクラス
  */
 #pragma once
-#include "Source/UI/Layout.h"
+#include <memory>
+
+#include "Layout.h"
 
 
 namespace app

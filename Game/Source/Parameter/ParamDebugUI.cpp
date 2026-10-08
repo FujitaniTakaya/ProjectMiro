@@ -7,6 +7,7 @@
 #include "ParamDebugUI.h"
 
 #include <cstring>
+
 #include "ParamHolder.h"
 
 
@@ -41,8 +42,14 @@ namespace app
          */
         const char* StripTypeName(const char* typeName)
         {
-            if (std::strncmp(typeName, "struct ", 7) == 0) return typeName + 7;
-            if (std::strncmp(typeName, "class ", 6) == 0) return typeName + 6;
+            if (std::strncmp(typeName, "struct ", 7) == 0)
+            {
+                return typeName + 7;
+            }
+            if (std::strncmp(typeName, "class ", 6) == 0)
+            {
+                return typeName + 6;
+            }
             return typeName;
         }
 
@@ -107,12 +114,24 @@ namespace app
             for (size_t i = 0; i < PARAM_COUNT; ++i)
             {
                 ParamDebugInfo info = {};
-                if (!holder.GetDebugInfo(static_cast<EnParamID>(i), info)) continue;
+                if (!holder.GetDebugInfo(static_cast<EnParamID>(i), info))
+                {
+                    continue;
+                }
 
                 ++registeredCount;
-                if (info.m_isLoaded) ++loadedCount;
-                if (info.m_isLastLoadFailed) ++failedCount;
-                if (info.m_hasDrawFunc) ++drawFuncCount;
+                if (info.m_isLoaded)
+                {
+                    ++loadedCount;
+                }
+                if (info.m_isLastLoadFailed)
+                {
+                    ++failedCount;
+                }
+                if (info.m_hasDrawFunc)
+                {
+                    ++drawFuncCount;
+                }
             }
 
             if (registeredCount == 0)
@@ -148,7 +167,10 @@ namespace app
                     {
                         const EnParamID id = static_cast<EnParamID>(i);
                         ParamDebugInfo info = {};
-                        if (!holder.GetDebugInfo(id, info)) continue;
+                        if (!holder.GetDebugInfo(id, info))
+                        {
+                            continue;
+                        }
 
                         ImGui::TableNextRow();
                         // NOTE: ボタンのIDが行ごとに重ならないようにする。
@@ -193,7 +215,10 @@ namespace app
                     {
                         const EnParamID id = static_cast<EnParamID>(i);
                         ParamDebugInfo info = {};
-                        if (!holder.GetDebugInfo(id, info) || !info.m_hasDrawFunc) continue;
+                        if (!holder.GetDebugInfo(id, info) || !info.m_hasDrawFunc)
+                        {
+                            continue;
+                        }
 
                         ImGui::PushID(static_cast<int>(i));
                         if (ImGui::TreeNode("value", "[%d] %s", static_cast<int>(i), StripTypeName(info.m_typeName)))

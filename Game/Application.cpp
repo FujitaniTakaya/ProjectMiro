@@ -5,6 +5,7 @@
 #include "stdafx.h"
 
 #include "Application.h"
+
 #include "Game.h"
 #include "Source/Effect/EffectManager.h"
 #include "Source/Parameter/HotReloadManager.h"
@@ -19,68 +20,68 @@
 
 namespace app
 {
-	Application::Application()
-	{
-		SoundManager::CreateInstance();
-		EffectManager::CreateInstance();
-		ParamHolder::CreateInstance();
-		Fade::CreateInstance();
-		SceneManager::CreateInstance();
+    Application::Application()
+    {
+        SoundManager::CreateInstance();
+        EffectManager::CreateInstance();
+        ParamHolder::CreateInstance();
+        Fade::CreateInstance();
+        SceneManager::CreateInstance();
 
-		m_game = std::make_unique<Game>();
-		m_game->StartWrapper();
+        m_game = std::make_unique<Game>();
+        m_game->StartWrapper();
 
-		m_soundDebugUI = std::make_unique<SoundDebugUI>();
-		m_paramDebugUI = std::make_unique<ParamDebugUI>();
-	}
-
-
-	Application::~Application()
-	{
-		m_paramDebugUI.reset();
-		m_soundDebugUI.reset();
-		m_game.reset();
-
-		SceneManager::DestroyInstance();
-		Fade::DestroyInstance();
-		ParamHolder::DestroyInstance();
-		EffectManager::DestroyInstance();
-		SoundManager::DestroyInstance();
-	}
+        m_soundDebugUI = std::make_unique<SoundDebugUI>();
+        m_paramDebugUI = std::make_unique<ParamDebugUI>();
+    }
 
 
-	void Application::PreUpdate()
-	{
-		HotReloadManager::Get().Update();
-		SoundManager::Get().Update();
-		EffectManager::Get().Update();
-		TimerManager::Get().Update();
-	}
+    Application::~Application()
+    {
+        m_paramDebugUI.reset();
+        m_soundDebugUI.reset();
+        m_game.reset();
+
+        SceneManager::DestroyInstance();
+        Fade::DestroyInstance();
+        ParamHolder::DestroyInstance();
+        EffectManager::DestroyInstance();
+        SoundManager::DestroyInstance();
+    }
 
 
-	void Application::Update()
-	{
-		m_game->UpdateWrapper();
-
-		// シーンの遷移の進行を見て、フェードを始めたり終わらせたりするので、Fadeの更新より前に呼ぶ。
-		SceneManager::Get().Update();
-		Fade::Get().Update();
-
-		m_soundDebugUI->Draw();
-		m_paramDebugUI->Draw();
-	}
+    void Application::PreUpdate()
+    {
+        HotReloadManager::Get().Update();
+        SoundManager::Get().Update();
+        EffectManager::Get().Update();
+        TimerManager::Get().Update();
+    }
 
 
-	void Application::Render(RenderContext& rc)
-	{
-		m_game->RenderWrapper(rc);
-		SceneManager::Get().Render(rc);
-	}
+    void Application::Update()
+    {
+        m_game->UpdateWrapper();
+
+        // シーンの遷移の進行を見て、フェードを始めたり終わらせたりするので、Fadeの更新より前に呼ぶ。
+        SceneManager::Get().Update();
+        Fade::Get().Update();
+
+        m_soundDebugUI->Draw();
+        m_paramDebugUI->Draw();
+    }
 
 
-	void Application::RenderUI(RenderContext& rc)
-	{
-		// フェードは最前面に出したいので、一番最後に描く。
-		Fade::Get().Render(rc);
-	}
-}
+    void Application::Render(RenderContext& rc)
+    {
+        m_game->RenderWrapper(rc);
+        SceneManager::Get().Render(rc);
+    }
+
+
+    void Application::RenderUI(RenderContext& rc)
+    {
+        // フェードは最前面に出したいので、一番最後に描く。
+        Fade::Get().Render(rc);
+    }
+} // namespace app

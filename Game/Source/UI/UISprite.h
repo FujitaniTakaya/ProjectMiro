@@ -6,6 +6,7 @@
  *          描画は即時なので、RenderUI()の中でDraw()を呼ぶこと。Render()の中だと、ポストプロセスに上書きされて見えなくなる。
  */
 #pragma once
+#include <cstdint>
 
 
 namespace app

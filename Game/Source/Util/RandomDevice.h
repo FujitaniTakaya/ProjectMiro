@@ -40,7 +40,7 @@ namespace app
 
             /**
              * @brief パーセントで確率を判定する
-             * @param percent 0.0f～100.0fの範囲で指定する。範囲外は丸める。
+             * @param percent 0.0f〜100.0fの範囲で指定する。範囲外は丸める。
              * @return percentの確率でtrueを返す
              */
             static bool Percent(const float percent);

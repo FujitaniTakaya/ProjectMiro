@@ -3,9 +3,10 @@
  * @brief パラメーターを保持して、IDで取り出せるようにするクラス
  */
 #include "stdafx.h"
+
 #include "ParamHolder.h"
 
-#include "Source/Parameter/ParamList.h"
+#include "ParamList.h"
 
 
 namespace app
@@ -36,7 +37,10 @@ namespace app
     bool ParamHolder::GetDebugInfo(EnParamID id, ParamDebugInfo& outInfo) const
     {
         const IEntry* entry = FindEntry(id);
-        if (entry == nullptr) return false;
+        if (entry == nullptr)
+        {
+            return false;
+        }
 
         outInfo = entry->GetDebugInfo();
         return true;
@@ -46,7 +50,10 @@ namespace app
     void ParamHolder::DrawValue(EnParamID id) const
     {
         const IEntry* entry = FindEntry(id);
-        if (entry == nullptr) return;
+        if (entry == nullptr)
+        {
+            return;
+        }
 
         entry->DrawValue();
     }
@@ -62,7 +69,10 @@ namespace app
     const ParamHolder::IEntry* ParamHolder::FindEntry(EnParamID id) const
     {
         const size_t index = static_cast<size_t>(id);
-        if (index >= m_entries.size()) return nullptr;
+        if (index >= m_entries.size())
+        {
+            return nullptr;
+        }
 
         return m_entries[index].get();
     }

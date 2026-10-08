@@ -6,11 +6,13 @@
  *              ui->FindAnimation(Hash32("fadeIn"))->PlayAnimation();
  */
 #pragma once
+#include <cstdint>
+#include <memory>
+#include <utility>
+
+#include "Source/UI/UIParts.h"
 #include "UIAnimation.h"
 #include "UIAnimationParameter.h"
-#include "Source/UI/UIParts.h"
-
-#include <memory>
 
 
 namespace app

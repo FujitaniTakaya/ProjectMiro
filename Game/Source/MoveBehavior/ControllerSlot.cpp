@@ -3,7 +3,10 @@
  * @brief Controllerを付け替えられるようにする入れ物
  */
 #include "stdafx.h"
+
 #include "ControllerSlot.h"
+
+#include <utility>
 
 
 namespace app
@@ -85,4 +88,4 @@ namespace app
 
         return m_input;
     }
-}
+} // namespace app

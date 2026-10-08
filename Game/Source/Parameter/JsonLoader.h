@@ -5,7 +5,8 @@
 #pragma once
 #include <memory>
 #include <string>
-#include "Source/Parameter/JsonView.h"
+
+#include "JsonView.h"
 
 
 namespace app

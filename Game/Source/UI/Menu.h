@@ -5,9 +5,12 @@
  *          MenuBaseを継承したクラスで、InitializeLogic()の中でUIのパーツを取り出して、ボタンを押した時の処理などを書く。
  */
 #pragma once
-#include "UIParts.h"
-
+#include <cstdint>
+#include <memory>
 #include <unordered_map>
+#include <utility>
+
+#include "UIParts.h"
 
 
 namespace app
@@ -56,7 +59,8 @@ namespace app
              *          ここで、GetUI()でUIのパーツを取り出して、ボタンを押した時の処理などを書く。
              *          UIのパーツは作り直されるので、取り出したポインタは、次に呼ばれた時に取り直すこと。
              */
-            virtual void InitializeLogic() {}
+            virtual void InitializeLogic()
+            {}
 
 
         public:

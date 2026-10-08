@@ -53,6 +53,7 @@ namespace app
 
     static_assert(
         std::size(EFFECT_LIST) == static_cast<size_t>(EnEffectKind::Max),
-        "EFFECT_LISTの数がEnEffectKindと合っていない。");
+        "EFFECT_LISTの数がEnEffectKindと合っていない。"
+    );
 
 } // namespace app

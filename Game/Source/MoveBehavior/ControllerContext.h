@@ -30,4 +30,4 @@ namespace app
         /** 前フレームからの経過時間(秒)。ControllerSlot が埋めるので、持ち主は設定しなくてよい */
         float deltaTime;
     };
-}
+} // namespace app

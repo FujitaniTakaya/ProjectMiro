@@ -3,7 +3,11 @@
  * @brief 周りを見て判断し、キャラクターへの入力を作るController(AI)
  */
 #include "stdafx.h"
+
 #include "AIController.h"
+
+#include <algorithm>
+
 #include "Source/MoveBehavior/StateMachineBase.h"
 #include "Source/Util/RandomDevice.h"
 
@@ -29,7 +33,7 @@ namespace app
         {
             return ToFlat(a - b).LengthSq();
         }
-    }
+    } // namespace
 
 
     /*************************************************************/
@@ -55,7 +59,8 @@ namespace app
 
         void Enter() override;
         void Update() override;
-        void Exit() override {}
+        void Exit() override
+        {}
 
     private:
         /** 持ち主 */
@@ -83,7 +88,8 @@ namespace app
 
         void Enter() override;
         void Update() override;
-        void Exit() override {}
+        void Exit() override
+        {}
 
     private:
         /** 持ち主 */
@@ -113,7 +119,8 @@ namespace app
 
         void Enter() override;
         void Update() override;
-        void Exit() override {}
+        void Exit() override
+        {}
 
     private:
         /** 持ち主 */
@@ -138,7 +145,8 @@ namespace app
 
         void Enter() override;
         void Update() override;
-        void Exit() override {}
+        void Exit() override
+        {}
 
     private:
         /** 持ち主 */
@@ -531,4 +539,4 @@ namespace app
             m_output.SetMove(direction);
         }
     }
-}
+} // namespace app

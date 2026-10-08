@@ -42,7 +42,7 @@ namespace app
         float sightHalfAngleDeg;
         /** ホームから離れすぎたと判定する距離。超えるとホームへ戻る */
         float maxDistFromHome;
-        /** 待機する最大の時間(秒)。実際の待機時間は 0 ～ この値 のランダム */
+        /** 待機する最大の時間(秒)。実際の待機時間は 0 〜 この値 のランダム */
         float idleTimeMax;
         /** 徘徊の目的地に着いたと判定する距離 */
         float arriveDistWander;
@@ -62,11 +62,11 @@ namespace app
         float arriveLastKnownDist;
         /** 攻撃(Action1)を押す間隔(秒)。1フレームより長くすること(短いと押しっぱなしになり、Triggerが立たない) */
         float attackInterval;
-        /** 巡回点がないとき、ホームから徘徊の目的地を決める最大の半径(実際は半径の 0.5 ～ 1.0 倍) */
+        /** 巡回点がないとき、ホームから徘徊の目的地を決める最大の半径(実際は半径の 0.5 〜 1.0 倍) */
         float wanderRadius;
         /** 視線の判定をする高さ(足元から)。足元だと地面に当たってしまうので持ち上げる */
         float eyeHeight;
         /** 視線の判定の両端を縮める距離。自分と目標のカプセルに当たらないように、カプセルの半径より大きくすること */
         float rayEndMargin;
     };
-}
+} // namespace app

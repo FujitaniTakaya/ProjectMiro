@@ -26,12 +26,14 @@ namespace app
          * @brief キャラクターに付けられたときに呼ばれる
          * @details 内部の状態を初期化する。同じControllerを別のキャラクターへ付け替えたときも呼ばれる。
          */
-        virtual void OnAttach() {}
+        virtual void OnAttach()
+        {}
 
         /**
          * @brief キャラクターから外されるときに呼ばれる
          */
-        virtual void OnDetach() {}
+        virtual void OnDetach()
+        {}
 
         /**
          * @brief 今フレームの入力を作る
@@ -40,4 +42,4 @@ namespace app
          */
         virtual CharacterInput Update(const ControllerContext& context) = 0;
     };
-}
+} // namespace app
