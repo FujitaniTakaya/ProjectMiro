@@ -14,6 +14,7 @@
 #include "Source/Scene/SceneManager.h"
 #include "Source/Sound/SoundDebugUI.h"
 #include "Source/Sound/SoundManager.h"
+#include "Source/Timer/TimerManager.h"
 
 
 namespace app
@@ -53,6 +54,7 @@ namespace app
 		HotReloadManager::Get().Update();
 		SoundManager::Get().Update();
 		EffectManager::Get().Update();
+		TimerManager::Get().Update();
 	}
 
 
