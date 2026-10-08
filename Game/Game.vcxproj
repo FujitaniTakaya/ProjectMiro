@@ -255,6 +255,9 @@
     <ClCompile Include="Source\Util\Curve.cpp" />
     <ClCompile Include="Source\Scene\Fade.cpp" />
     <ClCompile Include="Source\Scene\SceneManager.cpp" />
+    <ClCompile Include="Source\UI\Layout.cpp" />
+    <ClCompile Include="Source\UI\UIParts.cpp" />
+    <ClCompile Include="Source\UI\UISprite.cpp" />
     <ClCompile Include="Source\Timer\Timer.cpp" />
     <ClCompile Include="Source\Timer\TimerManager.cpp" />
   </ItemGroup>
@@ -294,6 +297,11 @@
     <ClInclude Include="Source\Scene\Fade.h" />
     <ClInclude Include="Source\Scene\IScene.h" />
     <ClInclude Include="Source\Scene\SceneManager.h" />
+    <ClInclude Include="Source\UI\Layout.h" />
+    <ClInclude Include="Source\UI\Menu.h" />
+    <ClInclude Include="Source\UI\SystemPacket.h" />
+    <ClInclude Include="Source\UI\UIParts.h" />
+    <ClInclude Include="Source\UI\UISprite.h" />
     <ClInclude Include="Source\Timer\Timer.h" />
     <ClInclude Include="Source\Timer\TimerHandle.h" />
     <ClInclude Include="Source\Timer\TimerManager.h" />

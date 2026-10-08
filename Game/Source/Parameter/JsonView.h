@@ -30,6 +30,21 @@ namespace app
          */
         JsonView operator[](size_t index) const;
 
+        /**
+         * @brief オブジェクトに、キーの要素があるかどうか
+         * @param key キー
+         * @return キーの要素があればtrue。オブジェクトでない場合はfalse
+         */
+        bool Contains(const char* key) const;
+
+        /**
+         * @brief オブジェクトの、キーの要素を取得
+         * @note operator[]にしていないのは、operator[](size_t)に、リテラルの0を渡した時に曖昧になるため。
+         * @param key キー。Contains(key)がtrueであること
+         * @return 要素への参照
+         */
+        JsonView Get(const char* key) const;
+
 
     private:
         // 参照先(nlohmann::json)を取り出せるのは、この2つだけ

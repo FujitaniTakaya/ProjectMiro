@@ -33,4 +33,19 @@ namespace app
     {
         return JsonView(&ToJson(m_node)[index]);
     }
+
+
+    bool JsonView::Contains(const char* key) const
+    {
+        const nlohmann::json& json = ToJson(m_node);
+
+        // オブジェクト以外は、要素を持たないものとして扱う
+        return json.is_object() && json.find(key) != json.end();
+    }
+
+
+    JsonView JsonView::Get(const char* key) const
+    {
+        return JsonView(&*ToJson(m_node).find(key));
+    }
 }

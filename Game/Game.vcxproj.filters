@@ -31,6 +31,9 @@
     <Filter Include="Source\Scene">
       <UniqueIdentifier>{057297d9-885f-4873-9323-d48e480bb930}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\UI">
+      <UniqueIdentifier>{ccfd5d3b-29a8-49b4-af33-4a858678ac03}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source\Timer">
       <UniqueIdentifier>{1ee8722d-6fcc-4b64-b91a-3123e4cf7c5d}</UniqueIdentifier>
     </Filter>
@@ -108,6 +111,15 @@
     </ClCompile>
     <ClCompile Include="Source\Scene\SceneManager.cpp">
       <Filter>Source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI\Layout.cpp">
+      <Filter>Source\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI\UIParts.cpp">
+      <Filter>Source\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI\UISprite.cpp">
+      <Filter>Source\UI</Filter>
     </ClCompile>
     <ClCompile Include="Source\Timer\Timer.cpp">
       <Filter>Source\Timer</Filter>
@@ -213,6 +225,21 @@
     </ClInclude>
     <ClInclude Include="Source\Scene\SceneManager.h">
       <Filter>Source\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\Layout.h">
+      <Filter>Source\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\Menu.h">
+      <Filter>Source\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\SystemPacket.h">
+      <Filter>Source\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\UIParts.h">
+      <Filter>Source\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\UISprite.h">
+      <Filter>Source\UI</Filter>
     </ClInclude>
     <ClInclude Include="Source\Timer\Timer.h">
       <Filter>Source\Timer</Filter>
