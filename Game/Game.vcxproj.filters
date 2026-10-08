@@ -94,6 +94,9 @@
     <ClCompile Include="Source\Util\RandomDevice.cpp">
       <Filter>Source\Util</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Util\Curve.cpp">
+      <Filter>Source\Util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -179,6 +182,9 @@
       <Filter>Source\MoveBehavior</Filter>
     </ClInclude>
     <ClInclude Include="Source\Util\RandomDevice.h">
+      <Filter>Source\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Util\Curve.h">
       <Filter>Source\Util</Filter>
     </ClInclude>
   </ItemGroup>

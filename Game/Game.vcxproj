@@ -252,6 +252,7 @@
     <ClCompile Include="Source\Controller\PlayerController.cpp" />
     <ClCompile Include="Source\MoveBehavior\ControllerSlot.cpp" />
     <ClCompile Include="Source\Util\RandomDevice.cpp" />
+    <ClCompile Include="Source\Util\Curve.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -285,6 +286,7 @@
     <ClInclude Include="Source\MoveBehavior\ControllerSlot.h" />
     <ClInclude Include="Source\MoveBehavior\IController.h" />
     <ClInclude Include="Source\Util\RandomDevice.h" />
+    <ClInclude Include="Source\Util\Curve.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BalloonEngine\BalloonEngine.vcxproj">
