@@ -70,6 +70,9 @@
     <ClCompile Include="Source\Parameter\ParamDebugUI.cpp">
       <Filter>Source\Parameter</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Util\RandomDevice.cpp">
+      <Filter>Source\Util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -129,6 +132,9 @@
     </ClInclude>
     <ClInclude Include="Source\Parameter\ParamDebugUI.h">
       <Filter>Source\Parameter</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Util\RandomDevice.h">
+      <Filter>Source\Util</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -247,6 +247,7 @@
     <ClCompile Include="Source\Parameter\ParamHolder.cpp" />
     <ClCompile Include="Source\Parameter\ParamList.cpp" />
     <ClCompile Include="Source\Parameter\ParamDebugUI.cpp" />
+    <ClCompile Include="Source\Util\RandomDevice.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -271,6 +272,7 @@
     <ClInclude Include="Source\Parameter\ParamHolder.h" />
     <ClInclude Include="Source\Parameter\ParamList.h" />
     <ClInclude Include="Source\Parameter\ParamDebugUI.h" />
+    <ClInclude Include="Source\Util\RandomDevice.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BalloonEngine\BalloonEngine.vcxproj">
