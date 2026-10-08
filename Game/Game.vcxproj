@@ -260,6 +260,8 @@
     <ClCompile Include="Source\UI\UISprite.cpp" />
     <ClCompile Include="Source\Timer\Timer.cpp" />
     <ClCompile Include="Source\Timer\TimerManager.cpp" />
+    <ClCompile Include="Source\UI\Animation\UIAnimation.cpp" />
+    <ClCompile Include="Source\UI\Animation\UIAnimationParameter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -305,6 +307,9 @@
     <ClInclude Include="Source\Timer\Timer.h" />
     <ClInclude Include="Source\Timer\TimerHandle.h" />
     <ClInclude Include="Source\Timer\TimerManager.h" />
+    <ClInclude Include="Source\UI\Animation\UIAnimation.h" />
+    <ClInclude Include="Source\UI\Animation\UIAnimationFactory.h" />
+    <ClInclude Include="Source\UI\Animation\UIAnimationParameter.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BalloonEngine\BalloonEngine.vcxproj">

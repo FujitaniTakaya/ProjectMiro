@@ -22,11 +22,46 @@ namespace app
             , m_pivot(0.5f, 0.5f)
             , m_isDraw(true)
             , m_key(0)
+            , m_animations()
         {}
 
 
         UIBase::~UIBase()
         {}
+
+
+        void UIBase::AddAnimation(const uint32_t key, std::unique_ptr<UIAnimationBase> animation)
+        {
+            if (!animation)
+            {
+                return;
+            }
+            animation->SetUI(this);
+
+            for (AnimationEntry& entry : m_animations)
+            {
+                if (entry.m_key == key)
+                {
+                    entry.m_animation = std::move(animation);
+                    return;
+                }
+            }
+            m_animations.emplace_back(key, std::move(animation));
+        }
+
+
+        void UIBase::RemoveAnimation(const uint32_t key)
+        {
+            const auto it = std::find_if(
+                m_animations.begin(),
+                m_animations.end(),
+                [key](const AnimationEntry& entry) { return entry.m_key == key; }
+            );
+            if (it != m_animations.end())
+            {
+                m_animations.erase(it);
+            }
+        }
 
 
 
@@ -45,6 +80,9 @@ namespace app
 
         void UIImage::Update()
         {
+            // アニメーションはローカルのトランスフォームを動かすので、トランスフォームの更新より先に更新する。
+            UpdateAnimation();
+
             // 親を考慮したワールドのトランスフォームで描画する。
             m_transform.UpdateTransform();
 
@@ -190,6 +228,7 @@ namespace app
 
         void UIDummy::Update()
         {
+            UpdateAnimation();
             m_transform.UpdateTransform();
         }
 
@@ -216,6 +255,8 @@ namespace app
 
         void UICanvas::Update()
         {
+            UpdateAnimation();
+
             // キャンバスのトランスフォームを更新する。(子のワールドのトランスフォームも更新される。)
             m_transform.UpdateTransform();
 

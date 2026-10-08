@@ -37,6 +37,9 @@
     <Filter Include="Source\Timer">
       <UniqueIdentifier>{1ee8722d-6fcc-4b64-b91a-3123e4cf7c5d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\UI\Animation">
+      <UniqueIdentifier>{6f764930-7919-4301-a109-012775e70728}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -126,6 +129,12 @@
     </ClCompile>
     <ClCompile Include="Source\Timer\TimerManager.cpp">
       <Filter>Source\Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI\Animation\UIAnimation.cpp">
+      <Filter>Source\UI\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI\Animation\UIAnimationParameter.cpp">
+      <Filter>Source\UI\Animation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -249,6 +258,15 @@
     </ClInclude>
     <ClInclude Include="Source\Timer\TimerManager.h">
       <Filter>Source\Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\Animation\UIAnimation.h">
+      <Filter>Source\UI\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\Animation\UIAnimationFactory.h">
+      <Filter>Source\UI\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\Animation\UIAnimationParameter.h">
+      <Filter>Source\UI\Animation</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

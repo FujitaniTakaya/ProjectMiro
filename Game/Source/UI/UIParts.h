@@ -4,9 +4,11 @@
  * @details UIBaseを継承したパーツを、UICanvasに登録して使う。
  *          パーツの座標・拡大・回転は、m_transform.m_localTransformに設定する。
  *          描画には、親(UICanvas)を考慮したm_transform.m_worldTransformが使われる。
+ *          パーツにはUIAnimationを登録できる。登録したアニメーションは、パーツのUpdate()で更新される。
  */
 #pragma once
 #include "UISprite.h"
+#include "Animation/UIAnimation.h"
 
 #include <algorithm>
 #include <memory>
@@ -77,6 +79,113 @@ namespace app
 
 
         public:
+            /**
+             * @brief 登録されている全てのアニメーションを更新
+             * @details 再生中のアニメーションだけが、値を反映する。UIのUpdate()の先頭(トランスフォームの更新の前)で呼ぶ。
+             *          更新中は、AddAnimation() RemoveAnimation()を呼ばないこと。
+             */
+            void UpdateAnimation()
+            {
+                for (AnimationEntry& entry : m_animations)
+                {
+                    entry.m_animation->Update();
+                }
+            }
+
+            /** 登録されている全てのアニメーションを再生 */
+            void PlayAnimation()
+            {
+                for (AnimationEntry& entry : m_animations)
+                {
+                    entry.m_animation->PlayAnimation();
+                }
+            }
+
+            /** 登録されている全てのアニメーションを停止 */
+            void StopAnimation()
+            {
+                for (AnimationEntry& entry : m_animations)
+                {
+                    entry.m_animation->StopAnimation();
+                }
+            }
+
+            /**
+             * @brief 再生中のアニメーションがあるかどうか
+             * @return 1つでも再生中ならtrue
+             */
+            bool IsPlayAnimation() const
+            {
+                for (const AnimationEntry& entry : m_animations)
+                {
+                    if (entry.m_animation->IsPlayAnimation())
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            /**
+             * @brief アニメーションを登録
+             * @details すでに同じキーのアニメーションがある場合は、置き換える。アニメーションはUIが所有する。
+             * @param key キー
+             * @param animation アニメーション
+             */
+            void AddAnimation(const uint32_t key, std::unique_ptr<UIAnimationBase> animation);
+
+            /**
+             * @brief アニメーションの登録を解除して、破棄する
+             * @details キーのアニメーションが無い場合は、何もしない。
+             * @param key キー
+             */
+            void RemoveAnimation(const uint32_t key);
+
+            /**
+             * @brief アニメーションを探す
+             * @param key キー
+             * @return 見つかったアニメーション。無い場合はnullptr。
+             */
+            UIAnimationBase* FindAnimation(const uint32_t key) const
+            {
+                for (const AnimationEntry& entry : m_animations)
+                {
+                    if (entry.m_key == key)
+                    {
+                        return entry.m_animation.get();
+                    }
+                }
+                return nullptr;
+            }
+
+            /**
+             * @brief アニメーションを探す
+             * @tparam T 取得するアニメーションの型
+             * @param key キー
+             * @return 見つかったアニメーション。無い場合や、型が違う場合はnullptr。
+             */
+            template <typename T>
+            T* FindAnimation(const uint32_t key) const
+            {
+                return dynamic_cast<T*>(FindAnimation(key));
+            }
+
+            /**
+             * @brief 登録されている全てのアニメーションに、関数を呼ぶ
+             * @tparam F UIAnimationBase*を受け取る関数
+             * @param func 関数
+             */
+            template <typename F>
+            void ForEachAnimation(F&& func)
+            {
+                for (AnimationEntry& entry : m_animations)
+                {
+                    func(entry.m_animation.get());
+                }
+            }
+
+
+        public:
             /** トランスフォーム。m_localTransformに値を設定する。 */
             HierarchicalTransform m_transform;
             /** 色 */
@@ -88,8 +197,34 @@ namespace app
 
 
         private:
+            /**
+             * @brief 登録されたアニメーション
+             */
+            struct AnimationEntry
+            {
+                /**
+                 * @brief コンストラクタ
+                 * @param key キー
+                 * @param animation アニメーション
+                 */
+                AnimationEntry(const uint32_t key, std::unique_ptr<UIAnimationBase> animation)
+                    : m_key(key)
+                    , m_animation(std::move(animation))
+                {
+                }
+
+                /** キー */
+                uint32_t m_key;
+                /** アニメーション */
+                std::unique_ptr<UIAnimationBase> m_animation;
+            };
+
+
+        private:
             /** キー(UIの名前のハッシュ値) */
             uint32_t m_key;
+            /** 登録されたアニメーション。1つのUIに登録される数は少ないので、配列を線形に探す。 */
+            std::vector<AnimationEntry> m_animations;
         };
 
 
