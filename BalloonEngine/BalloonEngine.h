@@ -9,6 +9,7 @@
 // clang-format off
 #include "math/LightColor.h"
 #include "math/Transform.h"
+#include "math/HierarchicalTransform.h"
 
 #include "imgui.h"
 

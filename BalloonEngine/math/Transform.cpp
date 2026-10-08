@@ -9,13 +9,12 @@
 
 namespace nsBalloonEngine
 {
-    Transform::Transform(Vector3 position, Quaternion rotation, Vector3 scale)
-        : m_position(position)
-        , m_rotation(rotation)
-        , m_scale(scale)
+    // NOTE: 初期値は、リテラルで初期化している。
+    //       Vector3::Zeroなど、他のファイルのstatic変数から初期化すると、
+    //       他のファイルのstatic変数の初期化中に生成された場合に、初期化の順番によってはゼロのままコピーされてしまうため。
+    Transform::Transform()
+        : m_position(0.0f, 0.0f, 0.0f)
+        , m_rotation(0.0f, 0.0f, 0.0f, 1.0f)
+        , m_scale(1.0f, 1.0f, 1.0f)
     {}
-
-
-    Transform::~Transform()
-    {}
-} // namespace nsBalloonEngine
+} // namespace nsBalloonEngine

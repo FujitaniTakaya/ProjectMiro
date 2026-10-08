@@ -13,12 +13,11 @@ namespace nsBalloonEngine
     class Transform
     {
     public:
-        Transform(
-            Vector3 position = g_vec3Zero,
-            Quaternion rotation = g_quatIdentity,
-            Vector3 scale = g_vec3One
-        );
-        ~Transform();
+        /**
+         * @brief コンストラクタ
+         * @details 座標は(0, 0, 0)、回転は単位クォータニオン、拡大は(1, 1, 1)で初期化する。
+         */
+        Transform();
 
 
     public:
@@ -29,4 +28,4 @@ namespace nsBalloonEngine
         /**	拡大 */
         Vector3 m_scale;
     };
-} // namespace nsBalloonEngine
+} // namespace nsBalloonEngine
