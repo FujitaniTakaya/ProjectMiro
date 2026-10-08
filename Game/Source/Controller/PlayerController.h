@@ -24,9 +24,9 @@ namespace app
     public:
         /**
          * @brief コンストラクタ
-         * @param padIndex 読み取るパッドの番号(0～3)
          * @note パッドが繋がっていなくても、キーボードの入力は全てのパッド番号に入る。
          *       実際に繋がっているパッド番号を指定すること。
+         * @param padIndex 読み取るパッドの番号(0〜3)
          */
         explicit PlayerController(const int padIndex = 0);
 
@@ -43,4 +43,4 @@ namespace app
         /** 読み取るパッドの番号 */
         int m_padIndex;
     };
-}
+} // namespace app

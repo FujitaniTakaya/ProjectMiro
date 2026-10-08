@@ -3,11 +3,12 @@
  * @brief シーンの管理をするクラス
  * @details シーンの登録・生成・破棄と、シーンの遷移(暗転 → ロード → 明転)を行う。シングルトン。
  *          シーンを追加するには、IScene を継承したクラスを作り、SceneManager のコンストラクタで AddSceneMap<T>() を呼ぶ。
- *          シーンから RequesutScene() で遷移を要求すると、SceneManager が次の順番で遷移する。
+ *          シーンから RequestScene() で遷移を要求すると、SceneManager が次の順番で遷移する。
  *            Idle(通常) → FadingOut(暗転) → LoadingScene(旧シーンを破棄して新シーンを生成。IsLoaded() を待つ) → FadingIn(明転) → Idle
  *          NOTE: ポーズは未対応。
  */
 #pragma once
+#include <cstdint>
 #include <functional>
 #include <map>
 #include <memory>
@@ -47,6 +48,9 @@ namespace app
         /**
          * @brief インスタンスを生成する
          * @details Fadeの生成後に呼ぶこと。
+         *          コンストラクタで最初のシーンを作り、シーンがエンジンの資源(モデルやスプライトなど)を持つので、関数内staticにはせず、
+         *          ApplicationのコンストラクタとデストラクタでCreateInstance()/DestroyInstance()を呼ぶ。
+         *          (static変数の破棄はエンジンの終了後になってしまう。起動時の処理が無いものは、関数内staticのGet()にする。)
          */
         static void CreateInstance();
 
@@ -90,13 +94,12 @@ namespace app
          * @details 追加する場合は、SceneManagerのコンストラクタで呼び出す。
          * @tparam T 追加するシーンのクラス。appScene() でIDを持っていること。
          */
-        template<typename T>
+        template <typename T>
         void AddSceneMap()
         {
-            m_sceneMap.emplace(T::ID(), []()
-                {
-                    return std::unique_ptr<IScene>(std::make_unique<T>());
-                });
+            m_sceneMap.emplace(T::ID(), []() {
+                return std::unique_ptr<IScene>(std::make_unique<T>());
+            });
         }
 
 
@@ -124,4 +127,4 @@ namespace app
         /** 唯一のインスタンス */
         static SceneManager* m_instance;
     };
-}
+} // namespace app

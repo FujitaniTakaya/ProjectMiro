@@ -10,6 +10,8 @@
  *              const CharacterInput& input = m_controllers.Update(context);
  */
 #pragma once
+#include <memory>
+
 #include "IController.h"
 
 
@@ -27,26 +29,26 @@ namespace app
 
         /**
          * @brief Controllerを付ける
-         * @param controller 付けるController。nullptr なら外すだけ
          * @details 既に付いているControllerがあれば、OnDetach() を呼んで破棄する。
          *          入力は無入力に戻り、新しいControllerの OnAttach() が呼ばれる。
          * @note Update() の最中(Controllerの中)から呼んではいけない
+         * @param controller 付けるController。nullptr なら外すだけ
          */
         void Attach(std::unique_ptr<IController> controller);
 
         /**
          * @brief Controllerを外して、所有権を返す
-         * @return 外したController。付いていなければ nullptr
          * @details OnDetach() を呼ぶ。返ったControllerは別のキャラクターの Attach() に渡して付け替えられる。
          * @note Update() の最中(Controllerの中)から呼んではいけない
+         * @return 外したController。付いていなければ nullptr
          */
         std::unique_ptr<IController> Detach();
 
         /**
          * @brief Controllerを更新して、今フレームの入力を作る
+         * @details Triggerは「今フレームで押している かつ 前フレームで押していない」で計算する。
          * @param context 操作対象の情報。deltaTime はここで埋める
          * @return 今フレームの入力。Controllerが付いていなければ無入力
-         * @details Triggerは「今フレームで押している かつ 前フレームで押していない」で計算する。
          */
         const CharacterInput& Update(const ControllerContext& context);
 
@@ -77,4 +79,4 @@ namespace app
         /** Controllerの Update() を実行中かどうか(実行中の付け替えを防ぐ) */
         bool m_isUpdating;
     };
-}
+} // namespace app

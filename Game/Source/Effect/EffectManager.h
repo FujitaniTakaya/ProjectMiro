@@ -27,12 +27,24 @@ namespace app
          */
         struct EffectEntry
         {
+            /**
+             * @brief コンストラクタ
+             * @param emitter エフェクトエミッター
+             */
+            explicit EffectEntry(EffectEmitter* emitter)
+                : m_emitter(emitter)
+                , m_followTarget(nullptr)
+                , m_followOffset(Vector3::Zero)
+            {
+            }
+
+
             /** エフェクトエミッター。NewGOで作られるのでメモリの管理はエンジンが行う。 */
-            EffectEmitter* m_emitter = nullptr;
+            EffectEmitter* m_emitter;
             /** 追従先の座標へのポインタ。nullptrなら追従しない。 */
-            const Vector3* m_followTarget = nullptr;
+            const Vector3* m_followTarget;
             /** 追従先からのオフセット */
-            Vector3 m_followOffset = Vector3::Zero;
+            Vector3 m_followOffset;
         };
 
 
@@ -120,6 +132,9 @@ namespace app
         /**
          * @brief インスタンスを生成する
          * @details EffectEngineの生成後(g_engineの初期化後)に呼ぶこと。
+         *          エンジンの資源(EffectEngineが管理するエミッター)を持つので、関数内staticにはせず、
+         *          ApplicationのコンストラクタとデストラクタでCreateInstance()/DestroyInstance()を呼ぶ。
+         *          (static変数の破棄はエンジンの終了後になってしまう。エンジンの資源を持たないものは、関数内staticのGet()にする。)
          */
         static void CreateInstance();
 

@@ -2,21 +2,27 @@
  * @file IScene.h
  * @brief シーンの基底クラス
  * @details 新しいシーンは、IScene を継承して appScene(クラス名) を書き、SceneManager のコンストラクタで AddSceneMap<T>() を呼ぶ。
- *          シーンの遷移は、RequesutScene() が true を返したときに SceneManager が行う。
+ *          シーンの遷移は、RequestScene() が true を返したときに SceneManager が行う。
  */
 #pragma once
+#include <cstdint>
+
 #include "Source/Util/CRC32.h"
 
 
- /**
-  * シーンのIDを返す関数 ID() を作るマクロ。
-  * Hash32は文字列を数値に変換するもの。数値に変換するときに別の文字列でも同じ数値になるケースがあるが、被りづらいようなアルゴリズムを使っている。
-  * @note constexpr変数に受けることで、ハッシュ値を必ずコンパイル時に計算する
-  *       (戻り値を直接 Hash32() にすると、実行時に毎回CRC32を計算してしまう)
-  */
-#define appScene(name)\
-public:\
- static constexpr uint32_t ID() { constexpr uint32_t id = Hash32(#name); return id; }
+/**
+ * シーンのIDを返す関数 ID() を作るマクロ。
+ * Hash32は文字列を数値に変換するもの。数値に変換するときに別の文字列でも同じ数値になるケースがあるが、被りづらいようなアルゴリズムを使っている。
+ * @note constexpr変数に受けることで、ハッシュ値を必ずコンパイル時に計算する
+ *       (戻り値を直接 Hash32() にすると、実行時に毎回CRC32を計算してしまう)
+ */
+#define appScene(name)                         \
+public:                                        \
+    static constexpr uint32_t ID()             \
+    {                                          \
+        constexpr uint32_t id = Hash32(#name); \
+        return id;                             \
+    }
 
 
 namespace app
@@ -31,8 +37,10 @@ namespace app
     class IScene : public Noncopyable
     {
     public:
-        IScene() {}
-        virtual ~IScene() {}
+        IScene()
+        {}
+        virtual ~IScene()
+        {}
 
 
         /**
@@ -56,15 +64,18 @@ namespace app
          * @details false を返している間は、SceneManager が暗転したまま待つ。
          * @return 完了していればtrue
          */
-        virtual bool IsLoaded() const { return true; }
+        virtual bool IsLoaded() const
+        {
+            return true;
+        }
 
 
         /**
          * @brief シーンの遷移を要求する
-         * @param id[out] 次のシーンのID
-         * @param waitTime[out] 暗転・明転にかける時間(秒)
+         * @param[out] id 次のシーンのID
+         * @param[out] waitTime 暗転・明転にかける時間(秒)
          * @return 遷移したいときtrue
          */
-        virtual bool RequesutScene(uint32_t& id, float& waitTime) = 0;
+        virtual bool RequestScene(uint32_t& id, float& waitTime) = 0;
     };
-}
+} // namespace app

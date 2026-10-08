@@ -3,6 +3,7 @@
  * @brief アクターのステートマシンの基底クラス群
  */
 #include "stdafx.h"
+
 #include "StateMachineBase.h"
 
 
@@ -12,11 +13,12 @@ namespace app
     {
         /** ステート用に最初に確保しておく数 */
         constexpr size_t RESERVE_STATE_COUNT = 16;
-    }
+    } // namespace
 
 
     StateMachineBase::StateMachineBase()
-        : m_currentState(nullptr)
+        : m_states()
+        , m_currentState(nullptr)
     {
         m_states.reserve(RESERVE_STATE_COUNT);
     }
@@ -28,7 +30,8 @@ namespace app
         ChangeState();
 
         // 現在のステートを更新する
-        if (m_currentState) {
+        if (m_currentState)
+        {
             m_currentState->Update();
         }
     }
@@ -81,4 +84,4 @@ namespace app
         // IDが外れ値の場合nullptrを返す
         return nullptr;
     }
-}
+} // namespace app

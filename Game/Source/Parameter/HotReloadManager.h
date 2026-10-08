@@ -10,17 +10,13 @@
 #include <map>
 #include <string>
 #include <vector>
-#include "Source/Parameter/JsonView.h"
+
+#include "HotReloadHandle.h"
+#include "JsonView.h"
 
 
 namespace app
 {
-    /** ホットリロードの登録ハンドル */
-    using HotReloadHandle = uint32_t;
-    /** ハンドル無効値 */
-    static constexpr HotReloadHandle INVALID_HOT_RELOAD_HANDLE = 0xffffffff;
-
-
     /**
      * @brief jsonを読み込んだ時に呼ばれる関数
      * @details 引数のJsonViewは、この関数の中でだけ使える。値は関数の中でコピーして保持すること。
@@ -35,12 +31,14 @@ namespace app
      *          ファイルの読み込みはJsonLoaderで行う。
      *          同じファイルに複数の関数を登録した場合も、更新の確認も読み込み直しもファイルごとに1回だけで、
      *          同じJsonViewを登録された全ての関数に渡す。
-     *          例: m_handle = HotReloadManager::Get().Register("Assets/Param/Enemy.json",
+     *          例: m_handle = HotReloadManager::Get().Register("Assets/parameter/enemy/Enemy.json",
      *                  [this](const JsonView& root) { LoadEnemy(root); });
      *              HotReloadManager::Get().Unregister(m_handle);
-     *          NOTE: ファイルの監視はデバッグビルドでのみ行う。リリースビルドでは、Register()での最初の読み込みだけ行う。
-     *          NOTE: 同じファイルかどうかは、パスの表記(「a/b.json」と「a\b.json」など)の違いは無視して判断する。
-     *                大文字小文字の違いは、別のファイルとして扱う。
+     *          NOTE: ファイルの監視は、K2_DEBUGが定義されたビルド(Debug・Preview)でのみ行う。
+     *                リリースビルドでは、Register()での最初の読み込みだけ行う。
+     *                (ImGuiのコードはBALLOON_IMGUI_ENABLED、開発用の処理・ログ・assertはK2_DEBUGで囲む。_DEBUGは使わない。)
+     *          NOTE: 同じファイルかどうかは、NormalizePath()で判断する。
+     *                パスの表記(「a/b.json」と「a\b.json」)や、大文字小文字の違いは無視する。
      *          NOTE: 関数内のstatic変数で保持するので、他のstatic変数のデストラクタからUnregister()を呼ばないこと。
      */
     class HotReloadManager : public Noncopyable
@@ -81,10 +79,10 @@ namespace app
             explicit FileEntry(const std::string& path)
                 : m_path(path)
                 , m_listeners()
-#ifdef _DEBUG
+#ifdef K2_DEBUG
                 , m_lastWriteTime((std::filesystem::file_time_type::min)())
                 , m_isLastLoadFailed(false)
-#endif // _DEBUG
+#endif // K2_DEBUG
             {
             }
 
@@ -92,12 +90,12 @@ namespace app
             std::string m_path;
             /** このファイルを読み込んだ時に呼ぶ関数 */
             std::vector<Listener> m_listeners;
-#ifdef _DEBUG
+#ifdef K2_DEBUG
             /** 最後に読み込めた時の、ファイルの更新日時。まだ読み込めていない場合は最小値。 */
             std::filesystem::file_time_type m_lastWriteTime;
             /** 最後の読み込みに失敗したかどうか */
             bool m_isLastLoadFailed;
-#endif // _DEBUG
+#endif // K2_DEBUG
         };
 
 
@@ -169,8 +167,18 @@ namespace app
 
     public:
         /**
+         * @brief パスの表記の違いを無くす
+         * @details 「a/b.json」と「a\b.json」、「a/./b.json」、「A/B.json」などが、同じ文字列になる。
+         *          同じjsonファイルかどうかを調べるのに使う。(大文字小文字は、ASCIIの範囲だけ小文字にそろえる。)
+         * @param path jsonファイルのパス
+         * @return 表記の違いを無くしたパス
+         */
+        static std::string NormalizePath(const std::string& path);
+
+
+        /**
          * @brief インスタンスを取得
-         * @details 初回の呼び出し時に生成される。
+         * @details 初回の呼び出し時に生成される。生成・破棄の呼び出しは要らない。(エンジンの資源を持たないため。)
          */
         static HotReloadManager& Get();
 
@@ -196,9 +204,9 @@ namespace app
         HotReloadHandle m_nextHandle;
         /** 更新を調べる間隔(秒) */
         float m_checkInterval;
-#ifdef _DEBUG
+#ifdef K2_DEBUG
         /** 最後に更新を調べた時刻 */
         std::chrono::steady_clock::time_point m_lastCheckTime;
-#endif // _DEBUG
+#endif // K2_DEBUG
     };
 } // namespace app

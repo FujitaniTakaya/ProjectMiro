@@ -3,16 +3,25 @@
  * @brief アクターのステートマシンの基底クラス群
  */
 #pragma once
+#include <cstdint>
+#include <memory>
+#include <utility>
+#include <vector>
+
 #include "Source/Util/CRC32.h"
- /**
-  * @brief 数値に変換するマクロ
-  * @param name ステート名
-  * @note constexpr変数に受けることで、ハッシュ値を必ずコンパイル時に計算する
-  *       (戻り値を直接 Hash32() にすると、実行時に毎回CRC32を計算してしまう)
-  */
-#define appState(name)\
-public:\
- static constexpr uint32_t ID() { constexpr uint32_t id = Hash32(#name); return id; }
+/**
+ * @brief 数値に変換するマクロ
+ * @note constexpr変数に受けることで、ハッシュ値を必ずコンパイル時に計算する
+ *       (戻り値を直接 Hash32() にすると、実行時に毎回CRC32を計算してしまう)
+ * @param name ステート名
+ */
+#define appState(name)                         \
+public:                                        \
+    static constexpr uint32_t ID()             \
+    {                                          \
+        constexpr uint32_t id = Hash32(#name); \
+        return id;                             \
+    }
 
 
 namespace app
@@ -27,7 +36,11 @@ namespace app
     class IState
     {
     public:
-        IState() = default;
+        IState()
+            : m_stateID(0)
+        {
+        }
+
         virtual ~IState() = default;
 
 
@@ -44,7 +57,7 @@ namespace app
         /** StateMachineBase が AddState() で設定する */
         friend class StateMachineBase;
         /** ステートID(IsEqualCurrentState() で検索せずに比較するために持つ) */
-        uint32_t m_stateID = 0;
+        uint32_t m_stateID;
     };
 
 
@@ -59,7 +72,7 @@ namespace app
     class StateMachineBase
     {
     public:
-        /*
+        /**
          * @brief ステートマシンを更新する
          * @note 持ち主が毎フレーム呼び出すこと
          */
@@ -71,9 +84,9 @@ namespace app
 
         /**
          * @brief 現在のステートと指定したIDが等しいかどうか
+         * @note 他のオブジェクトが、持ち主のステートを毎フレームチェックするために必要
          * @param stateID ステートID
          * @return 等しいかどうか
-         * @note 他のオブジェクトが、持ち主のステートを毎フレームチェックするために必要
          */
         bool IsEqualCurrentState(const uint32_t stateID) const;
 
@@ -88,9 +101,10 @@ namespace app
         /**
          * @brief ステートを追加する
          * @tparam TState ステートの型
-         * @param stateID ステートID
+         * @tparam TStateMachine ステートマシンの型
+         * @param stateMachine ステートのコンストラクタに渡す、持ち主のステートマシン
          */
-        template<typename TState, typename TStateMachine>
+        template <typename TState, typename TStateMachine>
         void AddState(TStateMachine&& stateMachine)
         {
             // すでに登録されている場合は警告を出して、先に登録したものを残す
@@ -107,7 +121,7 @@ namespace app
         }
 
 
-        /*
+        /**
          * @brief ステートの変更先を取得する
          * @return 変更先のステートポインタ
          */
@@ -140,6 +154,6 @@ namespace app
         /** ステートの一覧(数が少ないので線形探索する) */
         std::vector<StateEntry> m_states;
         /** 現在のステート */
-        IState* m_currentState = nullptr;
+        IState* m_currentState;
     };
-}
+} // namespace app

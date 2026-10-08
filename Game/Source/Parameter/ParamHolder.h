@@ -18,9 +18,10 @@
 #include <string>
 #include <typeinfo>
 #include <utility>
-#include "Source/Parameter/HotReloadManager.h"
-#include "Source/Parameter/JsonView.h"
-#include "Source/Parameter/ParamList.h"
+
+#include "HotReloadManager.h"
+#include "JsonView.h"
+#include "ParamList.h"
 
 
 namespace app
@@ -116,17 +117,15 @@ namespace app
                 , m_lastLoadTime()
                 , m_drawFunc(drawFunc)
             {
-                m_handle = HotReloadManager::Get().Register(path,
-                    [this, func](const JsonView& root)
-                    {
-                        // 読み込めた時だけ値を入れ替える。(以前の値が残らないように、毎回デフォルト構築した状態から読み込む。)
-                        T param{};
-                        func(root, param);
-                        m_param = std::move(param);
-                        m_isLoaded = true;
-                        ++m_loadCount;
-                        m_lastLoadTime = std::chrono::steady_clock::now();
-                    });
+                m_handle = HotReloadManager::Get().Register(path, [this, func](const JsonView& root) {
+                    // 読み込めた時だけ値を入れ替える。(以前の値が残らないように、毎回デフォルト構築した状態から読み込む。)
+                    T param{};
+                    func(root, param);
+                    m_param = std::move(param);
+                    m_isLoaded = true;
+                    ++m_loadCount;
+                    m_lastLoadTime = std::chrono::steady_clock::now();
+                });
             }
 
             ~Entry() override
@@ -138,9 +137,18 @@ namespace app
             Entry(const Entry&) = delete;
             Entry& operator=(const Entry&) = delete;
 
-            const std::type_info& GetType() const override { return typeid(T); }
-            const void* GetParameter() const override { return &m_param; }
-            bool IsLoaded() const override { return m_isLoaded; }
+            const std::type_info& GetType() const override
+            {
+                return typeid(T);
+            }
+            const void* GetParameter() const override
+            {
+                return &m_param;
+            }
+            bool IsLoaded() const override
+            {
+                return m_isLoaded;
+            }
 
             ParamDebugInfo GetDebugInfo() const override
             {
@@ -151,8 +159,8 @@ namespace app
                 info.m_isLastLoadFailed = HotReloadManager::Get().IsLastLoadFailed(m_handle);
                 info.m_loadCount = m_loadCount;
                 info.m_secondsSinceLastLoad = (m_loadCount == 0)
-                    ? -1.0f
-                    : std::chrono::duration<float>(std::chrono::steady_clock::now() - m_lastLoadTime).count();
+                                                  ? -1.0f
+                                                  : std::chrono::duration<float>(std::chrono::steady_clock::now() - m_lastLoadTime).count();
                 info.m_hasDrawFunc = static_cast<bool>(m_drawFunc);
                 return info;
             }
@@ -322,6 +330,9 @@ namespace app
         /**
          * @brief インスタンスを生成する
          * @details 全てのパラメーターを読み込むので、ゲームの生成前に呼ぶこと。
+         *          コンストラクタで起動時の処理(全てのjsonの読み込み)を行うので、関数内staticにはせず、
+         *          ApplicationのコンストラクタとデストラクタでCreateInstance()/DestroyInstance()を呼ぶ。
+         *          (起動時の処理が無いものは、関数内staticのGet()にする。)
          */
         static void CreateInstance();
 

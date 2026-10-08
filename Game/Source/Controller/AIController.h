@@ -16,9 +16,11 @@
  * @note 目標の元になるオブジェクトを破棄する前に、SetTargetProvider(nullptr) で外すこと。(捕まえているポインタが残らないように)
  */
 #pragma once
+#include <cstdint>
 #include <functional>
 #include <memory>
 #include <vector>
+
 #include "AIControllerConfig.h"
 #include "Source/MoveBehavior/IController.h"
 
@@ -59,22 +61,22 @@ namespace app
 
         /**
          * @brief 目標の位置を教える関数を設定する
-         * @param provider 目標の位置を教える関数。nullptr なら目標なし
          * @note 目標の元になるオブジェクトを破棄する前に nullptr を設定すること
+         * @param provider 目標の位置を教える関数。nullptr なら目標なし
          */
         void SetTargetProvider(const TargetProvider& provider);
 
         /**
          * @brief ホームの位置を設定する
-         * @param position ホームのワールド座標
          * @details 設定しなければ、Controllerが付けられて最初の Update() のときの、操作対象の位置がホームになる。
+         * @param position ホームのワールド座標
          */
         void SetHomePosition(const Vector3& position);
 
         /**
          * @brief 巡回点を追加する
-         * @param position 巡回点のワールド座標
          * @details 徘徊のとき、追加した順に巡回する。1つも追加しなければ、ホームの周りのランダムな点を歩く。
+         * @param position 巡回点のワールド座標
          */
         void AddPatrolPoint(const Vector3& position);
 
@@ -162,4 +164,4 @@ namespace app
         /** ステートマシン */
         std::unique_ptr<StateMachine> m_machine;
     };
-}
+} // namespace app

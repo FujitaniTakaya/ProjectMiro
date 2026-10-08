@@ -3,12 +3,16 @@
  * @brief jsonからパラメーターの値を読み込むのに使用する
  */
 #include "stdafx.h"
+
 #include "ParamLoader.h"
 
 #include <algorithm>
+
 #include "Json/json.hpp"
 
-#define VALUE_DIFFER K2_ASSERT(false, "値が無効です。");
+// NOTE: 型が違う時は、assertで止めずにログを出して、無効な値を返す。
+//       ホットリロード中にjsonを書き間違えても、ゲームが落ちないようにするため。(Layout/UIAnimationと同じ方針)
+#define VALUE_DIFFER(key) K2_LOG("jsonの値の型が違います。key=%s\n", key)
 
 namespace app
 {
@@ -37,18 +41,24 @@ namespace app
         template <size_t N>
         bool ReadFloats(const nlohmann::json& array, float (&out)[N])
         {
-            if (!array.is_array() || array.size() != N) return false;
+            if (!array.is_array() || array.size() != N)
+            {
+                return false;
+            }
 
             size_t i = 0;
             for (const auto& element : array)
             {
-                if (!element.is_number()) return false;
+                if (!element.is_number())
+                {
+                    return false;
+                }
 
                 out[i++] = element.get<float>();
             }
             return true;
         }
-    }
+    } // namespace
 
 
     bool ParamLoader::ToBool(
@@ -58,8 +68,15 @@ namespace app
     )
     {
         const nlohmann::json* value = Find(json.m_node, key);
-        if (!value) return invalid;
-        if (!value->is_boolean()) { VALUE_DIFFER; return invalid; }
+        if (!value)
+        {
+            return invalid;
+        }
+        if (!value->is_boolean())
+        {
+            VALUE_DIFFER(key);
+            return invalid;
+        }
 
         return value->get<bool>();
     }
@@ -72,8 +89,15 @@ namespace app
     )
     {
         const nlohmann::json* value = Find(json.m_node, key);
-        if (!value) return invalid;
-        if (!value->is_number_integer()) { VALUE_DIFFER; return invalid; }
+        if (!value)
+        {
+            return invalid;
+        }
+        if (!value->is_number_integer())
+        {
+            VALUE_DIFFER(key);
+            return invalid;
+        }
 
         return value->get<int>();
     }
@@ -86,8 +110,15 @@ namespace app
     )
     {
         const nlohmann::json* value = Find(json.m_node, key);
-        if (!value) return invalid;
-        if (!value->is_number_unsigned()) { VALUE_DIFFER; return invalid; }
+        if (!value)
+        {
+            return invalid;
+        }
+        if (!value->is_number_unsigned())
+        {
+            VALUE_DIFFER(key);
+            return invalid;
+        }
 
         return value->get<uint32_t>();
     }
@@ -100,8 +131,15 @@ namespace app
     )
     {
         const nlohmann::json* value = Find(json.m_node, key);
-        if (!value) return invalid;
-        if (!value->is_number()) { VALUE_DIFFER; return invalid; }
+        if (!value)
+        {
+            return invalid;
+        }
+        if (!value->is_number())
+        {
+            VALUE_DIFFER(key);
+            return invalid;
+        }
 
         return value->get<float>();
     }
@@ -114,8 +152,15 @@ namespace app
     )
     {
         const nlohmann::json* value = Find(json.m_node, key);
-        if (!value) return invalid;
-        if (!value->is_string()) { VALUE_DIFFER; return invalid; }
+        if (!value)
+        {
+            return invalid;
+        }
+        if (!value->is_string())
+        {
+            VALUE_DIFFER(key);
+            return invalid;
+        }
 
         return value->get<std::string>();
     }
@@ -128,10 +173,17 @@ namespace app
     )
     {
         const nlohmann::json* value = Find(json.m_node, key);
-        if (!value) return invalid;
+        if (!value)
+        {
+            return invalid;
+        }
 
         float v[2];
-        if (!ReadFloats(*value, v)) { VALUE_DIFFER; return invalid; }
+        if (!ReadFloats(*value, v))
+        {
+            VALUE_DIFFER(key);
+            return invalid;
+        }
 
         return Vector2(v[0], v[1]);
     }
@@ -144,10 +196,17 @@ namespace app
     )
     {
         const nlohmann::json* value = Find(json.m_node, key);
-        if (!value) return invalid;
+        if (!value)
+        {
+            return invalid;
+        }
 
         float v[3];
-        if (!ReadFloats(*value, v)) { VALUE_DIFFER; return invalid; }
+        if (!ReadFloats(*value, v))
+        {
+            VALUE_DIFFER(key);
+            return invalid;
+        }
 
         return Vector3(v[0], v[1], v[2]);
     }
@@ -161,13 +220,20 @@ namespace app
     )
     {
         const nlohmann::json* value = Find(json.m_node, key);
-        if (!value) return invalid;
+        if (!value)
+        {
+            return invalid;
+        }
 
         // 度数法から変換するモード: 配列サイズ3 [rotX, rotY, rotZ]
         if (isDegree)
         {
             float rotDeg[3];
-            if (!ReadFloats(*value, rotDeg)) { VALUE_DIFFER; return invalid; }
+            if (!ReadFloats(*value, rotDeg))
+            {
+                VALUE_DIFFER(key);
+                return invalid;
+            }
 
             Quaternion rotX, rotY, rotZ;
             rotX.SetRotationDegX(rotDeg[0]);
@@ -182,7 +248,11 @@ namespace app
 
         // Quaternionを直接読むモード: 配列サイズ4 [x, y, z, w]
         float q[4];
-        if (!ReadFloats(*value, q)) { VALUE_DIFFER; return invalid; }
+        if (!ReadFloats(*value, q))
+        {
+            VALUE_DIFFER(key);
+            return invalid;
+        }
 
         return Quaternion(q[0], q[1], q[2], q[3]);
     }
@@ -200,10 +270,17 @@ namespace app
         constexpr float convertValue = 255.0f;
 
         const nlohmann::json* value = Find(json.m_node, key);
-        if (!value) return invalid;
+        if (!value)
+        {
+            return invalid;
+        }
 
         float c[4];
-        if (!ReadFloats(*value, c)) { VALUE_DIFFER; return invalid; }
+        if (!ReadFloats(*value, c))
+        {
+            VALUE_DIFFER(key);
+            return invalid;
+        }
 
         // 0-255の値を0.0-1.0に変換する
         if (isConvert)
@@ -216,4 +293,4 @@ namespace app
 
         return Vector4(c[0], c[1], c[2], c[3]);
     }
-}
+} // namespace app

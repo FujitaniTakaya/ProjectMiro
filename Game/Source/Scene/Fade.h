@@ -8,6 +8,7 @@
  *          NOTE: 描画はRenderUI()の中でRender()を呼ぶこと。Render()の中だと、ポストプロセスに上書きされて見えなくなる。
  */
 #pragma once
+#include "Source/UI/UISprite.h"
 
 
 namespace app
@@ -66,6 +67,9 @@ namespace app
         /**
          * @brief インスタンスを生成する
          * @details スプライトを読み込むので、エンジンの初期化後に呼ぶこと。
+         *          エンジンの資源(スプライト)を持つので、関数内staticにはせず、
+         *          ApplicationのコンストラクタとデストラクタでCreateInstance()/DestroyInstance()を呼ぶ。
+         *          (static変数の破棄はエンジンの終了後になってしまう。エンジンの資源を持たないものは、関数内staticのGet()にする。)
          */
         static void CreateInstance();
 
@@ -108,7 +112,7 @@ namespace app
 
     private:
         /** 暗幕のスプライト */
-        Sprite m_fadeSprite;
+        ui::UISprite m_fadeSprite;
         /** フェードの状態 */
         FadeState m_state;
         /** フェードの経過時間(フェードアウト中は増え、フェードイン中は減る) */
@@ -121,4 +125,4 @@ namespace app
         /** 唯一のインスタンス */
         static Fade* m_instance;
     };
-}
+} // namespace app

@@ -5,6 +5,9 @@
 #include "stdafx.h"
 
 #include "UIAnimationParameter.h"
+
+#include <algorithm>
+
 #include "Source/Parameter/HotReloadManager.h"
 #include "Source/Parameter/ParamLoader.h"
 #include "Source/Util/CRC32.h"
@@ -85,8 +88,8 @@ namespace app
                 def.repeatCount = static_cast<uint16_t>(std::clamp(repeat, 0, MAX_REPEAT_COUNT));
 
                 def.endBehavior = (ParamLoader::ToString(item, "endBehavior") == "Reset")
-                    ? util::EndBehavior::Reset
-                    : util::EndBehavior::Hold;
+                                      ? util::EndBehavior::Reset
+                                      : util::EndBehavior::Hold;
             }
         } // namespace
 
@@ -171,9 +174,12 @@ namespace app
 
         bool UIAnimationParameter::Load(const std::string& path)
         {
+            // NOTE: 表記の違い(「a/b.json」と「a\b.json」、大文字小文字)があっても、同じファイルとして扱う。
+            //       HotReloadManagerが同じファイルを1つにまとめる判定と、同じにしておく。
+            const std::string key = HotReloadManager::NormalizePath(path);
             for (const FileEntry& file : m_files)
             {
-                if (file.m_path == path)
+                if (HotReloadManager::NormalizePath(file.m_path) == key)
                 {
                     return file.m_isLoaded;
                 }
@@ -238,8 +244,7 @@ namespace app
                 const auto it = m_defs.find(def.key);
                 if (it != m_defs.end() && it->second.m_fileIndex != fileIndex)
                 {
-                    K2_LOG("UIアニメーションのキーが、別のファイルと重複しています。後から読み込んだ方になります。key=%u path=%s\n",
-                        def.key, file.m_path.c_str());
+                    K2_LOG("UIアニメーションのキーが、別のファイルと重複しています。後から読み込んだ方になります。key=%u path=%s\n", def.key, file.m_path.c_str());
                 }
                 m_defs.insert_or_assign(def.key, Entry(def, fileIndex));
                 file.m_keys.push_back(def.key);

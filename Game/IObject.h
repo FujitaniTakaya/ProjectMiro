@@ -8,74 +8,80 @@
 
 namespace app
 {
-	/**
-	 * @brief アプリ側のオブジェクトの基底クラス
-	 */
-	class IObject : public Noncopyable
-	{
-	public:
-		virtual ~IObject() = default;
+    /**
+     * @brief アプリ側のオブジェクトの基底クラス
+     */
+    class IObject : public Noncopyable
+    {
+    public:
+        IObject()
+            : m_isActive(true)
+            , m_isPause(false)
+        {
+        }
+
+        virtual ~IObject() = default;
 
 
-	protected:
-		virtual void Start() = 0;
-		virtual void Update() = 0;
-		virtual void Render(RenderContext& renderContext) = 0;
+    protected:
+        virtual void Start() = 0;
+        virtual void Update() = 0;
+        virtual void Render(RenderContext& renderContext) = 0;
 
 
-		/** 下の関数を自分で呼んでください！ */
-	public:
-		void StartWrapper()
-		{
-			if (m_isActive)
-			{
-				Start();
-			}
-		}
+        /** 下の関数を自分で呼んでください！ */
+    public:
+        void StartWrapper()
+        {
+            if (m_isActive)
+            {
+                Start();
+            }
+        }
 
 
-		void UpdateWrapper()
-		{
-			if (m_isActive && !m_isPause)
-			{
-				Update();
-			}
-		}
+        void UpdateWrapper()
+        {
+            if (m_isActive && !m_isPause)
+            {
+                Update();
+            }
+        }
 
 
-		void RenderWrapper(RenderContext& renderContext)
-		{
-			if (m_isActive)
-			{
-				Render(renderContext);
-			}
-		}
+        void RenderWrapper(RenderContext& renderContext)
+        {
+            if (m_isActive)
+            {
+                Render(renderContext);
+            }
+        }
 
 
-		/**
-		 * @brief Activeフラグの設定
-		 * @param isActive Activeフラグ
-		 */
-		void SetActive(const bool isActive)
-		{
-			m_isActive = isActive;
-		}
+        /**
+         * @brief Activeフラグの設定
+         * @param isActive Activeフラグ
+         */
+        void SetActive(const bool isActive)
+        {
+            m_isActive = isActive;
+        }
 
 
-		/**
-		 * @brief Pauseフラグの設定
-		 * @param isPause Pauseフラグ
-		 */
-		void SetPause(const bool isPause)
-		{
-			m_isPause = isPause;
-		}
+        /**
+         * @brief Pauseフラグの設定
+         * @param isPause Pauseフラグ
+         */
+        void SetPause(const bool isPause)
+        {
+            m_isPause = isPause;
+        }
 
 
-	protected:
-		/** Activeフラグ */
-		bool m_isActive = true;
-		/** Pauseフラグ */
-		bool m_isPause = false;
-	};
-}
+    protected:
+        /** Activeフラグ */
+        bool m_isActive;
+        /** Pauseフラグ */
+        bool m_isPause;
+    };
+} // namespace app

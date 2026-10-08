@@ -4,8 +4,9 @@
  */
 #include "stdafx.h"
 
-#include "Fade.h"
 #include "SceneManager.h"
+
+#include "Fade.h"
 
 
 namespace app
@@ -44,7 +45,7 @@ namespace app
             }
             m_currentScene->Update();
             // シーンの遷移要求を判定する。
-            if (m_currentScene->RequesutScene(m_nextSceneId, m_fadeDuration))
+            if (m_currentScene->RequestScene(m_nextSceneId, m_fadeDuration))
             {
                 Fade::Get().FadeOut(m_fadeDuration);
                 m_transitionState = TransitionState::FadingOut;
@@ -70,6 +71,15 @@ namespace app
             {
                 CreateScene(m_nextSceneId);
                 m_nextSceneId = INVALID_SCENE_ID;
+
+                // シーンを生成できなかった場合(IDが登録されていない)は、暗転したまま止まらないように、シーン無しで明転する。
+                // NOTE: K2_DEBUGのビルドでは、CreateScene()のK2_ASSERTで止まる。
+                if (!m_currentScene)
+                {
+                    Fade::Get().FadeIn(m_fadeDuration);
+                    m_transitionState = TransitionState::FadingIn;
+                    break;
+                }
             }
             if (m_currentScene)
             {
@@ -153,4 +163,4 @@ namespace app
         m_currentScene = it->second();
         m_currentScene->Start();
     }
-}
+} // namespace app

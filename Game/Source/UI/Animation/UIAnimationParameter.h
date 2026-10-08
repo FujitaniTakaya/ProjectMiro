@@ -20,13 +20,13 @@
  *          NOTE: キーは、全てのjsonファイルで共通。同じキーが別のファイルにある場合は、後から読み込んだ方になる。
  */
 #pragma once
-#include "Source/Parameter/JsonView.h"
-#include "Source/Util/Curve.h"
-
 #include <cstdint>
 #include <string>
 #include <unordered_map>
 #include <vector>
+
+#include "Source/Parameter/JsonView.h"
+#include "Source/Util/Curve.h"
 
 
 namespace app
@@ -88,7 +88,7 @@ namespace app
         /**
          * @brief UIアニメーションの定義を管理するクラス
          * @details Load()でjsonを読み込むと、定義がキーで引けるようになる。複数のjsonを読み込める。シングルトン。
-         *          例: UIAnimationParameter::Get().Load("Assets/xxx/Animation.json");
+         *          例: UIAnimationParameter::Get().Load("Assets/parameter/ui/Animation.json");
          *              const UIAnimationDef* def = UIAnimationParameter::Get().Find(Hash32("fadeIn"));
          *          NOTE: Find()で取り出したポインタは、次にjsonが読み込まれる(デバッグビルドでは保存される)まで使える。持ち続けないこと。
          */

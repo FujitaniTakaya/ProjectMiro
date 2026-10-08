@@ -6,6 +6,8 @@
 
 #include "EffectManager.h"
 
+#include <iterator>
+
 
 namespace app
 {
@@ -110,9 +112,7 @@ namespace app
         emitter->SetScale(scale);
         emitter->Play();
 
-        EffectEntry entry;
-        entry.m_emitter = emitter;
-        m_effects.emplace(effectHandleCount, entry);
+        m_effects.emplace(effectHandleCount, EffectEntry(emitter));
         return effectHandleCount++;
     }
 

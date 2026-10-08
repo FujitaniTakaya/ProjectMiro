@@ -16,9 +16,6 @@
     <Filter Include="Source\Util">
       <UniqueIdentifier>{fb3d6a2e-5c1a-4e7b-9d84-2a6f0c13e7b5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Core">
-      <UniqueIdentifier>{7e88aa06-ab8b-47ee-9cf5-10f7b5d05324}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Parameter">
       <UniqueIdentifier>{8e6a3b1e-fa67-4258-abc8-bc76442299ab}</UniqueIdentifier>
     </Filter>
@@ -267,6 +264,9 @@
     </ClInclude>
     <ClInclude Include="Source\UI\Animation\UIAnimationParameter.h">
       <Filter>Source\UI\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Parameter\HotReloadHandle.h">
+      <Filter>Source\Parameter</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

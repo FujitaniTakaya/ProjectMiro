@@ -54,9 +54,9 @@ namespace app
 
         /**
          * @brief 移動入力を設定する
-         * @param worldMove ワールド空間の移動入力
          * @details y成分は0にし、長さが1を超える場合は1にそろえる。
-         *          長さはスティックの倒し具合(0.0f～1.0f)として扱われる。
+         *          長さはスティックの倒し具合(0.0f〜1.0f)として扱われる。
+         * @param worldMove ワールド空間の移動入力
          */
         void SetMove(const Vector3& worldMove)
         {
@@ -125,8 +125,8 @@ namespace app
 
         /**
          * @brief 前フレームの入力との差から、押した瞬間を計算する
-         * @param previous 前フレームの入力
          * @note ControllerSlot だけが呼ぶ
+         * @param previous 前フレームの入力
          */
         void UpdateTrigger(const CharacterInput& previous)
         {
@@ -157,4 +157,4 @@ namespace app
         /** 押した瞬間のボタン */
         uint32_t m_triggerMask;
     };
-}
+} // namespace app

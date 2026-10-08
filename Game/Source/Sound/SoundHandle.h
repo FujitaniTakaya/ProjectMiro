@@ -1,6 +1,6 @@
 ﻿/**
  * @file SoundHandle.h
- * @brief サウンド再生ハンドルの型定義（軽量ヘッダ）
+ * @brief サウンド再生ハンドルの型定義(軽量ヘッダ)
  */
 #pragma once
 #include <cstddef>
@@ -18,6 +18,8 @@ namespace app
 
     /**
      * @brief サウンドの種類
+     * @details 鳴らす音ごとの項目。SOUND_LISTに、このIDとサウンドファイルのパスを1行で登録する。
+     *          NOTE: 今あるBGM / SE / Voiceは、音を足すまでの仮の項目(グループ名ではない)。音を足したら置き換えること。
      */
     enum class EnSoundID : uint8_t
     {

@@ -17,10 +17,12 @@
  *          "rotation"は、Z軸回りの角度(度)。"color"は0〜255。UIGaugeは、"pivot": [x, y]も指定できる。
  */
 #pragma once
-#include "Menu.h"
-#include "Source/Parameter/HotReloadManager.h"
-
+#include <memory>
 #include <string>
+
+#include "Menu.h"
+#include "Source/Parameter/HotReloadHandle.h"
+#include "Source/Parameter/JsonView.h"
 
 
 namespace app

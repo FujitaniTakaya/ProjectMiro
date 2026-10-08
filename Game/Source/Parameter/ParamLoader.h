@@ -5,7 +5,8 @@
 #pragma once
 #include <cstdint>
 #include <string>
-#include "Source/Parameter/JsonView.h"
+
+#include "JsonView.h"
 
 
 namespace app
@@ -137,9 +138,9 @@ namespace app
          * @brief jsonからQuaternionを読み込む
          * @param json        読み込むjsonファイル
          * @param key         読み込むキー
-         * @param isDegree    trueなら [rotX, rotY, rotZ]（度数法）から変換、
+         * @param isDegree    trueなら [rotX, rotY, rotZ](度数法)から変換、
          *                    falseなら [x, y, z, w] をそのまま読む
-         * @param invalid     無効な値を返す場合の値（デフォルトはInvalidQuaternion）
+         * @param invalid     無効な値を返す場合の値(デフォルトはInvalidQuaternion)
          * @return 読み込んだQuaternion
          */
         static Quaternion ToRotation(

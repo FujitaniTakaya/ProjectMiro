@@ -5,7 +5,7 @@
  *          BGM / SE / Voice はMasterの子なので、音の最終的な音量は「Master x BGM(SE/Voice) x 個別の倍率」になる。
  *          音量の調整や音の再生・停止は、各グループに対して行う。
  *          例: SoundManager::Get().GetMaster().SetVolume(0.8f);
- *              SoundManager::Get().GetSE().Play(EnSoundID::Damage);
+ *              SoundManager::Get().GetSE().Play(音のID); (音のIDは、SoundHandle.hのEnSoundIDとSOUND_LISTに足す。)
  */
 #pragma once
 #include "BGMGroup.h"
@@ -104,6 +104,9 @@ namespace app
         /**
          * @brief インスタンスを生成する
          * @details g_soundEngineの生成後に呼ぶこと。
+         *          エンジンの資源(g_soundEngineが管理する音)を持つので、関数内staticにはせず、
+         *          ApplicationのコンストラクタとデストラクタでCreateInstance()/DestroyInstance()を呼ぶ。
+         *          (static変数の破棄はエンジンの終了後になってしまう。エンジンの資源を持たないものは、関数内staticのGet()にする。)
          */
         static void CreateInstance();
 

@@ -5,6 +5,11 @@
 #include "stdafx.h"
 
 #include "Layout.h"
+
+#include <cstdint>
+#include <utility>
+
+#include "Source/Parameter/HotReloadManager.h"
 #include "Source/Parameter/ParamLoader.h"
 #include "Source/Util/CRC32.h"
 

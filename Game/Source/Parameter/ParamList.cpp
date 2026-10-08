@@ -3,6 +3,7 @@
  * @brief 全パラメーターの登録一覧
  */
 #include "stdafx.h"
+
 #include "ParamList.h"
 
 #include "ParamHolder.h"
@@ -13,8 +14,8 @@ namespace app
 {
     void RegisterAllParams([[maybe_unused]] ParamHolder& holder)
     {
-        // 例: holder.Register<MiniMapParameter>(EnParamID::MiniMap, "Assets/parameter/UI/miniMap.json", &LoadMiniMap);
+        // 例: holder.Register<MiniMapParameter>(EnParamID::MiniMap, "Assets/parameter/ui/MiniMap.json", &LoadMiniMap);
         // 値をデバッグ画面(ParamDebugUI)で見たい場合は、4つ目の引数に表示関数を渡す。
-        //     holder.Register<MiniMapParameter>(EnParamID::MiniMap, "Assets/parameter/UI/miniMap.json", &LoadMiniMap, &DrawMiniMap);
+        //     holder.Register<MiniMapParameter>(EnParamID::MiniMap, "Assets/parameter/ui/MiniMap.json", &LoadMiniMap, &DrawMiniMap);
     }
-}
+} // namespace app
