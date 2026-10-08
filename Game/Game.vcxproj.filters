@@ -16,8 +16,17 @@
     <Filter Include="Source\Util">
       <UniqueIdentifier>{fb3d6a2e-5c1a-4e7b-9d84-2a6f0c13e7b5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Core">
+      <UniqueIdentifier>{7e88aa06-ab8b-47ee-9cf5-10f7b5d05324}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source\Parameter">
       <UniqueIdentifier>{8e6a3b1e-fa67-4258-abc8-bc76442299ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\MoveBehavior">
+      <UniqueIdentifier>{f7824a57-33ba-471a-9087-dbe5a6bb122a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Controller">
+      <UniqueIdentifier>{b9648993-d119-4996-930f-eb812f9bbc22}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -69,6 +78,18 @@
     </ClCompile>
     <ClCompile Include="Source\Parameter\ParamDebugUI.cpp">
       <Filter>Source\Parameter</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\MoveBehavior\StateMachineBase.cpp">
+      <Filter>Source\MoveBehavior</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Controller\AIController.cpp">
+      <Filter>Source\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Controller\PlayerController.cpp">
+      <Filter>Source\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\MoveBehavior\ControllerSlot.cpp">
+      <Filter>Source\MoveBehavior</Filter>
     </ClCompile>
     <ClCompile Include="Source\Util\RandomDevice.cpp">
       <Filter>Source\Util</Filter>
@@ -132,6 +153,30 @@
     </ClInclude>
     <ClInclude Include="Source\Parameter\ParamDebugUI.h">
       <Filter>Source\Parameter</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MoveBehavior\StateMachineBase.h">
+      <Filter>Source\MoveBehavior</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Controller\AIController.h">
+      <Filter>Source\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Controller\AIControllerConfig.h">
+      <Filter>Source\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Controller\PlayerController.h">
+      <Filter>Source\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MoveBehavior\CharacterInput.h">
+      <Filter>Source\MoveBehavior</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MoveBehavior\ControllerContext.h">
+      <Filter>Source\MoveBehavior</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MoveBehavior\ControllerSlot.h">
+      <Filter>Source\MoveBehavior</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MoveBehavior\IController.h">
+      <Filter>Source\MoveBehavior</Filter>
     </ClInclude>
     <ClInclude Include="Source\Util\RandomDevice.h">
       <Filter>Source\Util</Filter>
