@@ -962,6 +962,38 @@ namespace nsK2EngineLow {
 	/// <summary>
 	/// ベクトル同士の加算。
 	/// </summary>
+	static inline Vector2 operator+(const Vector2& v0, const Vector2& v1)
+	{
+		return Vector2(v0.x + v1.x, v0.y + v1.y);
+	}
+
+	/// <summary>
+	/// ベクトル同士の減算。
+	/// </summary>
+	static inline Vector2 operator-(const Vector2& v0, const Vector2& v1)
+	{
+		return Vector2(v0.x - v1.x, v0.y - v1.y);
+	}
+
+	/// <summary>
+	/// ベクトルとスカラーの乗算。
+	/// </summary>
+	static inline Vector2 operator*(const Vector2& v, float s)
+	{
+		return Vector2(v.x * s, v.y * s);
+	}
+
+	/// <summary>
+	/// ベクトルとスカラーの除算。
+	/// </summary>
+	static inline Vector2 operator/(const Vector2& v, float s)
+	{
+		return Vector2(v.x / s, v.y / s);
+	}
+
+	/// <summary>
+	/// ベクトル同士の加算。
+	/// </summary>
 	static inline Vector3 operator+(const Vector3& v0, const Vector3& v1)
 	{
 		Vector3 result;
