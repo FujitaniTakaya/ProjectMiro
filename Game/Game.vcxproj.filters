@@ -28,6 +28,9 @@
     <Filter Include="Source\Controller">
       <UniqueIdentifier>{b9648993-d119-4996-930f-eb812f9bbc22}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Scene">
+      <UniqueIdentifier>{057297d9-885f-4873-9323-d48e480bb930}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -96,6 +99,12 @@
     </ClCompile>
     <ClCompile Include="Source\Util\Curve.cpp">
       <Filter>Source\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\Fade.cpp">
+      <Filter>Source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\SceneManager.cpp">
+      <Filter>Source\Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -186,6 +195,15 @@
     </ClInclude>
     <ClInclude Include="Source\Util\Curve.h">
       <Filter>Source\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene\Fade.h">
+      <Filter>Source\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene\IScene.h">
+      <Filter>Source\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene\SceneManager.h">
+      <Filter>Source\Scene</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

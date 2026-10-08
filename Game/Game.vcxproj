@@ -253,6 +253,8 @@
     <ClCompile Include="Source\MoveBehavior\ControllerSlot.cpp" />
     <ClCompile Include="Source\Util\RandomDevice.cpp" />
     <ClCompile Include="Source\Util\Curve.cpp" />
+    <ClCompile Include="Source\Scene\Fade.cpp" />
+    <ClCompile Include="Source\Scene\SceneManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -287,6 +289,9 @@
     <ClInclude Include="Source\MoveBehavior\IController.h" />
     <ClInclude Include="Source\Util\RandomDevice.h" />
     <ClInclude Include="Source\Util\Curve.h" />
+    <ClInclude Include="Source\Scene\Fade.h" />
+    <ClInclude Include="Source\Scene\IScene.h" />
+    <ClInclude Include="Source\Scene\SceneManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BalloonEngine\BalloonEngine.vcxproj">

@@ -49,6 +49,17 @@ namespace app
 		void Render(RenderContext& rc);
 
 
+		/**
+		 * @brief アプリ側のUIの描画
+		 * @details RenderingEngine::Execute()の後に呼ばれる。
+		 *          Execute()の中のポストプロセスがフレームバッファーを全面コピーで上書きするので、
+		 *          Renderで描いたスプライトは見えなくなる。ポストプロセスの後に即時描画したいもの(UI・フェードなど)はここで描く。
+		 *          後から描いたものが手前に出るので、最前面にしたいものほど後に描くこと。
+		 * @param rc レンダーコンテキスト
+		 */
+		void RenderUI(RenderContext& rc);
+
+
 	private:
 		/** ゲーム */
 		std::unique_ptr<Game> m_game;

@@ -56,6 +56,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		g_engine->ExecuteRender();	// NewGOしたオブジェクト(サウンド・エフェクト)の描画。
 		application->Render(g_graphicsEngine->GetRenderContext());	// アプリ側の描画。
 		RenderingEngine::Get().Execute();	// BalloonEngineの描画。
+		application->RenderUI(g_graphicsEngine->GetRenderContext());	// アプリ側のUIの描画。(ポストプロセスの後に描くので、画面を上書きされない。)
 		g_engine->EndFrame();		// フレームの終了。
 	}
 

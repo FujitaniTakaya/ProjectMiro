@@ -10,6 +10,8 @@
 #include "Source/Parameter/HotReloadManager.h"
 #include "Source/Parameter/ParamDebugUI.h"
 #include "Source/Parameter/ParamHolder.h"
+#include "Source/Scene/Fade.h"
+#include "Source/Scene/SceneManager.h"
 #include "Source/Sound/SoundDebugUI.h"
 #include "Source/Sound/SoundManager.h"
 
@@ -21,6 +23,8 @@ namespace app
 		SoundManager::CreateInstance();
 		EffectManager::CreateInstance();
 		ParamHolder::CreateInstance();
+		Fade::CreateInstance();
+		SceneManager::CreateInstance();
 
 		m_game = std::make_unique<Game>();
 		m_game->StartWrapper();
@@ -36,6 +40,8 @@ namespace app
 		m_soundDebugUI.reset();
 		m_game.reset();
 
+		SceneManager::DestroyInstance();
+		Fade::DestroyInstance();
 		ParamHolder::DestroyInstance();
 		EffectManager::DestroyInstance();
 		SoundManager::DestroyInstance();
@@ -54,6 +60,10 @@ namespace app
 	{
 		m_game->UpdateWrapper();
 
+		// シーンの遷移の進行を見て、フェードを始めたり終わらせたりするので、Fadeの更新より前に呼ぶ。
+		SceneManager::Get().Update();
+		Fade::Get().Update();
+
 		m_soundDebugUI->Draw();
 		m_paramDebugUI->Draw();
 	}
@@ -62,5 +72,13 @@ namespace app
 	void Application::Render(RenderContext& rc)
 	{
 		m_game->RenderWrapper(rc);
+		SceneManager::Get().Render(rc);
+	}
+
+
+	void Application::RenderUI(RenderContext& rc)
+	{
+		// フェードは最前面に出したいので、一番最後に描く。
+		Fade::Get().Render(rc);
 	}
 }
