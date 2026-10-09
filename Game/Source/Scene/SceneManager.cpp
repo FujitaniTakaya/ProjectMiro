@@ -6,6 +6,7 @@
 
 #include "SceneManager.h"
 
+#include "DebugScene.h"
 #include "Fade.h"
 
 
@@ -22,10 +23,10 @@ namespace app
         , m_fadeDuration(0.0f)
     {
         // ここでシーンを追加する。
-        // 例: AddSceneMap<TitleScene>();
+        AddSceneMap<DebugScene>();
 
         // 最初のシーンもここで生成する。
-        // 例: CreateScene(TitleScene::ID());
+        CreateScene(DebugScene::ID());
     }
 
 

@@ -267,6 +267,7 @@
     <ClCompile Include="Source\Actor\ActorStateMachine.cpp" />
     <ClCompile Include="Source\Actor\Character\CharacterStateMachine.cpp" />
     <ClCompile Include="Source\Actor\Character\CharacterIState.cpp" />
+    <ClCompile Include="Source\Scene\DebugScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -322,6 +323,7 @@
     <ClInclude Include="Source\Actor\Character\CharacterStateMachine.h" />
     <ClInclude Include="Source\Actor\Character\CharacterAnimationClipID.h" />
     <ClInclude Include="Source\Actor\Character\CharacterIState.h" />
+    <ClInclude Include="Source\Scene\DebugScene.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BalloonEngine\BalloonEngine.vcxproj">

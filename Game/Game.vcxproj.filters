@@ -163,6 +163,9 @@
     <ClCompile Include="Source\Actor\Character\CharacterIState.cpp">
       <Filter>Source\Actor\Character</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Scene\DebugScene.cpp">
+      <Filter>Source\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -315,6 +318,9 @@
     </ClInclude>
     <ClInclude Include="Source\Actor\Character\CharacterIState.h">
       <Filter>Source\Actor\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene\DebugScene.h">
+      <Filter>Source\Scene</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
