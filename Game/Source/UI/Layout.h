@@ -21,8 +21,8 @@
 #include <string>
 
 #include "Menu.h"
-#include "Source/Parameter/HotReloadHandle.h"
-#include "Source/Parameter/JsonView.h"
+#include "Source/Core/HotReload/HotReloadHandle.h"
+#include "Source/Core/Json/JsonView.h"
 
 
 namespace app

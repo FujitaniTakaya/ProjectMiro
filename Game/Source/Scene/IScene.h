@@ -7,7 +7,7 @@
 #pragma once
 #include <cstdint>
 
-#include "Source/Util/CRC32.h"
+#include "Source/Core/Util/CRC32.h"
 
 
 /**

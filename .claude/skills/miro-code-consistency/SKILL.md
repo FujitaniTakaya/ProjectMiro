@@ -32,8 +32,9 @@ user-invocable: true
 - **ハンドル(C4, C5)**: `XHandle.h`(軽量ヘッダー)に`using XHandle = uint32_t`と`INVALID_X_HANDLE = 0xffffffff`。新規は index(下位16bit)+generation(上位16bit)で、枯渇は`K2_ASSERT`。項目ごとのenumは作らない。
 - **メンバー初期化(C2)**: コンストラクタの初期化リスト(宣言順)。`int m_x = 0;`のようなデフォルト初期化子は使わない。ネストしたstructも、初期値が要るならコンストラクタを持たせる。
 - **画像1枚の描画(C3)**: `ui::UISprite`を使う。`SpriteRender`はアルファブレンドできない。
-- **include(F5, F6)**: `stdafx.h`→空行→自ヘッダー→std`<...>`→プロジェクト`"..."`(clang-formatが整える)。同じディレクトリは`"X.h"`、他モジュールは`"Source/<Module>/X.h"`。ヘッダーは使うstdヘッダーを自分でincludeする(PCH頼みにしない)。
+- **include(F5, F6)**: `stdafx.h`→空行→自ヘッダー→std`<...>`→プロジェクト`"..."`(clang-formatが整える)。同じディレクトリは`"X.h"`、他モジュールは`"Source/<Module>/X.h"`(Coreの中は`"Source/Core/<Dir>/X.h"`)。ヘッダーは使うstdヘッダーを自分でincludeする(PCH頼みにしない)。
 - **Doxygen(D3)**: 日本語。`@brief`→`@details`→`@note`→`@tparam`→`@param`→`@return`の順。`/**`で始める。`@param[out] name`。半角の括弧、範囲は`〜`。
+- **Core(H1)**: `Game/Source/Core/`は他に依存しない基盤(`Util`・`Timer`・`Json`・`HotReload`・`Param`)。Coreの外(UI/Scene/Sound/Actorなど)をincludeしない。Core内も下の層だけ(`Json`←`HotReload`←`Param`。`Util`/`Timer`は単独)。新しい基盤を足すときは`check.py`の`CORE_ALLOWED`に依存先を書く。
 - **ファイル(F1〜F4, F7)**: UTF-8(BOM付き)、CRLF、末尾改行あり、4スペース。`Game/.clang-format`で差分0。閉じは`} // namespace app`。セミコロン無しのマクロ(`appState`など)を新設したら`.clang-format`の`StatementMacros`に足す。
 - **jsonのパス(D5)**: `Assets/parameter/<小文字のモジュール>/<Pascal>.json`。同じファイルかどうかは`HotReloadManager::NormalizePath`で比べる。
 - **命名**: メンバーは`m_`+camelCase、メソッドはPascalCase、定数はUPPER_SNAKE、enumは`enum class`、モジュール単位は`En`+`: uint8_t`+`Max`(`None = Max`)。

@@ -224,12 +224,45 @@ def check_files(root, files, rep, texts):
 
 def check_misc(root, rep):
     # B2: ParamLoaderの型不一致をassertで止めない
-    p = os.path.join(root, "Game", "Source", "Parameter", "ParamLoader.cpp")
+    p = os.path.join(root, "Game", "Source", "Core", "Json", "ParamLoader.cpp")
     if os.path.exists(p):
         text = open(p, "rb").read().decode("utf-8-sig")
         for i, line in enumerate(text.split("\n"), 1):
             if "K2_ASSERT(false" in line and "VALUE_DIFFER" in line:
-                rep.add("B2", "Game/Source/Parameter/ParamLoader.cpp", i, "型不一致をassert(abort)にしない。K2_LOGで知らせて無効値を返す")
+                rep.add("B2", "Game/Source/Core/Json/ParamLoader.cpp", i, "型不一致をassert(abort)にしない。K2_LOGで知らせて無効値を返す")
+
+
+# H1: Core の中の各モジュールが include してよい Core のモジュール(下の層だけ)
+CORE_ALLOWED = {
+    "Util": set(),
+    "Timer": set(),
+    "Json": set(),
+    "HotReload": {"Json"},
+    "Param": {"Json", "HotReload"},
+}
+
+
+def check_core_layers(root, rep):
+    core = os.path.join(root, "Game", "Source", "Core")
+    for module in sorted(os.listdir(core)) if os.path.isdir(core) else []:
+        d = os.path.join(core, module)
+        if not os.path.isdir(d):
+            continue
+        if module not in CORE_ALLOWED:
+            rep.add("H1", "Game/Source/Core/" + module, 1, "CORE_ALLOWED に無いモジュール。依存してよい層を check.py に足す")
+            continue
+        for name in sorted(os.listdir(d)):
+            if not name.endswith((".h", ".cpp")):
+                continue
+            rel = f"Game/Source/Core/{module}/{name}"
+            text = open(os.path.join(d, name), "rb").read().decode("utf-8-sig")
+            for i, line in enumerate(text.split("\n"), 1):
+                m = re.match(r'\s*#include "Source/([^"]+)"', line)
+                if not m:
+                    continue
+                parts = m.group(1).split("/")
+                if parts[0] != "Core" or (parts[1] != module and parts[1] not in CORE_ALLOWED[module]):
+                    rep.add("H1", rel, i, f"Core/{module} が {m.group(1)} を include している。Core は Core の下の層だけを include する")
 
 
 def check_clang_format(root, files, rep):
@@ -297,13 +330,14 @@ def main():
     texts = {}
     check_files(root, files, rep, texts)
     check_misc(root, rep)
+    check_core_layers(root, rep)
     if not args.no_clang_format and rep.wants("F1"):
         check_clang_format(root, files, rep)
     if not args.no_sync and rep.wants("G1") and not args.root:
         check_sync(root, rep)
 
     items = [it for it in rep.items if rep.wants(it[0])]
-    order = {"B": 0, "C": 1, "F": 2, "D": 3, "G": 4}
+    order = {"B": 0, "C": 1, "F": 2, "D": 3, "G": 4, "H": 5}
     items.sort(key=lambda it: (order.get(it[0][0], 9), it[0], it[1], it[2]))
     for check_id, path, line, msg in items:
         print(f"{check_id:<4} {path}:{line}  {msg}")

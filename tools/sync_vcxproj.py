@@ -42,6 +42,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 MANIFEST_DIR = Path(__file__).resolve().parent
 
 # プロジェクト名 -> 追加で除外するフォルダ名(独自のビルドシステムを持つ外部ライブラリなど)。
+# プロジェクト直下のフォルダだけが対象(深い階層の同名フォルダは除外しない)。
 # プロジェクトのフォルダ・vcxproj のファイル名は "<name>/<name>.vcxproj" を前提とする
 # (例: Game -> Game/Game.vcxproj, k2EngineLow -> k2EngineLow/k2EngineLow.vcxproj)。
 PROJECTS = {
@@ -68,8 +69,13 @@ def hash_file(path: Path) -> str:
     return hashlib.sha1(path.read_bytes()).hexdigest()
 
 
-def scan_disk(project_dir: Path, exclude_dir_names: set) -> dict:
-    """相対パス(文字列) -> {"kind": ..., "hash": ...} を返す。"""
+def scan_disk(project_dir: Path, exclude_dir_names: set, top_level_exclude_dir_names: set = frozenset()) -> dict:
+    """相対パス(文字列) -> {"kind": ..., "hash": ...} を返す。
+
+    exclude_dir_names は階層を問わず除外する(ビルド出力など)。
+    top_level_exclude_dir_names はプロジェクト直下のフォルダだけを除外する
+    (外部ライブラリ用。Source/Core/Json のような同名の自前フォルダを巻き込まないため)。
+    """
     result = {}
     for path in project_dir.rglob("*"):
         if path.is_dir():
@@ -79,6 +85,8 @@ def scan_disk(project_dir: Path, exclude_dir_names: set) -> dict:
             continue
         rel = path.relative_to(project_dir)
         if any(part in exclude_dir_names for part in rel.parts[:-1]):
+            continue
+        if rel.parts[:-1] and rel.parts[0] in top_level_exclude_dir_names:
             continue
         result[str(rel)] = {"kind": kind, "hash": hash_file(path)}
     return result
@@ -257,9 +265,7 @@ def sync_project(name: str, dry_run: bool) -> None:
         print(f"[{name}] {vcxproj} または {filters} が見つかりません。")
         sys.exit(1)
 
-    exclude_dir_names = BASE_EXCLUDE_DIR_NAMES | PROJECTS[name]
-
-    disk = scan_disk(project_dir, exclude_dir_names)
+    disk = scan_disk(project_dir, BASE_EXCLUDE_DIR_NAMES, PROJECTS[name])
     previous = load_manifest(manifest_path)
 
     proj = ProjectDoc(vcxproj, has_filters=False)

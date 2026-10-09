@@ -19,9 +19,9 @@
 #include <typeinfo>
 #include <utility>
 
-#include "HotReloadManager.h"
-#include "JsonView.h"
 #include "ParamList.h"
+#include "Source/Core/HotReload/HotReloadManager.h"
+#include "Source/Core/Json/JsonView.h"
 
 
 namespace app

@@ -8,7 +8,7 @@
 #include <utility>
 #include <vector>
 
-#include "Source/Util/CRC32.h"
+#include "Source/Core/Util/CRC32.h"
 /**
  * @brief 数値に変換するマクロ
  * @note constexpr変数に受けることで、ハッシュ値を必ずコンパイル時に計算する

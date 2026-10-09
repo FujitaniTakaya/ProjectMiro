@@ -11,7 +11,7 @@
 #include <functional>
 #include <vector>
 
-#include "Source/Util/Curve.h"
+#include "Source/Core/Util/Curve.h"
 
 
 namespace app

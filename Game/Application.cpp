@@ -7,15 +7,15 @@
 #include "Application.h"
 
 #include "Game.h"
+#include "Source/Core/HotReload/HotReloadManager.h"
+#include "Source/Core/Param/ParamDebugUI.h"
+#include "Source/Core/Param/ParamHolder.h"
+#include "Source/Core/Timer/TimerManager.h"
 #include "Source/Effect/EffectManager.h"
-#include "Source/Parameter/HotReloadManager.h"
-#include "Source/Parameter/ParamDebugUI.h"
-#include "Source/Parameter/ParamHolder.h"
 #include "Source/Scene/Fade.h"
 #include "Source/Scene/SceneManager.h"
 #include "Source/Sound/SoundDebugUI.h"
 #include "Source/Sound/SoundManager.h"
-#include "Source/Timer/TimerManager.h"
 
 
 namespace app

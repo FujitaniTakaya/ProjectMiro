@@ -12,7 +12,7 @@
 #include <vector>
 
 #include "HotReloadHandle.h"
-#include "JsonView.h"
+#include "Source/Core/Json/JsonView.h"
 
 
 namespace app
