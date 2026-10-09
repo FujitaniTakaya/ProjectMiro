@@ -154,6 +154,15 @@
     <ClCompile Include="Source\Actor\Character\CharacterBase.cpp">
       <Filter>Source\Actor\Character</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Actor\ActorStateMachine.cpp">
+      <Filter>Source\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Actor\Character\CharacterStateMachine.cpp">
+      <Filter>Source\Actor\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Actor\Character\CharacterIState.cpp">
+      <Filter>Source\Actor\Character</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -293,6 +302,18 @@
       <Filter>Source\Actor</Filter>
     </ClInclude>
     <ClInclude Include="Source\Actor\Character\CharacterBase.h">
+      <Filter>Source\Actor\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\ActorStateMachine.h">
+      <Filter>Source\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Character\CharacterStateMachine.h">
+      <Filter>Source\Actor\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Character\CharacterAnimationClipID.h">
+      <Filter>Source\Actor\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Character\CharacterIState.h">
       <Filter>Source\Actor\Character</Filter>
     </ClInclude>
   </ItemGroup>

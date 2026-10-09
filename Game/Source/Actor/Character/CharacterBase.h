@@ -3,6 +3,9 @@
  * @brief キャラクターの基底クラス
  */
 #pragma once
+#include <cstdint>
+#include <memory>
+
 #include "Source/Actor/Actor.h"
 
 
@@ -58,7 +61,45 @@ namespace app
              *       Execute()に渡す移動速度のyに、呼び出し側で重力を加えること。
              * @return キャラクターコントローラーのポインタ
              */
-            inline CharacterController* GetCharacterController() { return &m_characterController; }
+            inline CharacterController* GetCharacterController()
+            {
+                return &m_characterController;
+            }
+            /**
+             * @brief 水平方向(XZ)の現在の移動速度を取得
+             * @note 加速・減速(慣性)の途中の値。垂直方向はGetVerticalVelocity()で取る。
+             *       ステートマシンではなくキャラクターが持つので、ステートマシンを付け替えても引き継がれる。
+             * @return 現在の移動速度
+             */
+            inline const Vector3& GetCurrentVelocity() const
+            {
+                return m_currentVelocity;
+            }
+            /**
+             * @brief 水平方向(XZ)の現在の移動速度を設定
+             * @param velocity 現在の移動速度
+             */
+            inline void SetCurrentVelocity(const Vector3& velocity)
+            {
+                m_currentVelocity = velocity;
+            }
+            /**
+             * @brief 垂直方向(Y)の現在の速度を取得
+             * @return 垂直方向の速度。上向きが正
+             */
+            inline float GetVerticalVelocity() const
+            {
+                return m_verticalVelocity;
+            }
+            /**
+             * @brief 垂直方向(Y)の現在の速度を設定
+             * @note ジャンプは、上向きの速度を設定して行う。
+             * @param verticalVelocity 垂直方向の速度。上向きが正
+             */
+            inline void SetVerticalVelocity(const float verticalVelocity)
+            {
+                m_verticalVelocity = verticalVelocity;
+            }
 
 
         public:
@@ -91,6 +132,10 @@ namespace app
             std::unique_ptr<AnimationClip[]> m_animationClips;
             /** キャラクターコントローラー */
             CharacterController m_characterController;
+            /** 水平方向(XZ)の現在の移動速度 */
+            Vector3 m_currentVelocity;
+            /** 垂直方向(Y)の現在の速度 */
+            float m_verticalVelocity;
         };
-    }
-}
+    } // namespace actor
+} // namespace app

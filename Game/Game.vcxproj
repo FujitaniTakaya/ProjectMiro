@@ -264,6 +264,9 @@
     <ClCompile Include="Source\UI\Animation\UIAnimationParameter.cpp" />
     <ClCompile Include="Source\Actor\Actor.cpp" />
     <ClCompile Include="Source\Actor\Character\CharacterBase.cpp" />
+    <ClCompile Include="Source\Actor\ActorStateMachine.cpp" />
+    <ClCompile Include="Source\Actor\Character\CharacterStateMachine.cpp" />
+    <ClCompile Include="Source\Actor\Character\CharacterIState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -315,6 +318,10 @@
     <ClInclude Include="Source\Core\HotReload\HotReloadHandle.h" />
     <ClInclude Include="Source\Actor\Actor.h" />
     <ClInclude Include="Source\Actor\Character\CharacterBase.h" />
+    <ClInclude Include="Source\Actor\ActorStateMachine.h" />
+    <ClInclude Include="Source\Actor\Character\CharacterStateMachine.h" />
+    <ClInclude Include="Source\Actor\Character\CharacterAnimationClipID.h" />
+    <ClInclude Include="Source\Actor\Character\CharacterIState.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BalloonEngine\BalloonEngine.vcxproj">

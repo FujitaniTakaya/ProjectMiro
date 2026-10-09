@@ -6,6 +6,9 @@
 
 #include "CharacterBase.h"
 
+#include <cstdint>
+#include <memory>
+
 
 namespace app
 {
@@ -22,6 +25,8 @@ namespace app
 
         CharacterBase::CharacterBase()
             : m_animationClips(nullptr)
+            , m_currentVelocity(Vector3::Zero)
+            , m_verticalVelocity(0.0f)
         {}
 
 
@@ -75,5 +80,5 @@ namespace app
             // キャラクターコントローラーを初期化
             m_characterController.Init(radius, height, m_transform.m_position);
         }
-    }
-}
+    } // namespace actor
+} // namespace app

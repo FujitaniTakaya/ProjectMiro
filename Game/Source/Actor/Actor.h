@@ -21,32 +21,50 @@ namespace app
              * @brief トランスフォームを取得
              * @return トランスフォームの参照
              */
-            inline const Transform& GetTransform() const { return m_transform; }
+            inline const Transform& GetTransform() const
+            {
+                return m_transform;
+            }
             /**
              * @brief モデルレンダーを取得
              * @return モデルレンダーの参照
              */
-            inline ModelRender& GetModelRender() { return m_modelRender; }
+            inline ModelRender& GetModelRender()
+            {
+                return m_modelRender;
+            }
             /**
              * @brief 座標を設定
              * @param position 座標
              */
-            void SetPosition(const Vector3& position) { m_transform.m_position = position; }
+            void SetPosition(const Vector3& position)
+            {
+                m_transform.m_position = position;
+            }
             /**
              * @brief 回転を設定
              * @param rotation 回転
              */
-            void SetRotation(const Quaternion& rotation) { m_transform.m_rotation = rotation; }
+            void SetRotation(const Quaternion& rotation)
+            {
+                m_transform.m_rotation = rotation;
+            }
             /**
              * @brief 拡大率を設定
              * @param scale 拡大率
              */
-            void SetScale(const Vector3& scale) { m_transform.m_scale = scale; }
+            void SetScale(const Vector3& scale)
+            {
+                m_transform.m_scale = scale;
+            }
             /**
              * @brief アニメーション再生速度の設定
-             * @param speed 再生速度（1.0f=通常速度）
+             * @param speed 再生速度(1.0f=通常速度)
              */
-            void SetAnimationSpeed(const float speed) { m_modelRender.SetAnimationSpeed(speed); }
+            void SetAnimationSpeed(const float speed)
+            {
+                m_modelRender.SetAnimationSpeed(speed);
+            }
 
 
         public:
@@ -69,5 +87,5 @@ namespace app
             /** モデルレンダー */
             ModelRender m_modelRender;
         };
-    }
-}
+    } // namespace actor
+} // namespace app
