@@ -37,6 +37,12 @@
     <Filter Include="Source\UI\Animation">
       <UniqueIdentifier>{6f764930-7919-4301-a109-012775e70728}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Actor">
+      <UniqueIdentifier>{3ac76a5e-3c28-4869-843e-42250c509596}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Actor\Character">
+      <UniqueIdentifier>{b63a7e5b-1b8f-49d7-a456-ffdd79003939}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -132,6 +138,12 @@
     </ClCompile>
     <ClCompile Include="Source\UI\Animation\UIAnimationParameter.cpp">
       <Filter>Source\UI\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Actor\Actor.cpp">
+      <Filter>Source\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Actor\Character\CharacterBase.cpp">
+      <Filter>Source\Actor\Character</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -267,6 +279,12 @@
     </ClInclude>
     <ClInclude Include="Source\Parameter\HotReloadHandle.h">
       <Filter>Source\Parameter</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Actor.h">
+      <Filter>Source\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Character\CharacterBase.h">
+      <Filter>Source\Actor\Character</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

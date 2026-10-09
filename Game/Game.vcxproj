@@ -262,6 +262,8 @@
     <ClCompile Include="Source\Timer\TimerManager.cpp" />
     <ClCompile Include="Source\UI\Animation\UIAnimation.cpp" />
     <ClCompile Include="Source\UI\Animation\UIAnimationParameter.cpp" />
+    <ClCompile Include="Source\Actor\Actor.cpp" />
+    <ClCompile Include="Source\Actor\Character\CharacterBase.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -311,6 +313,8 @@
     <ClInclude Include="Source\UI\Animation\UIAnimationFactory.h" />
     <ClInclude Include="Source\UI\Animation\UIAnimationParameter.h" />
     <ClInclude Include="Source\Parameter\HotReloadHandle.h" />
+    <ClInclude Include="Source\Actor\Actor.h" />
+    <ClInclude Include="Source\Actor\Character\CharacterBase.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BalloonEngine\BalloonEngine.vcxproj">
