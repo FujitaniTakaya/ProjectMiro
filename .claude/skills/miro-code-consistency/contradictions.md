@@ -72,6 +72,7 @@
 | G3 | 古い6コミットに`Co-Authored-By`が無い/件名の形式が違う | 履歴は書き換えない。新しいコミットは「〜を追加し、〜できるようにする」形式 | 現状維持 | — |
 | G4 | 一部の中間コミット(9023c93、f585ec5、21e31f1)で、ファイルがvcxprojに未登録(`fa40e96`で解消) | 以後は各コミットでvcxprojを同期する | 現状維持 | — |
 | G5 | `tools/sync_vcxproj.py`の除外フォルダ(`Game`は`Json`)が階層を問わず効き、`Source/Core/Json`の6ファイルを「ディスクに無い」と見て登録削除しようとした | プロジェクト固有の除外は、プロジェクト直下のフォルダだけに効くようにした(`ExEngine`/`DirectXTK`/`Json`はどれも直下)。ビルド出力などの共通の除外は階層を問わない | 修正済み | G1 |
+| G6 | パラメーターの値が、json・`DEFAULT_xxx`定数・ヘッダーのメンバー・ctor・Load・Draw の5〜6か所に重複していた。キーを足す・値を変えるたびに手で揃える必要があった | 値は json が正。型・説明・パスを書く`Assets/parameter/**/*.schema.json`(jsonの隣)から、`tools/param_gen.py`が`// [PARAM_GEN begin/end members\|ctor\|load\|draw]`の間を生成する(無いファイルは雛形から作る)。`DEFAULT_xxx`定数は廃止し、ctorにjsonの値を入れる。検証つきのキーは`"load": "custom"`で手書きを残す。`--check`が差分0であること | 修正済み(MiroParameter・PlayerCameraParameterを移行) | G6 |
 
 ## H. モジュール構成
 

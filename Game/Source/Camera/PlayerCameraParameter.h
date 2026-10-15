@@ -24,13 +24,14 @@ namespace app
             PlayerCameraParameter();
 
 
+            // [PARAM_GEN begin members] 自動生成(tools/param_gen.py)。手で編集しない
             /** 注視点を、ターゲットの座標から上にずらす量 */
             float targetOffsetUp;
-            /** 注視点を、ターゲットの座標からカメラの右方向にずらす量(水平方向。左右に回すと一緒に回る) */
+            /** 注視点を、ターゲットの座標からカメラの右方向にずらす量(水平方向。左右に回すと一緒に回る。初期値は仮の値で、実機を見て調整する) */
             float targetOffsetRight;
             /** 注視点から視点までのベクトルの初期値 */
             Vector3 toCameraPos;
-            /** 右スティックを倒したときの回転速度(度/秒) */
+            /** 右スティックを倒したときの回転速度(度/秒。初期値は、1フレームあたり1.3度を60fpsで回す速さ) */
             float rotateSpeed;
             /** 注視点から視点までのベクトルを正規化したときの、y成分の下限(これより下に回さない。上向きすぎの制限) */
             float minToCameraDirY;
@@ -40,6 +41,7 @@ namespace app
             float nearClip;
             /** ファークリップ */
             float farClip;
+            // [PARAM_GEN end members]
         };
 
 

@@ -18,25 +18,6 @@ namespace app
     {
         namespace
         {
-            /** 注視点を上にずらす量の初期値 */
-            constexpr float DEFAULT_TARGET_OFFSET_UP = 80.0f;
-            /** 注視点を右にずらす量の初期値(仮の値。実機を見て調整する) */
-            constexpr float DEFAULT_TARGET_OFFSET_RIGHT = 60.0f;
-            /** 注視点から視点までのベクトルの初期値 */
-            constexpr float DEFAULT_TO_CAMERA_POS_X = 0.0f;
-            constexpr float DEFAULT_TO_CAMERA_POS_Y = 125.0f;
-            constexpr float DEFAULT_TO_CAMERA_POS_Z = -250.0f;
-            /** 回転速度の初期値(度/秒。1フレームあたり1.3度を60fpsで回す速さ) */
-            constexpr float DEFAULT_ROTATE_SPEED = 78.0f;
-            /** y成分の下限の初期値 */
-            constexpr float DEFAULT_MIN_TO_CAMERA_DIR_Y = -0.2f;
-            /** y成分の上限の初期値 */
-            constexpr float DEFAULT_MAX_TO_CAMERA_DIR_Y = 0.9f;
-            /** ニアクリップの初期値 */
-            constexpr float DEFAULT_NEAR_CLIP = 1.0f;
-            /** ファークリップの初期値 */
-            constexpr float DEFAULT_FAR_CLIP = 10000.0f;
-
             /**
              * y成分の制限に使える絶対値の上限
              * 真上・真下(1.0)だと、X軸回りの回転軸 Cross(AxisY, v) が0になってしまうため、手前で止める。
@@ -45,17 +26,19 @@ namespace app
         } // namespace
 
 
+        // [PARAM_GEN begin ctor] 自動生成(tools/param_gen.py)。手で編集しない
         PlayerCameraParameter::PlayerCameraParameter()
-            : targetOffsetUp(DEFAULT_TARGET_OFFSET_UP)
-            , targetOffsetRight(DEFAULT_TARGET_OFFSET_RIGHT)
-            , toCameraPos(DEFAULT_TO_CAMERA_POS_X, DEFAULT_TO_CAMERA_POS_Y, DEFAULT_TO_CAMERA_POS_Z)
-            , rotateSpeed(DEFAULT_ROTATE_SPEED)
-            , minToCameraDirY(DEFAULT_MIN_TO_CAMERA_DIR_Y)
-            , maxToCameraDirY(DEFAULT_MAX_TO_CAMERA_DIR_Y)
-            , nearClip(DEFAULT_NEAR_CLIP)
-            , farClip(DEFAULT_FAR_CLIP)
+            : targetOffsetUp(80.0f)
+            , targetOffsetRight(60.0f)
+            , toCameraPos(0.0f, 125.0f, -250.0f)
+            , rotateSpeed(78.0f)
+            , minToCameraDirY(-0.2f)
+            , maxToCameraDirY(0.9f)
+            , nearClip(1.0f)
+            , farClip(10000.0f)
         {
         }
+        // [PARAM_GEN end ctor]
 
 
 
@@ -65,9 +48,11 @@ namespace app
 
         void LoadPlayerCameraParameter(const JsonView& root, PlayerCameraParameter& param)
         {
+            // [PARAM_GEN begin load] 自動生成(tools/param_gen.py)。手で編集しない
             param.targetOffsetUp = ParamLoader::ToFloat(root, "targetOffsetUp", param.targetOffsetUp);
             param.targetOffsetRight = ParamLoader::ToFloat(root, "targetOffsetRight", param.targetOffsetRight);
             param.rotateSpeed = ParamLoader::ToFloat(root, "rotateSpeed", param.rotateSpeed);
+            // [PARAM_GEN end load]
 
             // 注視点から視点までのベクトル。水平成分が0だと、カメラの右方向が決まらない。
             const Vector3 toCameraPos = ParamLoader::ToVector3(root, "toCameraPos", param.toCameraPos);
@@ -111,6 +96,7 @@ namespace app
         void DrawPlayerCameraParameter([[maybe_unused]] const PlayerCameraParameter& param)
         {
 #ifdef BALLOON_IMGUI_ENABLED
+            // [PARAM_GEN begin draw] 自動生成(tools/param_gen.py)。手で編集しない
             ImGui::Text("targetOffsetUp: %.1f", param.targetOffsetUp);
             ImGui::Text("targetOffsetRight: %.1f", param.targetOffsetRight);
             ImGui::Text("toCameraPos: (%.1f, %.1f, %.1f)", param.toCameraPos.x, param.toCameraPos.y, param.toCameraPos.z);
@@ -119,6 +105,7 @@ namespace app
             ImGui::Text("maxToCameraDirY: %.2f", param.maxToCameraDirY);
             ImGui::Text("nearClip: %.1f", param.nearClip);
             ImGui::Text("farClip: %.1f", param.farClip);
+            // [PARAM_GEN end draw]
 #endif // BALLOON_IMGUI_ENABLED
         }
     } // namespace camera
