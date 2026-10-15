@@ -55,6 +55,14 @@ namespace app
          * @param rc レンダーコンテキスト
          */
         virtual void Render(RenderContext& rc) = 0;
+        /**
+         * @brief UIの描画
+         * @details ポストプロセスの後に呼ばれる。UIは、Render()ではなくここで描くこと。(Render()の中だと、ポストプロセスに上書きされて見えなくなる)
+         *          フェードより前に描かれるので、UIはフェードに隠れる。UIが無いシーンは、実装しなくてよい。
+         * @param rc レンダーコンテキスト
+         */
+        virtual void RenderUI([[maybe_unused]] RenderContext& rc)
+        {}
         /** @brief 通常の更新が止まっているとき(フェードアウト中など)の更新 */
         virtual void PauseUpdate() = 0;
 

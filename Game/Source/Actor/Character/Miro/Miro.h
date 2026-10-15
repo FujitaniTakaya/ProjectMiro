@@ -25,9 +25,10 @@ namespace app
          * @brief 主人公のMiro
          * @details 次の2つを持つ。
          *          - MiroStateMachine : 入力から状態(待機・歩き・走り)を決める。入力を作る ControllerSlot もここが持つ
-         *          - MiroParameter : ParamHolderから取り出した参照。ホットリロードで値が変わる
+         *          - MiroParameter : ParamHolderから取り出した参照。ホットリロードで値が変わる(最大HPもここ)
          *          Start() でパッド(PlayerController)を付ける。GetControllerSlot() で付け替えられる。
-         *          Update() の順は、ステートマシン(入力の作成 → ステートの更新) → モデルの更新。
+         *          Update() の順は、ステートマシン(入力の作成 → ステートの更新) → モデルの更新 → HPの通知。
+         *          HP(現在のHPはCharacterBase、最大HPはMiroParameter)は、InGameInfoHub に通知する。UIはそこから受け取る。
          *          ゾンビも、同じ形(ZombieStateMachine・ZombieParameter・AIController)で作る。
          * @note 初期座標は、Start() の前に SetPosition() で設定しておくこと。(キャラクターコントローラーが現在の座標に作られる)
          */
@@ -40,6 +41,12 @@ namespace app
              * @return コントローラーの入れ物
              */
             ControllerSlot& GetControllerSlot();
+
+            /**
+             * @brief 最大HPを取得
+             * @return MiroParameter の最大HP
+             */
+            virtual float GetMaxHp() const override;
 
 
         public:

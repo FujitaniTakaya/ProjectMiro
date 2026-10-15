@@ -16,6 +16,7 @@ namespace app
          * @brief Miroのパラメーター
          * @note radius と height は Init() で一度だけ使うので、ホットリロードしても次に起動するまで反映されない。
          *       歩き・走りの速度は、共通ステートが移動するようになったら使う。
+         *       maxHp はホットリロードで変わる。現在のHPは丸められないので、最大HPを下げると、現在のHPが最大HPを超えることがある。
          */
         struct MiroParameter
         {
@@ -31,6 +32,8 @@ namespace app
             float radius;
             /** キャラクターコントローラーの高さ */
             float height;
+            /** 最大HP */
+            float maxHp;
             // [PARAM_GEN end members]
         };
 

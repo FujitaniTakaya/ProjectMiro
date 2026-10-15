@@ -73,7 +73,8 @@ namespace app
 
     void Application::RenderUI(RenderContext& rc)
     {
-        // フェードは最前面に出したいので、一番最後に描く。
+        // シーンのUIを描いてから、フェードを描く。フェードは最前面に出したいので、一番最後。
+        SceneManager::Get().RenderUI(rc);
         Fade::Get().Render(rc);
     }
 } // namespace app
