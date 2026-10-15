@@ -6,6 +6,7 @@
 
 #include "CharacterBase.h"
 
+#include <algorithm>
 #include <cstdint>
 #include <memory>
 
@@ -27,6 +28,7 @@ namespace app
             : m_animationClips(nullptr)
             , m_currentVelocity(Vector3::Zero)
             , m_verticalVelocity(0.0f)
+            , m_hp(0.0f)
         {}
 
 
@@ -45,6 +47,34 @@ namespace app
         void CharacterBase::Render(RenderContext& rc)
         {
             m_modelRender.Draw(rc);
+        }
+
+
+        void CharacterBase::SetHp(const float hp)
+        {
+            // NOTE: 最大HPが0以下(パラメーターの誤り)でも、std::clampの前提(下限 <= 上限)が崩れないようにする。
+            const float maxHp = GetMaxHp();
+            m_hp = (maxHp > 0.0f) ? std::clamp(hp, 0.0f, maxHp) : 0.0f;
+        }
+
+
+        void CharacterBase::TakeDamage(const float damage)
+        {
+            if (damage <= 0.0f)
+            {
+                return;
+            }
+            SetHp(m_hp - damage);
+        }
+
+
+        void CharacterBase::Heal(const float amount)
+        {
+            if (amount <= 0.0f)
+            {
+                return;
+            }
+            SetHp(m_hp + amount);
         }
 
 
@@ -79,6 +109,9 @@ namespace app
 
             // キャラクターコントローラーを初期化
             m_characterController.Init(radius, height, m_transform.m_position);
+
+            // 現在のHPは、最大HPで始める
+            m_hp = GetMaxHp();
         }
     } // namespace actor
 } // namespace app

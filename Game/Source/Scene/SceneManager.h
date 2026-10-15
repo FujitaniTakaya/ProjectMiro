@@ -43,6 +43,13 @@ namespace app
          */
         void Render(RenderContext& rc);
 
+        /**
+         * @brief UIの描画
+         * @details ロード中は何も描かない。Fadeの描画より前に呼ぶこと。
+         * @param rc レンダーコンテキスト
+         */
+        void RenderUI(RenderContext& rc);
+
 
     public:
         /**

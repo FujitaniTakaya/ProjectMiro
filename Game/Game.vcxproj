@@ -275,6 +275,8 @@
     <ClCompile Include="Source\Camera\PlayerCameraParameter.cpp" />
     <ClCompile Include="Source\Actor\Weapon\WeaponBase.cpp" />
     <ClCompile Include="Source\Actor\Weapon\WeaponParameter.cpp" />
+    <ClCompile Include="Source\Manager\InGameInfoHub.cpp" />
+    <ClCompile Include="Source\UI\PlayerHP\HPBarMenu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -338,6 +340,8 @@
     <ClInclude Include="Source\Camera\PlayerCameraParameter.h" />
     <ClInclude Include="Source\Actor\Weapon\WeaponBase.h" />
     <ClInclude Include="Source\Actor\Weapon\WeaponParameter.h" />
+    <ClInclude Include="Source\Manager\InGameInfoHub.h" />
+    <ClInclude Include="Source\UI\PlayerHP\HPBarMenu.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BalloonEngine\BalloonEngine.vcxproj">

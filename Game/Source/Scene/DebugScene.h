@@ -8,6 +8,7 @@
 #include <memory>
 
 #include "IScene.h"
+#include "Source/UI/SystemPacket.h"
 
 
 namespace app
@@ -20,6 +21,10 @@ namespace app
     namespace camera
     {
         class PlayerCamera;
+    }
+    namespace ui
+    {
+        class HPBarMenu;
     }
 
     /**
@@ -39,6 +44,7 @@ namespace app
         void Update() override;
         void PauseUpdate() override;
         void Render(RenderContext& rc) override;
+        void RenderUI(RenderContext& rc) override;
 
         bool RequestScene(uint32_t& id, float& waitTime) override;
 
@@ -46,5 +52,7 @@ namespace app
     private:
         std::unique_ptr<actor::Miro> m_miro;
         std::unique_ptr<camera::PlayerCamera> m_playerCamera;
+        /** プレイヤーのHPバー。InGameInfoHubに通知されたHPを表示する */
+        ui::UIPacket<ui::HPBarMenu> m_hpBarPacket;
     };
 } // namespace app

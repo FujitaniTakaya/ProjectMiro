@@ -58,6 +58,12 @@
     <Filter Include="Source\Camera">
       <UniqueIdentifier>{f7b34625-f87c-42a0-8c6d-41f4ea4467d6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Manager">
+      <UniqueIdentifier>{b9229df0-6afc-455e-992b-aaeafe07037b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\UI\PlayerHP">
+      <UniqueIdentifier>{bf288387-ad03-4c1f-bdbc-7c976995c7db}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source\Actor\Weapon">
       <UniqueIdentifier>{fc663297-a766-4c34-8c53-e604f148b1dd}</UniqueIdentifier>
     </Filter>
@@ -195,6 +201,12 @@
     </ClCompile>
     <ClCompile Include="Source\Actor\Weapon\WeaponParameter.cpp">
       <Filter>Source\Actor\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Manager\InGameInfoHub.cpp">
+      <Filter>Source\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI\PlayerHP\HPBarMenu.cpp">
+      <Filter>Source\UI\PlayerHP</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -372,6 +384,12 @@
     </ClInclude>
     <ClInclude Include="Source\Actor\Weapon\WeaponParameter.h">
       <Filter>Source\Actor\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Manager\InGameInfoHub.h">
+      <Filter>Source\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\PlayerHP\HPBarMenu.h">
+      <Filter>Source\UI\PlayerHP</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
