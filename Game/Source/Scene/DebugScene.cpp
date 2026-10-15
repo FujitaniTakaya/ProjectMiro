@@ -9,6 +9,7 @@
 #include <memory>
 
 #include "Source/Actor/Character/Miro/Miro.h"
+#include "Source/Camera/PlayerCamera.h"
 
 
 namespace app
@@ -16,6 +17,7 @@ namespace app
     DebugScene::DebugScene()
     {
         m_miro = std::make_unique<actor::Miro>();
+        m_playerCamera = std::make_unique<camera::PlayerCamera>();
     }
 
 
@@ -26,6 +28,7 @@ namespace app
     bool DebugScene::Start()
     {
         m_miro->StartWrapper();
+        m_playerCamera->Start();
         return true;
     }
 
@@ -33,6 +36,10 @@ namespace app
     void DebugScene::Update()
     {
         m_miro->UpdateWrapper();
+
+        // Miroが動いた後の座標を追う
+        m_playerCamera->SetTargetPosition(m_miro->GetTransform().m_position);
+        m_playerCamera->Update();
     }
 
 

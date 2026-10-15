@@ -1,0 +1,10 @@
+{
+    "targetOffsetUp": 80.0,
+    "targetOffsetRight": 60.0,
+    "toCameraPos": [0.0, 125.0, -250.0],
+    "rotateSpeed": 78.0,
+    "minToCameraDirY": -0.2,
+    "maxToCameraDirY": 0.9,
+    "nearClip": 1.0,
+    "farClip": 10000.0
+}

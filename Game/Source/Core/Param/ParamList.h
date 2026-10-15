@@ -26,6 +26,8 @@ namespace app
     {
         /** Miro(主人公) */
         Miro,
+        /** プレイヤーカメラ */
+        PlayerCamera,
 
         Max,
         None = Max

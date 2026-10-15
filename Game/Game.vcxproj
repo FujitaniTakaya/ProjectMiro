@@ -271,6 +271,8 @@
     <ClCompile Include="Source\Actor\Character\Miro\Miro.cpp" />
     <ClCompile Include="Source\Actor\Character\Miro\MiroParameter.cpp" />
     <ClCompile Include="Source\Actor\Character\Miro\MiroStateMachine.cpp" />
+    <ClCompile Include="Source\Camera\PlayerCamera.cpp" />
+    <ClCompile Include="Source\Camera\PlayerCameraParameter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -330,6 +332,8 @@
     <ClInclude Include="Source\Actor\Character\Miro\Miro.h" />
     <ClInclude Include="Source\Actor\Character\Miro\MiroParameter.h" />
     <ClInclude Include="Source\Actor\Character\Miro\MiroStateMachine.h" />
+    <ClInclude Include="Source\Camera\PlayerCamera.h" />
+    <ClInclude Include="Source\Camera\PlayerCameraParameter.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BalloonEngine\BalloonEngine.vcxproj">

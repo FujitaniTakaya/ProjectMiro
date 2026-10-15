@@ -17,6 +17,10 @@ namespace app
 
         class Miro;
     }
+    namespace camera
+    {
+        class PlayerCamera;
+    }
 
     /**
      * @brief デバッグ用のシーン
@@ -41,5 +45,6 @@ namespace app
 
     private:
         std::unique_ptr<actor::Miro> m_miro;
+        std::unique_ptr<camera::PlayerCamera> m_playerCamera;
     };
 } // namespace app
