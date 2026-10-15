@@ -58,6 +58,9 @@
     <Filter Include="Source\Camera">
       <UniqueIdentifier>{f7b34625-f87c-42a0-8c6d-41f4ea4467d6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Actor\Weapon">
+      <UniqueIdentifier>{fc663297-a766-4c34-8c53-e604f148b1dd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -186,6 +189,12 @@
     </ClCompile>
     <ClCompile Include="Source\Camera\PlayerCameraParameter.cpp">
       <Filter>Source\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Actor\Weapon\WeaponBase.cpp">
+      <Filter>Source\Actor\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Actor\Weapon\WeaponParameter.cpp">
+      <Filter>Source\Actor\Weapon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -357,6 +366,12 @@
     </ClInclude>
     <ClInclude Include="Source\Camera\PlayerCameraParameter.h">
       <Filter>Source\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Weapon\WeaponBase.h">
+      <Filter>Source\Actor\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Weapon\WeaponParameter.h">
+      <Filter>Source\Actor\Weapon</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
