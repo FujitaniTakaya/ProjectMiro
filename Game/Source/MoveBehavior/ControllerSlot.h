@@ -1,8 +1,8 @@
 ﻿/**
  * @file ControllerSlot.h
  * @brief Controllerを付け替えられるようにする入れ物
- * @details キャラクターが1つメンバとして持つ。キャラクターは毎フレーム Update() を呼び、GetInput() の入力だけを読む。
- *          例: m_controllers.Attach(std::make_unique<PlayerController>());
+ * @details キャラクターのステートマシン(CharacterStateMachine)が1つメンバとして持つ。ステートマシンは毎フレーム Update() を呼び、GetInput() の入力だけを読む。
+ *          例: stateMachine.GetControllerSlot().Attach(std::make_unique<PlayerController>());
  *              ...
  *              ControllerContext context;
  *              context.position = GetPosition();

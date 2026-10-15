@@ -1,0 +1,6 @@
+{
+    "walkSpeed": 300.0,
+    "runSpeed": 600.0,
+    "radius": 25.0,
+    "height": 110.0
+}

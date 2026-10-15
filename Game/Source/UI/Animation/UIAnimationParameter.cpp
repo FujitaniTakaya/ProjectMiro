@@ -8,9 +8,9 @@
 
 #include <algorithm>
 
-#include "Source/Parameter/HotReloadManager.h"
-#include "Source/Parameter/ParamLoader.h"
-#include "Source/Util/CRC32.h"
+#include "Source/Core/HotReload/HotReloadManager.h"
+#include "Source/Core/Json/ParamLoader.h"
+#include "Source/Core/Util/CRC32.h"
 
 
 namespace app

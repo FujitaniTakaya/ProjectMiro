@@ -11,7 +11,6 @@
 namespace app
 {
     /** 前方宣言 */
-    class Game;
     class ParamDebugUI;
     class SoundDebugUI;
 
@@ -63,9 +62,6 @@ namespace app
 
 
     private:
-        /** ゲーム */
-        std::unique_ptr<Game> m_game;
-
         /** サウンドの音量調整用UI */
         std::unique_ptr<SoundDebugUI> m_soundDebugUI;
 

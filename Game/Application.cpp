@@ -6,16 +6,15 @@
 
 #include "Application.h"
 
-#include "Game.h"
+#include "Source/Core/HotReload/HotReloadManager.h"
+#include "Source/Core/Param/ParamDebugUI.h"
+#include "Source/Core/Param/ParamHolder.h"
+#include "Source/Core/Timer/TimerManager.h"
 #include "Source/Effect/EffectManager.h"
-#include "Source/Parameter/HotReloadManager.h"
-#include "Source/Parameter/ParamDebugUI.h"
-#include "Source/Parameter/ParamHolder.h"
 #include "Source/Scene/Fade.h"
 #include "Source/Scene/SceneManager.h"
 #include "Source/Sound/SoundDebugUI.h"
 #include "Source/Sound/SoundManager.h"
-#include "Source/Timer/TimerManager.h"
 
 
 namespace app
@@ -28,9 +27,6 @@ namespace app
         Fade::CreateInstance();
         SceneManager::CreateInstance();
 
-        m_game = std::make_unique<Game>();
-        m_game->StartWrapper();
-
         m_soundDebugUI = std::make_unique<SoundDebugUI>();
         m_paramDebugUI = std::make_unique<ParamDebugUI>();
     }
@@ -40,7 +36,6 @@ namespace app
     {
         m_paramDebugUI.reset();
         m_soundDebugUI.reset();
-        m_game.reset();
 
         SceneManager::DestroyInstance();
         Fade::DestroyInstance();
@@ -61,8 +56,6 @@ namespace app
 
     void Application::Update()
     {
-        m_game->UpdateWrapper();
-
         // シーンの遷移の進行を見て、フェードを始めたり終わらせたりするので、Fadeの更新より前に呼ぶ。
         SceneManager::Get().Update();
         Fade::Get().Update();
@@ -74,7 +67,6 @@ namespace app
 
     void Application::Render(RenderContext& rc)
     {
-        m_game->RenderWrapper(rc);
         SceneManager::Get().Render(rc);
     }
 

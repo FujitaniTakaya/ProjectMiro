@@ -25,8 +25,8 @@
 #include <unordered_map>
 #include <vector>
 
-#include "Source/Parameter/JsonView.h"
-#include "Source/Util/Curve.h"
+#include "Source/Core/Json/JsonView.h"
+#include "Source/Core/Util/Curve.h"
 
 
 namespace app

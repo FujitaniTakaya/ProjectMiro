@@ -114,6 +114,14 @@ namespace nsBalloonEngine
 
 
         /**
+         * @brief アニメーションが再生中かどうか
+         * @details ループしないクリップは、最後まで再生すると false になる。
+         * @return 再生中なら true。アニメーションを持たないモデルは常に false
+         */
+        bool IsPlayingAnimation() const;
+
+
+        /**
          * @brief アニメーション再生速度を設定する
          * @param speed 再生速度
          */

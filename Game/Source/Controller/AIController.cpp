@@ -8,8 +8,8 @@
 
 #include <algorithm>
 
+#include "Source/Core/Util/RandomDevice.h"
 #include "Source/MoveBehavior/StateMachineBase.h"
-#include "Source/Util/RandomDevice.h"
 
 
 namespace app

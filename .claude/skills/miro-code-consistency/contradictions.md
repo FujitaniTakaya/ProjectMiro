@@ -43,7 +43,7 @@
 | F2 | 文字コード: `CRC32.h`がShift-JIS(BOMなし)。MSVCはBOMなしUTF-8をcp932として読む(C4819) | UTF-8(BOM付き) | 修正済み | F2 |
 | F3 | 改行: `UIAnimation`の5ファイルが作業ツリーでLF(`autocrlf=true`なのでコミットには影響しない)。`StateMachineBase.{h,cpp}`は末尾改行なし | CRLF、末尾改行あり | 修正済み | F3 |
 | F4 | インデント: `CRC32.h`と`Application.*`、`IObject.h`がタブ | 4スペース(Microsoftスタイル)。`main.cpp`/`system/`は対象外 | 修正済み | F4 |
-| F5 | include表記: 同じモジュール内で`"Source/Parameter/X.h"`のフルパスと素の名前が混在。順序・グルーピングも不揃い | 同じディレクトリは`"X.h"`、他モジュールは`"Source/<Module>/X.h"`、子ディレクトリは相対(`"Animation/X.h"`)。`stdafx.h`→空行→自ヘッダー→std→プロジェクトの順(`IncludeBlocks: Regroup`が整える) | 修正済み | F5 |
+| F5 | include表記: 同じモジュール内で`"Source/Parameter/X.h"`のフルパスと素の名前が混在。順序・グルーピングも不揃い | 同じディレクトリは`"X.h"`、他モジュールは`"Source/<Module>/X.h"`(Coreの中は`"Source/Core/<Dir>/X.h"`)、子ディレクトリは相対(`"Animation/X.h"`)。`stdafx.h`→空行→自ヘッダー→std→プロジェクトの順(`IncludeBlocks: Regroup`が整える) | 修正済み | F5 |
 | F6 | ヘッダーがPCH頼みで`<memory>`/`<utility>`/`<cstdint>`/`<algorithm>`などをincludeしていない | ヘッダーは使うstdヘッダーを自分でincludeする | 修正済み | F6 |
 | F7 | `} // namespace app`の閉じコメントがController/MoveBehavior/Scene/Parameterに無かった。内部namespace名が`_internal`と`detail` | 閉じコメントあり(clang-formatが付ける)。内部は`detail` | 修正済み | F7 |
 | F8 | `appState(Idle)`のようなセミコロン無しのマクロを、clang-formatが次の`public:`と結合して`public : explicit ...`に崩した | `Game/.clang-format`の`StatementMacros`に`appState`/`appScene`を登録。セミコロン無しのマクロを新設したら、ここにも足す | 修正済み | F8 |
@@ -71,6 +71,14 @@
 | G2 | `BalloonEngine.vcxproj`にimguiが7行あるのに`BalloonEngine.vcxproj.filters`は0行(確認済み)。`sync_vcxproj.py`は、vcxprojにあって`.filters`に無い項目を検出できず、空フィルターも掃除しない(スクリプトの挙動は調査報告のみ、未確認) | 触っていない | 一部未確認 | — |
 | G3 | 古い6コミットに`Co-Authored-By`が無い/件名の形式が違う | 履歴は書き換えない。新しいコミットは「〜を追加し、〜できるようにする」形式 | 現状維持 | — |
 | G4 | 一部の中間コミット(9023c93、f585ec5、21e31f1)で、ファイルがvcxprojに未登録(`fa40e96`で解消) | 以後は各コミットでvcxprojを同期する | 現状維持 | — |
+| G5 | `tools/sync_vcxproj.py`の除外フォルダ(`Game`は`Json`)が階層を問わず効き、`Source/Core/Json`の6ファイルを「ディスクに無い」と見て登録削除しようとした | プロジェクト固有の除外は、プロジェクト直下のフォルダだけに効くようにした(`ExEngine`/`DirectXTK`/`Json`はどれも直下)。ビルド出力などの共通の除外は階層を問わない | 修正済み | G1 |
+
+## H. モジュール構成
+
+| ID | 矛盾 | 決定したルール | 状態 | 検出 |
+|---|---|---|---|---|
+| H1 | 基盤(`Util`・`Timer`・`Parameter`)が`Source/`直下に他の機能と並び、依存の向きがフォルダから読めなかった | 2026-10-09に`Source/Core/`へ移動し、`Parameter`は`Json`・`HotReload`・`Param`に分けた。Coreは他に依存しない(UI/Scene/Sound/Actorなどをincludeしない)。Core内は`Json`←`HotReload`←`Param`、`Util`/`Timer`は単独。基盤を足すときは`check.py`の`CORE_ALLOWED`に依存先を書く | 修正済み | H1 |
+| H2 | パラメーターの登録一覧`ParamList.cpp`が`Core/Param`にあり、全パラメーターの構造体(Actor・UIなど)をincludeする必要がある。Coreの規則(H1)と衝突する(MiroParameterの登録で表面化。登録が0件の間は違反にならなかった) | `RegisterAllParams()`の定義(`ParamList.cpp`)だけをCoreの外(`Source/ParamList.cpp`)に移した。IDと宣言は`Core/Param/ParamList.h`に残す。Coreが上の層をincludeする形に戻さない | 修正済み | H1 |
 
 ---
 

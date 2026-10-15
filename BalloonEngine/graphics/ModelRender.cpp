@@ -187,6 +187,13 @@ namespace nsBalloonEngine
     }
 
 
+    bool ModelRender::IsPlayingAnimation() const
+    {
+        // アニメーションを持たないモデルは Animation が初期化されていないので、問い合わせない
+        return m_isAnimated && m_animation.IsPlaying();
+    }
+
+
     void ModelRender::SetAnimationSpeed(const float speed)
     {
         m_animationSpeed = std::max<float>(0.01f, speed);
