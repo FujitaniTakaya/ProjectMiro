@@ -245,7 +245,6 @@
     <ClCompile Include="Source\Core\Json\JsonView.cpp" />
     <ClCompile Include="Source\Core\HotReload\HotReloadManager.cpp" />
     <ClCompile Include="Source\Core\Param\ParamHolder.cpp" />
-    <ClCompile Include="Source\Core\Param\ParamList.cpp" />
     <ClCompile Include="Source\Core\Param\ParamDebugUI.cpp" />
     <ClCompile Include="Source\MoveBehavior\StateMachineBase.cpp" />
     <ClCompile Include="Source\Controller\AIController.cpp" />
@@ -268,6 +267,7 @@
     <ClCompile Include="Source\Actor\Character\CharacterStateMachine.cpp" />
     <ClCompile Include="Source\Actor\Character\CharacterIState.cpp" />
     <ClCompile Include="Source\Scene\DebugScene.cpp" />
+    <ClCompile Include="Source\ParamList.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
