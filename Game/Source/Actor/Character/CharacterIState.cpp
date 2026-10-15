@@ -6,6 +6,9 @@
 
 #include "CharacterIState.h"
 
+#include "CharacterAnimationClipID.h"
+#include "CharacterStateMachine.h"
+
 
 namespace app
 {
@@ -24,11 +27,14 @@ namespace app
 
         void CharacterIdleState::Enter()
         {
+            m_owner->SetMoveSpeed(0.0f);
+            m_owner->PlayAnimation(EnCharacterAnimationClipID::Idle);
         }
 
 
         void CharacterIdleState::Update()
         {
+            m_owner->Move();
         }
 
 
@@ -50,11 +56,14 @@ namespace app
 
         void CharacterWalkState::Enter()
         {
+            m_owner->PlayAnimation(EnCharacterAnimationClipID::Walk);
         }
 
 
         void CharacterWalkState::Update()
         {
+            m_owner->SetMoveSpeed(m_owner->GetWalkSpeed());
+            m_owner->Move();
         }
 
 
@@ -76,11 +85,14 @@ namespace app
 
         void CharacterRunState::Enter()
         {
+            m_owner->PlayAnimation(EnCharacterAnimationClipID::Run);
         }
 
 
         void CharacterRunState::Update()
         {
+            m_owner->SetMoveSpeed(m_owner->GetRunSpeed());
+            m_owner->Move();
         }
 
 

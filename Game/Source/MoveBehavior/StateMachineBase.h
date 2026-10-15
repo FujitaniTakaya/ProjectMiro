@@ -76,7 +76,7 @@ namespace app
          * @brief ステートマシンを更新する
          * @note 持ち主が毎フレーム呼び出すこと
          */
-        void Update();
+        virtual void Update();
 
 
         /** ステートを変更させる */

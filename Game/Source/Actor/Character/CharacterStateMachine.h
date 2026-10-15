@@ -6,6 +6,7 @@
 #include "CharacterBase.h"
 #include "Source/Actor/ActorStateMachine.h"
 #include "Source/MoveBehavior/CharacterInput.h"
+#include "Source/MoveBehavior/ControllerSlot.h"
 
 
 namespace app
@@ -14,32 +15,33 @@ namespace app
     {
         /**
          * @brief キャラクターのステートマシン
-         * @details キャラクター共通の処理(入力の受け取り、移動、遷移判定の部品)をまとめる。
+         * @details キャラクター共通の処理(入力の作成、移動、遷移判定の部品)をまとめる。
+         *          入力を作る ControllerSlot を持つ。Update() で、持ち主の座標と向きから今フレームの入力を作ってから、ステートを更新する。
          *          現在の速度は持ち主の CharacterBase が持つので、ステートマシンを付け替えても引き継がれる。
          *          持ち主に求めるのは CharacterBase の公開機能だけなので、CharacterBase の派生ならどれにでも付けられる。
-         *          使い方: 持ち主が毎フレーム、SetInput() で入力を渡してから Update() を呼ぶ。
+         *          使い方: GetControllerSlot() でControllerを付け(プレイヤーならパッド、敵ならAI)、持ち主が毎フレーム Update() を呼ぶ。
          *          移動するステートは、自分の Update() で SetMoveSpeed() と Move() を呼ぶ。
+         *          歩き・走りの速度はキャラクターごとに違うので、派生クラスが GetWalkSpeed() / GetRunSpeed() で返す。
          */
         class CharacterStateMachine : public ActorStateMachine
         {
         public:
             /**
-             * @brief 今フレームの入力を設定する
-             * @note 持ち主が、Update() の前に毎フレーム呼ぶこと。
-             *       ControllerSlot::Update() が返した入力をそのまま渡せる。
-             * @param input 今フレームの入力
-             */
-            inline void SetInput(const CharacterInput& input)
-            {
-                m_input = input;
-            }
-            /**
              * @brief 今フレームの入力を取得する
-             * @return 入力
+             * @return Update() で作った入力。Controllerが付いていなければ無入力
              */
             inline const CharacterInput& GetInput() const
             {
-                return m_input;
+                return m_controllers.GetInput();
+            }
+            /**
+             * @brief コントローラーの入れ物を取得する
+             * @details Attach() / Detach() でControllerを付け替えられる。
+             * @return コントローラーの入れ物
+             */
+            inline ControllerSlot& GetControllerSlot()
+            {
+                return m_controllers;
             }
             /**
              * @brief 移動速度を設定する
@@ -78,8 +80,28 @@ namespace app
                 m_ownerCharacter->SetVerticalVelocity(verticalVelocity);
             }
 
+            /**
+             * @brief 歩きの移動速度を取得する
+             * @details キャラクターごとの値なので、派生クラスが返す。歩きステートが Update() で SetMoveSpeed() に渡す。
+             * @return 歩きの移動速度(入力の倒し具合が最大のときの速さ)
+             */
+            virtual float GetWalkSpeed() const = 0;
+            /**
+             * @brief 走りの移動速度を取得する
+             * @details キャラクターごとの値なので、派生クラスが返す。走りステートが Update() で SetMoveSpeed() に渡す。
+             * @return 走りの移動速度(入力の倒し具合が最大のときの速さ)
+             */
+            virtual float GetRunSpeed() const = 0;
+
 
         public:
+            /**
+             * @brief ステートマシンを更新する
+             * @details 持ち主の座標と向きから今フレームの入力を作り、そのあとでステートを更新する。
+             * @note 持ち主が毎フレーム呼び出すこと
+             */
+            virtual void Update() override;
+
             /**
              * @brief 移動処理
              * @details 入力と移動速度から、慣性(加速・減速)をつけて速度を決め、重力を足して、
@@ -87,6 +109,7 @@ namespace app
              *          結果は持ち主の座標と向きに反映される。
              * @note 持ち主の座標が正なので、外から SetPosition() されていても、その座標から動く。
              *       移動するステートが毎フレーム呼ぶこと。
+             * @note 床がまだないので、高さが0以下のときは地面にいるとみなして、重力を受けない。
              */
             void Move();
 
@@ -98,7 +121,7 @@ namespace app
              */
             inline bool CanChangeMoveState() const
             {
-                return m_input.IsMoving();
+                return GetInput().IsMoving();
             }
             /**
              * @brief 走りに切り替えられるかどうか
@@ -106,7 +129,7 @@ namespace app
              */
             inline bool CanChangeRunState() const
             {
-                return CanChangeMoveState() && m_input.IsPress(EnInputButton::Dash);
+                return CanChangeMoveState() && GetInput().IsPress(EnInputButton::Dash);
             }
             /**
              * @brief 地面についているかどうか
@@ -137,8 +160,8 @@ namespace app
         protected:
             /** 持ち主のキャラクター */
             CharacterBase* m_ownerCharacter;
-            /** 今フレームの入力 */
-            CharacterInput m_input;
+            /** コントローラーの入れ物(今フレームの入力もここが持つ) */
+            ControllerSlot m_controllers;
             /** 移動速度(入力の倒し具合が最大のときの速さ) */
             float m_moveSpeed;
         };
