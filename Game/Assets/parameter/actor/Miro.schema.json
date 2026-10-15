@@ -8,6 +8,7 @@
         { "name": "walkSpeed", "type": "float", "doc": "歩きの移動速度(入力の倒し具合が最大のときの速さ)" },
         { "name": "runSpeed", "type": "float", "doc": "走りの移動速度(入力の倒し具合が最大のときの速さ)" },
         { "name": "radius", "type": "float", "doc": "キャラクターコントローラーの半径" },
-        { "name": "height", "type": "float", "doc": "キャラクターコントローラーの高さ" }
+        { "name": "height", "type": "float", "doc": "キャラクターコントローラーの高さ" },
+        { "name": "maxHp", "type": "float", "doc": "最大HP" }
     ]
 }

@@ -14,6 +14,7 @@
 #include "Source/Actor/Character/CharacterAnimationClipID.h"
 #include "Source/Controller/PlayerController.h"
 #include "Source/Core/Param/ParamHolder.h"
+#include "Source/Manager/InGameInfoHub.h"
 #include "Source/MoveBehavior/ControllerSlot.h"
 
 
@@ -61,10 +62,19 @@ namespace app
         }
 
 
+        float Miro::GetMaxHp() const
+        {
+            return m_parameter.maxHp;
+        }
+
+
         void Miro::Start()
         {
-            // モデル・アニメーションクリップのロードと、キャラクターコントローラーの初期化
+            // モデル・アニメーションクリップのロードと、キャラクターコントローラーの初期化(現在のHPも最大HPで始まる)
             Init(MODEL_DATA, m_parameter.radius, m_parameter.height);
+
+            // 最初のHPを通知
+            InGameInfoHub::Get().NotifyPlayerHp(GetHp(), GetMaxHp());
 
             // パッドで操作する
             GetControllerSlot().Attach(std::make_unique<PlayerController>());
@@ -78,6 +88,9 @@ namespace app
 
             // モデルの更新
             CharacterBase::Update();
+
+            // HPの通知(値が変わった時だけ、UIに伝わる。ホットリロードで最大HPが変わった時も含む)
+            InGameInfoHub::Get().NotifyPlayerHp(GetHp(), GetMaxHp());
         }
 
 

@@ -19,6 +19,7 @@ namespace app
             , runSpeed(600.0f)
             , radius(25.0f)
             , height(110.0f)
+            , maxHp(100.0f)
         {
         }
         // [PARAM_GEN end ctor]
@@ -36,6 +37,7 @@ namespace app
             param.runSpeed = ParamLoader::ToFloat(root, "runSpeed", param.runSpeed);
             param.radius = ParamLoader::ToFloat(root, "radius", param.radius);
             param.height = ParamLoader::ToFloat(root, "height", param.height);
+            param.maxHp = ParamLoader::ToFloat(root, "maxHp", param.maxHp);
             // [PARAM_GEN end load]
         }
 
@@ -48,6 +50,7 @@ namespace app
             ImGui::Text("runSpeed: %.1f", param.runSpeed);
             ImGui::Text("radius: %.1f", param.radius);
             ImGui::Text("height: %.1f", param.height);
+            ImGui::Text("maxHp: %.1f", param.maxHp);
             // [PARAM_GEN end draw]
 #endif // BALLOON_IMGUI_ENABLED
         }

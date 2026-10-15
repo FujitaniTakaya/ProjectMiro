@@ -100,6 +100,37 @@ namespace app
             {
                 m_verticalVelocity = verticalVelocity;
             }
+            /**
+             * @brief 現在のHPを取得
+             * @note 最大HPはキャラクターごとのパラメーターで、ホットリロードで変わる。
+             *       最大HPを下げた場合、現在のHPが最大HPを超えたままになることがある。(次にSetHp()などで設定した時に丸められる)
+             * @return 現在のHP
+             */
+            inline float GetHp() const
+            {
+                return m_hp;
+            }
+            /**
+             * @brief 最大HPを取得
+             * @details キャラクターごとのパラメーター(statusのmaxHp)を返す。
+             * @return 最大HP
+             */
+            virtual float GetMaxHp() const = 0;
+            /**
+             * @brief 現在のHPを設定
+             * @param hp 現在のHP。0〜最大HPに丸められる
+             */
+            void SetHp(const float hp);
+            /**
+             * @brief ダメージを受ける
+             * @param damage ダメージ量。0以下の場合は何もしない
+             */
+            void TakeDamage(const float damage);
+            /**
+             * @brief 回復する
+             * @param amount 回復量。0以下の場合は何もしない
+             */
+            void Heal(const float amount);
 
 
         public:
@@ -111,6 +142,7 @@ namespace app
             /**
              * @brief 初期化処理
              * @details モデル・アニメーションクリップのロードと、キャラクターコントローラーの初期化を行う。
+             *          現在のHPは、最大HP(GetMaxHp())で始まる。
              * @note キャラクターコントローラーは現在のトランスフォームの座標に作られる。
              *       呼ぶ前にSetPosition()で初期座標を設定しておくこと。
              * @param data モデルデータ
@@ -136,6 +168,8 @@ namespace app
             Vector3 m_currentVelocity;
             /** 垂直方向(Y)の現在の速度 */
             float m_verticalVelocity;
+            /** 現在のHP */
+            float m_hp;
         };
     } // namespace actor
 } // namespace app

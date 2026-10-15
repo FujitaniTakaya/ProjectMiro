@@ -128,6 +128,23 @@ namespace app
     }
 
 
+    void SceneManager::RenderUI(RenderContext& rc)
+    {
+        if (!m_currentScene)
+        {
+            return;
+        }
+
+        // ロード中は、シーンのUIを描かない。
+        if (m_transitionState == TransitionState::LoadingScene)
+        {
+            return;
+        }
+
+        m_currentScene->RenderUI(rc);
+    }
+
+
     void SceneManager::CreateInstance()
     {
         K2_ASSERT(m_instance == nullptr, "SceneManagerは既に生成されている。");
