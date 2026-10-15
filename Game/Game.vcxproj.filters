@@ -52,6 +52,9 @@
     <Filter Include="Source\Actor\Character">
       <UniqueIdentifier>{b63a7e5b-1b8f-49d7-a456-ffdd79003939}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Actor\Character\Miro">
+      <UniqueIdentifier>{501c766a-cdb6-4ef8-a627-88498a80f26f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -95,9 +98,6 @@
       <Filter>Source\Core\HotReload</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\Param\ParamHolder.cpp">
-      <Filter>Source\Core\Param</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Core\Param\ParamList.cpp">
       <Filter>Source\Core\Param</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\Param\ParamDebugUI.cpp">
@@ -165,6 +165,18 @@
     </ClCompile>
     <ClCompile Include="Source\Scene\DebugScene.cpp">
       <Filter>Source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ParamList.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Actor\Character\Miro\Miro.cpp">
+      <Filter>Source\Actor\Character\Miro</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Actor\Character\Miro\MiroParameter.cpp">
+      <Filter>Source\Actor\Character\Miro</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Actor\Character\Miro\MiroStateMachine.cpp">
+      <Filter>Source\Actor\Character\Miro</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -321,6 +333,15 @@
     </ClInclude>
     <ClInclude Include="Source\Scene\DebugScene.h">
       <Filter>Source\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Character\Miro\Miro.h">
+      <Filter>Source\Actor\Character\Miro</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Character\Miro\MiroParameter.h">
+      <Filter>Source\Actor\Character\Miro</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Character\Miro\MiroStateMachine.h">
+      <Filter>Source\Actor\Character\Miro</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -268,6 +268,9 @@
     <ClCompile Include="Source\Actor\Character\CharacterIState.cpp" />
     <ClCompile Include="Source\Scene\DebugScene.cpp" />
     <ClCompile Include="Source\ParamList.cpp" />
+    <ClCompile Include="Source\Actor\Character\Miro\Miro.cpp" />
+    <ClCompile Include="Source\Actor\Character\Miro\MiroParameter.cpp" />
+    <ClCompile Include="Source\Actor\Character\Miro\MiroStateMachine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -324,6 +327,9 @@
     <ClInclude Include="Source\Actor\Character\CharacterAnimationClipID.h" />
     <ClInclude Include="Source\Actor\Character\CharacterIState.h" />
     <ClInclude Include="Source\Scene\DebugScene.h" />
+    <ClInclude Include="Source\Actor\Character\Miro\Miro.h" />
+    <ClInclude Include="Source\Actor\Character\Miro\MiroParameter.h" />
+    <ClInclude Include="Source\Actor\Character\Miro\MiroStateMachine.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BalloonEngine\BalloonEngine.vcxproj">
