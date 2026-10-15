@@ -22,6 +22,7 @@ namespace app
             MiroParameter();
 
 
+            // [PARAM_GEN begin members] 自動生成(tools/param_gen.py)。手で編集しない
             /** 歩きの移動速度(入力の倒し具合が最大のときの速さ) */
             float walkSpeed;
             /** 走りの移動速度(入力の倒し具合が最大のときの速さ) */
@@ -30,6 +31,7 @@ namespace app
             float radius;
             /** キャラクターコントローラーの高さ */
             float height;
+            // [PARAM_GEN end members]
         };
 
 

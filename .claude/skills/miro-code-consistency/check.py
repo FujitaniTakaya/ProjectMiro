@@ -306,12 +306,23 @@ def check_sync(root, rep):
                 rep.add("G1", "Game/Game.vcxproj.filters", 1, f"空のフィルター {name}")
 
 
+def check_param_gen(root, rep):
+    script = os.path.join(root, "tools", "param_gen.py")
+    if not os.path.exists(script):
+        print("[skip] G6: tools/param_gen.py が無い", file=sys.stderr)
+        return
+    proc = subprocess.run([sys.executable, "-X", "utf8", script, "--check"], cwd=root, capture_output=True, text=True, encoding="utf-8", errors="replace")
+    if proc.returncode != 0:
+        out = ((proc.stdout or "") + (proc.stderr or "")).strip()
+        rep.add("G6", "tools/param_gen.py", 1, "スキーマ・jsonと、生成されたC++が一致していない。tools/param_gen.py を実行する:\n" + out)
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--root", help="リポジトリのルート(Game/Source がある所)。省略すると、カレントから上へ探す")
     ap.add_argument("--only", help="調べるチェックIDをカンマ区切りで(例: B1,C2,F1)")
     ap.add_argument("--no-clang-format", action="store_true", help="F1を飛ばす")
-    ap.add_argument("--no-sync", action="store_true", help="G1を飛ばす")
+    ap.add_argument("--no-sync", action="store_true", help="G1・G6を飛ばす")
     args = ap.parse_args()
     try:
         sys.stdout.reconfigure(encoding="utf-8")
@@ -335,8 +346,10 @@ def main():
         check_clang_format(root, files, rep)
     if not args.no_sync and rep.wants("G1") and not args.root:
         check_sync(root, rep)
+    if not args.no_sync and rep.wants("G6") and not args.root:
+        check_param_gen(root, rep)
 
-    items = [it for it in rep.items if rep.wants(it[0])]
+    items =[it for it in rep.items if rep.wants(it[0])]
     order = {"B": 0, "C": 1, "F": 2, "D": 3, "G": 4, "H": 5}
     items.sort(key=lambda it: (order.get(it[0][0], 9), it[0], it[1], it[2]))
     for check_id, path, line, msg in items:
