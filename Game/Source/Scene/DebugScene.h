@@ -5,12 +5,19 @@
  */
 #pragma once
 #include <cstdint>
+#include <memory>
 
 #include "IScene.h"
 
 
 namespace app
 {
+    namespace actor
+    {
+
+        class Miro;
+    }
+
     /**
      * @brief デバッグ用のシーン
      */
@@ -30,5 +37,9 @@ namespace app
         void Render(RenderContext& rc) override;
 
         bool RequestScene(uint32_t& id, float& waitTime) override;
+
+
+    private:
+        std::unique_ptr<actor::Miro> m_miro;
     };
 } // namespace app

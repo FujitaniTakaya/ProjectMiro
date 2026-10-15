@@ -6,11 +6,17 @@
 
 #include "DebugScene.h"
 
+#include <memory>
+
+#include "Source/Actor/Character/Miro/Miro.h"
+
 
 namespace app
 {
     DebugScene::DebugScene()
-    {}
+    {
+        m_miro = std::make_unique<actor::Miro>();
+    }
 
 
     DebugScene::~DebugScene()
@@ -19,12 +25,15 @@ namespace app
 
     bool DebugScene::Start()
     {
+        m_miro->StartWrapper();
         return true;
     }
 
 
     void DebugScene::Update()
-    {}
+    {
+        m_miro->UpdateWrapper();
+    }
 
 
     void DebugScene::PauseUpdate()
@@ -32,7 +41,9 @@ namespace app
 
 
     void DebugScene::Render(RenderContext& rc)
-    {}
+    {
+        m_miro->RenderWrapper(rc);
+    }
 
 
     bool DebugScene::RequestScene(uint32_t& id, float& waitTime)
