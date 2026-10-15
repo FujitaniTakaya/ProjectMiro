@@ -34,7 +34,7 @@ user-invocable: true
 - **画像1枚の描画(C3)**: `ui::UISprite`を使う。`SpriteRender`はアルファブレンドできない。
 - **include(F5, F6)**: `stdafx.h`→空行→自ヘッダー→std`<...>`→プロジェクト`"..."`(clang-formatが整える)。同じディレクトリは`"X.h"`、他モジュールは`"Source/<Module>/X.h"`(Coreの中は`"Source/Core/<Dir>/X.h"`)。ヘッダーは使うstdヘッダーを自分でincludeする(PCH頼みにしない)。
 - **Doxygen(D3)**: 日本語。`@brief`→`@details`→`@note`→`@tparam`→`@param`→`@return`の順。`/**`で始める。`@param[out] name`。半角の括弧、範囲は`〜`。
-- **Core(H1)**: `Game/Source/Core/`は他に依存しない基盤(`Util`・`Timer`・`Json`・`HotReload`・`Param`)。Coreの外(UI/Scene/Sound/Actorなど)をincludeしない。Core内も下の層だけ(`Json`←`HotReload`←`Param`。`Util`/`Timer`は単独)。新しい基盤を足すときは`check.py`の`CORE_ALLOWED`に依存先を書く。
+- **Core(H1)**: `Game/Source/Core/`は他に依存しない基盤(`Util`・`Timer`・`Json`・`HotReload`・`Param`)。Coreの外(UI/Scene/Sound/Actorなど)をincludeしない。Core内も下の層だけ(`Json`←`HotReload`←`Param`。`Util`/`Timer`は単独)。新しい基盤を足すときは`check.py`の`CORE_ALLOWED`に依存先を書く。パラメーターの登録一覧`RegisterAllParams()`の定義(`Source/ParamList.cpp`)は、全パラメーターの構造体(Actor・UIなど)を知る必要があるのでCoreの外に置く(IDと宣言は`Core/Param/ParamList.h`)。
 - **ファイル(F1〜F4, F7)**: UTF-8(BOM付き)、CRLF、末尾改行あり、4スペース。`Game/.clang-format`で差分0。閉じは`} // namespace app`。セミコロン無しのマクロ(`appState`など)を新設したら`.clang-format`の`StatementMacros`に足す。
 - **jsonのパス(D5)**: `Assets/parameter/<小文字のモジュール>/<Pascal>.json`。同じファイルかどうかは`HotReloadManager::NormalizePath`で比べる。
 - **命名**: メンバーは`m_`+camelCase、メソッドはPascalCase、定数はUPPER_SNAKE、enumは`enum class`、モジュール単位は`En`+`: uint8_t`+`Max`(`None = Max`)。

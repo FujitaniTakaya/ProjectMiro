@@ -78,6 +78,7 @@
 | ID | 矛盾 | 決定したルール | 状態 | 検出 |
 |---|---|---|---|---|
 | H1 | 基盤(`Util`・`Timer`・`Parameter`)が`Source/`直下に他の機能と並び、依存の向きがフォルダから読めなかった | 2026-10-09に`Source/Core/`へ移動し、`Parameter`は`Json`・`HotReload`・`Param`に分けた。Coreは他に依存しない(UI/Scene/Sound/Actorなどをincludeしない)。Core内は`Json`←`HotReload`←`Param`、`Util`/`Timer`は単独。基盤を足すときは`check.py`の`CORE_ALLOWED`に依存先を書く | 修正済み | H1 |
+| H2 | パラメーターの登録一覧`ParamList.cpp`が`Core/Param`にあり、全パラメーターの構造体(Actor・UIなど)をincludeする必要がある。Coreの規則(H1)と衝突する(MiroParameterの登録で表面化。登録が0件の間は違反にならなかった) | `RegisterAllParams()`の定義(`ParamList.cpp`)だけをCoreの外(`Source/ParamList.cpp`)に移した。IDと宣言は`Core/Param/ParamList.h`に残す。Coreが上の層をincludeする形に戻さない | 修正済み | H1 |
 
 ---
 
