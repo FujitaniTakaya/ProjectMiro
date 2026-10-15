@@ -1,0 +1,17 @@
+{
+    "struct": "PlayerCameraParameter",
+    "namespace": "camera",
+    "json": "Assets/parameter/camera/PlayerCamera.json",
+    "h": "Source/Camera/PlayerCameraParameter.h",
+    "cpp": "Source/Camera/PlayerCameraParameter.cpp",
+    "params": [
+        { "name": "targetOffsetUp", "type": "float", "doc": "注視点を、ターゲットの座標から上にずらす量" },
+        { "name": "targetOffsetRight", "type": "float", "doc": "注視点を、ターゲットの座標からカメラの右方向にずらす量(水平方向。左右に回すと一緒に回る。初期値は仮の値で、実機を見て調整する)" },
+        { "name": "toCameraPos", "type": "vector3", "doc": "注視点から視点までのベクトルの初期値", "load": "custom" },
+        { "name": "rotateSpeed", "type": "float", "doc": "右スティックを倒したときの回転速度(度/秒。初期値は、1フレームあたり1.3度を60fpsで回す速さ)" },
+        { "name": "minToCameraDirY", "type": "float", "doc": "注視点から視点までのベクトルを正規化したときの、y成分の下限(これより下に回さない。上向きすぎの制限)", "digits": 2, "load": "custom" },
+        { "name": "maxToCameraDirY", "type": "float", "doc": "注視点から視点までのベクトルを正規化したときの、y成分の上限(これより上に回さない。下向きすぎの制限)", "digits": 2, "load": "custom" },
+        { "name": "nearClip", "type": "float", "doc": "ニアクリップ", "load": "custom" },
+        { "name": "farClip", "type": "float", "doc": "ファークリップ", "load": "custom" }
+    ]
+}

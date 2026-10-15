@@ -22,8 +22,9 @@ user-invocable: true
    違反なしで終了コード0。調べるのは `Game/Source/**`、`Game/Application.*`、`Game/IObject.h`。何も書き換えない。
 2. 書式(F1)は `clang-format -i` で直せる。場所は `C:\Program Files\Microsoft Visual Studio\2026\VC\Tools\Llvm\x64\bin\clang-format.exe`、`Game/` から `-style=file` で実行する。
 3. 新しい.h/.cppを足したら、`python -X utf8 tools/sync_vcxproj.py Game`(先に`--dry-run`)で`Game.vcxproj`/`.filters`に登録する(G1)。
-4. ビルドは PowerShell から `Game.sln` を `Debug`・`Preview`・`Release`(x64)の3構成で通す。`K2_DEBUG`の有無で挙動が変わるので、Previewも通すこと。
-5. `check.py`で検出できない項目(下の「機械検出できないもの」)は、自分で見る。
+4. パラメーター(`Assets/parameter/**/*.json`、`*.schema.json`)を足す・変えたら、`python -X utf8 tools/param_gen.py`(先に`--check`)か、`Game/param_gen.bat`(ダブルクリック。`--check`も渡せる)で、構造体・初期値・Load・Draw を生成する(G6)。
+5. ビルドは PowerShell から `Game.sln` を `Debug`・`Preview`・`Release`(x64)の3構成で通す。`K2_DEBUG`の有無で挙動が変わるので、Previewも通すこと。
+6. `check.py`で検出できない項目(下の「機械検出できないもの」)は、自分で見る。
 
 ## 書くときのルール(要約)
 - **デバッグマクロ(B1)**: ImGuiは`BALLOON_IMGUI_ENABLED`、開発用の処理・`K2_LOG`・`K2_ASSERT`は`K2_DEBUG`で囲む。`_DEBUG`は使わない。
@@ -37,6 +38,7 @@ user-invocable: true
 - **Core(H1)**: `Game/Source/Core/`は他に依存しない基盤(`Util`・`Timer`・`Json`・`HotReload`・`Param`)。Coreの外(UI/Scene/Sound/Actorなど)をincludeしない。Core内も下の層だけ(`Json`←`HotReload`←`Param`。`Util`/`Timer`は単独)。新しい基盤を足すときは`check.py`の`CORE_ALLOWED`に依存先を書く。パラメーターの登録一覧`RegisterAllParams()`の定義(`Source/ParamList.cpp`)は、全パラメーターの構造体(Actor・UIなど)を知る必要があるのでCoreの外に置く(IDと宣言は`Core/Param/ParamList.h`)。
 - **ファイル(F1〜F4, F7)**: UTF-8(BOM付き)、CRLF、末尾改行あり、4スペース。`Game/.clang-format`で差分0。閉じは`} // namespace app`。セミコロン無しのマクロ(`appState`など)を新設したら`.clang-format`の`StatementMacros`に足す。
 - **jsonのパス(D5)**: `Assets/parameter/<小文字のモジュール>/<Pascal>.json`。同じファイルかどうかは`HotReloadManager::NormalizePath`で比べる。
+- **パラメーター(G6)**: 値は json が正。型・説明・.h/.cpp/jsonのパスを、`Assets/parameter/<モジュール>/<Name>.schema.json`(jsonの隣、同じ基底名)に書き、`tools/param_gen.py`を実行する。無いファイルは雛形から作られ、`// [PARAM_GEN begin xxx]`〜`end`の間(members/ctor/load/draw)が書き換わる。**マーカーの中は手で編集しない**(次の実行で消える)。`DEFAULT_xxx`定数は使わない(ctorにjsonの値が入る)。検証が要るキーはスキーマで`"load": "custom"`にして、Load関数に手書きする。対応する型は float/int/uint32/bool/vector2/vector3/vector4/color/string。Quaternion などは、スキーマを使わず手書きの構造体にする。新規作成後は`sync_vcxproj.py Game`、`EnParamID`、`Source/ParamList.cpp`への登録を手でやる。
 - **命名**: メンバーは`m_`+camelCase、メソッドはPascalCase、定数はUPPER_SNAKE、enumは`enum class`、モジュール単位は`En`+`: uint8_t`+`Max`(`None = Max`)。
 - **触らないもの**: `k2EngineLow`(エンジン)、`Game.*`・`main.cpp`・`system/`(テンプレート由来、`main.cpp`/`system`はShift-JIS)。
 

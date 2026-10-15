@@ -1,0 +1,13 @@
+{
+    "struct": "MiroParameter",
+    "namespace": "actor",
+    "json": "Assets/parameter/actor/Miro.json",
+    "h": "Source/Actor/Character/Miro/MiroParameter.h",
+    "cpp": "Source/Actor/Character/Miro/MiroParameter.cpp",
+    "params": [
+        { "name": "walkSpeed", "type": "float", "doc": "歩きの移動速度(入力の倒し具合が最大のときの速さ)" },
+        { "name": "runSpeed", "type": "float", "doc": "走りの移動速度(入力の倒し具合が最大のときの速さ)" },
+        { "name": "radius", "type": "float", "doc": "キャラクターコントローラーの半径" },
+        { "name": "height", "type": "float", "doc": "キャラクターコントローラーの高さ" }
+    ]
+}
