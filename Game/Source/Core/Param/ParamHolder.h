@@ -1,7 +1,7 @@
 ﻿/**
  * @file ParamHolder.h
  * @brief パラメーターを保持して、IDで取り出せるようにするクラス
- * @details ParamList.cppに登録された全てのjsonファイルを、生成時にまとめて読み込んで保持する。シングルトン。
+ * @details Source/ParamList.cpp(Coreの外)に登録された全てのjsonファイルを、生成時にまとめて読み込んで保持する。シングルトン。
  *          jsonファイルの更新の監視と読み込み直しは、HotReloadManagerに任せる。(デバッグビルドでは、jsonを保存すると保持している値が書き換わる。)
  *          パラメーターは普通の構造体で、複数の場所から同じものを取り出せる。取り出した参照は、アプリが終わるまで使える。
  *          例: const MiniMapParameter& param = ParamHolder::Get().GetParameter<MiniMapParameter>(EnParamID::MiniMap);
@@ -205,7 +205,7 @@ namespace app
         ParamHolder();
         ~ParamHolder() = default;
 
-        // 登録できるのは、一覧(ParamList.cpp)だけ
+        // 登録できるのは、一覧(Source/ParamList.cpp)だけ
         friend void RegisterAllParams(ParamHolder& holder);
 
 

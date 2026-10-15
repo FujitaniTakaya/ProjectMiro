@@ -2,6 +2,8 @@
  * @file ParamList.h
  * @brief パラメーターのIDと、全パラメーターの登録一覧
  * @details IDと、IDごとのjsonファイル・読み込み方の登録(ParamList.cpp)は、ここが入り口。
+ *          NOTE: RegisterAllParams()の定義(ParamList.cpp)は、Coreの外の Source/ParamList.cpp にある。
+ *                パラメーターの構造体はActorやUIなどの上の層にあり、Coreに置くとCoreが上の層をincludeしてしまうため。
  *          NOTE: このヘッダーには、パラメーターの構造体のヘッダーをincludeしないこと。
  *                ParamHolderを使う全てのファイルが、全てのパラメーターの構造体に依存してしまう。
  *                構造体のヘッダーは、登録する側のParamList.cppでincludeする。
@@ -22,6 +24,9 @@ namespace app
      */
     enum class EnParamID : uint8_t
     {
+        /** Miro(主人公) */
+        Miro,
+
         Max,
         None = Max
     };
@@ -34,7 +39,7 @@ namespace app
      *          1. EnParamIDにIDを足す。
      *          2. パラメーターの構造体を作る。(普通の構造体でよい。配列のjsonなら、std::vectorにする。)
      *          3. jsonから構造体に読み込む関数を作る。(ParamLoaderを使う。構造体は、デフォルト構築された状態で渡される。)
-     *          4. ParamList.cppに、holder.Register<構造体>(ID, jsonのパス, 読み込む関数); を1行足す。
+     *          4. Source/ParamList.cpp(Coreの外)に、holder.Register<構造体>(ID, jsonのパス, 読み込む関数); を1行足す。
      *          デバッグ画面(ParamDebugUI)で値を見たい場合は、Register()の4つ目の引数に表示関数を渡す。(省略可)
      *          表示関数は void(const 構造体&) で、ImGuiの呼び出しは #ifdef BALLOON_IMGUI_ENABLED で囲むこと。
      * @param holder 登録先
