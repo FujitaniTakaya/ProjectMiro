@@ -17,7 +17,8 @@ namespace app
     {
 
         class Miro;
-    }
+        class Handgun;
+    } // namespace actor
     namespace camera
     {
         class PlayerCamera;
@@ -25,7 +26,8 @@ namespace app
     namespace ui
     {
         class HPBarMenu;
-    }
+        class HandgunAmmoMenu;
+    } // namespace ui
 
     /**
      * @brief デバッグ用のシーン
@@ -54,5 +56,11 @@ namespace app
         std::unique_ptr<camera::PlayerCamera> m_playerCamera;
         /** プレイヤーのHPバー。InGameInfoHubに通知されたHPを表示する */
         ui::UIPacket<ui::HPBarMenu> m_hpBarPacket;
+        /** ハンドガン。弾が減ったら、InGameInfoHubに残弾数を通知する(手に持たせるまでは、このシーンが持つ) */
+        std::unique_ptr<actor::Handgun> m_handgun;
+        /** ハンドガンの残段数UI。InGameInfoHubに通知された残弾数を表示する */
+        ui::UIPacket<ui::HandgunAmmoMenu> m_ammoPacket;
+        /** レティクル。動かさないので、Menuは基底クラスのまま */
+        ui::UIPacket<ui::MenuBase> m_reticlePacket;
     };
 } // namespace app

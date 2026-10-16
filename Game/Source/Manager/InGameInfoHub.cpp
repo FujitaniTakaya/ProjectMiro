@@ -16,6 +16,9 @@ namespace app
         , m_hasPlayerHp(false)
         , m_playerHp(0.0f)
         , m_playerMaxHp(0.0f)
+        , m_onPlayerAmmoChanged(nullptr)
+        , m_hasPlayerAmmo(false)
+        , m_playerAmmo(0)
     {}
 
 
@@ -59,11 +62,43 @@ namespace app
     }
 
 
+    void InGameInfoHub::SetOnPlayerAmmoChanged(PlayerAmmoCallback func)
+    {
+        m_onPlayerAmmoChanged = std::move(func);
+
+        // 通知済みの最新値を、登録した側にも渡す
+        if (m_onPlayerAmmoChanged && m_hasPlayerAmmo)
+        {
+            m_onPlayerAmmoChanged(m_playerAmmo);
+        }
+    }
+
+
+    void InGameInfoHub::NotifyPlayerAmmo(const uint32_t remainingAmmo)
+    {
+        if (m_hasPlayerAmmo && m_playerAmmo == remainingAmmo)
+        {
+            return;
+        }
+
+        m_hasPlayerAmmo = true;
+        m_playerAmmo = remainingAmmo;
+
+        if (m_onPlayerAmmoChanged)
+        {
+            m_onPlayerAmmoChanged(m_playerAmmo);
+        }
+    }
+
+
     void InGameInfoHub::ResetObservers()
     {
         m_onPlayerHpChanged = nullptr;
         m_hasPlayerHp = false;
         m_playerHp = 0.0f;
         m_playerMaxHp = 0.0f;
+        m_onPlayerAmmoChanged = nullptr;
+        m_hasPlayerAmmo = false;
+        m_playerAmmo = 0;
     }
 } // namespace app

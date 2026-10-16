@@ -7,9 +7,11 @@
  *          SetOn…() は、すでに通知された値があれば、登録した時にその最新値を1回返す。(登録が通知より後でも、表示がずれない)
  *          例: InGameInfoHub::Get().SetOnPlayerHpChanged([menu](const float hp, const float maxHp) { menu->SetHp(hp, maxHp); });
  *              InGameInfoHub::Get().NotifyPlayerHp(miro.GetHp(), miro.GetMaxHp());
+ *          プレイヤーの武器の残弾数も同じ形で、SetOnPlayerAmmoChanged() / NotifyPlayerAmmo() を使う。
  * @note 登録した関数が参照するもの(UIなど)を破棄する前に、ResetObservers() を呼ぶこと。
  */
 #pragma once
+#include <cstdint>
 #include <functional>
 
 
@@ -53,6 +55,23 @@ namespace app
          */
         void NotifyPlayerHp(const float hp, const float maxHp);
 
+        /** プレイヤーの武器の残弾数が変わった時に呼ぶ関数(引数: マガジンの残弾数) */
+        using PlayerAmmoCallback = std::function<void(const uint32_t remainingAmmo)>;
+
+        /**
+         * @brief プレイヤーの武器の残弾数が変わった時に呼ぶ関数を登録
+         * @details すでに登録されている場合は、置き換える。通知済みの値があれば、登録した時に最新値で1回呼ぶ。
+         * @param func 登録する関数。空の関数を渡すと、登録を解除する
+         */
+        void SetOnPlayerAmmoChanged(PlayerAmmoCallback func);
+
+        /**
+         * @brief プレイヤーの武器の残弾数を通知
+         * @details 前回の通知から値が変わった時だけ、登録された関数を呼ぶ。毎フレーム呼んでよい。
+         * @param remainingAmmo マガジンの残弾数
+         */
+        void NotifyPlayerAmmo(const uint32_t remainingAmmo);
+
         /**
          * @brief 登録された関数を全て解除し、通知された値も忘れる
          * @details シーンの破棄など、ゲームの区切りで呼ぶ。
@@ -69,5 +88,11 @@ namespace app
         float m_playerHp;
         /** 最後に通知された、プレイヤーの最大HP */
         float m_playerMaxHp;
+        /** プレイヤーの武器の残弾数が変わった時に呼ぶ関数 */
+        PlayerAmmoCallback m_onPlayerAmmoChanged;
+        /** プレイヤーの武器の残弾数が通知済みか */
+        bool m_hasPlayerAmmo;
+        /** 最後に通知された、プレイヤーの武器の残弾数 */
+        uint32_t m_playerAmmo;
     };
 } // namespace app

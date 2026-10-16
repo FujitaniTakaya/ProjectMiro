@@ -28,6 +28,8 @@ namespace app
         Miro,
         /** プレイヤーカメラ */
         PlayerCamera,
+        /** ハンドガン */
+        Handgun,
 
         Max,
         None = Max

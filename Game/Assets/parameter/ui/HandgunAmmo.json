@@ -1,0 +1,104 @@
+{
+    "canvas": {
+        "elements": [
+            {
+                "type": "UIIcon",
+                "name": "HandgunIcon",
+                "asset": "Assets/spriteData/UI/Handgun/HandgunIcon.dds",
+                "width": 160,
+                "height": 94,
+                "position": [
+                    752,
+                    -460,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                ]
+            },
+            {
+                "type": "UIDigit",
+                "name": "AmmoNumber",
+                "asset": "Assets/spriteData/UI/Handgun/Number",
+                "digit": 2,
+                "number": 0,
+                "width": 40,
+                "height": 64,
+                "position": [
+                    480,
+                    -460,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                ]
+            },
+            {
+                "type": "UIIcon",
+                "name": "Slash",
+                "asset": "Assets/spriteData/UI/White.DDS",
+                "width": 6,
+                "height": 64,
+                "position": [
+                    540,
+                    -460,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": -20,
+                "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                ]
+            },
+            {
+                "type": "UIIcon",
+                "name": "Infinity",
+                "asset": "Assets/spriteData/UI/Handgun/Infinity.dds",
+                "width": 64,
+                "height": 32,
+                "position": [
+                    620,
+                    -460,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                ]
+            }
+        ]
+    }
+}

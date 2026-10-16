@@ -8,6 +8,7 @@
  */
 #pragma once
 #include <algorithm>
+#include <array>
 #include <cstdint>
 #include <memory>
 #include <utility>
@@ -413,6 +414,110 @@ namespace app
                 const Vector4& color,
                 const Vector2& pivot
             );
+        };
+
+
+
+
+        /**
+         * @brief 数字を表示するUI
+         * @details 数字の画像を、1桁ずつ並べて描画する。画像は、フォルダの中の "0.dds"〜"9.dds"(1桁1枚)。
+         *          1の位がUIの座標で、上の桁ほど左に、画像の幅(width)ずつずれる。先頭の0は表示しない。(0は"0"を1桁表示する。)
+         *          桁ごとに0〜9の画像を、初期化の時に全て読み込む。数字が変わっても、画像は読み込み直さない。
+         *          (Spriteは1枚につき1つの描画情報しか持たないので、同じSpriteを違う位置に2回描くことはできない。)
+         * @note 最大桁数は9。表示できる範囲を超えた数字は、範囲に丸める。(最大桁数が2なら、0〜99)
+         */
+        class UIDigit : public UIBase
+        {
+        public:
+            UIDigit();
+            ~UIDigit() override;
+
+
+        public:
+            /** 更新 */
+            void Update() override;
+
+            /**
+             * @brief 描画
+             * @param rc レンダーコンテキスト
+             */
+            void Render(RenderContext& rc) override;
+
+
+        public:
+            /**
+             * @brief 初期化
+             * @param folderPath 数字の画像(0.dds〜9.dds)が入ったフォルダのパス
+             * @param maxDigits 最大桁数(1〜9に丸める)
+             * @param number 表示する数字
+             * @param width 画像1枚の幅。桁の間隔にもなる
+             * @param height 画像1枚の高さ
+             * @param position 座標(1の位)
+             * @param scale 拡大率
+             * @param rotation 回転
+             * @param color 色
+             */
+            void Initialize(
+                const char* folderPath,
+                const uint32_t maxDigits,
+                const int number,
+                const float width,
+                const float height,
+                const Vector3& position,
+                const Vector3& scale,
+                const Quaternion& rotation,
+                const Vector4& color
+            );
+
+            /**
+             * @brief 表示する数字を設定
+             * @details 範囲(0〜最大桁数で表せる最大の数)を超えた数字は、範囲に丸める。
+             * @param number 表示する数字
+             */
+            void SetNumber(const int number);
+
+            /**
+             * @brief 表示している数字を取得
+             * @return 表示している数字(丸めた後の値)
+             */
+            int GetNumber() const
+            {
+                return m_number;
+            }
+
+            /**
+             * @brief 表示している桁数を取得
+             * @return 表示している桁数(先頭の0は数えない。最小1)
+             */
+            uint32_t GetVisibleDigitCount() const
+            {
+                return m_visibleDigits;
+            }
+
+
+        private:
+            /** 最大桁数の上限 */
+            static constexpr uint32_t MAX_DIGITS = 9;
+            /** 1桁に使う画像の数(0〜9) */
+            static constexpr uint32_t DIGIT_KIND_COUNT = 10;
+
+
+        private:
+            /** 最大桁数 */
+            uint32_t m_maxDigits;
+            /** 表示できる最大の数(最大桁数が全て9) */
+            int m_maxNumber;
+            /** 表示している数字 */
+            int m_number;
+            /** 表示している桁数 */
+            uint32_t m_visibleDigits;
+            /** 桁ごとの数字。[0]が1の位 */
+            std::array<uint8_t, MAX_DIGITS> m_digits;
+            /** 画像1枚の幅。桁の間隔 */
+            float m_digitWidth;
+            /** 桁ごとの、0〜9のSprite。[桁 * 10 + 数字] */
+            std::unique_ptr<UISprite[]> m_digitSprites;
         };
 
 

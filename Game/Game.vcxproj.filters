@@ -67,6 +67,12 @@
     <Filter Include="Source\Actor\Weapon">
       <UniqueIdentifier>{fc663297-a766-4c34-8c53-e604f148b1dd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\UI\Handgun">
+      <UniqueIdentifier>{92d1a850-af1c-424b-a038-8246b8e76738}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Actor\Weapon\Handgun">
+      <UniqueIdentifier>{065eff3f-5355-4bc5-bb94-00939f9ec37f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -207,6 +213,12 @@
     </ClCompile>
     <ClCompile Include="Source\UI\PlayerHP\HPBarMenu.cpp">
       <Filter>Source\UI\PlayerHP</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI\Handgun\HandgunAmmoMenu.cpp">
+      <Filter>Source\UI\Handgun</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Actor\Weapon\Handgun\Handgun.cpp">
+      <Filter>Source\Actor\Weapon\Handgun</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -390,6 +402,12 @@
     </ClInclude>
     <ClInclude Include="Source\UI\PlayerHP\HPBarMenu.h">
       <Filter>Source\UI\PlayerHP</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Weapon\Handgun\Handgun.h">
+      <Filter>Source\Actor\Weapon\Handgun</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\Handgun\HandgunAmmoMenu.h">
+      <Filter>Source\UI\Handgun</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
