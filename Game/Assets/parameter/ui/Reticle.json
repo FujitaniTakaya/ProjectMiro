@@ -1,0 +1,126 @@
+{
+    "canvas": {
+        "elements": [
+            {
+                "type": "UIIcon",
+                "name": "ReticleTop",
+                "asset": "Assets/spriteData/UI/White.DDS",
+                "width": 3,
+                "height": 14,
+                "position": [
+                    0,
+                    15,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    255,
+                    255,
+                    255,
+                    230
+                ]
+            },
+            {
+                "type": "UIIcon",
+                "name": "ReticleBottom",
+                "asset": "Assets/spriteData/UI/White.DDS",
+                "width": 3,
+                "height": 14,
+                "position": [
+                    0,
+                    -15,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    255,
+                    255,
+                    255,
+                    230
+                ]
+            },
+            {
+                "type": "UIIcon",
+                "name": "ReticleLeft",
+                "asset": "Assets/spriteData/UI/White.DDS",
+                "width": 14,
+                "height": 3,
+                "position": [
+                    -15,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    255,
+                    255,
+                    255,
+                    230
+                ]
+            },
+            {
+                "type": "UIIcon",
+                "name": "ReticleRight",
+                "asset": "Assets/spriteData/UI/White.DDS",
+                "width": 14,
+                "height": 3,
+                "position": [
+                    15,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    255,
+                    255,
+                    255,
+                    230
+                ]
+            },
+            {
+                "type": "UIIcon",
+                "name": "ReticleDot",
+                "asset": "Assets/spriteData/UI/White.DDS",
+                "width": 3,
+                "height": 3,
+                "position": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    255,
+                    255,
+                    255,
+                    230
+                ]
+            }
+        ]
+    }
+}

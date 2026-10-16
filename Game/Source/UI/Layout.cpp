@@ -117,6 +117,35 @@ namespace app
             }
 
 
+            /**
+             * @brief UIDigitを作る
+             * @return 作ったUI。"asset"(数字の画像が入ったフォルダ)が無い場合はnullptr。
+             */
+            UIBase* CreateDigitUI(UICanvas& canvas, const uint32_t key, const JsonView& item)
+            {
+                const std::string asset = ParamLoader::ToString(item, "asset");
+                if (asset.empty())
+                {
+                    K2_LOG("UIDigitに\"asset\"がありません。\n");
+                    return nullptr;
+                }
+
+                UIDigit* digit = canvas.CreateUI<UIDigit>(key);
+                digit->Initialize(
+                    asset.c_str(),
+                    ParamLoader::ToUInt32(item, "digit", 1),
+                    ParamLoader::ToInt(item, "number", 0),
+                    ParamLoader::ToFloat(item, "width"),
+                    ParamLoader::ToFloat(item, "height"),
+                    ReadPosition(item),
+                    ReadScale(item),
+                    ReadRotation(item),
+                    ReadColor(item)
+                );
+                return digit;
+            }
+
+
             /** UIDummyを作る */
             UIBase* CreateDummyUI(UICanvas& canvas, const uint32_t key, const JsonView& item)
             {
@@ -146,6 +175,10 @@ namespace app
                 if (type == "UIGauge")
                 {
                     return CreateGaugeUI(canvas, key, item);
+                }
+                if (type == "UIDigit")
+                {
+                    return CreateDigitUI(canvas, key, item);
                 }
                 if (type == "UIDummy")
                 {

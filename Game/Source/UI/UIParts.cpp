@@ -6,6 +6,8 @@
 
 #include "UIParts.h"
 
+#include <string>
+
 
 namespace app
 {
@@ -210,6 +212,137 @@ namespace app
         )
         {
             InitializeImage(assetName, width, height, position, scale, rotation, color, pivot);
+        }
+
+
+
+
+        //=======================================================================
+        // UIDigit
+        //=======================================================================
+        UIDigit::UIDigit()
+            : m_maxDigits(1)
+            , m_maxNumber(0)
+            , m_number(0)
+            , m_visibleDigits(1)
+            , m_digits()
+            , m_digitWidth(0.0f)
+            , m_digitSprites(nullptr)
+        {}
+
+
+        UIDigit::~UIDigit()
+        {}
+
+
+        void UIDigit::Update()
+        {
+            UpdateAnimation();
+
+            // 親を考慮したワールドのトランスフォームで描画する。
+            m_transform.UpdateTransform();
+            if (!m_digitSprites)
+            {
+                return;
+            }
+
+            const Transform& world = m_transform.m_worldTransform;
+            for (uint32_t i = 0; i < m_visibleDigits; ++i)
+            {
+                // 上の桁ほど左へ。拡大・回転も掛ける。
+                Vector3 offset(-m_digitWidth * world.m_scale.x * static_cast<float>(i), 0.0f, 0.0f);
+                world.m_rotation.Apply(offset);
+
+                UISprite& sprite = m_digitSprites[i * DIGIT_KIND_COUNT + m_digits[i]];
+                sprite.SetPosition(world.m_position + offset);
+                sprite.SetRotation(world.m_rotation);
+                sprite.SetScale(world.m_scale);
+                sprite.SetPivot(m_pivot);
+                sprite.SetMulColor(m_color);
+                sprite.Update();
+            }
+        }
+
+
+        void UIDigit::Render(RenderContext& rc)
+        {
+            if (!m_isDraw || !m_digitSprites)
+            {
+                return;
+            }
+
+            for (uint32_t i = 0; i < m_visibleDigits; ++i)
+            {
+                m_digitSprites[i * DIGIT_KIND_COUNT + m_digits[i]].Draw(rc);
+            }
+        }
+
+
+        void UIDigit::Initialize(
+            const char* folderPath,
+            const uint32_t maxDigits,
+            const int number,
+            const float width,
+            const float height,
+            const Vector3& position,
+            const Vector3& scale,
+            const Quaternion& rotation,
+            const Vector4& color
+        )
+        {
+            m_transform.m_localTransform.m_position = position;
+            m_transform.m_localTransform.m_scale = scale;
+            m_transform.m_localTransform.m_rotation = rotation;
+            m_color = color;
+            m_digitWidth = width;
+
+            m_maxDigits = std::clamp<uint32_t>(maxDigits, 1, MAX_DIGITS);
+            m_maxNumber = 0;
+            for (uint32_t i = 0; i < m_maxDigits; ++i)
+            {
+                m_maxNumber = m_maxNumber * 10 + 9;
+            }
+
+            // 桁ごとに、0〜9の画像を全て読み込む。("フォルダ/0.dds" の0を、数字に書き換えていく。)
+            m_digitSprites = std::make_unique<UISprite[]>(m_maxDigits * DIGIT_KIND_COUNT);
+            std::string path = std::string(folderPath) + "/0.dds";
+            const size_t numberIndex = path.size() - 5;
+            for (uint32_t position = 0; position < m_maxDigits; ++position)
+            {
+                for (uint32_t digit = 0; digit < DIGIT_KIND_COUNT; ++digit)
+                {
+                    path[numberIndex] = static_cast<char>('0' + digit);
+                    m_digitSprites[position * DIGIT_KIND_COUNT + digit].Init(
+                        path.c_str(),
+                        static_cast<uint32_t>(width),
+                        static_cast<uint32_t>(height)
+                    );
+                }
+            }
+
+            SetNumber(number);
+
+            // 初期化した直後から、正しい位置に描画できるようにする。
+            Update();
+        }
+
+
+        void UIDigit::SetNumber(const int number)
+        {
+            m_number = std::clamp(number, 0, m_maxNumber);
+
+            // 1の位から順に、桁の数字を取り出す。先頭の0は表示しないが、1桁目は必ず表示する。
+            m_visibleDigits = 1;
+            int rest = m_number;
+            for (uint32_t i = 0; i < m_digits.size(); ++i)
+            {
+                m_digits[i] = static_cast<uint8_t>(rest % 10);
+                rest /= 10;
+                if (rest > 0)
+                {
+                    m_visibleDigits = i + 2;
+                }
+            }
         }
 
 

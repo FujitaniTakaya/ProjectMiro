@@ -13,8 +13,10 @@
  *              }
  *          }
  *
- *          "type"は、UIIcon、UIButton、UIGauge、UIDummy。"name"は、MenuBaseからUIのパーツを取り出す時の名前になる。
+ *          "type"は、UIIcon、UIButton、UIGauge、UIDigit、UIDummy。"name"は、MenuBaseからUIのパーツを取り出す時の名前になる。
  *          "rotation"は、Z軸回りの角度(度)。"color"は0〜255。UIGaugeは、"pivot": [x, y]も指定できる。
+ *          UIDigitは、"asset"に数字の画像(0.dds〜9.dds)が入ったフォルダを書く。"digit"は最大桁数、"number"は最初に表示する数字(省略は0)。
+ *          "width"は画像1枚の幅で、桁の間隔にもなる。"position"は1の位の座標。
  */
 #pragma once
 #include <memory>
