@@ -41,7 +41,8 @@ namespace nsBalloonEngine
         const char* ddsFilePath,
         const uint32_t width,
         const uint32_t height,
-        const char* fxFilePath
+        const char* fxFilePath,
+        const AlphaBlendMode alphaBlendMode
     )
     {
         SpriteInitData initData;
@@ -49,6 +50,7 @@ namespace nsBalloonEngine
         initData.m_fxFilePath = fxFilePath;
         initData.m_width = width;
         initData.m_height = height;
+        initData.m_alphaBlendMode = alphaBlendMode;
 
         m_sprite.Init(initData);
     }

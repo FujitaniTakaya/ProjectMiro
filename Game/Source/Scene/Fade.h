@@ -8,7 +8,6 @@
  *          NOTE: 描画はRenderUI()の中でRender()を呼ぶこと。Render()の中だと、ポストプロセスに上書きされて見えなくなる。
  */
 #pragma once
-#include "Source/UI/UISprite.h"
 
 
 namespace app
@@ -112,7 +111,7 @@ namespace app
 
     private:
         /** 暗幕のスプライト */
-        ui::UISprite m_fadeSprite;
+        SpriteRender m_fadeSprite;
         /** フェードの状態 */
         FadeState m_state;
         /** フェードの経過時間(フェードアウト中は増え、フェードイン中は減る) */

@@ -26,16 +26,18 @@
                 ]
             },
             {
-                "type": "UIDigit",
+                "type": "UIText",
                 "name": "AmmoNumber",
-                "asset": "Assets/spriteData/UI/Handgun/Number",
-                "digit": 2,
-                "number": 0,
-                "width": 40,
-                "height": 64,
+                "font": "RoundedMplus",
+                "text": "0",
+                "size": 72,
+                "pivot": [
+                    1,
+                    0.5
+                ],
                 "position": [
-                    480,
-                    -460,
+                    500,
+                    -455,
                     0
                 ],
                 "scale": [
@@ -52,14 +54,18 @@
                 ]
             },
             {
-                "type": "UIIcon",
+                "type": "UIText",
                 "name": "Slash",
-                "asset": "Assets/spriteData/UI/White.DDS",
-                "width": 6,
-                "height": 64,
+                "font": "RoundedMplus",
+                "text": "/",
+                "size": 72,
+                "pivot": [
+                    0.5,
+                    0.5
+                ],
                 "position": [
                     540,
-                    -460,
+                    -455,
                     0
                 ],
                 "scale": [
@@ -67,7 +73,7 @@
                     1,
                     1
                 ],
-                "rotation": -20,
+                "rotation": 0,
                 "color": [
                     255,
                     255,
@@ -76,14 +82,18 @@
                 ]
             },
             {
-                "type": "UIIcon",
+                "type": "UIText",
                 "name": "Infinity",
-                "asset": "Assets/spriteData/UI/Handgun/Infinity.dds",
-                "width": 64,
-                "height": 32,
+                "font": "RoundedMplus",
+                "text": "∞",
+                "size": 72,
+                "pivot": [
+                    0.5,
+                    0.5
+                ],
                 "position": [
                     620,
-                    -460,
+                    -455,
                     0
                 ],
                 "scale": [

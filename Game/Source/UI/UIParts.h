@@ -8,14 +8,13 @@
  */
 #pragma once
 #include <algorithm>
-#include <array>
 #include <cstdint>
 #include <memory>
+#include <string>
 #include <utility>
 #include <vector>
 
 #include "Animation/UIAnimation.h"
-#include "UISprite.h"
 
 
 namespace app
@@ -291,7 +290,7 @@ namespace app
 
         protected:
             /** 画像 */
-            UISprite m_sprite;
+            SpriteRender m_sprite;
         };
 
 
@@ -420,18 +419,54 @@ namespace app
 
 
         /**
-         * @brief 数字を表示するUI
-         * @details 数字の画像を、1桁ずつ並べて描画する。画像は、フォルダの中の "0.dds"〜"9.dds"(1桁1枚)。
-         *          1の位がUIの座標で、上の桁ほど左に、画像の幅(width)ずつずれる。先頭の0は表示しない。(0は"0"を1桁表示する。)
-         *          桁ごとに0〜9の画像を、初期化の時に全て読み込む。数字が変わっても、画像は読み込み直さない。
-         *          (Spriteは1枚につき1つの描画情報しか持たないので、同じSpriteを違う位置に2回描くことはできない。)
-         * @note 最大桁数は9。表示できる範囲を超えた数字は、範囲に丸める。(最大桁数が2なら、0〜99)
+         * @brief 文字を表示するUI
+         * @details BalloonEngineのFontRenderで、文字列を描画する。フォントは SetFont() でいつでも切り替えられる。
+         *          文字の大きさは、フォントサイズ(ピクセル)で指定する。トランスフォームの拡大率は、その上に掛かる。
+         *          基点は他のUIと同じで、(0, 0)が左下、(1, 1)が右上。座標が基点の位置になる。
+         *          '\n' で改行できる。複数行のときは、アライメント(左/中央/右)と行間が効く。
+         * @note 回転はZ軸回りだけ。(トランスフォームの回転のうち、Z軸回りの角度だけを使う。)
+         *       文字列は MAX_TEXT_SIZE - 1 文字まで。
          */
-        class UIDigit : public UIBase
+        class UIText : public UIBase
         {
         public:
-            UIDigit();
-            ~UIDigit() override;
+            /**
+             * @brief 初期化に渡す値
+             */
+            struct InitData
+            {
+                InitData();
+
+                /** フォントのID。FontManager::Find() で探す。 */
+                FontId m_fontId;
+                /** 文字列 */
+                std::wstring m_text;
+                /** フォントサイズ(ピクセル)。0以下ならフォントの標準の大きさ。 */
+                float m_fontSize;
+                /** 水平アライメント */
+                TextAlign m_align;
+                /** 行間倍率 */
+                float m_lineSpacing;
+                /** 影のオフセット(ピクセル)。0以下なら影なし。 */
+                float m_shadowOffset;
+                /** 影の色 */
+                Vector4 m_shadowColor;
+                /** 座標 */
+                Vector3 m_position;
+                /** 拡大率 */
+                Vector3 m_scale;
+                /** 回転 */
+                Quaternion m_rotation;
+                /** 色 */
+                Vector4 m_color;
+                /** 基点 */
+                Vector2 m_pivot;
+            };
+
+
+        public:
+            UIText();
+            ~UIText() override;
 
 
         public:
@@ -448,76 +483,55 @@ namespace app
         public:
             /**
              * @brief 初期化
-             * @param folderPath 数字の画像(0.dds〜9.dds)が入ったフォルダのパス
-             * @param maxDigits 最大桁数(1〜9に丸める)
-             * @param number 表示する数字
-             * @param width 画像1枚の幅。桁の間隔にもなる
-             * @param height 画像1枚の高さ
-             * @param position 座標(1の位)
-             * @param scale 拡大率
-             * @param rotation 回転
-             * @param color 色
+             * @param data 初期化に渡す値
              */
-            void Initialize(
-                const char* folderPath,
-                const uint32_t maxDigits,
-                const int number,
-                const float width,
-                const float height,
-                const Vector3& position,
-                const Vector3& scale,
-                const Quaternion& rotation,
-                const Vector4& color
-            );
+            void Initialize(const InitData& data);
 
             /**
-             * @brief 表示する数字を設定
-             * @details 範囲(0〜最大桁数で表せる最大の数)を超えた数字は、範囲に丸める。
-             * @param number 表示する数字
+             * @brief フォントを切り替える
+             * @details すぐに反映される。(次のRender()から、新しいフォントで描画する。)
+             *          文字の大きさは、フォントごとのem(アトラス生成時の-size)から決まるので、次のUpdate()で改めて計算される。
+             * @param fontId フォントのID
              */
-            void SetNumber(const int number);
-
-            /**
-             * @brief 表示している数字を取得
-             * @return 表示している数字(丸めた後の値)
-             */
-            int GetNumber() const
+            void SetFont(const FontId fontId)
             {
-                return m_number;
+                m_fontRender.SetFont(fontId);
             }
 
             /**
-             * @brief 表示している桁数を取得
-             * @return 表示している桁数(先頭の0は数えない。最小1)
+             * @brief フォントのIDを取得
+             * @return フォントのID
              */
-            uint32_t GetVisibleDigitCount() const
+            FontId GetFont() const
             {
-                return m_visibleDigits;
+                return m_fontRender.GetFont();
+            }
+
+            /**
+             * @brief 文字列を設定
+             * @details すぐに反映される。(次のRender()から、新しい文字列で描画する。)
+             * @param text 文字列。MAX_TEXT_SIZE - 1 文字を超えた分は切り捨てる。
+             */
+            void SetText(const wchar_t* text)
+            {
+                m_fontRender.SetText(text);
+            }
+
+            /**
+             * @brief 文字列を取得
+             * @return 文字列
+             */
+            const wchar_t* GetText() const
+            {
+                return m_fontRender.GetText();
             }
 
 
         private:
-            /** 最大桁数の上限 */
-            static constexpr uint32_t MAX_DIGITS = 9;
-            /** 1桁に使う画像の数(0〜9) */
-            static constexpr uint32_t DIGIT_KIND_COUNT = 10;
-
-
-        private:
-            /** 最大桁数 */
-            uint32_t m_maxDigits;
-            /** 表示できる最大の数(最大桁数が全て9) */
-            int m_maxNumber;
-            /** 表示している数字 */
-            int m_number;
-            /** 表示している桁数 */
-            uint32_t m_visibleDigits;
-            /** 桁ごとの数字。[0]が1の位 */
-            std::array<uint8_t, MAX_DIGITS> m_digits;
-            /** 画像1枚の幅。桁の間隔 */
-            float m_digitWidth;
-            /** 桁ごとの、0〜9のSprite。[桁 * 10 + 数字] */
-            std::unique_ptr<UISprite[]> m_digitSprites;
+            /** 文字の描画 */
+            FontRender m_fontRender;
+            /** フォントサイズ(ピクセル)。0以下ならフォントの標準の大きさ。 */
+            float m_fontSize;
         };
 
 

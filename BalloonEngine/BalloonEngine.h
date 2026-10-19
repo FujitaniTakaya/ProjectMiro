@@ -20,6 +20,8 @@
 #include "graphics/RenderingEngine.h"
 #include "graphics/ModelRender.h"
 #include "graphics/SpriteRender.h"
+#include "graphics/SDFFontEngine.h"
+#include "graphics/FontRender.h"
 
 #include "ui/ParameterUI.h"
 // clang-format on

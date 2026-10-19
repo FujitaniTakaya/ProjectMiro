@@ -11,6 +11,7 @@
 #include "Source/Core/Param/ParamHolder.h"
 #include "Source/Core/Timer/TimerManager.h"
 #include "Source/Effect/EffectManager.h"
+#include "Source/Font/FontManager.h"
 #include "Source/Scene/Fade.h"
 #include "Source/Scene/SceneManager.h"
 #include "Source/Sound/SoundDebugUI.h"
@@ -24,6 +25,7 @@ namespace app
         SoundManager::CreateInstance();
         EffectManager::CreateInstance();
         ParamHolder::CreateInstance();
+        FontManager::CreateInstance();
         Fade::CreateInstance();
         SceneManager::CreateInstance();
 
@@ -39,6 +41,7 @@ namespace app
 
         SceneManager::DestroyInstance();
         Fade::DestroyInstance();
+        FontManager::DestroyInstance();
         ParamHolder::DestroyInstance();
         EffectManager::DestroyInstance();
         SoundManager::DestroyInstance();

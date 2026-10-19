@@ -14,11 +14,13 @@
   <ItemGroup>
     <ClCompile Include="BalloonEnginePreCompile.cpp" />
     <ClCompile Include="graphics\DualBlur.cpp"><Filter>graphics</Filter></ClCompile>
+    <ClCompile Include="graphics\FontRender.cpp"><Filter>graphics</Filter></ClCompile>
     <ClCompile Include="graphics\ImGuiRenderer.cpp"><Filter>graphics</Filter></ClCompile>
     <ClCompile Include="graphics\IRenderObject.cpp"><Filter>graphics</Filter></ClCompile>
     <ClCompile Include="graphics\Light.cpp"><Filter>graphics</Filter></ClCompile>
     <ClCompile Include="graphics\ModelRender.cpp"><Filter>graphics</Filter></ClCompile>
     <ClCompile Include="graphics\RenderingEngine.cpp"><Filter>graphics</Filter></ClCompile>
+    <ClCompile Include="graphics\SDFFontEngine.cpp"><Filter>graphics</Filter></ClCompile>
     <ClCompile Include="graphics\SpriteRender.cpp"><Filter>graphics</Filter></ClCompile>
     <ClCompile Include="math\HierarchicalTransform.cpp"><Filter>math</Filter></ClCompile>
     <ClCompile Include="math\LightColor.cpp"><Filter>math</Filter></ClCompile>
@@ -29,12 +31,14 @@
     <ClInclude Include="BalloonEngine.h" />
     <ClInclude Include="BalloonEnginePreCompile.h" />
     <ClInclude Include="graphics\DualBlur.h"><Filter>graphics</Filter></ClInclude>
+    <ClInclude Include="graphics\FontRender.h"><Filter>graphics</Filter></ClInclude>
     <ClInclude Include="graphics\ImGuiRenderer.h"><Filter>graphics</Filter></ClInclude>
     <ClInclude Include="graphics\IRenderObject.h"><Filter>graphics</Filter></ClInclude>
     <ClInclude Include="graphics\Light.h"><Filter>graphics</Filter></ClInclude>
     <ClInclude Include="graphics\ModelRender.h"><Filter>graphics</Filter></ClInclude>
     <ClInclude Include="graphics\RenderingEngine.h"><Filter>graphics</Filter></ClInclude>
     <ClInclude Include="graphics\ShadowRef.h"><Filter>graphics</Filter></ClInclude>
+    <ClInclude Include="graphics\SDFFontEngine.h"><Filter>graphics</Filter></ClInclude>
     <ClInclude Include="graphics\SpriteRender.h"><Filter>graphics</Filter></ClInclude>
     <ClInclude Include="math\HierarchicalTransform.h"><Filter>math</Filter></ClInclude>
     <ClInclude Include="math\LightColor.h"><Filter>math</Filter></ClInclude>

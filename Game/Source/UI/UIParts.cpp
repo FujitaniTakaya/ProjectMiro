@@ -6,6 +6,7 @@
 
 #include "UIParts.h"
 
+#include <cmath>
 #include <string>
 
 
@@ -124,7 +125,7 @@ namespace app
             m_color = color;
             m_pivot = pivot;
 
-            m_sprite.Init(assetName, static_cast<uint32_t>(width), static_cast<uint32_t>(height));
+            m_sprite.Init(assetName, static_cast<uint32_t>(width), static_cast<uint32_t>(height), SpriteRender::DEFAULT_FX_PATH, AlphaBlendMode_Trans);
 
             // 初期化した直後から、正しい位置に描画できるようにする。
             Update();
@@ -218,131 +219,101 @@ namespace app
 
 
         //=======================================================================
-        // UIDigit
+        // UIText
         //=======================================================================
-        UIDigit::UIDigit()
-            : m_maxDigits(1)
-            , m_maxNumber(0)
-            , m_number(0)
-            , m_visibleDigits(1)
-            , m_digits()
-            , m_digitWidth(0.0f)
-            , m_digitSprites(nullptr)
-        {}
-
-
-        UIDigit::~UIDigit()
-        {}
-
-
-        void UIDigit::Update()
+        namespace
         {
+            /**
+             * @brief クォータニオンの、Z軸回りの回転角を求める
+             * @details Z軸回りだけの回転を前提にする。(UIの回転は、Z軸回りだけ。)
+             * @param rotation 回転
+             * @return Z軸回りの回転角(ラジアン)。反時計回りが正。
+             */
+            float ToZRadian(const Quaternion& rotation)
+            {
+                return 2.0f * std::atan2(rotation.z, rotation.w);
+            }
+        } // namespace
+
+
+        UIText::InitData::InitData()
+            : m_fontId(INVALID_FONT_ID)
+            , m_text()
+            , m_fontSize(0.0f)
+            , m_align(TextAlign::Left)
+            , m_lineSpacing(1.2f)
+            , m_shadowOffset(0.0f)
+            , m_shadowColor(0.0f, 0.0f, 0.0f, 1.0f)
+            , m_position(0.0f, 0.0f, 0.0f)
+            , m_scale(1.0f, 1.0f, 1.0f)
+            , m_rotation()
+            , m_color(1.0f, 1.0f, 1.0f, 1.0f)
+            , m_pivot(0.5f, 0.5f)
+        {}
+
+
+        UIText::UIText()
+            : m_fontRender()
+            , m_fontSize(0.0f)
+        {}
+
+
+        UIText::~UIText()
+        {}
+
+
+        void UIText::Update()
+        {
+            // アニメーションはローカルのトランスフォームを動かすので、トランスフォームの更新より先に更新する。
             UpdateAnimation();
 
             // 親を考慮したワールドのトランスフォームで描画する。
             m_transform.UpdateTransform();
-            if (!m_digitSprites)
-            {
-                return;
-            }
-
             const Transform& world = m_transform.m_worldTransform;
-            for (uint32_t i = 0; i < m_visibleDigits; ++i)
-            {
-                // 上の桁ほど左へ。拡大・回転も掛ける。
-                Vector3 offset(-m_digitWidth * world.m_scale.x * static_cast<float>(i), 0.0f, 0.0f);
-                world.m_rotation.Apply(offset);
 
-                UISprite& sprite = m_digitSprites[i * DIGIT_KIND_COUNT + m_digits[i]];
-                sprite.SetPosition(world.m_position + offset);
-                sprite.SetRotation(world.m_rotation);
-                sprite.SetScale(world.m_scale);
-                sprite.SetPivot(m_pivot);
-                sprite.SetMulColor(m_color);
-                sprite.Update();
+            // フォントサイズ(ピクセル)を、フォントの標準の大きさ(em)に対する倍率に直す。
+            float baseScale = 1.0f;
+            if (m_fontSize > 0.0f)
+            {
+                const float em = SDFFontEngine::Get().GetEmSize(m_fontRender.GetFont());
+                baseScale = (em > 0.0f) ? m_fontSize / em : 0.0f;
+            }
+
+            m_fontRender.SetPosition(world.m_position.x, world.m_position.y);
+            m_fontRender.SetScale(Vector2(world.m_scale.x * baseScale, world.m_scale.y * baseScale));
+            // NOTE: FontRenderの回転は、画面の上下が逆の座標で回すので、時計回りが正。UIの回転(反時計回りが正)に合わせるため、符号を反転する。
+            m_fontRender.SetRotation(-ToZRadian(world.m_rotation));
+            m_fontRender.SetPivot(m_pivot);
+            m_fontRender.SetColor(m_color);
+        }
+
+
+        void UIText::Render(RenderContext& rc)
+        {
+            if (m_isDraw)
+            {
+                m_fontRender.Draw(rc);
             }
         }
 
 
-        void UIDigit::Render(RenderContext& rc)
+        void UIText::Initialize(const InitData& data)
         {
-            if (!m_isDraw || !m_digitSprites)
-            {
-                return;
-            }
+            m_transform.m_localTransform.m_position = data.m_position;
+            m_transform.m_localTransform.m_scale = data.m_scale;
+            m_transform.m_localTransform.m_rotation = data.m_rotation;
+            m_color = data.m_color;
+            m_pivot = data.m_pivot;
+            m_fontSize = data.m_fontSize;
 
-            for (uint32_t i = 0; i < m_visibleDigits; ++i)
-            {
-                m_digitSprites[i * DIGIT_KIND_COUNT + m_digits[i]].Draw(rc);
-            }
-        }
-
-
-        void UIDigit::Initialize(
-            const char* folderPath,
-            const uint32_t maxDigits,
-            const int number,
-            const float width,
-            const float height,
-            const Vector3& position,
-            const Vector3& scale,
-            const Quaternion& rotation,
-            const Vector4& color
-        )
-        {
-            m_transform.m_localTransform.m_position = position;
-            m_transform.m_localTransform.m_scale = scale;
-            m_transform.m_localTransform.m_rotation = rotation;
-            m_color = color;
-            m_digitWidth = width;
-
-            m_maxDigits = std::clamp<uint32_t>(maxDigits, 1, MAX_DIGITS);
-            m_maxNumber = 0;
-            for (uint32_t i = 0; i < m_maxDigits; ++i)
-            {
-                m_maxNumber = m_maxNumber * 10 + 9;
-            }
-
-            // 桁ごとに、0〜9の画像を全て読み込む。("フォルダ/0.dds" の0を、数字に書き換えていく。)
-            m_digitSprites = std::make_unique<UISprite[]>(m_maxDigits * DIGIT_KIND_COUNT);
-            std::string path = std::string(folderPath) + "/0.dds";
-            const size_t numberIndex = path.size() - 5;
-            for (uint32_t position = 0; position < m_maxDigits; ++position)
-            {
-                for (uint32_t digit = 0; digit < DIGIT_KIND_COUNT; ++digit)
-                {
-                    path[numberIndex] = static_cast<char>('0' + digit);
-                    m_digitSprites[position * DIGIT_KIND_COUNT + digit].Init(
-                        path.c_str(),
-                        static_cast<uint32_t>(width),
-                        static_cast<uint32_t>(height)
-                    );
-                }
-            }
-
-            SetNumber(number);
+            m_fontRender.SetFont(data.m_fontId);
+            m_fontRender.SetText(data.m_text.c_str());
+            m_fontRender.SetTextAlign(data.m_align);
+            m_fontRender.SetLineSpacing(data.m_lineSpacing);
+            m_fontRender.SetShadowParam(data.m_shadowOffset > 0.0f, data.m_shadowOffset, data.m_shadowColor);
 
             // 初期化した直後から、正しい位置に描画できるようにする。
             Update();
-        }
-
-
-        void UIDigit::SetNumber(const int number)
-        {
-            m_number = std::clamp(number, 0, m_maxNumber);
-
-            // 1の位から順に、桁の数字を取り出す。先頭の0は表示しないが、1桁目は必ず表示する。
-            m_visibleDigits = 1;
-            int rest = m_number;
-            for (uint32_t i = 0; i < m_digits.size(); ++i)
-            {
-                m_digits[i] = static_cast<uint8_t>(rest % 10);
-                rest /= 10;
-                if (rest > 0)
-                {
-                    m_visibleDigits = i + 2;
-                }
-            }
         }
 
 

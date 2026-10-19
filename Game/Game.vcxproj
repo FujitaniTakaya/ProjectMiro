@@ -256,7 +256,6 @@
     <ClCompile Include="Source\Scene\SceneManager.cpp" />
     <ClCompile Include="Source\UI\Layout.cpp" />
     <ClCompile Include="Source\UI\UIParts.cpp" />
-    <ClCompile Include="Source\UI\UISprite.cpp" />
     <ClCompile Include="Source\Core\Timer\Timer.cpp" />
     <ClCompile Include="Source\Core\Timer\TimerManager.cpp" />
     <ClCompile Include="Source\UI\Animation\UIAnimation.cpp" />
@@ -279,6 +278,8 @@
     <ClCompile Include="Source\UI\PlayerHP\HPBarMenu.cpp" />
     <ClCompile Include="Source\UI\Handgun\HandgunAmmoMenu.cpp" />
     <ClCompile Include="Source\Actor\Weapon\Handgun\Handgun.cpp" />
+    <ClCompile Include="Source\Core\Util\TextEncoding.cpp" />
+    <ClCompile Include="Source\Font\FontManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -320,7 +321,6 @@
     <ClInclude Include="Source\UI\Menu.h" />
     <ClInclude Include="Source\UI\SystemPacket.h" />
     <ClInclude Include="Source\UI\UIParts.h" />
-    <ClInclude Include="Source\UI\UISprite.h" />
     <ClInclude Include="Source\Core\Timer\Timer.h" />
     <ClInclude Include="Source\Core\Timer\TimerHandle.h" />
     <ClInclude Include="Source\Core\Timer\TimerManager.h" />
@@ -346,6 +346,9 @@
     <ClInclude Include="Source\UI\PlayerHP\HPBarMenu.h" />
     <ClInclude Include="Source\Actor\Weapon\Handgun\Handgun.h" />
     <ClInclude Include="Source\UI\Handgun\HandgunAmmoMenu.h" />
+    <ClInclude Include="Source\Core\Util\TextEncoding.h" />
+    <ClInclude Include="Source\Font\FontList.h" />
+    <ClInclude Include="Source\Font\FontManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BalloonEngine\BalloonEngine.vcxproj">

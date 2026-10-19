@@ -12,6 +12,8 @@
 #include "Source/Core/HotReload/HotReloadManager.h"
 #include "Source/Core/Json/ParamLoader.h"
 #include "Source/Core/Util/CRC32.h"
+#include "Source/Core/Util/TextEncoding.h"
+#include "Source/Font/FontManager.h"
 
 
 namespace app
@@ -117,32 +119,67 @@ namespace app
             }
 
 
-            /**
-             * @brief UIDigitを作る
-             * @return 作ったUI。"asset"(数字の画像が入ったフォルダ)が無い場合はnullptr。
-             */
-            UIBase* CreateDigitUI(UICanvas& canvas, const uint32_t key, const JsonView& item)
+            /** jsonから文字の水平アライメントを読み込む。省略時は左寄せ */
+            TextAlign ReadTextAlign(const JsonView& item)
             {
-                const std::string asset = ParamLoader::ToString(item, "asset");
-                if (asset.empty())
+                const std::string align = ParamLoader::ToString(item, "align");
+                if (align.empty() || align == "Left")
                 {
-                    K2_LOG("UIDigitに\"asset\"がありません。\n");
-                    return nullptr;
+                    return TextAlign::Left;
+                }
+                if (align == "Center")
+                {
+                    return TextAlign::Center;
+                }
+                if (align == "Right")
+                {
+                    return TextAlign::Right;
                 }
 
-                UIDigit* digit = canvas.CreateUI<UIDigit>(key);
-                digit->Initialize(
-                    asset.c_str(),
-                    ParamLoader::ToUInt32(item, "digit", 1),
-                    ParamLoader::ToInt(item, "number", 0),
-                    ParamLoader::ToFloat(item, "width"),
-                    ParamLoader::ToFloat(item, "height"),
-                    ReadPosition(item),
-                    ReadScale(item),
-                    ReadRotation(item),
-                    ReadColor(item)
-                );
-                return digit;
+                K2_LOG("UITextの\"align\"が不正です。Left / Center / Right のどれかを書いてください。align=%s\n", align.c_str());
+                return TextAlign::Left;
+            }
+
+
+            /**
+             * @brief UITextを作る
+             * @details "font"が見つからない場合は、ログを出して作る。(フォントが無いので何も描画されないが、MenuからSetFont()で後から設定できる。)
+             * @return 作ったUI
+             */
+            UIBase* CreateTextUI(UICanvas& canvas, const uint32_t key, const JsonView& item)
+            {
+                UIText::InitData data;
+
+                // "font"を省略したときは、既定のフォント。
+                const std::string fontName = ParamLoader::ToString(item, "font");
+                if (fontName.empty())
+                {
+                    data.m_fontId = FontManager::Get().GetDefaultFont();
+                }
+                else
+                {
+                    data.m_fontId = FontManager::Get().Find(fontName.c_str());
+                    if (data.m_fontId == INVALID_FONT_ID)
+                    {
+                        K2_LOG("UITextのフォントが見つかりません。font=%s\n", fontName.c_str());
+                    }
+                }
+
+                data.m_text = util::Utf8ToWide(ParamLoader::ToString(item, "text"));
+                data.m_fontSize = ParamLoader::ToFloat(item, "size", 0.0f);
+                data.m_align = ReadTextAlign(item);
+                data.m_lineSpacing = ParamLoader::ToFloat(item, "lineSpacing", 1.2f);
+                data.m_shadowOffset = ParamLoader::ToFloat(item, "shadowOffset", 0.0f);
+                data.m_shadowColor = ParamLoader::ToVector4(item, "shadowColor", true, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
+                data.m_position = ReadPosition(item);
+                data.m_scale = ReadScale(item);
+                data.m_rotation = ReadRotation(item);
+                data.m_color = ReadColor(item);
+                data.m_pivot = ReadPivot(item);
+
+                UIText* text = canvas.CreateUI<UIText>(key);
+                text->Initialize(data);
+                return text;
             }
 
 
@@ -176,9 +213,9 @@ namespace app
                 {
                     return CreateGaugeUI(canvas, key, item);
                 }
-                if (type == "UIDigit")
+                if (type == "UIText")
                 {
-                    return CreateDigitUI(canvas, key, item);
+                    return CreateTextUI(canvas, key, item);
                 }
                 if (type == "UIDummy")
                 {
