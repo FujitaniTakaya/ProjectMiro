@@ -6,8 +6,8 @@
 
 #include "Handgun.h"
 
-#include "Source/Core/Param/ParamHolder.h"
 #include "Source/Actor/Weapon/WeaponParameter.h"
+#include "Source/Core/Param/ParamHolder.h"
 
 
 namespace app
