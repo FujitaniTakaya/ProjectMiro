@@ -196,11 +196,13 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Preview|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="graphics\DualBlur.cpp" />
+    <ClCompile Include="graphics\FontRender.cpp" />
     <ClCompile Include="graphics\ImGuiRenderer.cpp" />
     <ClCompile Include="graphics\IRenderObject.cpp" />
     <ClCompile Include="graphics\Light.cpp" />
     <ClCompile Include="graphics\ModelRender.cpp" />
     <ClCompile Include="graphics\RenderingEngine.cpp" />
+    <ClCompile Include="graphics\SDFFontEngine.cpp" />
     <ClCompile Include="graphics\SpriteRender.cpp" />
     <ClCompile Include="ThirdParty\imgui\imgui.cpp">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -239,11 +241,13 @@
     <ClInclude Include="BalloonEngine.h" />
     <ClInclude Include="BalloonEnginePreCompile.h" />
     <ClInclude Include="graphics\DualBlur.h" />
+    <ClInclude Include="graphics\FontRender.h" />
     <ClInclude Include="graphics\ImGuiRenderer.h" />
     <ClInclude Include="graphics\IRenderObject.h" />
     <ClInclude Include="graphics\Light.h" />
     <ClInclude Include="graphics\ModelRender.h" />
     <ClInclude Include="graphics\RenderingEngine.h" />
+    <ClInclude Include="graphics\SDFFontEngine.h" />
     <ClInclude Include="graphics\ShadowRef.h" />
     <ClInclude Include="graphics\SpriteRender.h" />
     <ClInclude Include="math\HierarchicalTransform.h" />

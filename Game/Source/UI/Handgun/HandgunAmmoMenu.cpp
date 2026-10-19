@@ -7,6 +7,7 @@
 #include "HandgunAmmoMenu.h"
 
 #include <cstdint>
+#include <string>
 
 #include "Source/Core/Util/CRC32.h"
 
@@ -33,10 +34,10 @@ namespace app
 
         void HandgunAmmoMenu::InitializeLogic()
         {
-            m_ammoNumber = GetUI<UIDigit>(AMMO_NUMBER_KEY);
+            m_ammoNumber = GetUI<UIText>(AMMO_NUMBER_KEY);
             if (!m_ammoNumber)
             {
-                K2_LOG("HandgunAmmoMenu: UIDigit \"AmmoNumber\" がありません。\n");
+                K2_LOG("HandgunAmmoMenu: UIText \"AmmoNumber\" がありません。\n");
             }
 
             ApplyAmmo();
@@ -54,7 +55,7 @@ namespace app
         {
             if (m_ammoNumber)
             {
-                m_ammoNumber->SetNumber(static_cast<int>(m_remainingAmmo));
+                m_ammoNumber->SetText(std::to_wstring(m_remainingAmmo).c_str());
             }
         }
     } // namespace ui

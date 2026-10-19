@@ -73,6 +73,9 @@
     <Filter Include="Source\Actor\Weapon\Handgun">
       <UniqueIdentifier>{065eff3f-5355-4bc5-bb94-00939f9ec37f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Font">
+      <UniqueIdentifier>{9cf0545a-ffd5-42cf-9500-0827199ce87c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -151,9 +154,6 @@
     <ClCompile Include="Source\UI\UIParts.cpp">
       <Filter>Source\UI</Filter>
     </ClCompile>
-    <ClCompile Include="Source\UI\UISprite.cpp">
-      <Filter>Source\UI</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Core\Timer\Timer.cpp">
       <Filter>Source\Core\Timer</Filter>
     </ClCompile>
@@ -219,6 +219,12 @@
     </ClCompile>
     <ClCompile Include="Source\Actor\Weapon\Handgun\Handgun.cpp">
       <Filter>Source\Actor\Weapon\Handgun</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Util\TextEncoding.cpp">
+      <Filter>Source\Core\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Font\FontManager.cpp">
+      <Filter>Source\Font</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -331,9 +337,6 @@
     <ClInclude Include="Source\UI\UIParts.h">
       <Filter>Source\UI</Filter>
     </ClInclude>
-    <ClInclude Include="Source\UI\UISprite.h">
-      <Filter>Source\UI</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Core\Timer\Timer.h">
       <Filter>Source\Core\Timer</Filter>
     </ClInclude>
@@ -408,6 +411,15 @@
     </ClInclude>
     <ClInclude Include="Source\UI\Handgun\HandgunAmmoMenu.h">
       <Filter>Source\UI\Handgun</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Util\TextEncoding.h">
+      <Filter>Source\Core\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Font\FontList.h">
+      <Filter>Source\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Font\FontManager.h">
+      <Filter>Source\Font</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

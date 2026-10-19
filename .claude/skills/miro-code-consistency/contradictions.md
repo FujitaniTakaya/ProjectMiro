@@ -24,7 +24,7 @@
 |---|---|---|---|---|
 | C1 | シングルトンが、`CreateInstance/DestroyInstance`(Sound/Effect/ParamHolder/Fade/SceneManager)と、関数内static`Get()`(Timer/HotReload/UIAnimationParameter)の2方式 | **コンストラクタで起動時の処理をするものだけ**Create/Destroy(エンジン資源を持つSound/Effect/Fade、最初のシーンを作るSceneManager、全jsonを読むParamHolder)。それ以外は関数内static。統一はせず、各ヘッダーのCreateInstanceの`@details`に理由を書いた | 修正済み(明文化) | — |
 | C2 | メンバーのデフォルト初期化子(`m_x = nullptr;`)が残っていた(`EffectManager.h`のEffectEntry、`StateMachineBase.h`のIState/`m_currentState`、`IObject.h`)。`StateMachineBase`は`m_currentState`が二重初期化で`m_states`が初期化リストに無かった | メンバーはコンストラクタの初期化リストで初期化する。ネストした補助structも、初期値が要るならコンストラクタを持たせる | 修正済み | C2 |
-| C3 | `Fade`と`ui::UISprite`が、同じ理由(`SpriteRender`にアルファブレンドが無い)で`Sprite`を包んでいた。シェーダーパス定数も重複 | 画像1枚を描く用途は`ui::UISprite`を使う | 修正済み | — |
+| C3 | `Fade`と`ui::UISprite`が、同じ理由(`SpriteRender`にアルファブレンドが無い)で`Sprite`を包んでいた。シェーダーパス定数も重複 | `SpriteRender::Init()`に`AlphaBlendMode`の引数を足し、`ui::UISprite`は廃止した(2026-10-19)。`SetMulColor()`などは値を覚えるだけで、`Update()`を呼ぶまで反映されない。画像1枚を描く用途は`SpriteRender`を使う | 修正済み | — |
 | C4 | `HotReloadHandle`だけマネージャーのヘッダー内で定義、払い出しのオーバーフロー検査も無い | `using XHandle = uint32_t`と`INVALID_X_HANDLE = 0xffffffff`は軽量ヘッダー`XHandle.h`に置く。払い出しの枯渇は`K2_ASSERT`で検査する(Sound/Effect/HotReload) | 修正済み | — |
 | C5 | ハンドルが4つとも`uint32_t`の別名で相互に代入できる。世代付き(index+generation)はTimerだけ。Sound/Effectはファイルスコープのグローバルカウンタ(Soundは全グループ共通でmapはグループごと) | 新規のハンドルは、Timerと同じindex+generation方式 | 現状維持(既存は変更しない) | — |
 | C6 | ID方式が3系統: `Hash32`(CRC32のuint32)、`uint8_t`のenum(`EnSoundID`/`EnEffectKind`/`EnParamID`、区切りは`Max, None = Max`)、`uint32_t`ハンドル。登録の重複検査も、SoundはコンパイルタイムのIsUnique、Effectはサイズのstatic_assert、Paramは実行時assertと不揃い | 新規の項目ごとにenumを増やさない(小さな閉じた集合だけenum)。既存は変更しない | 現状維持 | — |

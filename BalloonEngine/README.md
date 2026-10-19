@@ -7,8 +7,9 @@ k2EngineLow の上に作った自作の描画エンジン(静的ライブラリ)
 
 | 機能 | 内容 |
 |---|---|
-| 描画 | `RenderingEngine`(デファードレンダリング、シャドウ、ブルーム、被写界深度)、`ModelRender`、`SpriteRender`、`Light` |
+| 描画 | `RenderingEngine`(デファードレンダリング、シャドウ、ブルーム、被写界深度)、`ModelRender`、`SpriteRender`(画像1枚。アルファブレンドのモードを指定できる)、`Light` |
 | ImGui | 内蔵済み(`ThirdParty/imgui`)。Game側の設定は不要 |
+| フォント | `SDFFontEngine` / `FontRender`。SDFのアトラス(PNG + JSON)で文字を描く。フォントは複数登録でき、`FontRender::SetFont()` で切り替える。拡大しても輪郭が鮮明 |
 | パラメータ調整UI | `ui/ParameterUI`。ライト、ブルーム、被写界深度などを実行中に調整できる(F1で表示・非表示) |
 | シェーダー | `shader/`(ビルド時に Game の `Assets/shader/balloon/` へ自動コピー) |
 | 設定 | `BalloonEngine.props`(include パス、ライブラリ、C++17、シェーダーのコピー) |
@@ -80,6 +81,40 @@ k2EngineLow の上に作った自作の描画エンジン(静的ライブラリ)
 - ImGui は **Release 以外**で有効です(`BALLOON_IMGUI_ENABLED` が定義される)。
 - Release では ImGui が初期化されないので、`ImGui::` を呼ぶコードは必ず `#ifdef BALLOON_IMGUI_ENABLED` で囲むこと。
 - ImGui のウィンドウ配置は、実行フォルダの `imgui.ini` に保存されます(gitignore 済み)。
+
+## フォントの使い方
+
+文字は、SDF(符号付き距離場)のアトラス画像(PNG)とグリフ情報(JSON)で描きます。フォントは `SDFFontEngine::MAX_FONT_NUM`(8)個まで登録でき、文字列(`FontRender`)ごとに選べます。
+`SDFFontEngine` は `RenderingEngine::Initialize()` / `Finalize()` が初期化・終了するので、Game側は登録と描画だけです。
+
+1. アトラスを作る(msdf-atlas-gen)。
+
+   ```
+   msdf-atlas-gen.exe -font xxx.ttf -type sdf -format png -charset charset.txt -imageout xxx.png -json xxx.json -size 48
+   ```
+
+   - `charset.txt` は、アトラスに入れる文字のUnicodeコードポイント(10進数)を、空白で区切って並べたもの。フォントに無い文字は、アトラスに入らず、表示されない。
+   - `-size` がフォントのem(ピクセル)。`FontRender` の拡大率が1のときの文字の高さになる。
+2. `RenderingEngine::Initialize()` の後に、フォントを登録する。戻り値が `FontId`。失敗(ファイルが無い、上限を超えた)したときは `INVALID_FONT_ID`。
+
+   ```cpp
+   const FontId fontId = SDFFontEngine::Get().LoadFont("Assets/font/xxx.png", "Assets/font/xxx.json");
+   ```
+
+3. `FontRender` で描く。
+
+   ```cpp
+   FontRender text;
+   text.SetFont(fontId);                // 呼び直すと、フォントを切り替えられる
+   text.SetText(L"Hello ∞\n2行目");  // '\n' で改行。255文字まで
+   text.SetPosition(0.0f, 0.0f);        // 画面の中心が原点、y上が正
+   text.SetPivot(Vector2(0.5f, 0.5f));  // (0, 0)が左下、(1, 1)が右上
+   text.SetTextAlign(TextAlign::Center);
+   text.Draw(rc);                       // 即時描画
+   ```
+
+   `Draw()` は即時描画なので、`RenderingEngine::Execute()` の後(Game側のUIの描画)で呼ぶこと。それより前に呼ぶと、ポストプロセスに上書きされて見えなくなる。
+   `SetRotation()` はラジアンで、画面上で時計回りが正(座標の位置が回転の中心)。
 
 ## 注意
 

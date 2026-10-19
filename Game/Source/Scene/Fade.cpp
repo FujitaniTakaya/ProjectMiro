@@ -27,12 +27,9 @@ namespace app
         , m_timer(0.0f)
         , m_duration(0.0f)
     {
-        // NOTE: SpriteRenderは、アルファブレンドの指定ができない(AlphaBlendMode_None固定)ので、UISpriteを使う。
-        //       アルファブレンドが無いと、乗算色のアルファが効かず、フェードにならない。
-        m_fadeSprite.Init(FADE_SPRITE_PATH, FRAME_BUFFER_W, FRAME_BUFFER_H, AlphaBlendMode_Trans);
-
-        // 暗幕は動かないので、一度だけ更新する。(座標・回転・拡大は、UISpriteの初期値のまま)
-        m_fadeSprite.Update();
+        // NOTE: アルファブレンドをAlphaBlendMode_Transにしないと、乗算色のアルファが効かず、フェードにならない。
+        m_fadeSprite.Init(FADE_SPRITE_PATH, FRAME_BUFFER_W, FRAME_BUFFER_H, SpriteRender::DEFAULT_FX_PATH, AlphaBlendMode_Trans);
+        // NOTE: 暗幕は動かないので、座標・回転・拡大は、SpriteRenderの初期値のまま。Update()は、描く前にRender()が呼ぶ。
     }
 
 
@@ -68,7 +65,9 @@ namespace app
             return;
         }
 
+        // 乗算色は、Update()を呼ぶまでスプライトに反映されない。アルファが毎フレーム変わるので、描く前に更新する。
         m_fadeSprite.SetMulColor({ 1.0f, 1.0f, 1.0f, CalcAlpha() });
+        m_fadeSprite.Update();
         m_fadeSprite.Draw(rc);
     }
 

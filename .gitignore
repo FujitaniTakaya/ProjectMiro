@@ -448,3 +448,8 @@ ASALocalRun/
 Game/Assets/shader/balloon/
 # ImGuiのウィンドウ配置の保存ファイル。
 imgui.ini
+
+# SDFフォントのアトラス生成(tools/update_font.bat)が作る中間ファイル
+tools/charset.txt
+# 再配布できないフォント(Windows付属など)の確認用アトラス
+Game/Assets/font/local/

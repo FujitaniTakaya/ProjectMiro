@@ -13,10 +13,17 @@
  *              }
  *          }
  *
- *          "type"は、UIIcon、UIButton、UIGauge、UIDigit、UIDummy。"name"は、MenuBaseからUIのパーツを取り出す時の名前になる。
- *          "rotation"は、Z軸回りの角度(度)。"color"は0〜255。UIGaugeは、"pivot": [x, y]も指定できる。
- *          UIDigitは、"asset"に数字の画像(0.dds〜9.dds)が入ったフォルダを書く。"digit"は最大桁数、"number"は最初に表示する数字(省略は0)。
- *          "width"は画像1枚の幅で、桁の間隔にもなる。"position"は1の位の座標。
+ *          "type"は、UIIcon、UIButton、UIGauge、UIText、UIDummy。"name"は、MenuBaseからUIのパーツを取り出す時の名前になる。
+ *          "rotation"は、Z軸回りの角度(度)。"color"は0〜255。UIGaugeとUIText は、"pivot": [x, y]も指定できる。
+ *          UITextは、フォントで文字を表示する。
+ *              "text"     : 文字列(UTF-8)。"\n"で改行する。
+ *              "font"     : フォントの名前(FontList.hのFONT_LISTの名前)。省略は、FONT_LISTの最初のフォント。
+ *              "size"     : 文字の大きさ(ピクセル)。省略は、フォントの標準の大きさ。
+ *              "align"    : 水平アライメント。"Left"(省略時) / "Center" / "Right"。複数行のときに効く。
+ *              "lineSpacing" : 行間の倍率(省略は1.2)。
+ *              "shadowOffset" : 影のずれ(ピクセル)。省略か0なら影なし。"shadowColor"は影の色(0〜255、省略は黒)。
+ *              "pivot"    : 基点。(0, 0)が左下、(1, 1)が右上。省略は(0.5, 0.5)。"position"が基点の位置になる。
+ *          例: { "type": "UIText", "name": "Infinity", "font": "RoundedMplus", "text": "∞", "size": 64, "position": [620, -460, 0] }
  */
 #pragma once
 #include <memory>

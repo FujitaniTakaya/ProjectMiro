@@ -32,7 +32,7 @@ user-invocable: true
 - **シングルトン(C1)**: コンストラクタで起動時の処理(エンジン資源、全ファイルの読み込み、最初のシーンの生成)をするものだけ`CreateInstance/DestroyInstance`(`Application`で生成・破棄、`@details`に理由を書く)。それ以外は関数内static`Get()`+`Noncopyable`+private constructor。毎フレームの更新は`Application::PreUpdate()`に1行足し、時間は`g_gameTime->GetFrameDeltaTime()`を1回読む。
 - **ハンドル(C4, C5)**: `XHandle.h`(軽量ヘッダー)に`using XHandle = uint32_t`と`INVALID_X_HANDLE = 0xffffffff`。新規は index(下位16bit)+generation(上位16bit)で、枯渇は`K2_ASSERT`。項目ごとのenumは作らない。
 - **メンバー初期化(C2)**: コンストラクタの初期化リスト(宣言順)。`int m_x = 0;`のようなデフォルト初期化子は使わない。ネストしたstructも、初期値が要るならコンストラクタを持たせる。
-- **画像1枚の描画(C3)**: `ui::UISprite`を使う。`SpriteRender`はアルファブレンドできない。
+- **画像1枚の描画(C3)**: BalloonEngineの`SpriteRender`を使う。半透明にするときは`Init()`の最後の引数に`AlphaBlendMode_Trans`を渡す。位置・色などの`Set...()`は、`Update()`を呼ぶまで描画に反映されない。(`ui::UISprite`は、`SpriteRender`にアルファブレンドが入ったので、廃止した。)
 - **include(F5, F6)**: `stdafx.h`→空行→自ヘッダー→std`<...>`→プロジェクト`"..."`(clang-formatが整える)。同じディレクトリは`"X.h"`、他モジュールは`"Source/<Module>/X.h"`(Coreの中は`"Source/Core/<Dir>/X.h"`)。ヘッダーは使うstdヘッダーを自分でincludeする(PCH頼みにしない)。
 - **Doxygen(D3)**: 日本語。`@brief`→`@details`→`@note`→`@tparam`→`@param`→`@return`の順。`/**`で始める。`@param[out] name`。半角の括弧、範囲は`〜`。
 - **Core(H1)**: `Game/Source/Core/`は他に依存しない基盤(`Util`・`Timer`・`Json`・`HotReload`・`Param`)。Coreの外(UI/Scene/Sound/Actorなど)をincludeしない。Core内も下の層だけ(`Json`←`HotReload`←`Param`。`Util`/`Timer`は単独)。新しい基盤を足すときは`check.py`の`CORE_ALLOWED`に依存先を書く。パラメーターの登録一覧`RegisterAllParams()`の定義(`Source/ParamList.cpp`)は、全パラメーターの構造体(Actor・UIなど)を知る必要があるのでCoreの外に置く(IDと宣言は`Core/Param/ParamList.h`)。

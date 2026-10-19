@@ -7,6 +7,7 @@
 #include "RenderingEngine.h"
 
 #include "ImGuiRenderer.h"
+#include "SDFFontEngine.h"
 
 
 namespace nsBalloonEngine
@@ -78,6 +79,13 @@ namespace nsBalloonEngine
         InitializeDeferredRendering();
 
 
+        //========================================================================
+        // フォントを初期化
+        //========================================================================
+        // NOTE: フォントの登録(SDFFontEngine::LoadFont())は、Game側が、この後に行う。
+        SDFFontEngine::Get().Initialize();
+
+
 #ifdef BALLOON_IMGUI_ENABLED
         //========================================================================
         // ImGuiを初期化
@@ -92,6 +100,8 @@ namespace nsBalloonEngine
 
     void RenderingEngine::Finalize()
     {
+        SDFFontEngine::Get().Finalize();
+
 #ifdef BALLOON_IMGUI_ENABLED
         ImGuiRenderer::Get().Finalize();
 #endif // BALLOON_IMGUI_ENABLED
