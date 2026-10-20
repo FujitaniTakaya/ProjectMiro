@@ -181,9 +181,9 @@ namespace nsBalloonEngine
     //=======================================================================
     // アニメーション
     //=======================================================================
-    void ModelRender::PlayAnimation(const uint8_t clipIndex, const float interpolateTime)
+    void ModelRender::PlayAnimation(const uint8_t clipIndex, const float interpolateTime, const bool isReplay)
     {
-        m_animation.Play(clipIndex, interpolateTime);
+        m_animation.Play(clipIndex, interpolateTime, isReplay);
     }
 
 
