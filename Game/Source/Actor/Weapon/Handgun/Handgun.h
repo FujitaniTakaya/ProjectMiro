@@ -3,6 +3,7 @@
  * @brief ハンドガン
  */
 #pragma once
+#include "Source/Actor/ModelData.h"
 #include "Source/Actor/Weapon/WeaponBase.h"
 
 
@@ -15,8 +16,9 @@ namespace app
          * @details デフォルトの武器。予備弾は無限なので、マガジンの残弾が減るだけで、リロードすれば必ず満タンに戻る。
          *          値(リロード時間・マガジンサイズ)は Assets/parameter/actor/Handgun.json(EnParamID::Handgun)から、Start() で WeaponBase::Init() に入れる。
          *          Start() を一度呼んでから、毎フレーム Update() を呼ぶ。
-         * @note モデルはまだ無いので、Render() は何も描画しない。
-         *       ボタン入力・弾の発射・手への取り付けも、まだ無い。
+         * @note モデルは Assets/modelData/Weapon/Glock17/Glock17.tkm(Z-up・6ボーン)。Start() でロードし、Render() で描画する。
+         *       アニメーションは撃つ(スライド)・リロード(マガジン)の2つで、Fire()・Reload() が最初から再生する。
+         *       ボタン入力・弾の発射・手への取り付けは、まだ無い。
          */
         class Handgun : public WeaponBase
         {
@@ -27,7 +29,7 @@ namespace app
 
             /**
              * @brief 1発撃つ
-             * @details 残弾を1つ減らす。リロード中と、残弾が0の時は撃てない。
+             * @details 残弾を1つ減らして、撃つアニメーションを最初から再生する。リロード中と、残弾が0の時は撃てない。
              * @return 撃てたらtrue
              */
             bool Fire();
@@ -35,7 +37,8 @@ namespace app
             /**
              * @brief リロードを始める
              * @details リロード時間が過ぎると、残弾が満タン(マガジンサイズ)になる。予備弾は無限。
-             *          リロード中や満タンの時は、何もしない。リロード時間が0以下の場合は、すぐ満タンになる。
+             *          リロードのアニメーションは最初から再生するが、時間はリロード時間とは別(アニメーションの長さで決まる)。
+             *          リロード中や満タンの時は、何もしない。リロード時間が0以下の場合は、すぐ満タンになる。(アニメーションは再生しない)
              */
             void Reload();
 
@@ -50,11 +53,11 @@ namespace app
 
 
         protected:
-            /** 初期化処理。パラメーターから残弾を満タンにする */
+            /** 初期化処理。パラメーターから残弾を満タンにして、モデルをロードする */
             virtual void Start() override;
-            /** 更新処理。リロードの時間を進める */
+            /** 更新処理。リロードの時間を進めて、モデルを更新する */
             virtual void Update() override;
-            /** 描画処理。モデルが無いので何も描画しない */
+            /** 描画処理。モデルを描画する */
             virtual void Render(RenderContext& rc) override;
 
 
@@ -63,6 +66,8 @@ namespace app
             bool m_isReloading;
             /** リロードが終わるまでの残り時間(秒) */
             float m_reloadTimer;
+            /** アニメーションクリップ(撃つ・リロードの順) */
+            AnimationClips m_animationClips;
         };
     } // namespace actor
 } // namespace app

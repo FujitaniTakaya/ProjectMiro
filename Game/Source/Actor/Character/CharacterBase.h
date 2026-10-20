@@ -3,50 +3,14 @@
  * @brief キャラクターの基底クラス
  */
 #pragma once
-#include <cstdint>
-#include <memory>
-
 #include "Source/Actor/Actor.h"
+#include "Source/Actor/ModelData.h"
 
 
 namespace app
 {
     namespace actor
     {
-        /** アニメーションデータ */
-        struct AnimationData
-        {
-            /** ファイルネーム */
-            const char* fileName;
-            /** ループフラグ */
-            const bool isLoop;
-        };
-
-
-
-
-        /************************************/
-
-
-        /** モデルデータ */
-        struct ModelData
-        {
-            /** ファイルネーム */
-            const char* fileName;
-            /** アニメーションデータ */
-            const AnimationData* animationData;
-            /** モデルの上方向 */
-            const EnModelUpAxis upAxis;
-            /** アニメーションクリップの数 */
-            const uint8_t clipNum;
-        };
-
-
-
-
-        /************************************/
-
-
         /**
          * @brief キャラクターの基底クラス
          * @details モデルとアニメーションクリップはInit()で同期ロードする。
@@ -161,7 +125,7 @@ namespace app
 
         protected:
             /** アニメーションクリップ */
-            std::unique_ptr<AnimationClip[]> m_animationClips;
+            AnimationClips m_animationClips;
             /** キャラクターコントローラー */
             CharacterController m_characterController;
             /** 水平方向(XZ)の現在の移動速度 */

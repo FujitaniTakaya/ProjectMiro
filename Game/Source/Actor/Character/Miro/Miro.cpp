@@ -12,6 +12,7 @@
 #include "MiroParameter.h"
 #include "MiroStateMachine.h"
 #include "Source/Actor/Character/CharacterAnimationClipID.h"
+#include "Source/Actor/ModelData.h"
 #include "Source/Controller/PlayerController.h"
 #include "Source/Core/Param/ParamHolder.h"
 #include "Source/Manager/InGameInfoHub.h"

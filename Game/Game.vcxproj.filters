@@ -421,5 +421,8 @@
     <ClInclude Include="Source\Font\FontManager.h">
       <Filter>Source\Font</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Actor\ModelData.h">
+      <Filter>Source\Actor</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
