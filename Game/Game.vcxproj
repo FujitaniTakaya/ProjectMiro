@@ -350,6 +350,7 @@
     <ClInclude Include="Source\Font\FontList.h" />
     <ClInclude Include="Source\Font\FontManager.h" />
     <ClInclude Include="Source\Actor\ModelData.h" />
+    <ClInclude Include="Source\Actor\Character\Miro\MiroAnimationClipID.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BalloonEngine\BalloonEngine.vcxproj">

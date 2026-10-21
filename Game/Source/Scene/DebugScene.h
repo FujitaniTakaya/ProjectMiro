@@ -62,5 +62,7 @@ namespace app
         ui::UIPacket<ui::HandgunAmmoMenu> m_ammoPacket;
         /** レティクル。動かさないので、Menuは基底クラスのまま */
         ui::UIPacket<ui::MenuBase> m_reticlePacket;
+        /** 背景(bg.tkm)のモデル。動かさないので、Start()で一度だけ更新する */
+        ModelRender m_bgModelRender;
     };
 } // namespace app

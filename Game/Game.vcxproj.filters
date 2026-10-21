@@ -424,5 +424,8 @@
     <ClInclude Include="Source\Actor\ModelData.h">
       <Filter>Source\Actor</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Actor\Character\Miro\MiroAnimationClipID.h">
+      <Filter>Source\Actor\Character\Miro</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

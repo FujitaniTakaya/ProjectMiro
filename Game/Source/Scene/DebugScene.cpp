@@ -26,6 +26,16 @@ namespace app
         constexpr const char* HANDGUN_AMMO_JSON_PATH = "Assets/parameter/ui/HandgunAmmo.json";
         /** レティクルのレイアウトのjson */
         constexpr const char* RETICLE_JSON_PATH = "Assets/parameter/ui/Reticle.json";
+        /** ハンドガンを置く座標。手に持たせるまでは、カメラの注視点(Miroの右上)の手前に置く */
+        const Vector3 HANDGUN_POSITION(60.0f, 90.0f, -60.0f);
+        /** ハンドガンのY軸回転(度)。銃口が+Xを向き、側面が最初のカメラ(Miroの後ろ)から見える */
+        constexpr float HANDGUN_YAW_DEG = 90.0f;
+        /** 背景モデルのファイルパス */
+        constexpr const char* BG_MODEL_PATH = "Assets/modelData/bg.tkm";
+        /** 背景モデルが影を受けるか */
+        constexpr bool BG_IS_RECEIVE_SHADOW = true;
+        /** 背景モデルが影を落とすか */
+        constexpr bool BG_IS_CAST_SHADOW = false;
     } // namespace
 
 
@@ -55,6 +65,10 @@ namespace app
 
         m_miro = std::make_unique<actor::Miro>();
         m_handgun = std::make_unique<actor::Handgun>();
+        m_handgun->SetPosition(HANDGUN_POSITION);
+        Quaternion handgunRotation;
+        handgunRotation.SetRotationDegY(HANDGUN_YAW_DEG);
+        m_handgun->SetRotation(handgunRotation);
         m_playerCamera = std::make_unique<camera::PlayerCamera>();
     }
 
@@ -71,6 +85,10 @@ namespace app
         m_miro->StartWrapper();
         m_handgun->StartWrapper();
         m_playerCamera->Start();
+
+        // 背景のモデル(アニメーションは無い。Z-upのモデル)。動かさないので、ワールド行列はここで確定させる
+        m_bgModelRender.Init(BG_MODEL_PATH, nullptr, 0, EnModelUpAxis::enModelUpAxisZ, BG_IS_RECEIVE_SHADOW, BG_IS_CAST_SHADOW);
+        m_bgModelRender.Update();
 
         // 最初の残弾数を通知
         InGameInfoHub::Get().NotifyPlayerAmmo(m_handgun->GetRemainingAmmo());
@@ -123,6 +141,7 @@ namespace app
 
     void DebugScene::Render(RenderContext& rc)
     {
+        m_bgModelRender.Draw(rc);
         m_miro->RenderWrapper(rc);
         m_handgun->RenderWrapper(rc);
     }
