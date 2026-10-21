@@ -109,8 +109,9 @@ namespace nsBalloonEngine
          * @brief アニメーションを再生する
          * @param clipIndex 再生するアニメーションクリップのインデックス
          * @param interpolateTime インターポレーション時間
+         * @param isReplay 巻き戻して1から再生するか
          */
-        void PlayAnimation(const uint8_t clipIndex, const float interpolateTime = 0.0f);
+        void PlayAnimation(const uint8_t clipIndex, const float interpolateTime = 0.0f, const bool isReplay = false);
 
 
         /**
@@ -186,4 +187,4 @@ namespace nsBalloonEngine
         /** フォワードを使って特殊レンダリングをするかどうか */
         bool m_useForwardRendering;
     };
-} // namespace nsBalloonEngine
+} // namespace nsBalloonEngine

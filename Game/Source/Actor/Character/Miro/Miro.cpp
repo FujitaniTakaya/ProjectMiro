@@ -6,12 +6,14 @@
 
 #include "Miro.h"
 
+#include <cstddef>
 #include <cstdint>
 #include <iterator>
 
+#include "MiroAnimationClipID.h"
 #include "MiroParameter.h"
 #include "MiroStateMachine.h"
-#include "Source/Actor/Character/CharacterAnimationClipID.h"
+#include "Source/Actor/ModelData.h"
 #include "Source/Controller/PlayerController.h"
 #include "Source/Core/Param/ParamHolder.h"
 #include "Source/Manager/InGameInfoHub.h"
@@ -24,22 +26,49 @@ namespace app
     {
         namespace
         {
+            /** モデルのファイルパス。テクスチャは同じフォルダに置く */
+            constexpr const char* MODEL_PATH = "Assets/modelData/character/miro/miro.tkm";
+
             /**
              * アニメーションデータ
-             * 先頭は EnCharacterAnimationClipID の順(待機・歩き・走り)に並べること。共通ステートが番号で再生する。
+             * EnMiroAnimationClipID の順に並べること。先頭は EnCharacterAnimationClipID の順(待機・歩き・走り)で、共通ステートが番号で再生する。
              */
             const AnimationData ANIMATION_DATA[] = {
-                { "Assets/animData/idle.tka", true },
-                { "Assets/animData/walk.tka", true },
-                { "Assets/animData/run.tka", true },
+                // 共通
+                { "Assets/animData/character/miro/Miro_Idle.tka", true },
+                { "Assets/animData/character/miro/walk/Miro_Walk_Fwd.tka", true },
+                { "Assets/animData/character/miro/dash/Miro_Run_Fwd.tka", true },
+                // 歩き
+                { "Assets/animData/character/miro/walk/Miro_Walk_Fwd_Left.tka", true },
+                { "Assets/animData/character/miro/walk/Miro_Walk_Fwd_Right.tka", true },
+                { "Assets/animData/character/miro/walk/Miro_Walk_Left.tka", true },
+                { "Assets/animData/character/miro/walk/Miro_Walk_Right.tka", true },
+                { "Assets/animData/character/miro/walk/Miro_Walk_Bwd.tka", true },
+                { "Assets/animData/character/miro/walk/Miro_Walk_Bwd_Left.tka", true },
+                { "Assets/animData/character/miro/walk/Miro_Walk_Bwd_Right.tka", true },
+                // 走り
+                { "Assets/animData/character/miro/dash/Miro_Run_Fwd_Left.tka", true },
+                { "Assets/animData/character/miro/dash/Miro_Run_Fwd_Right.tka", true },
+                { "Assets/animData/character/miro/dash/Miro_Run_Left.tka", true },
+                { "Assets/animData/character/miro/dash/Miro_Run_Right.tka", true },
+                { "Assets/animData/character/miro/dash/Miro_Run_Bwd.tka", true },
+                { "Assets/animData/character/miro/dash/Miro_Run_Bwd_Left.tka", true },
+                { "Assets/animData/character/miro/dash/Miro_Run_Bwd_Right.tka", true },
+                // ハンドガン
+                { "Assets/animData/character/miro/pistol/Miro_GunShot01.tka", false },
+                { "Assets/animData/character/miro/pistol/Miro_GunShot02.tka", false },
+                { "Assets/animData/character/miro/pistol/Miro_GunShot03.tka", false },
+                { "Assets/animData/character/miro/pistol/Miro_Pistol_DryFire.tka", false },
+                { "Assets/animData/character/miro/pistol/Miro_Pistol_Equip.tka", false },
+                { "Assets/animData/character/miro/pistol/Miro_Pistol_Reload.tka", false },
             };
-            static_assert(std::size(ANIMATION_DATA) == CHARACTER_ANIMATION_CLIP_COUNT, "共通のアニメーションクリップの数と合わせること");
+            static_assert(std::size(ANIMATION_DATA) == static_cast<size_t>(EnMiroAnimationClipID::Max), "アニメーションデータの数をIDと合わせること");
 
-            /** モデルデータ */
+            /** モデルデータ(Z-upのモデル) */
             const ModelData MODEL_DATA = {
-                "Assets/modelData/unityChan.tkm",
+                MODEL_PATH,
                 ANIMATION_DATA,
-                EnModelUpAxis::enModelUpAxisY,
+                EnModelUpAxis::enModelUpAxisZ,
                 static_cast<uint8_t>(std::size(ANIMATION_DATA))
             };
         } // namespace

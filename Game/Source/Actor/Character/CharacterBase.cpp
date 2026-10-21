@@ -7,8 +7,6 @@
 #include "CharacterBase.h"
 
 #include <algorithm>
-#include <cstdint>
-#include <memory>
 
 
 namespace app
@@ -81,17 +79,7 @@ namespace app
         void CharacterBase::Init(const ModelData& data, const float radius, const float height)
         {
             // アニメーションクリップを同期ロード
-            // NOTE: クリップが0個のときは配列を作らずnullptrを渡す。
-            //       make_unique<AnimationClip[]>(0)は非nullを返し、ModelRender側でアニメーションありとして扱われてしまう。
-            if (data.clipNum > 0)
-            {
-                m_animationClips = std::make_unique<AnimationClip[]>(data.clipNum);
-                for (uint8_t i = 0; i < data.clipNum; ++i)
-                {
-                    m_animationClips[i].Load(data.animationData[i].fileName);
-                    m_animationClips[i].SetLoopFlag(data.animationData[i].isLoop);
-                }
-            }
+            m_animationClips = LoadAnimationClips(data);
 
             // モデルを初期化
             m_modelRender.Init(

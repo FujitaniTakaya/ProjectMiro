@@ -55,10 +55,11 @@ namespace nsK2EngineLow {
 		/// </summary>
 		/// <param name="clipNo">アニメーションクリップの番号。Init関数に渡したanimClipListの並びとなる。</param>
 		/// <param name="interpolateTime">補完時間(単位：秒)</param>
-		void Play(int clipNo, float interpolateTime = 0.0f)
+		/// <param name="isReplay">巻き戻して1から再生するか</param>
+		void Play(int clipNo, float interpolateTime = 0.0f, bool isReplay = false)
 		{
 			if (clipNo < m_animationClips.size()) {
-				PlayCommon(m_animationClips[clipNo], interpolateTime);
+				PlayCommon(m_animationClips[clipNo], interpolateTime, isReplay);
 			}
 		}
 		/// <summary>
@@ -138,11 +139,15 @@ namespace nsK2EngineLow {
 		Vector3 CalcFootstepDeltaValueInWorldSpace(Quaternion rotation, Vector3 scale) const;
 
 	private:
-		void PlayCommon(AnimationClip* nextClip, float interpolateTime)
+		void PlayCommon(AnimationClip* nextClip, float interpolateTime, bool isReplay)
 		{
 			int index = GetLastAnimationControllerIndex();
-			if (m_animationPlayController[index].GetAnimClip() == nextClip) {
+			if (m_animationPlayController[index].GetAnimClip() == nextClip && !isReplay) {
 				return;
+			}
+			if (isReplay) {
+				//巻き戻して再生する時は、補間しない。(コントローラーが1つだけなのに補間すると、初期ポーズと混ざってしまう)
+				interpolateTime = 0.0f;
 			}
 			if (interpolateTime == 0.0f) {
 				//補完なし。
