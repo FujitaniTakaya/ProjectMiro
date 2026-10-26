@@ -28,8 +28,8 @@ namespace app
         constexpr const char* HANDGUN_AMMO_JSON_PATH = "Assets/parameter/ui/HandgunAmmo.json";
         /** レティクルのレイアウトのjson */
         constexpr const char* RETICLE_JSON_PATH = "Assets/parameter/ui/Reticle.json";
-        /** コアを置く座標。モデルの原点は中心にあり、拡大後の下端が原点より61下なので、高さを61にして地面(y=0)に乗せる */
-        const Vector3 CORE_POSITION(0.0f, 61.0f, 0.0f);
+        /** コアを置く座標。コアの真下の地面(y=0)の座標を渡す。浮かせる高さはCore側で足す */
+        const Vector3 CORE_POSITION(0.0f, 0.0f, 0.0f);
         /** Miroの初期座標 */
         const Vector3 MIRO_POSITION(100.0f, 100.0f, 0.0f);
         /** ハンドガンを置く座標。手に持たせるまでは、カメラの注視点(Miroの右上)の手前に置く */
