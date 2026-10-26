@@ -19,6 +19,7 @@ namespace app
         class Miro;
         class Handgun;
         class StageField;
+        class Core;
     } // namespace actor
     namespace camera
     {
@@ -65,6 +66,8 @@ namespace app
         ui::UIPacket<ui::MenuBase> m_reticlePacket;
         /** ステージのフィールド(背景のstage.tkm) */
         std::unique_ptr<actor::StageField> m_stageField;
+        /** ステージのコア(宝石のモデル)。当たり判定は無い */
+        std::unique_ptr<actor::Core> m_core;
         /** 背景の当たり判定。m_stageFieldのモデルの形そのままのメッシュコライダー(キャラクターコントローラーが床や壁として扱う) */
         PhysicsStaticObject m_bgPhysicsStaticObject;
     };

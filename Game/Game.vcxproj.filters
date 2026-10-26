@@ -235,6 +235,9 @@
     <ClCompile Include="Source\Actor\Stage\StageField.cpp">
       <Filter>Source\Actor\Stage</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Actor\Stage\Core.cpp">
+      <Filter>Source\Actor\Stage</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -443,6 +446,9 @@
       <Filter>Source\Actor\Character\Miro</Filter>
     </ClInclude>
     <ClInclude Include="Source\Actor\Stage\StageField.h">
+      <Filter>Source\Actor\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Stage\Core.h">
       <Filter>Source\Actor\Stage</Filter>
     </ClInclude>
   </ItemGroup>

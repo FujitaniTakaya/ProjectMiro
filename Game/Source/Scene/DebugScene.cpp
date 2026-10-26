@@ -9,6 +9,7 @@
 #include <memory>
 
 #include "Source/Actor/Character/Miro/Miro.h"
+#include "Source/Actor/Stage/Core.h"
 #include "Source/Actor/Stage/StageField.h"
 #include "Source/Actor/Weapon/Handgun/Handgun.h"
 #include "Source/Camera/PlayerCamera.h"
@@ -27,6 +28,10 @@ namespace app
         constexpr const char* HANDGUN_AMMO_JSON_PATH = "Assets/parameter/ui/HandgunAmmo.json";
         /** レティクルのレイアウトのjson */
         constexpr const char* RETICLE_JSON_PATH = "Assets/parameter/ui/Reticle.json";
+        /** コアを置く座標。モデルの原点は中心にあり、拡大後の下端が原点より61下なので、高さを61にして地面(y=0)に乗せる */
+        const Vector3 CORE_POSITION(0.0f, 61.0f, 0.0f);
+        /** Miroの初期座標 */
+        const Vector3 MIRO_POSITION(100.0f, 100.0f, 0.0f);
         /** ハンドガンを置く座標。手に持たせるまでは、カメラの注視点(Miroの右上)の手前に置く */
         const Vector3 HANDGUN_POSITION(60.0f, 90.0f, -60.0f);
         /** ハンドガンのY軸回転(度)。銃口が+Xを向き、側面が最初のカメラ(Miroの後ろ)から見える */
@@ -59,7 +64,10 @@ namespace app
         ui::InitUIPacket(m_reticlePacket, RETICLE_JSON_PATH);
 
         m_stageField = std::make_unique<actor::StageField>();
+        m_core = std::make_unique<actor::Core>();
+        m_core->SetPosition(CORE_POSITION);
         m_miro = std::make_unique<actor::Miro>();
+        m_miro->SetPosition(MIRO_POSITION);
         m_handgun = std::make_unique<actor::Handgun>();
         m_handgun->SetPosition(HANDGUN_POSITION);
         Quaternion handgunRotation;
@@ -84,6 +92,7 @@ namespace app
 
         // ステージのフィールド。ワールド行列は、ここで確定する
         m_stageField->StartWrapper();
+        m_core->StartWrapper();
 
         // 背景の当たり判定。モデルの形をそのまま使うので、ワールド行列(Z-upの補正込み)が確定した後に作る
         ModelRender& stageModelRender = m_stageField->GetModelRender();
@@ -98,6 +107,7 @@ namespace app
     void DebugScene::Update()
     {
         m_stageField->UpdateWrapper();
+        m_core->UpdateWrapper();
         m_miro->UpdateWrapper();
         m_handgun->UpdateWrapper();
 
@@ -142,6 +152,7 @@ namespace app
     void DebugScene::Render(RenderContext& rc)
     {
         m_stageField->RenderWrapper(rc);
+        m_core->RenderWrapper(rc);
         m_miro->RenderWrapper(rc);
         m_handgun->RenderWrapper(rc);
     }
