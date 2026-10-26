@@ -46,6 +46,7 @@ namespace app
     public:
         CharacterInput()
             : m_move(Vector3::Zero)
+            , m_look(Vector3::Zero)
             , m_pressMask(0)
             , m_triggerMask(0)
         {
@@ -83,6 +84,44 @@ namespace app
         bool IsMoving() const
         {
             return m_move.LengthSq() > MOVE_THRESHOLD_SQ;
+        }
+
+
+        /**
+         * @brief 向きたい方向を設定する
+         * @details y成分は0にして、水平方向の長さを1にそろえる。水平方向の長さが0なら「指定なし」になる。
+         *          これを読むのは、移動方向と別の向きを持つキャラクター(Miroなど)だけ。読まないキャラクターは、今までどおり移動方向を向く。
+         * @param worldLook ワールド空間の向きたい方向
+         */
+        void SetLook(const Vector3& worldLook)
+        {
+            m_look = Vector3(worldLook.x, 0.0f, worldLook.z);
+            if (m_look.LengthSq() > LOOK_THRESHOLD_SQ)
+            {
+                m_look.Normalize();
+            }
+            else
+            {
+                m_look = Vector3::Zero;
+            }
+        }
+
+        /**
+         * @brief 向きたい方向を取得する
+         * @return ワールド空間(XZ平面)の向きたい方向。長さ1。指定がなければゼロベクトル
+         */
+        const Vector3& GetLook() const
+        {
+            return m_look;
+        }
+
+        /**
+         * @brief 向きたい方向が指定されているかどうか
+         * @return 指定されていれば true
+         */
+        bool HasLook() const
+        {
+            return m_look.LengthSq() > LOOK_THRESHOLD_SQ;
         }
 
 
@@ -147,11 +186,15 @@ namespace app
 
         /** 移動入力が「ある」とみなす長さの二乗(Beastの STICK_AMOUNT_THRESHOLD = 0.0001 の二乗) */
         static constexpr float MOVE_THRESHOLD_SQ = 0.0001f * 0.0001f;
+        /** 向きたい方向が「ある」とみなす長さの二乗 */
+        static constexpr float LOOK_THRESHOLD_SQ = 0.0001f * 0.0001f;
 
 
     private:
         /** 移動入力(ワールド空間のXZ平面。長さが倒し具合) */
         Vector3 m_move;
+        /** 向きたい方向(ワールド空間のXZ平面。長さ1。指定がなければゼロ) */
+        Vector3 m_look;
         /** 押しているボタン */
         uint32_t m_pressMask;
         /** 押した瞬間のボタン */

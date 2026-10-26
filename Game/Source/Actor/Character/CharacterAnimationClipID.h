@@ -18,15 +18,12 @@ namespace app
         /**
          * @brief キャラクター共通のアニメーションクリップID
          * @note 全キャラクターが持つものだけを置く。足すときは、全キャラクターの animationData の同じ位置にも足すこと。
+         *       歩き・走りは、動き方がキャラクターで大きく違うので、共通にしない。各キャラクターが固有のenumで持つ。
          */
         enum class EnCharacterAnimationClipID : uint8_t
         {
             /** 待機 */
             Idle,
-            /** 歩き */
-            Walk,
-            /** 走り */
-            Run,
 
             Max
         };

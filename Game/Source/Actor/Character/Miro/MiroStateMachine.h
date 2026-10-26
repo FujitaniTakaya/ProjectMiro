@@ -16,9 +16,10 @@ namespace app
 
         /**
          * @brief Miroのステートマシン
-         * @details キャラクター共通のステート(待機・歩き・走り)を登録して、入力から遷移先を決める。
+         * @details キャラクター共通の待機ステートと、Miro専用の歩き・走りステート(8方向。MiroIState.h)を登録して、入力から遷移先を決める。
          *          入力は、CharacterStateMachine が持つ ControllerSlot から Update() で作る。(CharacterStateMachine を参照)
          *          歩き・走りの速度は、MiroParameter の値を返す。
+         *          向きは、移動方向ではなくカメラの方向(入力のLook)にそろえる。
          *          Miro専用のステートが要るようになったら、ここで追加する。
          * @note MiroParameter は ParamHolder が持つものの参照なので、ホットリロードで速度が変わる。
          */
@@ -38,6 +39,13 @@ namespace app
 
 
         protected:
+            /**
+             * @brief 向きを決める
+             * @details 入力にLook(カメラの方向)があれば、移動方向と関係なくその方向を向く。(入力がなくても向く)
+             *          なければ、共通の動き(移動入力がある間だけ、移動方向を向く)。
+             */
+            virtual void UpdateRotation() override;
+
             /**
              * @brief ステートの変更先を取得する
              * @details 優先度の高い順に判定する。走りに切り替えられるなら走り、移動入力があれば歩き、どれにも当てはまらなければ待機。

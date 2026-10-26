@@ -1,8 +1,9 @@
 ﻿/**
  * @file CharacterIState.h
  * @brief キャラクター共通のステート
- * @details Miroとゾンビなど、全キャラクターで共通のステートをまとめる。
- *          ステートの処理はキャラクターで共通にして、違いはデータ(アニメーションの番号、移動速度)で出す。
+ * @details Miroとゾンビなど、全キャラクターで共通のステートをまとめる。今は待機だけ。
+ *          歩き・走りは、動き方(アニメーションの方向数、向きの決め方)がキャラクターで大きく違うので、キャラクターごとに持つ。
+ *          (Miroは Miro/MiroIState.h)
  *          アニメーションは EnCharacterAnimationClipID の番号で再生する。
  */
 #pragma once
@@ -68,56 +69,6 @@ namespace app
         public:
             explicit CharacterIdleState(CharacterStateMachine* owner);
             ~CharacterIdleState() override = default;
-        };
-
-
-
-
-        /*************************************************************/
-
-
-        /**
-         * @brief 歩きステート
-         */
-        class CharacterWalkState : public CharacterIState
-        {
-            appState(CharacterWalkState);
-
-        public:
-            // IStateの仮想関数のオーバーライド
-            void Enter() override final;
-            void Update() override final;
-            void Exit() override final;
-
-
-        public:
-            explicit CharacterWalkState(CharacterStateMachine* owner);
-            ~CharacterWalkState() override = default;
-        };
-
-
-
-
-        /*************************************************************/
-
-
-        /**
-         * @brief 走りステート
-         */
-        class CharacterRunState : public CharacterIState
-        {
-            appState(CharacterRunState);
-
-        public:
-            // IStateの仮想関数のオーバーライド
-            void Enter() override final;
-            void Update() override final;
-            void Exit() override final;
-
-
-        public:
-            explicit CharacterRunState(CharacterStateMachine* owner);
-            ~CharacterRunState() override = default;
         };
     } // namespace actor
 } // namespace app
