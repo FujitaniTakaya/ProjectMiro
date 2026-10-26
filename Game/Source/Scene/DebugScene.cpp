@@ -31,7 +31,7 @@ namespace app
         /** ハンドガンのY軸回転(度)。銃口が+Xを向き、側面が最初のカメラ(Miroの後ろ)から見える */
         constexpr float HANDGUN_YAW_DEG = 90.0f;
         /** 背景モデルのファイルパス */
-        constexpr const char* BG_MODEL_PATH = "Assets/modelData/bg.tkm";
+        constexpr const char* BG_MODEL_PATH = "Assets/modelData/stage/stage.tkm";
         /** 背景モデルが影を受けるか */
         constexpr bool BG_IS_RECEIVE_SHADOW = true;
         /** 背景モデルが影を落とすか */
@@ -89,6 +89,9 @@ namespace app
         // 背景のモデル(アニメーションは無い。Z-upのモデル)。動かさないので、ワールド行列はここで確定させる
         m_bgModelRender.Init(BG_MODEL_PATH, nullptr, 0, EnModelUpAxis::enModelUpAxisZ, BG_IS_RECEIVE_SHADOW, BG_IS_CAST_SHADOW);
         m_bgModelRender.Update();
+
+        // 背景の当たり判定。モデルの形をそのまま使うので、ワールド行列(Z-upの補正込み)が確定した後に作る
+        m_bgPhysicsStaticObject.CreateFromModel(m_bgModelRender.GetModel(), m_bgModelRender.GetModel().GetWorldMatrix());
 
         // 最初の残弾数を通知
         InGameInfoHub::Get().NotifyPlayerAmmo(m_handgun->GetRemainingAmmo());

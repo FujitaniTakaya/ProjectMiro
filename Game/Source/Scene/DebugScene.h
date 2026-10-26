@@ -62,7 +62,9 @@ namespace app
         ui::UIPacket<ui::HandgunAmmoMenu> m_ammoPacket;
         /** レティクル。動かさないので、Menuは基底クラスのまま */
         ui::UIPacket<ui::MenuBase> m_reticlePacket;
-        /** 背景(bg.tkm)のモデル。動かさないので、Start()で一度だけ更新する */
+        /** 背景(stage.tkm)のモデル。動かさないので、Start()で一度だけ更新する */
         ModelRender m_bgModelRender;
+        /** 背景の当たり判定。m_bgModelRenderの形そのままのメッシュコライダー(キャラクターコントローラーが床や壁として扱う) */
+        PhysicsStaticObject m_bgPhysicsStaticObject;
     };
 } // namespace app
