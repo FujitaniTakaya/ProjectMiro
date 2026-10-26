@@ -28,7 +28,7 @@ namespace app
 
         // [PARAM_GEN begin ctor] 自動生成(tools/param_gen.py)。手で編集しない
         PlayerCameraParameter::PlayerCameraParameter()
-            : targetOffsetUp(80.0f)
+            : targetOffsetUp(180.0f)
             , targetOffsetRight(60.0f)
             , toCameraPos(0.0f, 125.0f, -250.0f)
             , rotateSpeed(78.0f)

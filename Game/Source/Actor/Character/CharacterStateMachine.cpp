@@ -90,17 +90,34 @@ namespace app
             m_ownerActor->SetPosition(nextPosition);
 
             // --- 回転 ---
+            UpdateRotation();
+        }
+
+
+        void CharacterStateMachine::UpdateRotation()
+        {
             // 入力がある間だけ、入力の方向へ向ける。(入力がない間は、向きを変えない)
+            const CharacterInput& input = GetInput();
             if (input.IsMoving())
             {
-                Vector3 inputDirection = inputMove;
-                inputDirection.y = 0.0f;
-                inputDirection.Normalize();
-
-                Quaternion rotation = m_ownerActor->GetTransform().m_rotation;
-                rotation.SetRotationYFromDirectionXZ(inputDirection);
-                m_ownerActor->SetRotation(rotation);
+                FaceDirection(input.GetMove());
             }
+        }
+
+
+        void CharacterStateMachine::FaceDirection(const Vector3& direction)
+        {
+            Vector3 xzDirection = direction;
+            xzDirection.y = 0.0f;
+            if (xzDirection.LengthSq() <= 0.0f)
+            {
+                return;
+            }
+            xzDirection.Normalize();
+
+            Quaternion rotation = m_ownerActor->GetTransform().m_rotation;
+            rotation.SetRotationYFromDirectionXZ(xzDirection);
+            m_ownerActor->SetRotation(rotation);
         }
 
 

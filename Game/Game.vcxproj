@@ -280,6 +280,7 @@
     <ClCompile Include="Source\Actor\Weapon\Handgun\Handgun.cpp" />
     <ClCompile Include="Source\Core\Util\TextEncoding.cpp" />
     <ClCompile Include="Source\Font\FontManager.cpp" />
+    <ClCompile Include="Source\Actor\Character\Miro\MiroIState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -351,6 +352,8 @@
     <ClInclude Include="Source\Font\FontManager.h" />
     <ClInclude Include="Source\Actor\ModelData.h" />
     <ClInclude Include="Source\Actor\Character\Miro\MiroAnimationClipID.h" />
+    <ClInclude Include="Source\Actor\Character\Miro\MiroIState.h" />
+    <ClInclude Include="Source\Actor\Character\Miro\MiroMoveDirection.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BalloonEngine\BalloonEngine.vcxproj">

@@ -105,7 +105,7 @@ namespace app
             /**
              * @brief 移動処理
              * @details 入力と移動速度から、慣性(加速・減速)をつけて速度を決め、重力を足して、
-             *          キャラクターコントローラーで壁・地面との衝突を解決する。入力がある間は、入力の方向を向く。
+             *          キャラクターコントローラーで壁・地面との衝突を解決する。最後に UpdateRotation() で向きを決める。
              *          結果は持ち主の座標と向きに反映される。
              * @note 持ち主の座標が正なので、外から SetPosition() されていても、その座標から動く。
              *       移動するステートが毎フレーム呼ぶこと。
@@ -139,6 +139,19 @@ namespace app
             {
                 return m_ownerCharacter->GetCharacterController()->IsOnGround();
             }
+
+            /**
+             * @brief 向きを決める
+             * @details Move() が最後に呼ぶ。既定は、移動入力がある間だけ、入力の方向へ向ける。(入力がない間は、向きを変えない)
+             *          向きの決め方が違うキャラクターは、オーバーライドする。(例: Miroは、移動方向と関係なくカメラの方向を向く)
+             */
+            virtual void UpdateRotation();
+            /**
+             * @brief 持ち主を、水平方向(XZ)の指定の方向へ向ける
+             * @details UpdateRotation() のオーバーライドから使う。
+             * @param direction 向ける方向。yは無視される。水平方向の長さが0なら、向きを変えない
+             */
+            void FaceDirection(const Vector3& direction);
 
             /**
              * @brief ステートの変更先を取得する

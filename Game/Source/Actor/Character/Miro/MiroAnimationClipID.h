@@ -3,7 +3,10 @@
  * @brief Miroのアニメーションクリップ ID
  * @details Assets/animData/character/miro のアニメーションを、Miro.cpp の ANIMATION_DATA と同じ順に並べる。
  *          値はそのままアニメーションクリップの並びの番号になる。(ActorStateMachine::PlayAnimation() が番号として使う)
- *          先頭の3つ(待機・歩き・走り)は、共通ステートが EnCharacterAnimationClipID の番号で再生するため、同じ位置に置く。
+ *          先頭の待機は、共通ステートが EnCharacterAnimationClipID の番号で再生するため、同じ位置に置く。
+ *          歩き・走りは、Miro専用のステート(MiroIState.h)が、移動方向(MiroMoveDirection.h)に合わせて選ぶ。
+ * @note 歩き・走りのファイル名の左右(Left/Right)は、エンジン上の向き。3ds Max(右手系)から書き出した素材の左右とは逆になる。
+ *       書き出し直したら、左右のファイル名を入れ替えること。
  */
 #pragma once
 #include <cstdint>
@@ -27,16 +30,14 @@ namespace app
 
             /** 待機 */
             Idle,
-            /** 歩き(前進)。共通ステートの歩き */
-            WalkFwd,
-            /** 走り(前進)。共通ステートの走り */
-            RunFwd,
 
 
             /*
              * 歩き(walk/)
              */
 
+            /** 歩き(前進) */
+            WalkFwd,
             /** 歩き(前進・左) */
             WalkFwdLeft,
             /** 歩き(前進・右) */
@@ -57,6 +58,8 @@ namespace app
              * 走り(dash/)
              */
 
+            /** 走り(前進) */
+            RunFwd,
             /** 走り(前進・左) */
             RunFwdLeft,
             /** 走り(前進・右) */
@@ -94,7 +97,5 @@ namespace app
         };
 
         static_assert(static_cast<uint8_t>(EnMiroAnimationClipID::Idle) == static_cast<uint8_t>(EnCharacterAnimationClipID::Idle), "待機は共通のIDと同じ番号にすること");
-        static_assert(static_cast<uint8_t>(EnMiroAnimationClipID::WalkFwd) == static_cast<uint8_t>(EnCharacterAnimationClipID::Walk), "歩きは共通のIDと同じ番号にすること");
-        static_assert(static_cast<uint8_t>(EnMiroAnimationClipID::RunFwd) == static_cast<uint8_t>(EnCharacterAnimationClipID::Run), "走りは共通のIDと同じ番号にすること");
     } // namespace actor
 } // namespace app

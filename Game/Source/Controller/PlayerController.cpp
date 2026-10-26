@@ -27,6 +27,23 @@ namespace app
         GamePad& pad = *g_pad[m_padIndex];
 
 
+        // カメラの水平方向の前を求める
+        Vector3 cameraForward = Vector3::Front;
+        if (g_camera3D != nullptr)
+        {
+            Vector3 toTarget = g_camera3D->GetTarget() - g_camera3D->GetPosition();
+            toTarget.y = 0.0f;
+            if (toTarget.LengthSq() > FLT_EPSILON)
+            {
+                toTarget.Normalize();
+                cameraForward = toTarget;
+            }
+        }
+
+        // 向きたい方向(カメラの向き)。移動方向と別の向きを持つキャラクターだけが読む
+        input.SetLook(cameraForward);
+
+
         // -------------------------------------------------------------
         // 移動(左スティック。カメラの向き基準)
         // エンジンのGamePadは、遊び(デッドゾーン)を処理して、スティックの値を長さ1に正規化する。
@@ -36,18 +53,7 @@ namespace app
         const float stickY = pad.GetLStickYF();
         if (stickX * stickX + stickY * stickY > FLT_EPSILON)
         {
-            // カメラの水平方向の前と右を求める
-            Vector3 cameraForward = Vector3::Front;
-            if (g_camera3D != nullptr)
-            {
-                Vector3 toTarget = g_camera3D->GetTarget() - g_camera3D->GetPosition();
-                toTarget.y = 0.0f;
-                if (toTarget.LengthSq() > FLT_EPSILON)
-                {
-                    toTarget.Normalize();
-                    cameraForward = toTarget;
-                }
-            }
+            // カメラの水平方向の右を求める
             const Vector3 cameraRight(cameraForward.z, 0.0f, -cameraForward.x);
 
             // スティックの方向をカメラの向きに合わせる

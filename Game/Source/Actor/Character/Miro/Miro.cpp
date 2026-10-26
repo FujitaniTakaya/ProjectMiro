@@ -31,14 +31,13 @@ namespace app
 
             /**
              * アニメーションデータ
-             * EnMiroAnimationClipID の順に並べること。先頭は EnCharacterAnimationClipID の順(待機・歩き・走り)で、共通ステートが番号で再生する。
+             * EnMiroAnimationClipID の順に並べること。先頭は EnCharacterAnimationClipID の順(待機)で、共通ステートが番号で再生する。
              */
             const AnimationData ANIMATION_DATA[] = {
                 // 共通
                 { "Assets/animData/character/miro/Miro_Idle.tka", true },
-                { "Assets/animData/character/miro/walk/Miro_Walk_Fwd.tka", true },
-                { "Assets/animData/character/miro/dash/Miro_Run_Fwd.tka", true },
                 // 歩き
+                { "Assets/animData/character/miro/walk/Miro_Walk_Fwd.tka", true },
                 { "Assets/animData/character/miro/walk/Miro_Walk_Fwd_Left.tka", true },
                 { "Assets/animData/character/miro/walk/Miro_Walk_Fwd_Right.tka", true },
                 { "Assets/animData/character/miro/walk/Miro_Walk_Left.tka", true },
@@ -47,6 +46,7 @@ namespace app
                 { "Assets/animData/character/miro/walk/Miro_Walk_Bwd_Left.tka", true },
                 { "Assets/animData/character/miro/walk/Miro_Walk_Bwd_Right.tka", true },
                 // 走り
+                { "Assets/animData/character/miro/dash/Miro_Run_Fwd.tka", true },
                 { "Assets/animData/character/miro/dash/Miro_Run_Fwd_Left.tka", true },
                 { "Assets/animData/character/miro/dash/Miro_Run_Fwd_Right.tka", true },
                 { "Assets/animData/character/miro/dash/Miro_Run_Left.tka", true },
