@@ -19,6 +19,10 @@ namespace app
         , m_onPlayerAmmoChanged(nullptr)
         , m_hasPlayerAmmo(false)
         , m_playerAmmo(0)
+        , m_onCoreHpChanged(nullptr)
+        , m_hasCoreHp(false)
+        , m_coreHp(0.0f)
+        , m_coreMaxHp(0.0f)
     {}
 
 
@@ -91,6 +95,36 @@ namespace app
     }
 
 
+    void InGameInfoHub::SetOnCoreHpChanged(CoreHpCallback func)
+    {
+        m_onCoreHpChanged = std::move(func);
+
+        // 通知済みの最新値を、登録した側にも渡す
+        if (m_onCoreHpChanged && m_hasCoreHp)
+        {
+            m_onCoreHpChanged(m_coreHp, m_coreMaxHp);
+        }
+    }
+
+
+    void InGameInfoHub::NotifyCoreHp(const float hp, const float maxHp)
+    {
+        if (m_hasCoreHp && m_coreHp == hp && m_coreMaxHp == maxHp)
+        {
+            return;
+        }
+
+        m_hasCoreHp = true;
+        m_coreHp = hp;
+        m_coreMaxHp = maxHp;
+
+        if (m_onCoreHpChanged)
+        {
+            m_onCoreHpChanged(m_coreHp, m_coreMaxHp);
+        }
+    }
+
+
     void InGameInfoHub::ResetObservers()
     {
         m_onPlayerHpChanged = nullptr;
@@ -100,5 +134,9 @@ namespace app
         m_onPlayerAmmoChanged = nullptr;
         m_hasPlayerAmmo = false;
         m_playerAmmo = 0;
+        m_onCoreHpChanged = nullptr;
+        m_hasCoreHp = false;
+        m_coreHp = 0.0f;
+        m_coreMaxHp = 0.0f;
     }
 } // namespace app

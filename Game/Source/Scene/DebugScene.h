@@ -27,6 +27,7 @@ namespace app
     }
     namespace ui
     {
+        class CoreHPBarMenu;
         class HPBarMenu;
         class HandgunAmmoMenu;
     } // namespace ui
@@ -68,6 +69,8 @@ namespace app
         std::unique_ptr<actor::StageField> m_stageField;
         /** ステージのコア(宝石のモデル)。当たり判定は無い */
         std::unique_ptr<actor::Core> m_core;
+        /** コアの耐久値バー。InGameInfoHubに通知された耐久値を、コアの頭上の画面位置に表示する */
+        ui::UIPacket<ui::CoreHPBarMenu> m_coreHpBarPacket;
         /** 背景の当たり判定。m_stageFieldのモデルの形そのままのメッシュコライダー(キャラクターコントローラーが床や壁として扱う) */
         PhysicsStaticObject m_bgPhysicsStaticObject;
     };

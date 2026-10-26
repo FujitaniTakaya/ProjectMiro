@@ -14,6 +14,7 @@
 #include "Source/Actor/Weapon/Handgun/Handgun.h"
 #include "Source/Camera/PlayerCamera.h"
 #include "Source/Manager/InGameInfoHub.h"
+#include "Source/UI/CoreHP/CoreHPBarMenu.h"
 #include "Source/UI/Handgun/HandgunAmmoMenu.h"
 #include "Source/UI/PlayerHP/HPBarMenu.h"
 
@@ -24,6 +25,8 @@ namespace app
     {
         /** プレイヤーのHPバーのレイアウトのjson */
         constexpr const char* HP_BAR_JSON_PATH = "Assets/parameter/ui/HPBar.json";
+        /** コアの耐久値バーのレイアウトのjson */
+        constexpr const char* CORE_HP_BAR_JSON_PATH = "Assets/parameter/ui/CoreHPBar.json";
         /** ハンドガンの残段数UIのレイアウトのjson */
         constexpr const char* HANDGUN_AMMO_JSON_PATH = "Assets/parameter/ui/HandgunAmmo.json";
         /** レティクルのレイアウトのjson */
@@ -46,6 +49,7 @@ namespace app
         , m_handgun(nullptr)
         , m_ammoPacket(nullptr)
         , m_reticlePacket(nullptr)
+        , m_coreHpBarPacket(nullptr)
     {
         // プレイヤーのHPバー。Miroより先に作って、InGameInfoHubに通知されたHPを受け取る
         ui::InitUIPacket(m_hpBarPacket, HP_BAR_JSON_PATH);
@@ -62,6 +66,13 @@ namespace app
         }
 
         ui::InitUIPacket(m_reticlePacket, RETICLE_JSON_PATH);
+
+        // コアの耐久値バー。コアより先に作って、InGameInfoHubに通知された耐久値を受け取る
+        ui::InitUIPacket(m_coreHpBarPacket, CORE_HP_BAR_JSON_PATH);
+        if (ui::CoreHPBarMenu* coreHpBarMenu = m_coreHpBarPacket->GetMenu())
+        {
+            InGameInfoHub::Get().SetOnCoreHpChanged([coreHpBarMenu](const float hp, const float maxHp) { coreHpBarMenu->SetHp(hp, maxHp); });
+        }
 
         m_stageField = std::make_unique<actor::StageField>();
         m_core = std::make_unique<actor::Core>();
@@ -139,6 +150,13 @@ namespace app
         // MiroがHPを通知した後に、HPバーを更新する
         m_hpBarPacket->Update();
 
+        // コアの耐久値バー。カメラが更新された後に画面位置を求めて、コアが耐久値を通知した後に更新する
+        if (ui::CoreHPBarMenu* coreHpBarMenu = m_coreHpBarPacket->GetMenu())
+        {
+            coreHpBarMenu->UpdateScreenPosition(m_core->GetHpBarWorldPosition());
+        }
+        m_coreHpBarPacket->Update();
+
         // ハンドガンが残弾数を通知した後に、残段数UIを更新する
         m_ammoPacket->Update();
         m_reticlePacket->Update();
@@ -161,6 +179,7 @@ namespace app
     void DebugScene::RenderUI(RenderContext& rc)
     {
         m_hpBarPacket->Render(rc);
+        m_coreHpBarPacket->Render(rc);
         m_ammoPacket->Render(rc);
         m_reticlePacket->Render(rc);
     }

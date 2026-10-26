@@ -283,6 +283,8 @@
     <ClCompile Include="Source\Actor\Character\Miro\MiroIState.cpp" />
     <ClCompile Include="Source\Actor\Stage\StageField.cpp" />
     <ClCompile Include="Source\Actor\Stage\Core.cpp" />
+    <ClCompile Include="Source\Actor\Stage\CoreParameter.cpp" />
+    <ClCompile Include="Source\UI\CoreHP\CoreHPBarMenu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -358,6 +360,8 @@
     <ClInclude Include="Source\Actor\Character\Miro\MiroMoveDirection.h" />
     <ClInclude Include="Source\Actor\Stage\StageField.h" />
     <ClInclude Include="Source\Actor\Stage\Core.h" />
+    <ClInclude Include="Source\Actor\Stage\CoreParameter.h" />
+    <ClInclude Include="Source\UI\CoreHP\CoreHPBarMenu.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BalloonEngine\BalloonEngine.vcxproj">
