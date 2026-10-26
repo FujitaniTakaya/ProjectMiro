@@ -1,0 +1,11 @@
+{
+    "struct": "CoreParameter",
+    "namespace": "actor",
+    "json": "Assets/parameter/actor/Core.json",
+    "h": "Source/Actor/Stage/CoreParameter.h",
+    "cpp": "Source/Actor/Stage/CoreParameter.cpp",
+    "params": [
+        { "name": "maxHp", "type": "float", "doc": "最大耐久値" },
+        { "name": "hpBarOffsetY", "type": "float", "doc": "耐久値バーの基準点の高さ(コアの中心から上へ。cm)" }
+    ]
+}

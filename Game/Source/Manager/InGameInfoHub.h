@@ -8,6 +8,7 @@
  *          例: InGameInfoHub::Get().SetOnPlayerHpChanged([menu](const float hp, const float maxHp) { menu->SetHp(hp, maxHp); });
  *              InGameInfoHub::Get().NotifyPlayerHp(miro.GetHp(), miro.GetMaxHp());
  *          プレイヤーの武器の残弾数も同じ形で、SetOnPlayerAmmoChanged() / NotifyPlayerAmmo() を使う。
+ *          ステージのコアの耐久値も同じ形で、SetOnCoreHpChanged() / NotifyCoreHp() を使う。
  * @note 登録した関数が参照するもの(UIなど)を破棄する前に、ResetObservers() を呼ぶこと。
  */
 #pragma once
@@ -72,6 +73,24 @@ namespace app
          */
         void NotifyPlayerAmmo(const uint32_t remainingAmmo);
 
+        /** ステージのコアの耐久値が変わった時に呼ぶ関数(引数: 現在の耐久値、最大耐久値) */
+        using CoreHpCallback = std::function<void(const float hp, const float maxHp)>;
+
+        /**
+         * @brief ステージのコアの耐久値が変わった時に呼ぶ関数を登録
+         * @details すでに登録されている場合は、置き換える。通知済みの値があれば、登録した時に最新値で1回呼ぶ。
+         * @param func 登録する関数。空の関数を渡すと、登録を解除する
+         */
+        void SetOnCoreHpChanged(CoreHpCallback func);
+
+        /**
+         * @brief ステージのコアの耐久値を通知
+         * @details 前回の通知から値が変わった時だけ、登録された関数を呼ぶ。毎フレーム呼んでよい。
+         * @param hp 現在の耐久値
+         * @param maxHp 最大耐久値
+         */
+        void NotifyCoreHp(const float hp, const float maxHp);
+
         /**
          * @brief 登録された関数を全て解除し、通知された値も忘れる
          * @details シーンの破棄など、ゲームの区切りで呼ぶ。
@@ -94,5 +113,13 @@ namespace app
         bool m_hasPlayerAmmo;
         /** 最後に通知された、プレイヤーの武器の残弾数 */
         uint32_t m_playerAmmo;
+        /** ステージのコアの耐久値が変わった時に呼ぶ関数 */
+        CoreHpCallback m_onCoreHpChanged;
+        /** ステージのコアの耐久値が通知済みか */
+        bool m_hasCoreHp;
+        /** 最後に通知された、ステージのコアの現在の耐久値 */
+        float m_coreHp;
+        /** 最後に通知された、ステージのコアの最大耐久値 */
+        float m_coreMaxHp;
     };
 } // namespace app

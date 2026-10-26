@@ -9,9 +9,12 @@
 #include <memory>
 
 #include "Source/Actor/Character/Miro/Miro.h"
+#include "Source/Actor/Stage/Core.h"
+#include "Source/Actor/Stage/StageField.h"
 #include "Source/Actor/Weapon/Handgun/Handgun.h"
 #include "Source/Camera/PlayerCamera.h"
 #include "Source/Manager/InGameInfoHub.h"
+#include "Source/UI/CoreHP/CoreHPBarMenu.h"
 #include "Source/UI/Handgun/HandgunAmmoMenu.h"
 #include "Source/UI/PlayerHP/HPBarMenu.h"
 
@@ -22,20 +25,20 @@ namespace app
     {
         /** プレイヤーのHPバーのレイアウトのjson */
         constexpr const char* HP_BAR_JSON_PATH = "Assets/parameter/ui/HPBar.json";
+        /** コアの耐久値バーのレイアウトのjson */
+        constexpr const char* CORE_HP_BAR_JSON_PATH = "Assets/parameter/ui/CoreHPBar.json";
         /** ハンドガンの残段数UIのレイアウトのjson */
         constexpr const char* HANDGUN_AMMO_JSON_PATH = "Assets/parameter/ui/HandgunAmmo.json";
         /** レティクルのレイアウトのjson */
         constexpr const char* RETICLE_JSON_PATH = "Assets/parameter/ui/Reticle.json";
+        /** コアを置く座標。コアの真下の地面(y=0)の座標を渡す。浮かせる高さはCore側で足す */
+        const Vector3 CORE_POSITION(0.0f, 0.0f, 0.0f);
+        /** Miroの初期座標 */
+        const Vector3 MIRO_POSITION(100.0f, 100.0f, 0.0f);
         /** ハンドガンを置く座標。手に持たせるまでは、カメラの注視点(Miroの右上)の手前に置く */
         const Vector3 HANDGUN_POSITION(60.0f, 90.0f, -60.0f);
         /** ハンドガンのY軸回転(度)。銃口が+Xを向き、側面が最初のカメラ(Miroの後ろ)から見える */
         constexpr float HANDGUN_YAW_DEG = 90.0f;
-        /** 背景モデルのファイルパス */
-        constexpr const char* BG_MODEL_PATH = "Assets/modelData/stage/stage.tkm";
-        /** 背景モデルが影を受けるか */
-        constexpr bool BG_IS_RECEIVE_SHADOW = true;
-        /** 背景モデルが影を落とすか */
-        constexpr bool BG_IS_CAST_SHADOW = false;
     } // namespace
 
 
@@ -46,6 +49,7 @@ namespace app
         , m_handgun(nullptr)
         , m_ammoPacket(nullptr)
         , m_reticlePacket(nullptr)
+        , m_coreHpBarPacket(nullptr)
     {
         // プレイヤーのHPバー。Miroより先に作って、InGameInfoHubに通知されたHPを受け取る
         ui::InitUIPacket(m_hpBarPacket, HP_BAR_JSON_PATH);
@@ -63,7 +67,18 @@ namespace app
 
         ui::InitUIPacket(m_reticlePacket, RETICLE_JSON_PATH);
 
+        // コアの耐久値バー。コアより先に作って、InGameInfoHubに通知された耐久値を受け取る
+        ui::InitUIPacket(m_coreHpBarPacket, CORE_HP_BAR_JSON_PATH);
+        if (ui::CoreHPBarMenu* coreHpBarMenu = m_coreHpBarPacket->GetMenu())
+        {
+            InGameInfoHub::Get().SetOnCoreHpChanged([coreHpBarMenu](const float hp, const float maxHp) { coreHpBarMenu->SetHp(hp, maxHp); });
+        }
+
+        m_stageField = std::make_unique<actor::StageField>();
+        m_core = std::make_unique<actor::Core>();
+        m_core->SetPosition(CORE_POSITION);
         m_miro = std::make_unique<actor::Miro>();
+        m_miro->SetPosition(MIRO_POSITION);
         m_handgun = std::make_unique<actor::Handgun>();
         m_handgun->SetPosition(HANDGUN_POSITION);
         Quaternion handgunRotation;
@@ -86,12 +101,13 @@ namespace app
         m_handgun->StartWrapper();
         m_playerCamera->Start();
 
-        // 背景のモデル(アニメーションは無い。Z-upのモデル)。動かさないので、ワールド行列はここで確定させる
-        m_bgModelRender.Init(BG_MODEL_PATH, nullptr, 0, EnModelUpAxis::enModelUpAxisZ, BG_IS_RECEIVE_SHADOW, BG_IS_CAST_SHADOW);
-        m_bgModelRender.Update();
+        // ステージのフィールド。ワールド行列は、ここで確定する
+        m_stageField->StartWrapper();
+        m_core->StartWrapper();
 
         // 背景の当たり判定。モデルの形をそのまま使うので、ワールド行列(Z-upの補正込み)が確定した後に作る
-        m_bgPhysicsStaticObject.CreateFromModel(m_bgModelRender.GetModel(), m_bgModelRender.GetModel().GetWorldMatrix());
+        ModelRender& stageModelRender = m_stageField->GetModelRender();
+        m_bgPhysicsStaticObject.CreateFromModel(stageModelRender.GetModel(), stageModelRender.GetModel().GetWorldMatrix());
 
         // 最初の残弾数を通知
         InGameInfoHub::Get().NotifyPlayerAmmo(m_handgun->GetRemainingAmmo());
@@ -101,6 +117,8 @@ namespace app
 
     void DebugScene::Update()
     {
+        m_stageField->UpdateWrapper();
+        m_core->UpdateWrapper();
         m_miro->UpdateWrapper();
         m_handgun->UpdateWrapper();
 
@@ -132,6 +150,13 @@ namespace app
         // MiroがHPを通知した後に、HPバーを更新する
         m_hpBarPacket->Update();
 
+        // コアの耐久値バー。カメラが更新された後に画面位置を求めて、コアが耐久値を通知した後に更新する
+        if (ui::CoreHPBarMenu* coreHpBarMenu = m_coreHpBarPacket->GetMenu())
+        {
+            coreHpBarMenu->UpdateScreenPosition(m_core->GetHpBarWorldPosition());
+        }
+        m_coreHpBarPacket->Update();
+
         // ハンドガンが残弾数を通知した後に、残段数UIを更新する
         m_ammoPacket->Update();
         m_reticlePacket->Update();
@@ -144,7 +169,8 @@ namespace app
 
     void DebugScene::Render(RenderContext& rc)
     {
-        m_bgModelRender.Draw(rc);
+        m_stageField->RenderWrapper(rc);
+        m_core->RenderWrapper(rc);
         m_miro->RenderWrapper(rc);
         m_handgun->RenderWrapper(rc);
     }
@@ -153,6 +179,7 @@ namespace app
     void DebugScene::RenderUI(RenderContext& rc)
     {
         m_hpBarPacket->Render(rc);
+        m_coreHpBarPacket->Render(rc);
         m_ammoPacket->Render(rc);
         m_reticlePacket->Render(rc);
     }

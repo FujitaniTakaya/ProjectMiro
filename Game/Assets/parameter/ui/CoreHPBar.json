@@ -1,0 +1,90 @@
+{
+    "canvas": {
+        "elements": [
+            {
+                "type": "UIGauge",
+                "name": "GreyGauge",
+                "asset": "Assets/spriteData/UI/White.DDS",
+                "width": 200,
+                "height": 14,
+                "position": [
+                    -100,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    40,
+                    40,
+                    40,
+                    200
+                ],
+                "pivot": [
+                    0,
+                    0.5
+                ]
+            },
+            {
+                "type": "UIGauge",
+                "name": "RedGauge",
+                "asset": "Assets/spriteData/UI/White.DDS",
+                "width": 200,
+                "height": 14,
+                "position": [
+                    -100,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    220,
+                    50,
+                    50,
+                    255
+                ],
+                "pivot": [
+                    0,
+                    0.5
+                ]
+            },
+            {
+                "type": "UIGauge",
+                "name": "GreenGauge",
+                "asset": "Assets/spriteData/UI/White.DDS",
+                "width": 200,
+                "height": 14,
+                "position": [
+                    -100,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    70,
+                    210,
+                    90,
+                    255
+                ],
+                "pivot": [
+                    0,
+                    0.5
+                ]
+            }
+        ]
+    }
+}

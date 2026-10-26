@@ -30,6 +30,8 @@ namespace app
         PlayerCamera,
         /** ハンドガン */
         Handgun,
+        /** ステージのコア */
+        Core,
 
         Max,
         None = Max

@@ -76,6 +76,12 @@
     <Filter Include="Source\Font">
       <UniqueIdentifier>{9cf0545a-ffd5-42cf-9500-0827199ce87c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Actor\Stage">
+      <UniqueIdentifier>{81981836-6625-4273-b5bf-fde0e88048ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\UI\CoreHP">
+      <UniqueIdentifier>{8a26cdd8-32ed-442f-98db-e2650de23455}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -228,6 +234,18 @@
     </ClCompile>
     <ClCompile Include="Source\Actor\Character\Miro\MiroIState.cpp">
       <Filter>Source\Actor\Character\Miro</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Actor\Stage\StageField.cpp">
+      <Filter>Source\Actor\Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Actor\Stage\Core.cpp">
+      <Filter>Source\Actor\Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Actor\Stage\CoreParameter.cpp">
+      <Filter>Source\Actor\Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI\CoreHP\CoreHPBarMenu.cpp">
+      <Filter>Source\UI\CoreHP</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -435,6 +453,18 @@
     </ClInclude>
     <ClInclude Include="Source\Actor\Character\Miro\MiroMoveDirection.h">
       <Filter>Source\Actor\Character\Miro</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Stage\StageField.h">
+      <Filter>Source\Actor\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Stage\Core.h">
+      <Filter>Source\Actor\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Stage\CoreParameter.h">
+      <Filter>Source\Actor\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\CoreHP\CoreHPBarMenu.h">
+      <Filter>Source\UI\CoreHP</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

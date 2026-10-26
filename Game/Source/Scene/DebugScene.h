@@ -18,6 +18,8 @@ namespace app
 
         class Miro;
         class Handgun;
+        class StageField;
+        class Core;
     } // namespace actor
     namespace camera
     {
@@ -25,6 +27,7 @@ namespace app
     }
     namespace ui
     {
+        class CoreHPBarMenu;
         class HPBarMenu;
         class HandgunAmmoMenu;
     } // namespace ui
@@ -62,9 +65,13 @@ namespace app
         ui::UIPacket<ui::HandgunAmmoMenu> m_ammoPacket;
         /** レティクル。動かさないので、Menuは基底クラスのまま */
         ui::UIPacket<ui::MenuBase> m_reticlePacket;
-        /** 背景(stage.tkm)のモデル。動かさないので、Start()で一度だけ更新する */
-        ModelRender m_bgModelRender;
-        /** 背景の当たり判定。m_bgModelRenderの形そのままのメッシュコライダー(キャラクターコントローラーが床や壁として扱う) */
+        /** ステージのフィールド(背景のstage.tkm) */
+        std::unique_ptr<actor::StageField> m_stageField;
+        /** ステージのコア(宝石のモデル)。当たり判定は無い */
+        std::unique_ptr<actor::Core> m_core;
+        /** コアの耐久値バー。InGameInfoHubに通知された耐久値を、コアの頭上の画面位置に表示する */
+        ui::UIPacket<ui::CoreHPBarMenu> m_coreHpBarPacket;
+        /** 背景の当たり判定。m_stageFieldのモデルの形そのままのメッシュコライダー(キャラクターコントローラーが床や壁として扱う) */
         PhysicsStaticObject m_bgPhysicsStaticObject;
     };
 } // namespace app
