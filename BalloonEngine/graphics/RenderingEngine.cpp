@@ -30,6 +30,8 @@ namespace nsBalloonEngine
         , m_isDualBlurEnable(false)
         , m_isDoFEnable(false)
         , m_bloomIntensity(1.0f)
+        , m_skyLuminance(1.0f)
+        , m_isSkyEnable(false)
     {}
 
 
@@ -120,11 +122,12 @@ namespace nsBalloonEngine
         //  1. シャドウマップを描画
         //  2. ジオメトリ(G-Buffer)生成
         //  3. ライティング計算(デファード本体)
-        //  4. フォワード
-        //  5. エフェクト
-        //  6. ポストプロセス
-        //  7. コピー
-        //  8. 2D, imgui
+        //  4. 空(G-Bufferに何も描かれていない画素)
+        //  5. フォワード
+        //  6. エフェクト
+        //  7. ポストプロセス
+        //  8. コピー
+        //  9. 2D, imgui
 
 
         //========================================================================
@@ -140,6 +143,11 @@ namespace nsBalloonEngine
         //========================================================================
         // デファードレンダリング描画
         ExecuteDeferredRendering(rc);
+
+
+        //========================================================================
+        // 空の描画
+        ExecuteSky(rc);
 
 
         //========================================================================
@@ -390,6 +398,62 @@ namespace nsBalloonEngine
         // 遅延描画用スプライトを描画
         m_deferredRenderingSprite.Update(g_vec3Zero, g_quatIdentity, g_vec3One);
         m_deferredRenderingSprite.Draw(rc);
+    }
+
+
+    void RenderingEngine::SetSkyCube(const wchar_t* ddsFilePath, const float luminance)
+    {
+        m_skyCubeTexture.InitFromDDSFile(ddsFilePath);
+        if (!m_skyCubeTexture.IsValid())
+        {
+            K2_LOG("The sky cube texture could not be loaded: %ls\n", ddsFilePath);
+            m_isSkyEnable = false;
+            return;
+        }
+
+        // テクスチャを作り直したので、ディスクリプタを持つスプライトも作り直す。
+        SpriteInitData initData;
+        initData.m_width = FRAME_BUFFER_W;
+        initData.m_height = FRAME_BUFFER_H;
+        initData.m_fxFilePath = "Assets/shader/balloon/skyCube.fx";
+        initData.m_textures[0] = &m_skyCubeTexture;
+        initData.m_textures[1] = &GetRenderTarget(RTType::Depth).GetRenderTargetTexture();
+        initData.m_expandConstantBuffer = &SceneLight::Get().m_sceneLight;
+        initData.m_expandConstantBufferSize = sizeof(LightingCB);
+        m_skySprite.Init(initData);
+
+        m_skyLuminance = luminance;
+        m_isSkyEnable = true;
+    }
+
+
+    void RenderingEngine::SetSkyLuminance(const float luminance)
+    {
+        m_skyLuminance = luminance;
+    }
+
+
+    void RenderingEngine::ClearSkyCube()
+    {
+        m_isSkyEnable = false;
+    }
+
+
+    void RenderingEngine::ExecuteSky(RenderContext& rc)
+    {
+        if (!m_isSkyEnable)
+        {
+            return;
+        }
+
+        // デファードライティングの結果を描いたメインレンダーターゲットに、そのまま重ねる。
+        rc.WaitUntilToPossibleSetRenderTarget(m_mainRenderTarget);
+        rc.SetRenderTargetAndViewport(m_mainRenderTarget);
+
+        // 明るさは、スプライトの乗算カラーで渡す
+        m_skySprite.SetMulColor(Vector4(m_skyLuminance, m_skyLuminance, m_skyLuminance, 1.0f));
+        m_skySprite.Update(g_vec3Zero, g_quatIdentity, g_vec3One);
+        m_skySprite.Draw(rc);
     }
 
 
