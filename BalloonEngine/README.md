@@ -7,7 +7,7 @@ k2EngineLow の上に作った自作の描画エンジン(静的ライブラリ)
 
 | 機能 | 内容 |
 |---|---|
-| 描画 | `RenderingEngine`(デファードレンダリング、シャドウ、ブルーム、被写界深度)、`ModelRender`、`SpriteRender`(画像1枚。アルファブレンドのモードを指定できる)、`Light` |
+| 描画 | `RenderingEngine`(デファードレンダリング、シャドウ、ブルーム、被写界深度、空=`SetSkyCube()`でキューブマップを設定)、`ModelRender`、`SpriteRender`(画像1枚。アルファブレンドのモードを指定できる)、`Light` |
 | ImGui | 内蔵済み(`ThirdParty/imgui`)。Game側の設定は不要 |
 | フォント | `SDFFontEngine` / `FontRender`。SDFのアトラス(PNG + JSON)で文字を描く。フォントは複数登録でき、`FontRender::SetFont()` で切り替える。拡大しても輪郭が鮮明 |
 | パラメータ調整UI | `ui/ParameterUI`。ライト、ブルーム、被写界深度などを実行中に調整できる(F1で表示・非表示) |

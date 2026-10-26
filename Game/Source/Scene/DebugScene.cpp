@@ -39,6 +39,10 @@ namespace app
         const Vector3 HANDGUN_POSITION(60.0f, 90.0f, -60.0f);
         /** ハンドガンのY軸回転(度)。銃口が+Xを向き、側面が最初のカメラ(Miroの後ろ)から見える */
         constexpr float HANDGUN_YAW_DEG = 90.0f;
+        /** 空のキューブマップ(曇天の昼) */
+        constexpr const wchar_t* SKY_CUBE_PATH = L"Assets/modelData/preset/skyCubeMapOvercast.dds";
+        /** 空の明るさ(キューブマップの色に掛ける倍率) */
+        constexpr float SKY_LUMINANCE = 1.0f;
     } // namespace
 
 
@@ -92,11 +96,16 @@ namespace app
     {
         // 登録した関数は、HPバーを参照している。HPバーが無くなる前に解除する
         InGameInfoHub::Get().ResetObservers();
+
+        // 空はエンジンが持っているので、このシーンのものを描かなくする
+        RenderingEngine::Get().ClearSkyCube();
     }
 
 
     bool DebugScene::Start()
     {
+        RenderingEngine::Get().SetSkyCube(SKY_CUBE_PATH, SKY_LUMINANCE);
+
         m_miro->StartWrapper();
         m_handgun->StartWrapper();
         m_playerCamera->Start();

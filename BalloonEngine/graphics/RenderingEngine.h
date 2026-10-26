@@ -100,6 +100,35 @@ namespace nsBalloonEngine
 
 
         //=======================================================================
+        // 空(スカイキューブ)
+        //=======================================================================
+    public:
+        /**
+         * @brief 空のキューブマップを設定する。
+         * @details デファードライティングの後に、G-Bufferに何も描かれていない画素へ描く。
+         *          カメラが動いても空は動かない(視線の方向だけで引く)。
+         * @note    ddsファイルは、6面のキューブマップ(ミップ付き)。+Yが上。
+         *          テクスチャを作り直すので、シーンの開始時に呼ぶこと。毎フレーム呼ばないこと。
+         * @param ddsFilePath キューブマップのddsファイルのパス
+         * @param luminance 明るさ(テクスチャの色に掛ける倍率)
+         */
+        void SetSkyCube(const wchar_t* ddsFilePath, const float luminance = 1.0f);
+
+
+        /**
+         * @brief 空の明るさを設定する。
+         * @param luminance 明るさ(テクスチャの色に掛ける倍率)
+         */
+        void SetSkyLuminance(const float luminance);
+
+
+        /**
+         * @brief 空を描かないようにする。
+         */
+        void ClearSkyCube();
+
+
+        //=======================================================================
         // ポストプロセス
         //=======================================================================
     public:
@@ -163,6 +192,14 @@ namespace nsBalloonEngine
 
         /** @brief 遅延描画を実行する。 */
         void ExecuteDeferredRendering(RenderContext& rc);
+
+
+    private:
+        /**
+         * @brief 空の描画を実行する。
+         * @details デファードライティングの結果の上に、G-Bufferに何も描かれていない画素だけを上書きする。
+         */
+        void ExecuteSky(RenderContext& rc);
 
 
     private:
@@ -347,6 +384,20 @@ namespace nsBalloonEngine
         Sprite m_dofSprite;
         /** 被写界深度の有効化フラグ */
         bool m_isDoFEnable;
+
+
+        //=======================================================================
+        // 空(スカイキューブ)
+        //=======================================================================
+    private:
+        /** 空のキューブマップ */
+        Texture m_skyCubeTexture;
+        /** 空を描く全画面スプライト */
+        Sprite m_skySprite;
+        /** 空の明るさ(テクスチャの色に掛ける倍率) */
+        float m_skyLuminance;
+        /** 空を描くか */
+        bool m_isSkyEnable;
 
 
         //=======================================================================
