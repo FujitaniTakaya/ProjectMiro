@@ -101,6 +101,16 @@ namespace nsBalloonEngine
         Model& GetModel() const;
 
 
+        /**
+         * @brief ボーンを名前で探す
+         * @details 武器をキャラクターの手に取り付ける時などに使う。ボーンのワールド行列は、Update() で毎フレーム更新される。
+         * @note 返したポインタは、このModelRenderが生きている間だけ使える。
+         * @param boneName ボーンの名前
+         * @return ボーン。見つからない場合はnullptr
+         */
+        const Bone* FindBone(const wchar_t* boneName) const;
+
+
         //=======================================================================
         // アニメーション
         //=======================================================================

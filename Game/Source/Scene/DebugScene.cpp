@@ -35,10 +35,6 @@ namespace app
         const Vector3 CORE_POSITION(0.0f, 0.0f, 0.0f);
         /** Miroの初期座標 */
         const Vector3 MIRO_POSITION(100.0f, 100.0f, 0.0f);
-        /** ハンドガンを置く座標。手に持たせるまでは、カメラの注視点(Miroの右上)の手前に置く */
-        const Vector3 HANDGUN_POSITION(60.0f, 90.0f, -60.0f);
-        /** ハンドガンのY軸回転(度)。銃口が+Xを向き、側面が最初のカメラ(Miroの後ろ)から見える */
-        constexpr float HANDGUN_YAW_DEG = 90.0f;
         /** 空のキューブマップ(曇天の昼) */
         constexpr const wchar_t* SKY_CUBE_PATH = L"Assets/modelData/preset/skyCubeMapOvercast.dds";
         /** 空の明るさ(キューブマップの色に掛ける倍率) */
@@ -84,10 +80,6 @@ namespace app
         m_miro = std::make_unique<actor::Miro>();
         m_miro->SetPosition(MIRO_POSITION);
         m_handgun = std::make_unique<actor::Handgun>();
-        m_handgun->SetPosition(HANDGUN_POSITION);
-        Quaternion handgunRotation;
-        handgunRotation.SetRotationDegY(HANDGUN_YAW_DEG);
-        m_handgun->SetRotation(handgunRotation);
         m_playerCamera = std::make_unique<camera::PlayerCamera>();
     }
 
@@ -109,6 +101,9 @@ namespace app
         m_miro->StartWrapper();
         m_handgun->StartWrapper();
         m_playerCamera->Start();
+
+        // ハンドガンをMiroの手に持たせる。ボーンはMiroのStart()でモデルをロードした後に取れる
+        m_handgun->AttachToBone(m_miro->GetWeaponHandBone());
 
         // ステージのフィールド。ワールド行列は、ここで確定する
         m_stageField->StartWrapper();

@@ -120,6 +120,9 @@ namespace app
 
         void Handgun::Update()
         {
+            // 手のボーンに取り付けている時は、ボーンの今の位置と向きに追従する
+            UpdateAttachedTransform();
+
             if (m_isReloading)
             {
                 m_reloadTimer -= g_gameTime->GetFrameDeltaTime();

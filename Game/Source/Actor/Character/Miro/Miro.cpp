@@ -64,6 +64,13 @@ namespace app
             };
             static_assert(std::size(ANIMATION_DATA) == static_cast<size_t>(EnMiroAnimationClipID::Max), "アニメーションデータの数をIDと合わせること");
 
+            /**
+             * 武器を持つ手のボーンの名前
+             * モデルが左右鏡像なので、ボーン名のLと、画面上の左右は逆になる。Lのボーンが、画面ではMiroの右手。
+             * 構えのアニメ(Pistol_*・GunShot*)が銃を握るのはR側(画面では左手)なので、構えのステートを作る時は、握りの左右を合わせること。
+             */
+            constexpr const wchar_t* WEAPON_HAND_BONE_NAME = L"Base HumanLPalm";
+
             /** モデルデータ(Z-upのモデル) */
             const ModelData MODEL_DATA = {
                 MODEL_PATH,
@@ -88,6 +95,12 @@ namespace app
         ControllerSlot& Miro::GetControllerSlot()
         {
             return m_stateMachine->GetControllerSlot();
+        }
+
+
+        const Bone* Miro::GetWeaponHandBone() const
+        {
+            return m_modelRender.FindBone(WEAPON_HAND_BONE_NAME);
         }
 
 

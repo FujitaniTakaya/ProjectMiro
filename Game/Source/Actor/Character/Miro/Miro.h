@@ -43,6 +43,14 @@ namespace app
             ControllerSlot& GetControllerSlot();
 
             /**
+             * @brief 武器を持つ手のボーンを取得
+             * @details 武器の AttachToBone() に渡す。ボーンは Start() の後で取れる。
+             * @note 返したポインタは、Miroが生きている間だけ使える。
+             * @return 武器を持つ手のボーン。モデルをロードする前や、ボーンが無い場合はnullptr
+             */
+            const Bone* GetWeaponHandBone() const;
+
+            /**
              * @brief 最大HPを取得
              * @return MiroParameter の最大HP
              */
