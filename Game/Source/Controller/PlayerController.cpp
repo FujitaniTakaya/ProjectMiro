@@ -77,6 +77,8 @@ namespace app
         input.SetPress(EnInputButton::Action2, pad.IsPress(enButtonY));
         // ZLは、エンジンでは左トリガー(enButtonLB2。キーボードはN)
         input.SetPress(EnInputButton::Aim, pad.IsPress(enButtonLB2));
+        // ZRは、エンジンでは右トリガー(enButtonRB2。キーボードは8)
+        input.SetPress(EnInputButton::Fire, pad.IsPress(enButtonRB2));
 
         return input;
     }

@@ -19,7 +19,7 @@ namespace app
          * @note モデルは Assets/modelData/Weapon/Glock17/Glock17.tkm(Z-up・6ボーン)。Start() でロードし、Render() で描画する。
          *       アニメーションは撃つ(スライド)・リロード(マガジン)の2つで、Fire()・Reload() が最初から再生する。
          *       手のボーンへの取り付けは AttachToBone() で行う。取り付けた後は、持ち主のUpdate()の後に、毎フレームUpdate()を呼ぶこと。
-         *       ボタン入力・弾の発射は、まだ無い。
+         *       ボタン入力は持ち主が受け取って Fire() を呼ぶ。(Miroの構えステートが、ZRを押した瞬間に呼ぶ)弾そのもの(当たり判定・ダメージ)は、まだ無い。
          */
         class Handgun : public WeaponBase
         {

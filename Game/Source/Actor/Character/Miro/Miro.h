@@ -3,6 +3,7 @@
  * @brief 主人公のMiro
  */
 #pragma once
+#include <functional>
 #include <memory>
 
 #include "Source/Actor/Character/CharacterBase.h"
@@ -24,7 +25,7 @@ namespace app
         /**
          * @brief 主人公のMiro
          * @details 次の2つを持つ。
-         *          - MiroStateMachine : 入力から状態(待機・歩き・走り)を決める。入力を作る ControllerSlot もここが持つ
+         *          - MiroStateMachine : 入力から状態(待機・歩き・走り・構え)を決める。入力を作る ControllerSlot もここが持つ
          *          - MiroParameter : ParamHolderから取り出した参照。ホットリロードで値が変わる(最大HPもここ)
          *          Start() でパッド(PlayerController)を付ける。GetControllerSlot() で付け替えられる。
          *          Update() の順は、ステートマシン(入力の作成 → ステートの更新) → モデルの更新 → HPの通知。
@@ -49,6 +50,15 @@ namespace app
              * @return 武器を持つ手のボーン。モデルをロードする前や、ボーンが無い場合はnullptr
              */
             const Bone* GetWeaponHandBone() const;
+
+            /**
+             * @brief 撃つ処理を設定する
+             * @details 構えたポーズを保っている間にZRを押した瞬間に、呼ばれる。Miroは武器を知らないので、武器を撃つ処理は持ち主(シーン)が渡す。
+             *          例: miro.SetOnFire([&handgun]() { return handgun.Fire(); });
+             * @note 渡した処理が参照するものは、Miroが生きている間、有効であること。
+             * @param onFire 撃つ処理。撃てたら true、撃てない(弾切れ・リロード中など)なら false を返すこと
+             */
+            void SetOnFire(std::function<bool()> onFire);
 
             /**
              * @brief 最大HPを取得

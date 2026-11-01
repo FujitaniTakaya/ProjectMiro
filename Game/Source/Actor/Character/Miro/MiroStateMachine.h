@@ -3,6 +3,8 @@
  * @brief Miroのステートマシン
  */
 #pragma once
+#include <functional>
+
 #include "Source/Actor/Character/CharacterStateMachine.h"
 
 
@@ -42,6 +44,22 @@ namespace app
              * @return MiroParameter の構え中の移動速度(入力の倒し具合が最大のときの速さ)
              */
             float GetAimMoveSpeed() const;
+
+            /** 撃つ処理。撃てたら true を返す */
+            using FireHandler = std::function<bool()>;
+            /**
+             * @brief 撃つ処理を設定する
+             * @details 構えたポーズを保っている間にZRを押した瞬間に、構えステートが TryFire() 経由で呼ぶ。
+             *          ステートマシンは武器を知らない。武器を撃つ処理は、持ち主が渡す。
+             * @note 渡した処理が参照するものは、このステートマシンが生きている間、有効であること。
+             * @param onFire 撃つ処理。撃てたら true、撃てない(弾切れ・リロード中など)なら false を返すこと
+             */
+            void SetOnFire(FireHandler onFire);
+            /**
+             * @brief 1発撃つ
+             * @return 撃てたら true。撃つ処理が設定されていない時と、撃てない時は false
+             */
+            bool TryFire() const;
 
 
         protected:
@@ -98,6 +116,8 @@ namespace app
         private:
             /** パラメーター */
             const MiroParameter& m_parameter;
+            /** 撃つ処理。設定されていない時は空 */
+            FireHandler m_onFire;
         };
     } // namespace actor
 } // namespace app

@@ -9,6 +9,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <iterator>
+#include <utility>
 
 #include "MiroAnimationClipID.h"
 #include "MiroParameter.h"
@@ -101,6 +102,12 @@ namespace app
         const Bone* Miro::GetWeaponHandBone() const
         {
             return m_modelRender.FindBone(WEAPON_HAND_BONE_NAME);
+        }
+
+
+        void Miro::SetOnFire(std::function<bool()> onFire)
+        {
+            m_stateMachine->SetOnFire(std::move(onFire));
         }
 
 

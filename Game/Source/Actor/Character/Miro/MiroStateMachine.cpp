@@ -7,6 +7,7 @@
 #include "MiroStateMachine.h"
 
 #include <cmath>
+#include <utility>
 
 #include "MiroIState.h"
 #include "MiroParameter.h"
@@ -20,6 +21,7 @@ namespace app
         MiroStateMachine::MiroStateMachine(CharacterBase* ownerCharacter, const MiroParameter& parameter)
             : CharacterStateMachine(ownerCharacter)
             , m_parameter(parameter)
+            , m_onFire(nullptr)
         {
             // 待機は共通ステート、歩き・走り・構えはMiro専用のステートを登録する
             AddState<CharacterIdleState>(this);
@@ -45,6 +47,18 @@ namespace app
         float MiroStateMachine::GetAimMoveSpeed() const
         {
             return m_parameter.aimMoveSpeed;
+        }
+
+
+        void MiroStateMachine::SetOnFire(FireHandler onFire)
+        {
+            m_onFire = std::move(onFire);
+        }
+
+
+        bool MiroStateMachine::TryFire() const
+        {
+            return m_onFire && m_onFire();
         }
 
 

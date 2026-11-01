@@ -161,6 +161,14 @@ namespace app
         {
             // 歩きより遅い構え中の速度で動く。毎フレーム読むので、ホットリロードが効く
             m_owner->SetMoveSpeed(m_miroOwner->GetAimMoveSpeed());
+
+            // 構えたポーズを保っている間(構える動きと撃つ動きが終わった後)に、ZRを押した瞬間に1発撃つ。
+            // 撃てたら、撃つ動き(GunShot02)を最初から再生する。始まりと終わりが構えたポーズなので、終わるとそのポーズを保つ
+            if (!m_owner->IsPlayingAnimation() && m_owner->GetInput().IsTrigger(EnInputButton::Fire) && m_miroOwner->TryFire())
+            {
+                m_owner->PlayAnimation(EnMiroAnimationClipID::GunShot02, 0.0f, true);
+            }
+
             m_owner->Move();
         }
 

@@ -32,6 +32,8 @@ namespace app
         Action2,
         /** 狙う・構える(パッドのZL。左トリガー)。押している間だけ立つ */
         Aim,
+        /** 撃つ(パッドのZR。右トリガー)。押した瞬間(IsTrigger)で1発撃つ */
+        Fire,
 
         Count
     };

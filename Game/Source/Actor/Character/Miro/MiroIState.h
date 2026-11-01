@@ -116,6 +116,8 @@ namespace app
          * @details ZLを押している間のステート。待機から構えたポーズまでのアニメーション(GunShot01)を1回再生して、最後のポーズを保つ。(ループしないクリップは終端で止まる)
          *          構えながら動くアニメーションがまだないので、動くと構えのポーズのまま滑る。移動速度は、歩きより遅い構え中の速度(MiroParameter の aimMoveSpeed)。
          *          向きは、カメラの方向から少し中央側へ回した方向。(MiroStateMachine::UpdateRotation)
+         *          構えたポーズを保っている間に、ZRを押した瞬間に1発撃つ。撃てたら、撃つ動き(GunShot02)を最初から再生する。
+         *          構える動きと撃つ動きの間は撃てない。(撃つ動きの長さが、撃てる間隔になる)押した瞬間だけ撃つので、押しっぱなしでは連射しない。
          *          ZLを離すと、構えを解くステート(MiroAimEndState)へ移る。
          */
         class MiroAimState : public CharacterIState
@@ -132,14 +134,14 @@ namespace app
         public:
             /**
              * @brief コンストラクタ
-             * @param owner ステートを持つステートマシン。構え中の移動速度を読むために、Miroのステートマシンを受け取る
+             * @param owner ステートを持つステートマシン。構え中の移動速度と、撃つ処理のために、Miroのステートマシンを受け取る
              */
             explicit MiroAimState(MiroStateMachine* owner);
             ~MiroAimState() override = default;
 
 
         private:
-            /** 構え中の移動速度を読むためのMiroのステートマシン */
+            /** 構え中の移動速度を読み、撃つ処理を呼ぶための、Miroのステートマシン */
             const MiroStateMachine* m_miroOwner;
         };
 

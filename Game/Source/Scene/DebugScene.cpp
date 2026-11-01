@@ -105,6 +105,9 @@ namespace app
         // ハンドガンをMiroの手に持たせる。ボーンはMiroのStart()でモデルをロードした後に取れる
         m_handgun->AttachToBone(m_miro->GetWeaponHandBone());
 
+        // Miroが構えてZRを押した時は、ハンドガンを撃つ。撃てたかどうか(弾切れ・リロード中は撃てない)をMiroに返す
+        m_miro->SetOnFire([this]() { return m_handgun->Fire(); });
+
         // ステージのフィールド。ワールド行列は、ここで確定する
         m_stageField->StartWrapper();
         m_core->StartWrapper();
