@@ -1,0 +1,114 @@
+{
+    "canvas": {
+        "elements": [
+            {
+                "type": "UIIcon",
+                "name": "Backdrop",
+                "asset": "Assets/spriteData/UI/White.DDS",
+                "width": 2000,
+                "height": 1200,
+                "position": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    18,
+                    22,
+                    34,
+                    255
+                ]
+            },
+            {
+                "type": "UIText",
+                "name": "Logo",
+                "font": "RoundedMplus",
+                "text": "ProjectMiro",
+                "size": 160,
+                "pivot": [
+                    0.5,
+                    0.5
+                ],
+                "position": [
+                    0,
+                    120,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                ]
+            },
+            {
+                "type": "UIText",
+                "name": "SubTitle",
+                "font": "RoundedMplus",
+                "text": "仮タイトル",
+                "size": 48,
+                "pivot": [
+                    0.5,
+                    0.5
+                ],
+                "position": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    170,
+                    180,
+                    205,
+                    255
+                ]
+            },
+            {
+                "type": "UIText",
+                "name": "PressStart",
+                "font": "RoundedMplus",
+                "text": "PRESS START",
+                "size": 56,
+                "pivot": [
+                    0.5,
+                    0.5
+                ],
+                "position": [
+                    0,
+                    -300,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                ]
+            }
+        ]
+    }
+}

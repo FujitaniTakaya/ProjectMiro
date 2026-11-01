@@ -82,6 +82,9 @@
     <Filter Include="Source\UI\CoreHP">
       <UniqueIdentifier>{8a26cdd8-32ed-442f-98db-e2650de23455}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\UI\Title">
+      <UniqueIdentifier>{4b2acfd5-9fc3-4c88-9776-7428dffabc42}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -246,6 +249,18 @@
     </ClCompile>
     <ClCompile Include="Source\UI\CoreHP\CoreHPBarMenu.cpp">
       <Filter>Source\UI\CoreHP</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\InGameScene.cpp">
+      <Filter>Source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\ResultScene.cpp">
+      <Filter>Source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\TitleScene.cpp">
+      <Filter>Source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI\Title\TitleMenu.cpp">
+      <Filter>Source\UI\Title</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -465,6 +480,18 @@
     </ClInclude>
     <ClInclude Include="Source\UI\CoreHP\CoreHPBarMenu.h">
       <Filter>Source\UI\CoreHP</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene\InGameScene.h">
+      <Filter>Source\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene\ResultScene.h">
+      <Filter>Source\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene\TitleScene.h">
+      <Filter>Source\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\Title\TitleMenu.h">
+      <Filter>Source\UI\Title</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
