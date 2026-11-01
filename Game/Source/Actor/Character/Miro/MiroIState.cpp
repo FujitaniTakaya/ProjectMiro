@@ -9,6 +9,7 @@
 #include <cstddef>
 #include <iterator>
 
+#include "MiroStateMachine.h"
 #include "Source/Actor/Character/CharacterStateMachine.h"
 
 
@@ -141,6 +142,66 @@ namespace app
 
         MiroRunState::MiroRunState(CharacterStateMachine* owner)
             : MiroMoveState(owner)
+        {
+        }
+
+
+
+
+        /*************************************************************/
+
+
+        void MiroAimState::Enter()
+        {
+            m_owner->PlayAnimation(EnMiroAnimationClipID::GunShot01);
+        }
+
+
+        void MiroAimState::Update()
+        {
+            // 歩きより遅い構え中の速度で動く。毎フレーム読むので、ホットリロードが効く
+            m_owner->SetMoveSpeed(m_miroOwner->GetAimMoveSpeed());
+            m_owner->Move();
+        }
+
+
+        void MiroAimState::Exit()
+        {
+        }
+
+
+        MiroAimState::MiroAimState(MiroStateMachine* owner)
+            : CharacterIState(owner)
+            , m_miroOwner(owner)
+        {
+        }
+
+
+
+
+        /*************************************************************/
+
+
+        void MiroAimEndState::Enter()
+        {
+            m_owner->SetMoveSpeed(0.0f);
+            m_owner->PlayAnimation(EnMiroAnimationClipID::GunShot03);
+        }
+
+
+        void MiroAimEndState::Update()
+        {
+            m_owner->Move();
+        }
+
+
+        void MiroAimEndState::Exit()
+        {
+        }
+
+
+        MiroAimEndState::MiroAimEndState(CharacterStateMachine* owner)
+            : CharacterIState(owner)
         {
         }
     } // namespace actor
