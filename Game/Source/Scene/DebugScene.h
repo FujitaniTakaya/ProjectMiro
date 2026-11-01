@@ -1,7 +1,7 @@
 ﻿/**
  * @file DebugScene.h
  * @brief デバッグ用のシーン
- * @details 開発中の動作確認に使うシーン。最初のシーンとして起動する。
+ * @details 開発中の動作確認に使うシーン。タイトルシーンでスタートを押すと進む。
  */
 #pragma once
 #include <cstdint>

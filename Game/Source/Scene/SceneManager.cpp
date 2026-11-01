@@ -8,6 +8,9 @@
 
 #include "DebugScene.h"
 #include "Fade.h"
+#include "InGameScene.h"
+#include "ResultScene.h"
+#include "TitleScene.h"
 
 
 namespace app
@@ -24,9 +27,12 @@ namespace app
     {
         // ここでシーンを追加する。
         AddSceneMap<DebugScene>();
+        AddSceneMap<TitleScene>();
+        AddSceneMap<InGameScene>();
+        AddSceneMap<ResultScene>();
 
         // 最初のシーンもここで生成する。
-        CreateScene(DebugScene::ID());
+        CreateScene(TitleScene::ID());
     }
 
 
