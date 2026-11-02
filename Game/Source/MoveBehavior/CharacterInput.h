@@ -5,6 +5,7 @@
  *          パッドの入力もAIの判断も、全てこの形に変換されるので、
  *          キャラクターはどのControllerが付いているかを知らなくてよい。(Controllerを付け替えられる)
  *          キャラクターのコードは g_pad を直接読まず、この入力だけを読むこと。
+ *          ボタンはパッドのボタン名で表す(EnInputButton)ので、AIControllerも「プレイヤーが押すはずのボタン」を押す形で入力を作る。
  */
 #pragma once
 #include <cstdint>
@@ -14,26 +15,24 @@ namespace app
 {
     /**
      * @brief 入力ボタン
-     * @details パッドのボタン名(A/B/X/Y)ではなく、役割で名前を付けている。
-     *          ボタン名で付けると、キャラクターごとに意味が変わってしまい、付け替えられなくなるため。
-     *          例: Beastでは、Bが「ペンギンでは忍び足」「シロクマでは走り」と意味が割れていた。
+     * @details パッドのボタンの名前(A/B/X/Y/LB2/RB2)で付けている。パッドの IsPress / IsTrigger を簡略化しただけの、全てのControllerに共通の入れ物。
+     *          ボタンがどんな意味になるかは、読むキャラクターが決める。(例: Miroは ActionLB2 を構える、ActionRB2 を撃つとして読む)
+     *          役割の名前(ジャンプ・リロードなど)とボタンの対応は、それぞれのControllerが固有に持つ。(PlayerControllerの EnPlayerAction など)
      */
     enum class EnInputButton : uint8_t
     {
-        /** ジャンプ(パッドのA) */
-        Jump,
-        /** 走り。Sneakと同時には立たない */
-        Dash,
-        /** 忍び足。Dashと同時には立たない。DashもSneakも立っていなければ歩き */
-        Sneak,
-        /** アクション1(パッドのX。ペンギンならスライド、シロクマなら攻撃) */
-        Action1,
-        /** アクション2(パッドのY。ペンギンなら再集合の呼びかけ) */
-        Action2,
-        /** 狙う・構える(パッドのZL。左トリガー)。押している間だけ立つ */
-        Aim,
-        /** 撃つ(パッドのZR。右トリガー)。押した瞬間(IsTrigger)で1発撃つ */
-        Fire,
+        /** Aボタン */
+        ActionA,
+        /** Bボタン */
+        ActionB,
+        /** Xボタン */
+        ActionX,
+        /** Yボタン */
+        ActionY,
+        /** LB2(左トリガー。ZL) */
+        ActionLB2,
+        /** RB2(右トリガー。ZR) */
+        ActionRB2,
 
         Count
     };

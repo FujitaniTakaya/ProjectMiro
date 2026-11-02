@@ -7,6 +7,7 @@
 #include "DebugScene.h"
 
 #include <memory>
+#include <utility>
 
 #include "Source/Actor/Character/Miro/Miro.h"
 #include "Source/Actor/Stage/Core.h"
@@ -105,8 +106,16 @@ namespace app
         // ハンドガンをMiroの手に持たせる。ボーンはMiroのStart()でモデルをロードした後に取れる
         m_handgun->AttachToBone(m_miro->GetWeaponHandBone());
 
-        // Miroが構えてZRを押した時は、ハンドガンを撃つ。撃てたかどうか(弾切れ・リロード中は撃てない)をMiroに返す
-        m_miro->SetOnFire([this]() { return m_handgun->Fire(); });
+        // Miroの武器の処理を、ハンドガンに結びつける。
+        // fire: 構えてZRを押した時。撃てたかどうか(弾切れ・リロード中は撃てない)をMiroに返す
+        // canReload・isEmpty: リロードステートに入るかの判定。Xを押した時と、マガジンが空になった時に使う
+        // reload: リロードステートに入った時
+        actor::MiroWeaponHandler weaponHandler;
+        weaponHandler.fire = [this]() { return m_handgun->Fire(); };
+        weaponHandler.canReload = [this]() { return m_handgun->CanReload(); };
+        weaponHandler.isEmpty = [this]() { return m_handgun->GetRemainingAmmo() == 0; };
+        weaponHandler.reload = [this]() { m_handgun->Reload(); };
+        m_miro->SetWeaponHandler(std::move(weaponHandler));
 
         // ステージのフィールド。ワールド行列は、ここで確定する
         m_stageField->StartWrapper();

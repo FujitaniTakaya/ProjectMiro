@@ -153,6 +153,7 @@ namespace app
 
         void MiroAimState::Enter()
         {
+            m_isFiring = false;
             m_owner->PlayAnimation(EnMiroAnimationClipID::GunShot01);
         }
 
@@ -162,11 +163,12 @@ namespace app
             // 歩きより遅い構え中の速度で動く。毎フレーム読むので、ホットリロードが効く
             m_owner->SetMoveSpeed(m_miroOwner->GetAimMoveSpeed());
 
-            // 構えたポーズを保っている間(構える動きと撃つ動きが終わった後)に、ZRを押した瞬間に1発撃つ。
+            // 構えたポーズを保っている間(構える動きと撃つ動きが終わった後)に、ZR(ActionRB2)を押した瞬間に1発撃つ。
             // 撃てたら、撃つ動き(GunShot02)を最初から再生する。始まりと終わりが構えたポーズなので、終わるとそのポーズを保つ
-            if (!m_owner->IsPlayingAnimation() && m_owner->GetInput().IsTrigger(EnInputButton::Fire) && m_miroOwner->TryFire())
+            if (!m_owner->IsPlayingAnimation() && m_owner->GetInput().IsTrigger(EnInputButton::ActionRB2) && m_miroOwner->TryFire())
             {
                 m_owner->PlayAnimation(EnMiroAnimationClipID::GunShot02, 0.0f, true);
+                m_isFiring = true;
             }
 
             m_owner->Move();
@@ -178,9 +180,17 @@ namespace app
         }
 
 
+        bool MiroAimState::IsFiring() const
+        {
+            // 撃つ動きが終われば、撃つ動きの最中ではなくなる。(フラグは、構える動きの間は立たない)
+            return m_isFiring && m_owner->IsPlayingAnimation();
+        }
+
+
         MiroAimState::MiroAimState(MiroStateMachine* owner)
             : CharacterIState(owner)
             , m_miroOwner(owner)
+            , m_isFiring(false)
         {
         }
 
@@ -210,6 +220,38 @@ namespace app
 
         MiroAimEndState::MiroAimEndState(CharacterStateMachine* owner)
             : CharacterIState(owner)
+        {
+        }
+
+
+
+
+        /*************************************************************/
+
+
+        void MiroReloadState::Enter()
+        {
+            m_owner->PlayAnimation(EnMiroAnimationClipID::PistolReload);
+            m_miroOwner->StartReload();
+        }
+
+
+        void MiroReloadState::Update()
+        {
+            // 構え中と同じ、歩きより遅い速度で動く。毎フレーム読むので、ホットリロードが効く
+            m_owner->SetMoveSpeed(m_miroOwner->GetAimMoveSpeed());
+            m_owner->Move();
+        }
+
+
+        void MiroReloadState::Exit()
+        {
+        }
+
+
+        MiroReloadState::MiroReloadState(MiroStateMachine* owner)
+            : CharacterIState(owner)
+            , m_miroOwner(owner)
         {
         }
     } // namespace actor

@@ -105,9 +105,9 @@ namespace app
         }
 
 
-        void Miro::SetOnFire(std::function<bool()> onFire)
+        void Miro::SetWeaponHandler(MiroWeaponHandler handler)
         {
-            m_stateMachine->SetOnFire(std::move(onFire));
+            m_stateMachine->SetWeaponHandler(std::move(handler));
         }
 
 

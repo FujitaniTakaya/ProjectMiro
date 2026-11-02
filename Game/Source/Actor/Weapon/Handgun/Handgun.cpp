@@ -49,6 +49,12 @@ namespace app
             };
             static_assert(std::size(ANIMATION_DATA) == static_cast<size_t>(EnHandgunAnimationClipID::Max), "アニメーションデータの数をIDと合わせること");
 
+            /**
+             * リロードのクリップ(Glock17_Reload.tka)の長さ(秒)
+             * クリップの長さを取るAPIがないので、tkaから測った値を置く。リロード時間に収めるための再生速度(この長さ / リロード時間)の計算に使う。
+             */
+            constexpr float RELOAD_CLIP_LENGTH = 3.3333f;
+
             /** モデルデータ(Z-upのモデル) */
             constexpr ModelData MODEL_DATA = {
                 MODEL_PATH,
@@ -76,6 +82,8 @@ namespace app
                 return false;
             }
             --m_remainingAmmo;
+            // リロードで速めた再生速度を、通常に戻す
+            SetAnimationSpeed(1.0f);
             m_modelRender.PlayAnimation(static_cast<uint8_t>(EnHandgunAnimationClipID::Fire), 0.0f, true);
             return true;
         }
@@ -83,7 +91,7 @@ namespace app
 
         void Handgun::Reload()
         {
-            if (m_isReloading || m_remainingAmmo >= m_magazineSize)
+            if (!CanReload())
             {
                 return;
             }
@@ -95,6 +103,8 @@ namespace app
             }
             m_isReloading = true;
             m_reloadTimer = m_reloadTime;
+            // クリップがリロード時間で終わるように再生速度を合わせる
+            SetAnimationSpeed(RELOAD_CLIP_LENGTH / m_reloadTime);
             m_modelRender.PlayAnimation(static_cast<uint8_t>(EnHandgunAnimationClipID::Reload), 0.0f, true);
         }
 

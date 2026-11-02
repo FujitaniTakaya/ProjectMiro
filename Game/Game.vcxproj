@@ -370,6 +370,7 @@
     <ClInclude Include="Source\Scene\ResultScene.h" />
     <ClInclude Include="Source\Scene\TitleScene.h" />
     <ClInclude Include="Source\UI\Title\TitleMenu.h" />
+    <ClInclude Include="Source\Actor\Character\Miro\MiroWeaponHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BalloonEngine\BalloonEngine.vcxproj">

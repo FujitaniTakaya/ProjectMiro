@@ -3,9 +3,9 @@
  * @brief 主人公のMiro
  */
 #pragma once
-#include <functional>
 #include <memory>
 
+#include "MiroWeaponHandler.h"
 #include "Source/Actor/Character/CharacterBase.h"
 
 
@@ -25,7 +25,7 @@ namespace app
         /**
          * @brief 主人公のMiro
          * @details 次の2つを持つ。
-         *          - MiroStateMachine : 入力から状態(待機・歩き・走り・構え)を決める。入力を作る ControllerSlot もここが持つ
+         *          - MiroStateMachine : 入力から状態(待機・歩き・走り・構え・リロード)を決める。入力を作る ControllerSlot もここが持つ
          *          - MiroParameter : ParamHolderから取り出した参照。ホットリロードで値が変わる(最大HPもここ)
          *          Start() でパッド(PlayerController)を付ける。GetControllerSlot() で付け替えられる。
          *          Update() の順は、ステートマシン(入力の作成 → ステートの更新) → モデルの更新 → HPの通知。
@@ -52,13 +52,17 @@ namespace app
             const Bone* GetWeaponHandBone() const;
 
             /**
-             * @brief 撃つ処理を設定する
-             * @details 構えたポーズを保っている間にZRを押した瞬間に、呼ばれる。Miroは武器を知らないので、武器を撃つ処理は持ち主(シーン)が渡す。
-             *          例: miro.SetOnFire([&handgun]() { return handgun.Fire(); });
+             * @brief 武器の処理を設定する
+             * @details Miroは武器を知らないので、撃つ・リロードに要る処理は持ち主(シーン)が渡す。
+             *          - fire : 構えたポーズを保っている間にZRを押した瞬間に呼ばれる
+             *          - canReload・isEmpty : Xを押した時と、マガジンが空になった時のリロードの判定に、毎フレーム呼ばれる
+             *          - reload : リロードステートに入った時に呼ばれる
+             *          リロード中は、武器が撃てない(fire が false を返す)。Miroも構えステートに入れない。
+             *          例: handler.fire = [&handgun]() { return handgun.Fire(); }; miro.SetWeaponHandler(handler);
              * @note 渡した処理が参照するものは、Miroが生きている間、有効であること。
-             * @param onFire 撃つ処理。撃てたら true、撃てない(弾切れ・リロード中など)なら false を返すこと
+             * @param handler 武器の処理
              */
-            void SetOnFire(std::function<bool()> onFire);
+            void SetWeaponHandler(MiroWeaponHandler handler);
 
             /**
              * @brief 最大HPを取得
