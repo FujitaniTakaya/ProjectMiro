@@ -125,11 +125,11 @@ namespace app
             }
             /**
              * @brief 走りに切り替えられるかどうか
-             * @return 移動入力があり、ダッシュを押していれば true
+             * @return 移動入力があり、ダッシュ(ActionB)を押していれば true
              */
             inline bool CanChangeRunState() const
             {
-                return CanChangeMoveState() && GetInput().IsPress(EnInputButton::Dash);
+                return CanChangeMoveState() && GetInput().IsPress(EnInputButton::ActionB);
             }
             /**
              * @brief 地面についているかどうか

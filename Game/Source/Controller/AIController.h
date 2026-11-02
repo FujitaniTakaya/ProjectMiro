@@ -7,7 +7,7 @@
  *          状態は4つ。
  *            Idle       : その場で止まって待つ。時間が経つと Wandering へ
  *            Wandering  : 巡回点(なければホームの周り)を歩く。目標が見えたら Chase へ
- *            Chase      : 目標を走って追う。近づいたら止まって、一定間隔でAction1を押す(攻撃)
+ *            Chase      : 目標を走って追う。近づいたら止まって、一定間隔でActionYを押す(攻撃)
  *            ReturnHome : ホームへ歩いて戻る。着いたら Idle へ
  *          ホームから離れすぎると ReturnHome へ。追跡は、離されすぎたり、時間が尽きたりすると諦めて ReturnHome へ。
  *
@@ -99,7 +99,7 @@ namespace app
         /**
          * @brief 今フレームの入力を作る
          * @param context 操作対象の情報
-         * @return 今フレームの入力。移動の方向と、Dash / Action1 の押下状態を設定する
+         * @return 今フレームの入力。移動の方向と、ActionB(走り) / ActionY(攻撃) の押下状態を設定する
          */
         CharacterInput Update(const ControllerContext& context) override;
 

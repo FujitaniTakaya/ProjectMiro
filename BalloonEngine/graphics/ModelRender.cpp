@@ -178,6 +178,13 @@ namespace nsBalloonEngine
     }
 
 
+    const Bone* ModelRender::FindBone(const wchar_t* boneName) const
+    {
+        const int boneNo = m_skeleton.FindBoneID(boneName);
+        return (boneNo < 0) ? nullptr : m_skeleton.GetBone(boneNo);
+    }
+
+
     //=======================================================================
     // アニメーション
     //=======================================================================

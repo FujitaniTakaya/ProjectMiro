@@ -56,11 +56,11 @@ namespace app
         float lostChaseDistance;
         /** 追跡し続けられる時間(秒)。尽きるとホームへ戻る。ホームに着くと回復する(BeastのスタミナのmaxStamina / 減少率) */
         float maxChaseSeconds;
-        /** 攻撃する距離。この距離以内では止まって、Action1を押す */
+        /** 攻撃する距離。この距離以内では止まって、ActionYを押す */
         float attackDistance;
         /** 目標を見失ったとき、最後に見た位置に着いたと判定する距離 */
         float arriveLastKnownDist;
-        /** 攻撃(Action1)を押す間隔(秒)。1フレームより長くすること(短いと押しっぱなしになり、Triggerが立たない) */
+        /** 攻撃(ActionY)を押す間隔(秒)。1フレームより長くすること(短いと押しっぱなしになり、Triggerが立たない) */
         float attackInterval;
         /** 巡回点がないとき、ホームから徘徊の目的地を決める最大の半径(実際は半径の 0.5 〜 1.0 倍) */
         float wanderRadius;

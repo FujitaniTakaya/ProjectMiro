@@ -35,11 +35,12 @@ namespace app
              * @tparam TEnum アニメーションIDの型
              * @param animationID アニメーションID。アニメーションクリップの並びの番号になる
              * @param interpolateTime ブレンド時間(秒)。省略時は標準ブレンド
+             * @param isReplay 今のクリップと同じでも、最初から巻き戻して再生する。(連続して撃つ動きなど)巻き戻す時は、ブレンドしない
              */
             template <typename TEnum>
-            inline void PlayAnimation(const TEnum animationID, const float interpolateTime = ANIMATION_INTERPOLATE_TIME)
+            inline void PlayAnimation(const TEnum animationID, const float interpolateTime = ANIMATION_INTERPOLATE_TIME, const bool isReplay = false)
             {
-                m_ownerActor->GetModelRender().PlayAnimation(static_cast<uint8_t>(animationID), interpolateTime);
+                m_ownerActor->GetModelRender().PlayAnimation(static_cast<uint8_t>(animationID), interpolateTime, isReplay);
             }
             /**
              * @brief アニメーションの再生速度を設定する

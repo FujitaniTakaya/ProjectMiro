@@ -493,5 +493,8 @@
     <ClInclude Include="Source\UI\Title\TitleMenu.h">
       <Filter>Source\UI\Title</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Actor\Character\Miro\MiroWeaponHandler.h">
+      <Filter>Source\Actor\Character\Miro</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

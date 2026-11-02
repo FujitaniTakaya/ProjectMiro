@@ -1,6 +1,8 @@
 {
     "walkSpeed": 300.0,
     "runSpeed": 600.0,
+    "aimMoveSpeed": 150.0,
+    "aimTurnDegrees": 20.0,
     "radius": 25.0,
     "height": 110.0,
     "maxHp": 100.0

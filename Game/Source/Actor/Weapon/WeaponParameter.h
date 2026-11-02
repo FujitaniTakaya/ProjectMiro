@@ -28,6 +28,10 @@ namespace app
             float reloadTime;
             /** マガジンサイズ(満タンの弾数) */
             uint32_t magazineSize;
+            /** 手のボーンから見た、武器の位置(cm)。武器をキャラクターの手に取り付けた時に使う */
+            Vector3 gripPosition;
+            /** 手のボーンから見た、武器の向き。jsonは [rotX, rotY, rotZ](度)で書く */
+            Quaternion gripRotation;
         };
 
 

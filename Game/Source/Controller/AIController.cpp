@@ -296,10 +296,10 @@ namespace app
 
         if (m_ai.m_hasTarget && distanceSq <= config.attackDistance * config.attackDistance)
         {
-            // 攻撃: 止まって、間隔ごとにAction1を1フレームだけ押す
+            // 攻撃: 止まって、間隔ごとにActionYを1フレームだけ押す
             if (m_attackTimer >= config.attackInterval)
             {
-                m_ai.m_output.SetPress(EnInputButton::Action1);
+                m_ai.m_output.SetPress(EnInputButton::ActionY);
                 m_attackTimer = 0.0f;
             }
         }
@@ -307,7 +307,7 @@ namespace app
         {
             // 走って追う
             m_ai.MoveToward(destination);
-            m_ai.m_output.SetPress(EnInputButton::Dash);
+            m_ai.m_output.SetPress(EnInputButton::ActionB);
         }
 
         if (m_ai.m_chaseTimeLeft <= 0.0f)

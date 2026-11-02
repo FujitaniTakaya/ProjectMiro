@@ -6,9 +6,62 @@
 
 #include "PlayerController.h"
 
+#include <cstddef>
+#include <cstdint>
+#include <iterator>
+
 
 namespace app
 {
+    namespace
+    {
+        /** プレイヤーの操作。役割で名前を付ける。ボタンとの対応は ACTION_BINDINGS で決める */
+        enum class EnPlayerAction : uint8_t
+        {
+            /** ジャンプ */
+            Jump,
+            /** 走り。押している間は歩きではなく走る */
+            Dash,
+            /** リロード */
+            Reload,
+            /** 構える。押している間だけ立つ */
+            Aim,
+            /** 撃つ。押した瞬間(IsTrigger)で1発撃つ */
+            Fire,
+
+            Max
+        };
+
+        /** 操作に割り当てるボタン */
+        struct ActionBinding
+        {
+            /** 読み取るパッドのボタン */
+            EnButton padButton;
+            /** 押下状態を設定する、キャラクターへの入力のボタン */
+            EnInputButton inputButton;
+        };
+
+        /**
+         * 操作とボタンの対応
+         * EnPlayerAction の順に並べること。
+         * Yボタンは、割り当てる操作がまだないので載せていない。
+         */
+        constexpr ActionBinding ACTION_BINDINGS[] = {
+            // Jump: Aボタン
+            { enButtonA, EnInputButton::ActionA },
+            // Dash: Bボタン(キーボードはK)
+            { enButtonB, EnInputButton::ActionB },
+            // Reload: Xボタン(キーボードはL)
+            { enButtonX, EnInputButton::ActionX },
+            // Aim: ZL。エンジンでは左トリガー(enButtonLB2。キーボードはN)
+            { enButtonLB2, EnInputButton::ActionLB2 },
+            // Fire: ZR。エンジンでは右トリガー(enButtonRB2。キーボードは8)
+            { enButtonRB2, EnInputButton::ActionRB2 },
+        };
+        static_assert(std::size(ACTION_BINDINGS) == static_cast<size_t>(EnPlayerAction::Max), "操作とボタンの対応の数をEnPlayerActionと合わせること");
+    } // namespace
+
+
     PlayerController::PlayerController(const int padIndex)
         : m_padIndex(padIndex)
     {
@@ -63,18 +116,18 @@ namespace app
                 moveDirection.Normalize();
             }
             input.SetMove(moveDirection);
-
-            // Bボタンを押している間は走り、押していなければ歩き
-            input.SetPress(EnInputButton::Dash, pad.IsPress(enButtonB));
         }
 
 
         // -------------------------------------------------------------
         // ボタン(押している状態だけ設定する。押した瞬間は ControllerSlot が計算する)
+        // 走り(Dash)は、スティックを倒していなくてもBボタンをそのまま写す。
+        // 走りに切り替えるかどうかは、移動入力も見る読む側が決める。
         // -------------------------------------------------------------
-        input.SetPress(EnInputButton::Jump, pad.IsPress(enButtonA));
-        input.SetPress(EnInputButton::Action1, pad.IsPress(enButtonX));
-        input.SetPress(EnInputButton::Action2, pad.IsPress(enButtonY));
+        for (const ActionBinding& binding : ACTION_BINDINGS)
+        {
+            input.SetPress(binding.inputButton, pad.IsPress(binding.padButton));
+        }
 
         return input;
     }
