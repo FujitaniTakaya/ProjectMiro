@@ -63,7 +63,10 @@ namespace app
          */
         virtual void RenderUI([[maybe_unused]] RenderContext& rc)
         {}
-        /** @brief 通常の更新が止まっているとき(フェードアウト中など)の更新 */
+        /**
+         * @brief 通常の更新が止まっているとき(フェードアウト中・ポーズ中)の更新
+         * @details ポーズ画面そのものは SceneManager が動かすので、シーンは、ポーズ中も動かしたいもの(映像再生など)だけを更新すればよい。
+         */
         virtual void PauseUpdate() = 0;
 
 
@@ -75,6 +78,18 @@ namespace app
         virtual bool IsLoaded() const
         {
             return true;
+        }
+
+
+        /**
+         * @brief ポーズできるシーンかどうかを返す
+         * @details true を返すシーンでは、スタートボタンでポーズ画面が開く。ポーズ中は Update() が呼ばれず、PauseUpdate() が呼ばれる。
+         *          ゲームプレイ中のシーンだけ true にする。(タイトルなどは false のまま)
+         * @return ポーズできるならtrue
+         */
+        virtual bool IsPausable() const
+        {
+            return false;
         }
 
 

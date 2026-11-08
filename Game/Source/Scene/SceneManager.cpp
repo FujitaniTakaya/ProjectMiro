@@ -15,6 +15,13 @@
 
 namespace app
 {
+    namespace
+    {
+        /** ポーズ画面から「タイトルへ」を決めた後の、暗転・明転にかける時間(秒) */
+        constexpr float PAUSE_TO_TITLE_FADE_DURATION = 1.0f;
+    } // namespace
+
+
     SceneManager* SceneManager::m_instance = nullptr;
 
 
@@ -24,6 +31,7 @@ namespace app
         , m_nextSceneId(INVALID_SCENE_ID)
         , m_transitionState(TransitionState::Idle)
         , m_fadeDuration(0.0f)
+        , m_pause()
     {
         // ここでシーンを追加する。
         AddSceneMap<DebugScene>();
@@ -50,12 +58,34 @@ namespace app
             {
                 break;
             }
+
+            // ポーズ中:シーンの Update() を止めて、ポーズ画面を動かす。
+            if (m_pause.IsPaused())
+            {
+                m_currentScene->PauseUpdate();
+                m_pause.Update();
+                // 「タイトルへ」が決まったら、タイトルシーンへ遷移する。(ポーズ画面は、暗転が終わるまでそのまま見せる)
+                if (m_pause.IsTitleRequested())
+                {
+                    m_nextSceneId = TitleScene::ID();
+                    m_fadeDuration = PAUSE_TO_TITLE_FADE_DURATION;
+                    Fade::Get().FadeOut(m_fadeDuration);
+                    m_transitionState = TransitionState::FadingOut;
+                }
+                break;
+            }
+
             m_currentScene->Update();
             // シーンの遷移要求を判定する。
             if (m_currentScene->RequestScene(m_nextSceneId, m_fadeDuration))
             {
                 Fade::Get().FadeOut(m_fadeDuration);
                 m_transitionState = TransitionState::FadingOut;
+            }
+            else if (m_currentScene->IsPausable() && PauseController::IsOpenTriggered())
+            {
+                // NOTE: シーンの Update() の後で開く。このフレームの入力は、ポーズ画面には渡さない。
+                m_pause.Open();
             }
             break;
 
@@ -147,6 +177,13 @@ namespace app
             return;
         }
 
+        // ポーズ中は、シーンのUI(HUD)を隠して、ポーズ画面だけを描く。
+        if (m_pause.IsPaused())
+        {
+            m_pause.RenderUI(rc);
+            return;
+        }
+
         m_currentScene->RenderUI(rc);
     }
 
@@ -183,6 +220,9 @@ namespace app
             K2_ASSERT(false, "新規シーンが追加されていません。SceneManagerのコンストラクタでAddSceneMap<T>()を呼ぶこと。\n");
             return;
         }
+
+        // 前のシーンのポーズ(ぼけ・ポーズ画面)を、新しいシーンに持ち越さない。
+        m_pause.Reset();
 
         m_currentScene = it->second();
         m_currentScene->Start();

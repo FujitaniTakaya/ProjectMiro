@@ -43,6 +43,11 @@ namespace app
              * @return MiroParameter の構え中の移動速度(入力の倒し具合が最大のときの速さ)
              */
             float GetAimMoveSpeed() const;
+            /**
+             * @brief 構え中かどうか
+             * @return 構えステートか、構えを解くステートなら true
+             */
+            bool IsAiming() const;
 
             /**
              * @brief 武器の処理を設定する
@@ -119,12 +124,6 @@ namespace app
              * @return リロードステートに入る(または続ける)なら true
              */
             bool CanChangeReloadState();
-
-            /**
-             * @brief 構え中かどうか
-             * @return 構えステートか、構えを解くステートなら true
-             */
-            bool IsAiming() const;
 
             /**
              * @brief 撃つ動きの最中かどうか

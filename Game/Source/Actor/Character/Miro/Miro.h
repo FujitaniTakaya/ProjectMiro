@@ -52,6 +52,13 @@ namespace app
             const Bone* GetWeaponHandBone() const;
 
             /**
+             * @brief ハンドガンを構えているかどうか
+             * @details 構えている間と、構えを解く間(ZLを離してから構えを解き終わるまで)が対象。カメラが、エイム感度に切り替えるために使う。
+             * @return 構えているならtrue
+             */
+            bool IsAiming() const;
+
+            /**
              * @brief 武器の処理を設定する
              * @details Miroは武器を知らないので、撃つ・リロードに要る処理は持ち主(シーン)が渡す。
              *          - fire : 構えたポーズを保っている間にZRを押した瞬間に呼ばれる

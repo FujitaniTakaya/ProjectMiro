@@ -10,6 +10,7 @@
 
 #include "PlayerCameraParameter.h"
 #include "Source/Core/Param/ParamHolder.h"
+#include "Source/Option/OptionSettings.h"
 
 
 namespace app
@@ -21,6 +22,7 @@ namespace app
             , m_padIndex(padIndex)
             , m_toCameraPos(Vector3::Zero)
             , m_targetPosition(Vector3::Zero)
+            , m_isAiming(false)
         {
         }
 
@@ -46,7 +48,10 @@ namespace app
                 stickX = g_pad[m_padIndex]->GetRStickXF();
                 stickY = g_pad[m_padIndex]->GetRStickYF();
             }
-            const float rotateDeg = m_parameter.rotateSpeed * g_gameTime->GetFrameDeltaTime();
+            // 通常はカメラ感度、構えている間はエイム感度。どちらも、基準の回転速度に掛ける倍率。
+            const OptionSettings& settings = OptionSettings::Get();
+            const float sensitivity = m_isAiming ? settings.GetAimSensitivity() : settings.GetCameraSensitivity();
+            const float rotateDeg = m_parameter.rotateSpeed * sensitivity * g_gameTime->GetFrameDeltaTime();
 
             // Y軸周りの回転(左右)
             Quaternion qRot;

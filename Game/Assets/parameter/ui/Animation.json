@@ -1,0 +1,14 @@
+{
+    "animations": [
+        {
+            "key": "cursorSway",
+            "valueType": "Float",
+            "startValue": -6,
+            "endValue": 6,
+            "duration": 0.5,
+            "easing": "EaseInOut",
+            "loop": "PingPong",
+            "repeat": 0
+        }
+    ]
+}

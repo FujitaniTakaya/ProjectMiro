@@ -29,15 +29,15 @@
                 "type": "UIText",
                 "name": "Logo",
                 "font": "RoundedMplus",
-                "text": "ProjectMiro",
-                "size": 160,
+                "text": "ミロ・エコー",
+                "size": 128,
                 "pivot": [
-                    0.5,
-                    0.5
+                    1,
+                    1
                 ],
                 "position": [
-                    0,
-                    120,
+                    920,
+                    500,
                     0
                 ],
                 "scale": [
@@ -55,17 +55,17 @@
             },
             {
                 "type": "UIText",
-                "name": "SubTitle",
+                "name": "ItemStart",
                 "font": "RoundedMplus",
-                "text": "仮タイトル",
+                "text": "はじめる",
                 "size": 48,
                 "pivot": [
-                    0.5,
+                    0,
                     0.5
                 ],
                 "position": [
-                    0,
-                    0,
+                    640,
+                    210,
                     0
                 ],
                 "scale": [
@@ -75,29 +75,85 @@
                 ],
                 "rotation": 0,
                 "color": [
-                    170,
-                    180,
-                    205,
+                    255,
+                    255,
+                    255,
                     255
                 ]
             },
             {
                 "type": "UIText",
-                "name": "PressStart",
+                "name": "ItemOption",
                 "font": "RoundedMplus",
-                "text": "PRESS START",
-                "size": 56,
+                "text": "オプション",
+                "size": 48,
                 "pivot": [
-                    0.5,
+                    0,
                     0.5
                 ],
                 "position": [
-                    0,
-                    -300,
+                    640,
+                    138,
                     0
                 ],
                 "scale": [
                     1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                ]
+            },
+            {
+                "type": "UIText",
+                "name": "ItemQuit",
+                "font": "RoundedMplus",
+                "text": "おわる",
+                "size": 48,
+                "pivot": [
+                    0,
+                    0.5
+                ],
+                "position": [
+                    640,
+                    66,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                ]
+            },
+            {
+                "type": "UIText",
+                "name": "Cursor",
+                "font": "RoundedMplus",
+                "text": "→",
+                "size": 24,
+                "pivot": [
+                    1,
+                    0.5
+                ],
+                "position": [
+                    624,
+                    210,
+                    0
+                ],
+                "scale": [
+                    1.35,
                     1,
                     1
                 ],

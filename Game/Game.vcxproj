@@ -289,6 +289,14 @@
     <ClCompile Include="Source\Scene\ResultScene.cpp" />
     <ClCompile Include="Source\Scene\TitleScene.cpp" />
     <ClCompile Include="Source\UI\Title\TitleMenu.cpp" />
+    <ClCompile Include="Source\Option\OptionSettings.cpp" />
+    <ClCompile Include="Source\UI\MenuInput.cpp" />
+    <ClCompile Include="Source\UI\Option\OptionMenu.cpp" />
+    <ClCompile Include="Source\UI\BlurredBackdrop.cpp" />
+    <ClCompile Include="Source\Scene\PauseController.cpp" />
+    <ClCompile Include="Source\UI\Pause\PauseMenu.cpp" />
+    <ClCompile Include="Source\UI\CursorSway.cpp" />
+    <ClCompile Include="Source\UI\SelectionTint.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -371,6 +379,14 @@
     <ClInclude Include="Source\Scene\TitleScene.h" />
     <ClInclude Include="Source\UI\Title\TitleMenu.h" />
     <ClInclude Include="Source\Actor\Character\Miro\MiroWeaponHandler.h" />
+    <ClInclude Include="Source\Option\OptionSettings.h" />
+    <ClInclude Include="Source\UI\MenuInput.h" />
+    <ClInclude Include="Source\UI\Option\OptionMenu.h" />
+    <ClInclude Include="Source\UI\BlurredBackdrop.h" />
+    <ClInclude Include="Source\Scene\PauseController.h" />
+    <ClInclude Include="Source\UI\Pause\PauseMenu.h" />
+    <ClInclude Include="Source\UI\CursorSway.h" />
+    <ClInclude Include="Source\UI\SelectionTint.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BalloonEngine\BalloonEngine.vcxproj">

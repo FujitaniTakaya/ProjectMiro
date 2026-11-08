@@ -85,6 +85,15 @@
     <Filter Include="Source\UI\Title">
       <UniqueIdentifier>{4b2acfd5-9fc3-4c88-9776-7428dffabc42}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Option">
+      <UniqueIdentifier>{a04cee54-e3f6-418c-91d2-5d25d48a1884}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\UI\Option">
+      <UniqueIdentifier>{4c2439fe-0eee-42f5-ab78-a6a7d2970811}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\UI\Pause">
+      <UniqueIdentifier>{d53c8f74-c356-46c2-85d8-e6412dbcc36c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -261,6 +270,30 @@
     </ClCompile>
     <ClCompile Include="Source\UI\Title\TitleMenu.cpp">
       <Filter>Source\UI\Title</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Option\OptionSettings.cpp">
+      <Filter>Source\Option</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI\MenuInput.cpp">
+      <Filter>Source\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI\Option\OptionMenu.cpp">
+      <Filter>Source\UI\Option</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI\BlurredBackdrop.cpp">
+      <Filter>Source\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\PauseController.cpp">
+      <Filter>Source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI\Pause\PauseMenu.cpp">
+      <Filter>Source\UI\Pause</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI\CursorSway.cpp">
+      <Filter>Source\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI\SelectionTint.cpp">
+      <Filter>Source\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -495,6 +528,30 @@
     </ClInclude>
     <ClInclude Include="Source\Actor\Character\Miro\MiroWeaponHandler.h">
       <Filter>Source\Actor\Character\Miro</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Option\OptionSettings.h">
+      <Filter>Source\Option</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\MenuInput.h">
+      <Filter>Source\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\Option\OptionMenu.h">
+      <Filter>Source\UI\Option</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\BlurredBackdrop.h">
+      <Filter>Source\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene\PauseController.h">
+      <Filter>Source\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\Pause\PauseMenu.h">
+      <Filter>Source\UI\Pause</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\CursorSway.h">
+      <Filter>Source\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\SelectionTint.h">
+      <Filter>Source\UI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

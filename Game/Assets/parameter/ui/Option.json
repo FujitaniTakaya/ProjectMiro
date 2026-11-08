@@ -1,0 +1,558 @@
+{
+    "canvas": {
+        "elements": [
+            {
+                "type": "UIIcon",
+                "name": "Backdrop",
+                "asset": "Assets/spriteData/UI/White.DDS",
+                "width": 2000,
+                "height": 1200,
+                "position": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    18,
+                    22,
+                    34,
+                    130
+                ]
+            },
+            {
+                "type": "UIText",
+                "name": "Heading",
+                "font": "RoundedMplus",
+                "text": "オプション",
+                "size": 112,
+                "pivot": [
+                    1,
+                    1
+                ],
+                "position": [
+                    920,
+                    500,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                ]
+            },
+            {
+                "type": "UIText",
+                "name": "ItemSound",
+                "font": "RoundedMplus",
+                "text": "サウンド",
+                "size": 48,
+                "pivot": [
+                    0,
+                    0.5
+                ],
+                "position": [
+                    640,
+                    210,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                ]
+            },
+            {
+                "type": "UIText",
+                "name": "ItemSensitivity",
+                "font": "RoundedMplus",
+                "text": "感度",
+                "size": 48,
+                "pivot": [
+                    0,
+                    0.5
+                ],
+                "position": [
+                    640,
+                    138,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                ]
+            },
+            {
+                "type": "UIText",
+                "name": "Cursor",
+                "font": "RoundedMplus",
+                "text": "→",
+                "size": 24,
+                "pivot": [
+                    1,
+                    0.5
+                ],
+                "position": [
+                    624,
+                    210,
+                    0
+                ],
+                "scale": [
+                    1.35,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                ]
+            },
+            {
+                "type": "UIIcon",
+                "name": "Panel",
+                "asset": "Assets/spriteData/UI/White.DDS",
+                "width": 920,
+                "height": 760,
+                "position": [
+                    -480,
+                    -20,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    30,
+                    36,
+                    56,
+                    235
+                ]
+            },
+            {
+                "type": "UIText",
+                "name": "PanelTitle",
+                "font": "RoundedMplus",
+                "text": "サウンド",
+                "size": 64,
+                "pivot": [
+                    0,
+                    1
+                ],
+                "position": [
+                    -880,
+                    320,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                ]
+            },
+            {
+                "type": "UIText",
+                "name": "Row0Label",
+                "font": "RoundedMplus",
+                "text": "全体",
+                "size": 44,
+                "pivot": [
+                    0,
+                    0.5
+                ],
+                "position": [
+                    -820,
+                    130,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                ]
+            },
+            {
+                "type": "UIGauge",
+                "name": "Row0BarBg",
+                "asset": "Assets/spriteData/UI/White.DDS",
+                "width": 480,
+                "height": 24,
+                "position": [
+                    -620,
+                    130,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    70,
+                    76,
+                    100,
+                    255
+                ],
+                "pivot": [
+                    0,
+                    0.5
+                ]
+            },
+            {
+                "type": "UIGauge",
+                "name": "Row0BarFill",
+                "asset": "Assets/spriteData/UI/White.DDS",
+                "width": 480,
+                "height": 24,
+                "position": [
+                    -620,
+                    130,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                ],
+                "pivot": [
+                    0,
+                    0.5
+                ]
+            },
+            {
+                "type": "UIText",
+                "name": "Row0Value",
+                "font": "RoundedMplus",
+                "text": "100",
+                "size": 44,
+                "pivot": [
+                    0,
+                    0.5
+                ],
+                "position": [
+                    -120,
+                    130,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                ]
+            },
+            {
+                "type": "UIText",
+                "name": "Row1Label",
+                "font": "RoundedMplus",
+                "text": "BGM",
+                "size": 44,
+                "pivot": [
+                    0,
+                    0.5
+                ],
+                "position": [
+                    -820,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                ]
+            },
+            {
+                "type": "UIGauge",
+                "name": "Row1BarBg",
+                "asset": "Assets/spriteData/UI/White.DDS",
+                "width": 480,
+                "height": 24,
+                "position": [
+                    -620,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    70,
+                    76,
+                    100,
+                    255
+                ],
+                "pivot": [
+                    0,
+                    0.5
+                ]
+            },
+            {
+                "type": "UIGauge",
+                "name": "Row1BarFill",
+                "asset": "Assets/spriteData/UI/White.DDS",
+                "width": 480,
+                "height": 24,
+                "position": [
+                    -620,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                ],
+                "pivot": [
+                    0,
+                    0.5
+                ]
+            },
+            {
+                "type": "UIText",
+                "name": "Row1Value",
+                "font": "RoundedMplus",
+                "text": "100",
+                "size": 44,
+                "pivot": [
+                    0,
+                    0.5
+                ],
+                "position": [
+                    -120,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                ]
+            },
+            {
+                "type": "UIText",
+                "name": "Row2Label",
+                "font": "RoundedMplus",
+                "text": "SE",
+                "size": 44,
+                "pivot": [
+                    0,
+                    0.5
+                ],
+                "position": [
+                    -820,
+                    -130,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                ]
+            },
+            {
+                "type": "UIGauge",
+                "name": "Row2BarBg",
+                "asset": "Assets/spriteData/UI/White.DDS",
+                "width": 480,
+                "height": 24,
+                "position": [
+                    -620,
+                    -130,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    70,
+                    76,
+                    100,
+                    255
+                ],
+                "pivot": [
+                    0,
+                    0.5
+                ]
+            },
+            {
+                "type": "UIGauge",
+                "name": "Row2BarFill",
+                "asset": "Assets/spriteData/UI/White.DDS",
+                "width": 480,
+                "height": 24,
+                "position": [
+                    -620,
+                    -130,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                ],
+                "pivot": [
+                    0,
+                    0.5
+                ]
+            },
+            {
+                "type": "UIText",
+                "name": "Row2Value",
+                "font": "RoundedMplus",
+                "text": "100",
+                "size": 44,
+                "pivot": [
+                    0,
+                    0.5
+                ],
+                "position": [
+                    -120,
+                    -130,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                ]
+            },
+            {
+                "type": "UIText",
+                "name": "RowCursor",
+                "font": "RoundedMplus",
+                "text": "→",
+                "size": 22,
+                "pivot": [
+                    1,
+                    0.5
+                ],
+                "position": [
+                    -836,
+                    130,
+                    0
+                ],
+                "scale": [
+                    1.35,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                ]
+            }
+        ]
+    }
+}
