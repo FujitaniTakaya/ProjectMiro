@@ -27,6 +27,7 @@ namespace nsBalloonEngine
 
     RenderingEngine::RenderingEngine()
         : m_screenBlurPower(0.0f)
+        , m_sceneBlurRate(0.0f)
         , m_isDualBlurEnable(false)
         , m_isDoFEnable(false)
         , m_bloomIntensity(1.0f)
@@ -585,6 +586,16 @@ namespace nsBalloonEngine
         dofInitData.m_expandConstantBuffer = &m_dofCB;
         dofInitData.m_expandConstantBufferSize = sizeof(DoFCB);
         m_dofSprite.Init(dofInitData);
+
+        // シーンぼかし用のスプライトを初期化
+        // NOTE: m_dofBlur.GetResultTexture() を参照するので、必ず m_dofBlur.Init の後に Init する。
+        //       DoF と同じ、元の画像(t0)とぼかした画像(t1)を混ぜるスプライト。混ぜる割合だけが、距離ではなく定数バッファの値になる。
+        SpriteInitData sceneBlurInitData = initData;
+        sceneBlurInitData.m_fxFilePath = "Assets/shader/balloon/bloom/sceneBlur.fx";
+        sceneBlurInitData.m_textures[1] = &m_dofBlur.GetResultTexture();
+        sceneBlurInitData.m_expandConstantBuffer = &m_sceneBlurCB;
+        sceneBlurInitData.m_expandConstantBufferSize = sizeof(SceneBlurCB);
+        m_sceneBlurSprite.Init(sceneBlurInitData);
     }
 
 
@@ -595,7 +606,9 @@ namespace nsBalloonEngine
             m_screenBlur.ExecuteOnGPU(rc, m_screenBlurPower);
         }
 
-        if (m_isDoFEnable)
+        // NOTE: シーンぼかしは DoF と同じ m_dofBlur(mainRT をぼかした結果)を使う。どちらかが有効なときだけ実行する。
+        const bool isSceneBlur = m_sceneBlurRate > 0.0f;
+        if (m_isDoFEnable || isSceneBlur)
         {
             m_dofBlur.ExecuteOnGPU(rc);
         }
@@ -605,7 +618,13 @@ namespace nsBalloonEngine
         rc.SetViewportAndScissor(g_graphicsEngine->GetFrameBufferViewport());
 
 
-        if (m_isDoFEnable)
+        if (isSceneBlur)
+        {
+            m_sceneBlurCB.blendRate = m_sceneBlurRate;
+            m_sceneBlurSprite.Update(g_vec3Zero, g_quatIdentity, g_vec3One);
+            m_sceneBlurSprite.Draw(rc);
+        }
+        else if (m_isDoFEnable)
         {
             m_dofSprite.Update(g_vec3Zero, g_quatIdentity, g_vec3One);
             m_dofSprite.Draw(rc);
@@ -637,6 +656,12 @@ namespace nsBalloonEngine
         ImGuiRenderer::Get().Render();
         ImGuiRenderer::Get().NewFrame();
 #endif // BALLOON_IMGUI_ENABLED
+    }
+
+
+    void RenderingEngine::SetSceneBlurRate(const float rate)
+    {
+        m_sceneBlurRate = std::clamp(rate, 0.0f, 1.0f);
     }
 
 
@@ -736,6 +761,16 @@ namespace nsBalloonEngine
     DoFCB::DoFCB()
         : focusDistance(10.0f)
         , focusRange(5.0f)
+    {
+    }
+
+
+    //=======================================================================
+    // SceneBlurCB
+    //=======================================================================
+    SceneBlurCB::SceneBlurCB()
+        : blendRate(0.0f)
+        , padding()
     {
     }
 } // namespace nsBalloonEngine
