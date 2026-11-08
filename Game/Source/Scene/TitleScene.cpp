@@ -7,8 +7,8 @@
 #include "TitleScene.h"
 
 #include "DebugScene.h"
-#include "Source/UI/Option/OptionMenu.h"
-#include "Source/UI/Title/TitleMenu.h"
+#include "Source/UI/Screen/Option/OptionMenu.h"
+#include "Source/UI/Screen/Title/TitleMenu.h"
 
 
 namespace app

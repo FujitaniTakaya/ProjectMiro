@@ -14,7 +14,7 @@
 #include "Source/Core/Util/CRC32.h"
 #include "Source/Option/OptionSettings.h"
 #include "Source/Sound/SoundManager.h"
-#include "Source/UI/CursorSway.h"
+#include "Source/UI/Common/CursorSway.h"
 
 
 namespace app

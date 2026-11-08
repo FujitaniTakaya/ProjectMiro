@@ -11,8 +11,8 @@
 #include <array>
 #include <cstdint>
 
-#include "Source/UI/Menu.h"
-#include "Source/UI/SelectionTint.h"
+#include "Source/UI/Common/SelectionTint.h"
+#include "Source/UI/Foundation/Menu.h"
 
 
 namespace app

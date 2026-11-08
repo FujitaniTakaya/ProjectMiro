@@ -6,7 +6,7 @@
  *          例: AttachCursorSway(m_cursor);   // MenuBase::InitializeLogic() の中で、矢印を取り出した後に呼ぶ
  */
 #pragma once
-#include "UIParts.h"
+#include "Source/UI/Foundation/UIParts.h"
 
 
 namespace app

@@ -7,7 +7,7 @@
 #include "TitleMenu.h"
 
 #include "Source/Core/Util/CRC32.h"
-#include "Source/UI/CursorSway.h"
+#include "Source/UI/Common/CursorSway.h"
 
 
 namespace app

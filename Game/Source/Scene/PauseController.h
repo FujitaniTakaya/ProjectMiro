@@ -13,8 +13,8 @@
 #pragma once
 #include <cstdint>
 
-#include "Source/UI/MenuInput.h"
-#include "Source/UI/SystemPacket.h"
+#include "Source/UI/Common/MenuInput.h"
+#include "Source/UI/Foundation/SystemPacket.h"
 
 
 namespace app

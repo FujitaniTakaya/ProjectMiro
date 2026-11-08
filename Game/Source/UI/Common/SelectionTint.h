@@ -12,7 +12,7 @@
 #pragma once
 #include <vector>
 
-#include "UIParts.h"
+#include "Source/UI/Foundation/UIParts.h"
 
 
 namespace app

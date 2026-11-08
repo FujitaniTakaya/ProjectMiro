@@ -8,7 +8,7 @@
  *          - "GreenGauge" : 現在のHP
  */
 #pragma once
-#include "Source/UI/Menu.h"
+#include "Source/UI/Foundation/Menu.h"
 
 
 namespace app

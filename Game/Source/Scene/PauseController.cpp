@@ -8,8 +8,8 @@
 
 #include <algorithm>
 
-#include "Source/UI/Option/OptionMenu.h"
-#include "Source/UI/Pause/PauseMenu.h"
+#include "Source/UI/Screen/Option/OptionMenu.h"
+#include "Source/UI/Screen/Pause/PauseMenu.h"
 
 
 namespace app

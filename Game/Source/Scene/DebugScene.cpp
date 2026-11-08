@@ -15,9 +15,9 @@
 #include "Source/Actor/Weapon/Handgun/Handgun.h"
 #include "Source/Camera/PlayerCamera.h"
 #include "Source/Manager/InGameInfoHub.h"
-#include "Source/UI/CoreHP/CoreHPBarMenu.h"
-#include "Source/UI/Handgun/HandgunAmmoMenu.h"
-#include "Source/UI/PlayerHP/HPBarMenu.h"
+#include "Source/UI/HUD/CoreHP/CoreHPBarMenu.h"
+#include "Source/UI/HUD/Handgun/HandgunAmmoMenu.h"
+#include "Source/UI/HUD/PlayerHP/HPBarMenu.h"
 
 
 namespace app

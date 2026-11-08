@@ -61,14 +61,8 @@
     <Filter Include="Source\Manager">
       <UniqueIdentifier>{b9229df0-6afc-455e-992b-aaeafe07037b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\UI\PlayerHP">
-      <UniqueIdentifier>{bf288387-ad03-4c1f-bdbc-7c976995c7db}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Actor\Weapon">
       <UniqueIdentifier>{fc663297-a766-4c34-8c53-e604f148b1dd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\UI\Handgun">
-      <UniqueIdentifier>{92d1a850-af1c-424b-a038-8246b8e76738}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Actor\Weapon\Handgun">
       <UniqueIdentifier>{065eff3f-5355-4bc5-bb94-00939f9ec37f}</UniqueIdentifier>
@@ -79,20 +73,38 @@
     <Filter Include="Source\Actor\Stage">
       <UniqueIdentifier>{81981836-6625-4273-b5bf-fde0e88048ff}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\UI\CoreHP">
-      <UniqueIdentifier>{8a26cdd8-32ed-442f-98db-e2650de23455}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\UI\Title">
-      <UniqueIdentifier>{4b2acfd5-9fc3-4c88-9776-7428dffabc42}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Option">
       <UniqueIdentifier>{a04cee54-e3f6-418c-91d2-5d25d48a1884}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\UI\Option">
-      <UniqueIdentifier>{4c2439fe-0eee-42f5-ab78-a6a7d2970811}</UniqueIdentifier>
+    <Filter Include="Source\UI\Common">
+      <UniqueIdentifier>{8a4e9a03-385b-44f4-a484-274fb525a8aa}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\UI\Pause">
-      <UniqueIdentifier>{d53c8f74-c356-46c2-85d8-e6412dbcc36c}</UniqueIdentifier>
+    <Filter Include="Source\UI\HUD">
+      <UniqueIdentifier>{ddec319e-e117-4ea4-99f8-a93f66d564c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\UI\HUD\CoreHP">
+      <UniqueIdentifier>{3770951a-c637-457a-a2de-08493c9e8475}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\UI\HUD\Handgun">
+      <UniqueIdentifier>{db1c95fd-4b7e-4d08-942e-af1f0f096e46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\UI\Foundation">
+      <UniqueIdentifier>{d9a65c66-5738-4107-a488-c69dec11a9a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\UI\HUD\PlayerHP">
+      <UniqueIdentifier>{b42b0c28-8cff-4b76-b8a3-a3258c35bdb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\UI\Screen">
+      <UniqueIdentifier>{c8c36b72-3d76-454d-aaae-3a849733d5dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\UI\Screen\Option">
+      <UniqueIdentifier>{3fadeed5-71e8-4a07-b4cb-b85fe30b32cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\UI\Screen\Pause">
+      <UniqueIdentifier>{c5b6abc2-2286-47df-a91c-3b98d2a11ae8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\UI\Screen\Title">
+      <UniqueIdentifier>{06a7b656-5bbd-4f46-b0d0-bbf3ffa0aedf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -166,11 +178,11 @@
     <ClCompile Include="Source\Scene\SceneManager.cpp">
       <Filter>Source\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Source\UI\Layout.cpp">
-      <Filter>Source\UI</Filter>
+    <ClCompile Include="Source\UI\Foundation\Layout.cpp">
+      <Filter>Source\UI\Foundation</Filter>
     </ClCompile>
-    <ClCompile Include="Source\UI\UIParts.cpp">
-      <Filter>Source\UI</Filter>
+    <ClCompile Include="Source\UI\Foundation\UIParts.cpp">
+      <Filter>Source\UI\Foundation</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\Timer\Timer.cpp">
       <Filter>Source\Core\Timer</Filter>
@@ -229,11 +241,11 @@
     <ClCompile Include="Source\Manager\InGameInfoHub.cpp">
       <Filter>Source\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="Source\UI\PlayerHP\HPBarMenu.cpp">
-      <Filter>Source\UI\PlayerHP</Filter>
+    <ClCompile Include="Source\UI\HUD\PlayerHP\HPBarMenu.cpp">
+      <Filter>Source\UI\HUD\PlayerHP</Filter>
     </ClCompile>
-    <ClCompile Include="Source\UI\Handgun\HandgunAmmoMenu.cpp">
-      <Filter>Source\UI\Handgun</Filter>
+    <ClCompile Include="Source\UI\HUD\Handgun\HandgunAmmoMenu.cpp">
+      <Filter>Source\UI\HUD\Handgun</Filter>
     </ClCompile>
     <ClCompile Include="Source\Actor\Weapon\Handgun\Handgun.cpp">
       <Filter>Source\Actor\Weapon\Handgun</Filter>
@@ -256,8 +268,8 @@
     <ClCompile Include="Source\Actor\Stage\CoreParameter.cpp">
       <Filter>Source\Actor\Stage</Filter>
     </ClCompile>
-    <ClCompile Include="Source\UI\CoreHP\CoreHPBarMenu.cpp">
-      <Filter>Source\UI\CoreHP</Filter>
+    <ClCompile Include="Source\UI\HUD\CoreHP\CoreHPBarMenu.cpp">
+      <Filter>Source\UI\HUD\CoreHP</Filter>
     </ClCompile>
     <ClCompile Include="Source\Scene\InGameScene.cpp">
       <Filter>Source\Scene</Filter>
@@ -268,32 +280,32 @@
     <ClCompile Include="Source\Scene\TitleScene.cpp">
       <Filter>Source\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Source\UI\Title\TitleMenu.cpp">
-      <Filter>Source\UI\Title</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Option\OptionSettings.cpp">
       <Filter>Source\Option</Filter>
     </ClCompile>
-    <ClCompile Include="Source\UI\MenuInput.cpp">
-      <Filter>Source\UI</Filter>
+    <ClCompile Include="Source\UI\Common\MenuInput.cpp">
+      <Filter>Source\UI\Common</Filter>
     </ClCompile>
-    <ClCompile Include="Source\UI\Option\OptionMenu.cpp">
-      <Filter>Source\UI\Option</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\UI\BlurredBackdrop.cpp">
-      <Filter>Source\UI</Filter>
+    <ClCompile Include="Source\UI\Common\BlurredBackdrop.cpp">
+      <Filter>Source\UI\Common</Filter>
     </ClCompile>
     <ClCompile Include="Source\Scene\PauseController.cpp">
       <Filter>Source\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Source\UI\Pause\PauseMenu.cpp">
-      <Filter>Source\UI\Pause</Filter>
+    <ClCompile Include="Source\UI\Common\CursorSway.cpp">
+      <Filter>Source\UI\Common</Filter>
     </ClCompile>
-    <ClCompile Include="Source\UI\CursorSway.cpp">
-      <Filter>Source\UI</Filter>
+    <ClCompile Include="Source\UI\Common\SelectionTint.cpp">
+      <Filter>Source\UI\Common</Filter>
     </ClCompile>
-    <ClCompile Include="Source\UI\SelectionTint.cpp">
-      <Filter>Source\UI</Filter>
+    <ClCompile Include="Source\UI\Screen\Option\OptionMenu.cpp">
+      <Filter>Source\UI\Screen\Option</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI\Screen\Pause\PauseMenu.cpp">
+      <Filter>Source\UI\Screen\Pause</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI\Screen\Title\TitleMenu.cpp">
+      <Filter>Source\UI\Screen\Title</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -394,17 +406,14 @@
     <ClInclude Include="Source\Scene\SceneManager.h">
       <Filter>Source\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Source\UI\Layout.h">
-      <Filter>Source\UI</Filter>
+    <ClInclude Include="Source\UI\Foundation\Layout.h">
+      <Filter>Source\UI\Foundation</Filter>
     </ClInclude>
-    <ClInclude Include="Source\UI\Menu.h">
-      <Filter>Source\UI</Filter>
+    <ClInclude Include="Source\UI\Foundation\Menu.h">
+      <Filter>Source\UI\Foundation</Filter>
     </ClInclude>
-    <ClInclude Include="Source\UI\SystemPacket.h">
-      <Filter>Source\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\UI\UIParts.h">
-      <Filter>Source\UI</Filter>
+    <ClInclude Include="Source\UI\Foundation\SystemPacket.h">
+      <Filter>Source\UI\Foundation</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\Timer\Timer.h">
       <Filter>Source\Core\Timer</Filter>
@@ -472,14 +481,8 @@
     <ClInclude Include="Source\Manager\InGameInfoHub.h">
       <Filter>Source\Manager</Filter>
     </ClInclude>
-    <ClInclude Include="Source\UI\PlayerHP\HPBarMenu.h">
-      <Filter>Source\UI\PlayerHP</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Actor\Weapon\Handgun\Handgun.h">
       <Filter>Source\Actor\Weapon\Handgun</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\UI\Handgun\HandgunAmmoMenu.h">
-      <Filter>Source\UI\Handgun</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\Util\TextEncoding.h">
       <Filter>Source\Core\Util</Filter>
@@ -511,9 +514,6 @@
     <ClInclude Include="Source\Actor\Stage\CoreParameter.h">
       <Filter>Source\Actor\Stage</Filter>
     </ClInclude>
-    <ClInclude Include="Source\UI\CoreHP\CoreHPBarMenu.h">
-      <Filter>Source\UI\CoreHP</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Scene\InGameScene.h">
       <Filter>Source\Scene</Filter>
     </ClInclude>
@@ -523,35 +523,47 @@
     <ClInclude Include="Source\Scene\TitleScene.h">
       <Filter>Source\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Source\UI\Title\TitleMenu.h">
-      <Filter>Source\UI\Title</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Actor\Character\Miro\MiroWeaponHandler.h">
       <Filter>Source\Actor\Character\Miro</Filter>
     </ClInclude>
     <ClInclude Include="Source\Option\OptionSettings.h">
       <Filter>Source\Option</Filter>
     </ClInclude>
-    <ClInclude Include="Source\UI\MenuInput.h">
-      <Filter>Source\UI</Filter>
+    <ClInclude Include="Source\UI\Common\MenuInput.h">
+      <Filter>Source\UI\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Source\UI\Option\OptionMenu.h">
-      <Filter>Source\UI\Option</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\UI\BlurredBackdrop.h">
-      <Filter>Source\UI</Filter>
+    <ClInclude Include="Source\UI\Common\BlurredBackdrop.h">
+      <Filter>Source\UI\Common</Filter>
     </ClInclude>
     <ClInclude Include="Source\Scene\PauseController.h">
       <Filter>Source\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Source\UI\Pause\PauseMenu.h">
-      <Filter>Source\UI\Pause</Filter>
+    <ClInclude Include="Source\UI\Common\CursorSway.h">
+      <Filter>Source\UI\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Source\UI\CursorSway.h">
-      <Filter>Source\UI</Filter>
+    <ClInclude Include="Source\UI\Common\SelectionTint.h">
+      <Filter>Source\UI\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Source\UI\SelectionTint.h">
-      <Filter>Source\UI</Filter>
+    <ClInclude Include="Source\UI\Foundation\UIParts.h">
+      <Filter>Source\UI\Foundation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\HUD\CoreHP\CoreHPBarMenu.h">
+      <Filter>Source\UI\HUD\CoreHP</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\HUD\Handgun\HandgunAmmoMenu.h">
+      <Filter>Source\UI\HUD\Handgun</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\HUD\PlayerHP\HPBarMenu.h">
+      <Filter>Source\UI\HUD\PlayerHP</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\Screen\Option\OptionMenu.h">
+      <Filter>Source\UI\Screen\Option</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\Screen\Pause\PauseMenu.h">
+      <Filter>Source\UI\Screen\Pause</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\Screen\Title\TitleMenu.h">
+      <Filter>Source\UI\Screen\Title</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
