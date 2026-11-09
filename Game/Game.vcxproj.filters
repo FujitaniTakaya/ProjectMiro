@@ -106,6 +106,9 @@
     <Filter Include="Source\UI\Screen\Title">
       <UniqueIdentifier>{06a7b656-5bbd-4f46-b0d0-bbf3ffa0aedf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Actor\Character\Zombie">
+      <UniqueIdentifier>{510496a3-2dc1-49a0-bcac-98f5bfe381ed}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -306,6 +309,15 @@
     </ClCompile>
     <ClCompile Include="Source\UI\Screen\Title\TitleMenu.cpp">
       <Filter>Source\UI\Screen\Title</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Actor\Character\Zombie\ZombieBase.cpp">
+      <Filter>Source\Actor\Character\Zombie</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Actor\Character\Zombie\ZombieParameter.cpp">
+      <Filter>Source\Actor\Character\Zombie</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Actor\Character\Zombie\ZombieStateMachine.cpp">
+      <Filter>Source\Actor\Character\Zombie</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -564,6 +576,18 @@
     </ClInclude>
     <ClInclude Include="Source\UI\Screen\Title\TitleMenu.h">
       <Filter>Source\UI\Screen\Title</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Character\Zombie\ZombieAnimationClipID.h">
+      <Filter>Source\Actor\Character\Zombie</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Character\Zombie\ZombieBase.h">
+      <Filter>Source\Actor\Character\Zombie</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Character\Zombie\ZombieParameter.h">
+      <Filter>Source\Actor\Character\Zombie</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Character\Zombie\ZombieStateMachine.h">
+      <Filter>Source\Actor\Character\Zombie</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

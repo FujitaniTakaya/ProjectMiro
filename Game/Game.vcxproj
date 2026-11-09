@@ -297,6 +297,9 @@
     <ClCompile Include="Source\UI\Screen\Option\OptionMenu.cpp" />
     <ClCompile Include="Source\UI\Screen\Pause\PauseMenu.cpp" />
     <ClCompile Include="Source\UI\Screen\Title\TitleMenu.cpp" />
+    <ClCompile Include="Source\Actor\Character\Zombie\ZombieBase.cpp" />
+    <ClCompile Include="Source\Actor\Character\Zombie\ZombieParameter.cpp" />
+    <ClCompile Include="Source\Actor\Character\Zombie\ZombieStateMachine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -387,6 +390,10 @@
     <ClInclude Include="Source\UI\Screen\Option\OptionMenu.h" />
     <ClInclude Include="Source\UI\Screen\Pause\PauseMenu.h" />
     <ClInclude Include="Source\UI\Screen\Title\TitleMenu.h" />
+    <ClInclude Include="Source\Actor\Character\Zombie\ZombieAnimationClipID.h" />
+    <ClInclude Include="Source\Actor\Character\Zombie\ZombieBase.h" />
+    <ClInclude Include="Source\Actor\Character\Zombie\ZombieParameter.h" />
+    <ClInclude Include="Source\Actor\Character\Zombie\ZombieStateMachine.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BalloonEngine\BalloonEngine.vcxproj">

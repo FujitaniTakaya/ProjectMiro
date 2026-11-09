@@ -32,6 +32,8 @@ namespace app
         Handgun,
         /** ステージのコア */
         Core,
+        /** ゾンビ(基本の1種類) */
+        Zombie,
 
         Max,
         None = Max

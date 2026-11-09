@@ -11,6 +11,7 @@
 #include "Source/Core/Param/ParamList.h"
 
 #include "Source/Actor/Character/Miro/MiroParameter.h"
+#include "Source/Actor/Character/Zombie/ZombieParameter.h"
 #include "Source/Actor/Stage/CoreParameter.h"
 #include "Source/Actor/Weapon/WeaponParameter.h"
 #include "Source/Camera/PlayerCameraParameter.h"
@@ -26,6 +27,7 @@ namespace app
         holder.Register<camera::PlayerCameraParameter>(EnParamID::PlayerCamera, "Assets/parameter/camera/PlayerCamera.json", &camera::LoadPlayerCameraParameter, &camera::DrawPlayerCameraParameter);
         holder.Register<actor::WeaponParameter>(EnParamID::Handgun, "Assets/parameter/actor/Handgun.json", &actor::LoadWeaponParameter, &actor::DrawWeaponParameter);
         holder.Register<actor::CoreParameter>(EnParamID::Core, "Assets/parameter/actor/Core.json", &actor::LoadCoreParameter, &actor::DrawCoreParameter);
+        holder.Register<actor::ZombieParameter>(EnParamID::Zombie, "Assets/parameter/actor/Zombie.json", &actor::LoadZombieParameter, &actor::DrawZombieParameter);
 
         // 例: holder.Register<MiniMapParameter>(EnParamID::MiniMap, "Assets/parameter/ui/MiniMap.json", &LoadMiniMap);
         // 値をデバッグ画面(ParamDebugUI)で見たい場合は、4つ目の引数に表示関数を渡す。
