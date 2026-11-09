@@ -30,5 +30,6 @@ namespace app
         void Render(RenderContext& rc) override;
 
         bool RequestScene(uint32_t& id, float& waitTime) override;
+        bool IsPausable() const override;
     };
 } // namespace app

@@ -1,0 +1,142 @@
+{
+    "canvas": {
+        "elements": [
+            {
+                "type": "UIIcon",
+                "name": "Backdrop",
+                "asset": "Assets/spriteData/UI/White.DDS",
+                "width": 2000,
+                "height": 1200,
+                "position": [
+                    0,
+                    0,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    18,
+                    22,
+                    34,
+                    130
+                ]
+            },
+            {
+                "type": "UIText",
+                "name": "Heading",
+                "font": "RoundedMplus",
+                "text": "ポーズ",
+                "size": 112,
+                "pivot": [
+                    1,
+                    1
+                ],
+                "position": [
+                    920,
+                    500,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                ]
+            },
+            {
+                "type": "UIText",
+                "name": "ItemOption",
+                "font": "RoundedMplus",
+                "text": "オプション",
+                "size": 48,
+                "pivot": [
+                    0,
+                    0.5
+                ],
+                "position": [
+                    640,
+                    210,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                ]
+            },
+            {
+                "type": "UIText",
+                "name": "ItemTitle",
+                "font": "RoundedMplus",
+                "text": "タイトルへ",
+                "size": 48,
+                "pivot": [
+                    0,
+                    0.5
+                ],
+                "position": [
+                    640,
+                    138,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                ]
+            },
+            {
+                "type": "UIText",
+                "name": "Cursor",
+                "font": "RoundedMplus",
+                "text": "→",
+                "size": 24,
+                "pivot": [
+                    1,
+                    0.5
+                ],
+                "position": [
+                    624,
+                    210,
+                    0
+                ],
+                "scale": [
+                    1.35,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                ]
+            }
+        ]
+    }
+}

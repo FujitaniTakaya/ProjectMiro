@@ -5,7 +5,9 @@
  *          シーンを追加するには、IScene を継承したクラスを作り、SceneManager のコンストラクタで AddSceneMap<T>() を呼ぶ。
  *          シーンから RequestScene() で遷移を要求すると、SceneManager が次の順番で遷移する。
  *            Idle(通常) → FadingOut(暗転) → LoadingScene(旧シーンを破棄して新シーンを生成。IsLoaded() を待つ) → FadingIn(明転) → Idle
- *          NOTE: ポーズは未対応。
+ *          ポーズ画面も、このクラスが動かす。IsPausable() が true のシーンで、スタートボタンを押すと PauseController が開く。
+ *          ポーズ中(Idle の間)は、シーンの Update() の代わりに PauseUpdate() を呼び、シーンのUI(HUD)は描かない。
+ *          ポーズ画面で「タイトルへ」を決めると、TitleScene へ遷移する。
  */
 #pragma once
 #include <cstdint>
@@ -14,6 +16,7 @@
 #include <memory>
 
 #include "IScene.h"
+#include "PauseController.h"
 
 
 namespace app
@@ -128,6 +131,8 @@ namespace app
         TransitionState m_transitionState;
         /** フェードの持続時間(秒) */
         float m_fadeDuration;
+        /** ポーズ画面 */
+        PauseController m_pause;
 
 
     private:

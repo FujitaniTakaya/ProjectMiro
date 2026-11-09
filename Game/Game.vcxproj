@@ -254,8 +254,8 @@
     <ClCompile Include="Source\Core\Util\Curve.cpp" />
     <ClCompile Include="Source\Scene\Fade.cpp" />
     <ClCompile Include="Source\Scene\SceneManager.cpp" />
-    <ClCompile Include="Source\UI\Layout.cpp" />
-    <ClCompile Include="Source\UI\UIParts.cpp" />
+    <ClCompile Include="Source\UI\Foundation\Layout.cpp" />
+    <ClCompile Include="Source\UI\Foundation\UIParts.cpp" />
     <ClCompile Include="Source\Core\Timer\Timer.cpp" />
     <ClCompile Include="Source\Core\Timer\TimerManager.cpp" />
     <ClCompile Include="Source\UI\Animation\UIAnimation.cpp" />
@@ -275,8 +275,8 @@
     <ClCompile Include="Source\Actor\Weapon\WeaponBase.cpp" />
     <ClCompile Include="Source\Actor\Weapon\WeaponParameter.cpp" />
     <ClCompile Include="Source\Manager\InGameInfoHub.cpp" />
-    <ClCompile Include="Source\UI\PlayerHP\HPBarMenu.cpp" />
-    <ClCompile Include="Source\UI\Handgun\HandgunAmmoMenu.cpp" />
+    <ClCompile Include="Source\UI\HUD\PlayerHP\HPBarMenu.cpp" />
+    <ClCompile Include="Source\UI\HUD\Handgun\HandgunAmmoMenu.cpp" />
     <ClCompile Include="Source\Actor\Weapon\Handgun\Handgun.cpp" />
     <ClCompile Include="Source\Core\Util\TextEncoding.cpp" />
     <ClCompile Include="Source\Font\FontManager.cpp" />
@@ -284,11 +284,19 @@
     <ClCompile Include="Source\Actor\Stage\StageField.cpp" />
     <ClCompile Include="Source\Actor\Stage\Core.cpp" />
     <ClCompile Include="Source\Actor\Stage\CoreParameter.cpp" />
-    <ClCompile Include="Source\UI\CoreHP\CoreHPBarMenu.cpp" />
+    <ClCompile Include="Source\UI\HUD\CoreHP\CoreHPBarMenu.cpp" />
     <ClCompile Include="Source\Scene\InGameScene.cpp" />
     <ClCompile Include="Source\Scene\ResultScene.cpp" />
     <ClCompile Include="Source\Scene\TitleScene.cpp" />
-    <ClCompile Include="Source\UI\Title\TitleMenu.cpp" />
+    <ClCompile Include="Source\Option\OptionSettings.cpp" />
+    <ClCompile Include="Source\UI\Common\MenuInput.cpp" />
+    <ClCompile Include="Source\UI\Common\BlurredBackdrop.cpp" />
+    <ClCompile Include="Source\Scene\PauseController.cpp" />
+    <ClCompile Include="Source\UI\Common\CursorSway.cpp" />
+    <ClCompile Include="Source\UI\Common\SelectionTint.cpp" />
+    <ClCompile Include="Source\UI\Screen\Option\OptionMenu.cpp" />
+    <ClCompile Include="Source\UI\Screen\Pause\PauseMenu.cpp" />
+    <ClCompile Include="Source\UI\Screen\Title\TitleMenu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -326,10 +334,9 @@
     <ClInclude Include="Source\Scene\Fade.h" />
     <ClInclude Include="Source\Scene\IScene.h" />
     <ClInclude Include="Source\Scene\SceneManager.h" />
-    <ClInclude Include="Source\UI\Layout.h" />
-    <ClInclude Include="Source\UI\Menu.h" />
-    <ClInclude Include="Source\UI\SystemPacket.h" />
-    <ClInclude Include="Source\UI\UIParts.h" />
+    <ClInclude Include="Source\UI\Foundation\Layout.h" />
+    <ClInclude Include="Source\UI\Foundation\Menu.h" />
+    <ClInclude Include="Source\UI\Foundation\SystemPacket.h" />
     <ClInclude Include="Source\Core\Timer\Timer.h" />
     <ClInclude Include="Source\Core\Timer\TimerHandle.h" />
     <ClInclude Include="Source\Core\Timer\TimerManager.h" />
@@ -352,9 +359,7 @@
     <ClInclude Include="Source\Actor\Weapon\WeaponBase.h" />
     <ClInclude Include="Source\Actor\Weapon\WeaponParameter.h" />
     <ClInclude Include="Source\Manager\InGameInfoHub.h" />
-    <ClInclude Include="Source\UI\PlayerHP\HPBarMenu.h" />
     <ClInclude Include="Source\Actor\Weapon\Handgun\Handgun.h" />
-    <ClInclude Include="Source\UI\Handgun\HandgunAmmoMenu.h" />
     <ClInclude Include="Source\Core\Util\TextEncoding.h" />
     <ClInclude Include="Source\Font\FontList.h" />
     <ClInclude Include="Source\Font\FontManager.h" />
@@ -365,12 +370,23 @@
     <ClInclude Include="Source\Actor\Stage\StageField.h" />
     <ClInclude Include="Source\Actor\Stage\Core.h" />
     <ClInclude Include="Source\Actor\Stage\CoreParameter.h" />
-    <ClInclude Include="Source\UI\CoreHP\CoreHPBarMenu.h" />
     <ClInclude Include="Source\Scene\InGameScene.h" />
     <ClInclude Include="Source\Scene\ResultScene.h" />
     <ClInclude Include="Source\Scene\TitleScene.h" />
-    <ClInclude Include="Source\UI\Title\TitleMenu.h" />
     <ClInclude Include="Source\Actor\Character\Miro\MiroWeaponHandler.h" />
+    <ClInclude Include="Source\Option\OptionSettings.h" />
+    <ClInclude Include="Source\UI\Common\MenuInput.h" />
+    <ClInclude Include="Source\UI\Common\BlurredBackdrop.h" />
+    <ClInclude Include="Source\Scene\PauseController.h" />
+    <ClInclude Include="Source\UI\Common\CursorSway.h" />
+    <ClInclude Include="Source\UI\Common\SelectionTint.h" />
+    <ClInclude Include="Source\UI\Foundation\UIParts.h" />
+    <ClInclude Include="Source\UI\HUD\CoreHP\CoreHPBarMenu.h" />
+    <ClInclude Include="Source\UI\HUD\Handgun\HandgunAmmoMenu.h" />
+    <ClInclude Include="Source\UI\HUD\PlayerHP\HPBarMenu.h" />
+    <ClInclude Include="Source\UI\Screen\Option\OptionMenu.h" />
+    <ClInclude Include="Source\UI\Screen\Pause\PauseMenu.h" />
+    <ClInclude Include="Source\UI\Screen\Title\TitleMenu.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BalloonEngine\BalloonEngine.vcxproj">

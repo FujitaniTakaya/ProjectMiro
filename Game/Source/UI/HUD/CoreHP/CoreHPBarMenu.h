@@ -5,7 +5,7 @@
  *          バーは、キャンバスの原点が中心になるように置く。キャンバスを、3D空間の点を画面に変換した位置へ動かして使う。
  */
 #pragma once
-#include "Source/UI/PlayerHP/HPBarMenu.h"
+#include "Source/UI/HUD/PlayerHP/HPBarMenu.h"
 
 
 namespace app

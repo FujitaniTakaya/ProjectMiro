@@ -9,7 +9,7 @@
 #pragma once
 #include <cstdint>
 
-#include "Source/UI/Menu.h"
+#include "Source/UI/Foundation/Menu.h"
 
 
 namespace app

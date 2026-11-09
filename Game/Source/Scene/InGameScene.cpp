@@ -39,4 +39,10 @@ namespace app
     {
         return false;
     }
+
+
+    bool InGameScene::IsPausable() const
+    {
+        return true;
+    }
 } // namespace app

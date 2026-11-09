@@ -8,7 +8,7 @@
 #include <memory>
 
 #include "IScene.h"
-#include "Source/UI/SystemPacket.h"
+#include "Source/UI/Foundation/SystemPacket.h"
 
 
 namespace app
@@ -52,6 +52,7 @@ namespace app
         void RenderUI(RenderContext& rc) override;
 
         bool RequestScene(uint32_t& id, float& waitTime) override;
+        bool IsPausable() const override;
 
 
     private:

@@ -57,6 +57,20 @@ namespace nsBalloonEngine
     };
 
 
+    /**
+     * @brief シーンぼかし用の定数バッファ
+     */
+    struct SceneBlurCB
+    {
+        /** ぼかした画像を混ぜる割合(0〜1)。0で元の画像のまま、1でぼかした画像だけ */
+        float blendRate;
+        float padding[3];
+
+        SceneBlurCB();
+        ~SceneBlurCB() = default;
+    };
+
+
 
     /**
      * @brief 描画エンジンクラス
@@ -134,12 +148,25 @@ namespace nsBalloonEngine
     public:
         /**
          * @brief スクリーンブラーの強さを設定する。
+         * @details ぼかした画像を、元の画像の上に加算合成する。元の画像は残り、画面は明るくにじむ。
+         *          画面全体をぼかして置き換えたいときは、SetSceneBlurRate() を使うこと。
          * @param power ブラーの強さ
          */
         void SetScreenBlurPower(float& power)
         {
             m_screenBlurPower = power;
         }
+
+
+        /**
+         * @brief シーンぼかしの割合を設定する。
+         * @details 元の画像と、ぼかした画像(DualBlur)を、この割合で混ぜて画面に出す。
+         *          1にすると元の画像は消え、画面全体がぼけた絵に置き換わる。ポーズ画面の背景用。
+         *          毎フレーム少しずつ動かせば、ぼけていく遷移になる。0のときは何も実行しない。
+         *          被写界深度(DoF)が有効でも、この割合が0より大きい間は、こちらが優先される。
+         * @param rate ぼかした画像を混ぜる割合。0〜1に丸める。0でぼかさない
+         */
+        void SetSceneBlurRate(const float rate);
 
 
         //=======================================================================
@@ -347,6 +374,12 @@ namespace nsBalloonEngine
         GaussianBlur m_screenBlur;
         /** ブラーの値 */
         float m_screenBlurPower;
+        /** シーンぼかしの割合(0〜1) */
+        float m_sceneBlurRate;
+        /** シーンぼかし用の定数バッファ */
+        SceneBlurCB m_sceneBlurCB;
+        /** 元の画像とぼかした画像を混ぜて、フレームバッファーに出すスプライト */
+        Sprite m_sceneBlurSprite;
 
 
         //=======================================================================

@@ -7,6 +7,8 @@
  *            右スティック左右 : 注視点を中心に、Y軸回りに回す
  *            右スティック上下 : 注視点を中心に、上下に回す(角度の制限あり)
  *          キーボードでは、矢印キーが右スティックになる。
+ *          回る速さは、PlayerCameraParameter の rotateSpeed に、オプションの感度(OptionSettings)を掛けたもの。
+ *          通常はカメラ感度、ハンドガンを構えている間(SetAiming(true))はエイム感度を掛ける。
  */
 #pragma once
 
@@ -56,6 +58,16 @@ namespace app
              */
             void SetTargetPosition(const Vector3& position);
 
+            /**
+             * @brief ハンドガンを構えているかどうかを設定
+             * @details 構えている間は、カメラ感度の代わりにエイム感度で回る。毎フレーム、Update() の前に設定すること。
+             * @param isAiming 構えているならtrue
+             */
+            void SetAiming(const bool isAiming)
+            {
+                m_isAiming = isAiming;
+            }
+
 
         private:
             /** パラメーター(ParamHolderが持つもの。アプリが終わるまで使える) */
@@ -66,6 +78,8 @@ namespace app
             Vector3 m_toCameraPos;
             /** ターゲットの座標 */
             Vector3 m_targetPosition;
+            /** ハンドガンを構えているかどうか */
+            bool m_isAiming;
         };
     } // namespace camera
 } // namespace app

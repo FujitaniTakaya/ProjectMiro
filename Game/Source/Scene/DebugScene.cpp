@@ -15,9 +15,9 @@
 #include "Source/Actor/Weapon/Handgun/Handgun.h"
 #include "Source/Camera/PlayerCamera.h"
 #include "Source/Manager/InGameInfoHub.h"
-#include "Source/UI/CoreHP/CoreHPBarMenu.h"
-#include "Source/UI/Handgun/HandgunAmmoMenu.h"
-#include "Source/UI/PlayerHP/HPBarMenu.h"
+#include "Source/UI/HUD/CoreHP/CoreHPBarMenu.h"
+#include "Source/UI/HUD/Handgun/HandgunAmmoMenu.h"
+#include "Source/UI/HUD/PlayerHP/HPBarMenu.h"
 
 
 namespace app
@@ -159,8 +159,9 @@ namespace app
         // ハンドガンが更新された後の残弾数を通知する(値が変わった時だけ、UIに伝わる)
         InGameInfoHub::Get().NotifyPlayerAmmo(m_handgun->GetRemainingAmmo());
 
-        // Miroが動いた後の座標を追う
+        // Miroが動いた後の座標を追う。構えている間は、エイム感度で回る
         m_playerCamera->SetTargetPosition(m_miro->GetTransform().m_position);
+        m_playerCamera->SetAiming(m_miro->IsAiming());
         m_playerCamera->Update();
 
         // MiroがHPを通知した後に、HPバーを更新する
@@ -204,5 +205,11 @@ namespace app
     bool DebugScene::RequestScene(uint32_t& id, float& waitTime)
     {
         return false;
+    }
+
+
+    bool DebugScene::IsPausable() const
+    {
+        return true;
     }
 } // namespace app

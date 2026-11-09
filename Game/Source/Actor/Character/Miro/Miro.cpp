@@ -105,6 +105,12 @@ namespace app
         }
 
 
+        bool Miro::IsAiming() const
+        {
+            return m_stateMachine->IsAiming();
+        }
+
+
         void Miro::SetWeaponHandler(MiroWeaponHandler handler)
         {
             m_stateMachine->SetWeaponHandler(std::move(handler));

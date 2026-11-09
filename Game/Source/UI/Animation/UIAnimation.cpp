@@ -8,7 +8,7 @@
 
 #include <utility>
 
-#include "Source/UI/UIParts.h"
+#include "Source/UI/Foundation/UIParts.h"
 #include "UIAnimationParameter.h"
 
 
