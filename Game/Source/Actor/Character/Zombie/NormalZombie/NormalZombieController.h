@@ -1,16 +1,13 @@
 ﻿/**
  * @file NormalZombieController.h
  * @brief 通常のゾンビ用のController
- * @details コアの位置へ一直線に歩く入力を作る。コアの位置は SetCorePositionProvider() で教える。
- *          コアまでのXZ平面の距離が ZombieParameter::coreStopDistance 以内になったら、着いたとみなして立ち止まる。
- *          ボタンは押さないので、ゾンビは歩きで進む。
+ * @details コアの位置へ一直線に歩く入力を作る。コアへ向かう処理は ZombieCoreApproach が行う。
+ *          ボタンは押さないので、ゾンビは歩きで進む。コアに着いたら立ち止まる。
  *          NormalZombie には付けていない。付けるときは、GetControllerSlot().Attach() で付ける。
- * @note 経路探索がまだ無いので、間に壁や崖があっても真っ直ぐ向かう。
- *       アンガー値が溜まり切ったとき(本格ロックオン)の動きもまだ無いので、アンガー値は見ずに、常にコアへ向かう。
+ * @note アンガー値が溜まり切ったとき(本格ロックオン)の動きもまだ無いので、アンガー値は見ずに、常にコアへ向かう。
  */
 #pragma once
-#include <functional>
-
+#include "Source/Actor/Character/Zombie/ZombieCoreApproach.h"
 #include "Source/MoveBehavior/IController.h"
 
 
@@ -28,12 +25,8 @@ namespace app
         class NormalZombieController : public IController
         {
         public:
-            /**
-             * @brief コアの位置を教える関数
-             * @param outPosition コアの足元(地面)のワールド座標を入れる。高さは使わない
-             * @return コアがあれば true。なければ false
-             */
-            using PositionProvider = std::function<bool(Vector3& outPosition)>;
+            /** コアの位置を教える関数(ZombieCoreApproach と同じ) */
+            using PositionProvider = ZombieCoreApproach::PositionProvider;
 
 
         public:
@@ -54,7 +47,7 @@ namespace app
 
             /**
              * @brief 今フレームの入力を作る
-             * @details コアが着いたとみなす距離より遠ければ、コアへ向かう移動入力(長さ1)を作る。
+             * @details コアへ向かう移動入力(長さ1)だけを作る。ボタンは押さない。
              * @param context 操作対象の情報。座標からコアへの向きを決める
              * @return 今フレームの入力。コアがない、またはコアに着いていれば無入力
              */
@@ -62,10 +55,8 @@ namespace app
 
 
         private:
-            /** パラメーター(ParamHolderが持つもの。アプリが終わるまで使える) */
-            const ZombieParameter& m_parameter;
-            /** コアの位置を教える関数 */
-            PositionProvider m_corePositionProvider;
+            /** コアへ向かう処理 */
+            ZombieCoreApproach m_coreApproach;
         };
     } // namespace actor
 } // namespace app

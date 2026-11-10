@@ -18,6 +18,7 @@ namespace app
 
         class Miro;
         class NormalZombie;
+        class RunningZombie;
         class Handgun;
         class StageField;
         class Core;
@@ -60,6 +61,8 @@ namespace app
         std::unique_ptr<actor::Miro> m_miro;
         /** 通常のゾンビ。Start() で NormalZombieController を付けて、コアへ一直線に歩かせる */
         std::unique_ptr<actor::NormalZombie> m_normalZombie;
+        /** 走り続けるゾンビ。Start() で RunningZombieController を付けて、コアへ一直線に走らせる */
+        std::unique_ptr<actor::RunningZombie> m_runningZombie;
         std::unique_ptr<camera::PlayerCamera> m_playerCamera;
         /** プレイヤーのHPバー。InGameInfoHubに通知されたHPを表示する */
         ui::UIPacket<ui::HPBarMenu> m_hpBarPacket;

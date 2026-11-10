@@ -2,6 +2,7 @@
  * @file ZombieParameter.h
  * @brief Zombieのパラメーター
  * @details ParamHolderに EnParamID::Zombie で登録する。jsonは Assets/parameter/actor/Zombie.json。
+ *          ゾンビの種類ごとに、同じ構造体を別のID・jsonで登録する。(例: 走り続けるゾンビは EnParamID::RunningZombie の RunningZombie.json)
  *          例: const ZombieParameter& param = ParamHolder::Get().GetParameter<ZombieParameter>(EnParamID::Zombie);
  */
 #pragma once

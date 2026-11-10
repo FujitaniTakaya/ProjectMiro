@@ -303,6 +303,9 @@
     <ClCompile Include="Source\Actor\Character\Zombie\ZombieIState.cpp" />
     <ClCompile Include="Source\Actor\Character\Zombie\NormalZombie\NormalZombie.cpp" />
     <ClCompile Include="Source\Actor\Character\Zombie\NormalZombie\NormalZombieController.cpp" />
+    <ClCompile Include="Source\Actor\Character\Zombie\RunningZombie\RunningZombie.cpp" />
+    <ClCompile Include="Source\Actor\Character\Zombie\RunningZombie\RunningZombieController.cpp" />
+    <ClCompile Include="Source\Actor\Character\Zombie\ZombieCoreApproach.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -400,6 +403,9 @@
     <ClInclude Include="Source\Actor\Character\Zombie\ZombieIState.h" />
     <ClInclude Include="Source\Actor\Character\Zombie\NormalZombie\NormalZombie.h" />
     <ClInclude Include="Source\Actor\Character\Zombie\NormalZombie\NormalZombieController.h" />
+    <ClInclude Include="Source\Actor\Character\Zombie\RunningZombie\RunningZombie.h" />
+    <ClInclude Include="Source\Actor\Character\Zombie\RunningZombie\RunningZombieController.h" />
+    <ClInclude Include="Source\Actor\Character\Zombie\ZombieCoreApproach.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BalloonEngine\BalloonEngine.vcxproj">
