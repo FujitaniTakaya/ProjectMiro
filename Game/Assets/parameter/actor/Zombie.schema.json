@@ -1,0 +1,22 @@
+{
+    "struct": "ZombieParameter",
+    "namespace": "actor",
+    "json": "Assets/parameter/actor/Zombie.json",
+    "h": "Source/Actor/Character/Zombie/ZombieParameter.h",
+    "cpp": "Source/Actor/Character/Zombie/ZombieParameter.cpp",
+    "params": [
+        { "name": "maxHp", "type": "float", "doc": "最大HP。個体の耐久力で、ダメージを受けきると死亡する" },
+        { "name": "walkSpeed", "type": "float", "digits": 2, "doc": "通常時の移動速度。プレイヤーの走り速度に対する割合" },
+        { "name": "runSpeed", "type": "float", "digits": 2, "doc": "ロックオン時の移動速度。プレイヤーの走り速度に対する割合" },
+        { "name": "attackPower", "type": "float", "doc": "攻撃が当たった時に与える固定ダメージ" },
+        { "name": "initialAnger", "type": "float", "doc": "最初から保持しているアンガー値(種類ごとの固定値)" },
+        { "name": "angerGainRate", "type": "float", "digits": 2, "doc": "あがりやすさ。被弾ダメージをアンガー値へ加算するときの倍率" },
+        { "name": "angerThreshold", "type": "float", "doc": "こらえる閾値(発火ライン)。累積アンガー値がこの値に達すると、本格ロックオンへ移行する" },
+        { "name": "angerSpreadValue", "type": "float", "doc": "ばらまくアンガー値。本格ロックオンに達したとき、周囲のゾンビへ伝播させる値" },
+        { "name": "angerSpreadRadius", "type": "float", "doc": "巻き込む範囲。アンガー値の伝播が届く距離(半径)" },
+        { "name": "radius", "type": "float", "doc": "キャラクターコントローラーの半径" },
+        { "name": "height", "type": "float", "doc": "キャラクターコントローラーの高さ" },
+        { "name": "coreStopDistance", "type": "float", "doc": "コアに着いたとみなす距離。コアのXZ平面での距離がこの値以内になると、立ち止まる" },
+        { "name": "attackBoxSize", "type": "float", "doc": "攻撃判定の箱の一辺(cm)。振り下ろしの間、右手に付く。コアなどの当たり判定に重なるとダメージが入る" }
+    ]
+}

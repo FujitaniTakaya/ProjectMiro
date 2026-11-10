@@ -106,6 +106,15 @@
     <Filter Include="Source\UI\Screen\Title">
       <UniqueIdentifier>{06a7b656-5bbd-4f46-b0d0-bbf3ffa0aedf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Actor\Character\Zombie">
+      <UniqueIdentifier>{510496a3-2dc1-49a0-bcac-98f5bfe381ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Actor\Character\Zombie\NormalZombie">
+      <UniqueIdentifier>{ad71aac3-49db-4206-b125-9c89f86c638a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Actor\Character\Zombie\RunningZombie">
+      <UniqueIdentifier>{5558cced-cc08-41f0-8323-5b6bd5033e89}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -306,6 +315,39 @@
     </ClCompile>
     <ClCompile Include="Source\UI\Screen\Title\TitleMenu.cpp">
       <Filter>Source\UI\Screen\Title</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Actor\Character\Zombie\ZombieBase.cpp">
+      <Filter>Source\Actor\Character\Zombie</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Actor\Character\Zombie\ZombieParameter.cpp">
+      <Filter>Source\Actor\Character\Zombie</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Actor\Character\Zombie\ZombieStateMachine.cpp">
+      <Filter>Source\Actor\Character\Zombie</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Actor\Character\Zombie\ZombieIState.cpp">
+      <Filter>Source\Actor\Character\Zombie</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Actor\Character\Zombie\NormalZombie\NormalZombie.cpp">
+      <Filter>Source\Actor\Character\Zombie\NormalZombie</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Actor\Character\Zombie\NormalZombie\NormalZombieController.cpp">
+      <Filter>Source\Actor\Character\Zombie\NormalZombie</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Actor\Character\Zombie\ZombieSpawnParameter.cpp">
+      <Filter>Source\Actor\Character\Zombie</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Actor\Character\Zombie\RunningZombie\RunningZombie.cpp">
+      <Filter>Source\Actor\Character\Zombie\RunningZombie</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Actor\Character\Zombie\RunningZombie\RunningZombieController.cpp">
+      <Filter>Source\Actor\Character\Zombie\RunningZombie</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Actor\Character\Zombie\ZombieCoreApproach.cpp">
+      <Filter>Source\Actor\Character\Zombie</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Actor\Character\Zombie\ZombieSpawner.cpp">
+      <Filter>Source\Actor\Character\Zombie</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -564,6 +606,48 @@
     </ClInclude>
     <ClInclude Include="Source\UI\Screen\Title\TitleMenu.h">
       <Filter>Source\UI\Screen\Title</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Character\Zombie\ZombieAnimationClipID.h">
+      <Filter>Source\Actor\Character\Zombie</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Character\Zombie\ZombieBase.h">
+      <Filter>Source\Actor\Character\Zombie</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Character\Zombie\ZombieParameter.h">
+      <Filter>Source\Actor\Character\Zombie</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Character\Zombie\ZombieStateMachine.h">
+      <Filter>Source\Actor\Character\Zombie</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Character\Zombie\ZombieIState.h">
+      <Filter>Source\Actor\Character\Zombie</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Character\Zombie\NormalZombie\NormalZombie.h">
+      <Filter>Source\Actor\Character\Zombie\NormalZombie</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Character\Zombie\NormalZombie\NormalZombieController.h">
+      <Filter>Source\Actor\Character\Zombie\NormalZombie</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Character\Zombie\ZombieSpawnParameter.h">
+      <Filter>Source\Actor\Character\Zombie</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Character\Zombie\RunningZombie\RunningZombie.h">
+      <Filter>Source\Actor\Character\Zombie\RunningZombie</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Character\Zombie\RunningZombie\RunningZombieController.h">
+      <Filter>Source\Actor\Character\Zombie\RunningZombie</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Character\Zombie\ZombieCoreApproach.h">
+      <Filter>Source\Actor\Character\Zombie</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Character\Zombie\ZombieSpawnRule.h">
+      <Filter>Source\Actor\Character\Zombie</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Character\Zombie\ZombieSpawner.h">
+      <Filter>Source\Actor\Character\Zombie</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Character\Zombie\ZombieAttackHandler.h">
+      <Filter>Source\Actor\Character\Zombie</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

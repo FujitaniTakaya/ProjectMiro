@@ -32,6 +32,12 @@ namespace app
         Handgun,
         /** ステージのコア */
         Core,
+        /** ゾンビ(基本の1種類) */
+        Zombie,
+        /** ゾンビのスポーン地点(4つのゲート) */
+        ZombieSpawn,
+        /** 走り続けるゾンビ(構造体は Zombie と同じ ZombieParameter) */
+        RunningZombie,
 
         Max,
         None = Max

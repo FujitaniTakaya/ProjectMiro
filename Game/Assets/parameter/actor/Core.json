@@ -1,4 +1,6 @@
 {
     "maxHp": 1000.0,
-    "hpBarOffsetY": 150.0
+    "hpBarOffsetY": 150.0,
+    "hitBoxWidth": 240.0,
+    "hitBoxHeight": 220.0
 }

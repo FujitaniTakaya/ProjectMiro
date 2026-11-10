@@ -1,0 +1,15 @@
+{
+    "maxHp": 50.0,
+    "walkSpeed": 0.3,
+    "runSpeed": 0.9,
+    "attackPower": 10.0,
+    "initialAnger": 0.0,
+    "angerGainRate": 1.0,
+    "angerThreshold": 100.0,
+    "angerSpreadValue": 30.0,
+    "angerSpreadRadius": 500.0,
+    "radius": 25.0,
+    "height": 110.0,
+    "coreStopDistance": 150.0,
+    "attackBoxSize": 60.0
+}

@@ -139,6 +139,18 @@ namespace nsBalloonEngine
         void SetAnimationSpeed(const float speed);
 
 
+        /**
+         * @brief アニメーションイベントのリスナーを登録する
+         * @details tka が持つイベント(発火時刻と名前)は、再生時間が発火時刻を過ぎた時に、1回だけリスナーへ通知される。
+         *          通知はアニメーションの更新(Update())の中で行われる。リスナーは、ここで登録したものが全て呼ばれる。
+         *          ループ・巻き戻し再生をすると、そのクリップのイベントは、また1回ずつ通知される。
+         *          アニメーションを持たないモデル(Init() でクリップを渡さなかったもの)には、通知されない。
+         * @note リスナーが持つポインタは、このModelRenderが生きている間は有効であること。
+         * @param listener リスナー。引数はイベントを起こしたクリップの名前とイベント名
+         */
+        void AddAnimationEventListener(const AnimationEventListener& listener);
+
+
     public:
         /**
          * @brief フォワードレンダリングモデルを使用するかどうかを設定する

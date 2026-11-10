@@ -25,6 +25,10 @@ namespace app
             float maxHp;
             /** 耐久値バーの基準点の高さ(コアの中心から上へ。cm) */
             float hpBarOffsetY;
+            /** 当たり判定の箱の幅(XとZ。cm)。ゾンビの攻撃判定が重なるとダメージを受ける */
+            float hitBoxWidth;
+            /** 当たり判定の箱の高さ(Y。cm)。箱の中心はコアの宝石の中心 */
+            float hitBoxHeight;
             // [PARAM_GEN end members]
         };
 

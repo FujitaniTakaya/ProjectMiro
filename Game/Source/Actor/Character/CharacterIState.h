@@ -54,6 +54,7 @@ namespace app
 
         /**
          * @brief 待機ステート
+         * @details Enter() だけは派生クラスで拡張できる。(例: ゾンビは入るときに慣性を消す。ZombieIdleState を参照)
          */
         class CharacterIdleState : public CharacterIState
         {
@@ -61,7 +62,7 @@ namespace app
 
         public:
             // IStateの仮想関数のオーバーライド
-            void Enter() override final;
+            void Enter() override;
             void Update() override final;
             void Exit() override final;
 

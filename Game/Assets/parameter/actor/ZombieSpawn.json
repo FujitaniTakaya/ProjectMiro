@@ -1,0 +1,11 @@
+{
+    "gateNorth": [2600.0, 300.0, -3100.0],
+    "gateSouth": [-2600.0, 300.0, 2700.0],
+    "gateWest": [-4400.0, 0.0, 0.0],
+    "gateEast": [4400.0, 0.0, 0.0],
+    "spawnOrder": "NNNR",
+    "spawnInterval": 3.0,
+    "maxAliveCount": 20,
+    "dropHeight": 200.0,
+    "gateJitterRadius": 120.0
+}

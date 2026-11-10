@@ -207,6 +207,12 @@ namespace nsBalloonEngine
     }
 
 
+    void ModelRender::AddAnimationEventListener(const AnimationEventListener& listener)
+    {
+        m_animation.AddAnimationEventListener(listener);
+    }
+
+
     void ModelRender::SetForwardOption(const bool isForwardOption)
     {
         m_useForwardRendering = isForwardOption;
