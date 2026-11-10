@@ -4,7 +4,7 @@
  * @details Assets/animData/character/zombie のアニメーションを、各ゾンビ(NormalZombie.cpp など)の ANIMATION_DATA と同じ順に並べる。
  *          値はそのままアニメーションクリップの並びの番号になる。(ActorStateMachine::PlayAnimation() が番号として使う)
  *          先頭の待機は、共通ステートが EnCharacterAnimationClipID の番号で再生するため、同じ位置に置く。
- *          歩き・走りは、ゾンビ専用のステート(ZombieIState.h)が再生する。
+ *          歩き・走り・攻撃は、ゾンビ専用のステート(ZombieIState.h)が再生する。
  *          ゾンビの種類が違っても、同じ順に並べること。(ステートマシンが全種類で共通)
  */
 #pragma once
@@ -32,6 +32,8 @@ namespace app
             Run,
             /** 死亡(ループしない) */
             Death,
+            /** 攻撃(ループしない) */
+            Attack,
 
             Max
         };

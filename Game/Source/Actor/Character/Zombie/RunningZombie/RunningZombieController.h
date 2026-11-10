@@ -2,7 +2,7 @@
  * @file RunningZombieController.h
  * @brief 走り続けるゾンビ用のController
  * @details コアの位置へ一直線に走る入力を作る。コアへ向かう処理は ZombieCoreApproach が行う(NormalZombieController と同じ)。
- *          違いは、コアへ向かっている間、ずっと走りボタン(ActionB)を押すこと。ゾンビは走りで進む。コアに着いたら立ち止まる。
+ *          違いは、コアへ向かっている間、ずっと走りボタン(ActionB)を押すこと。ゾンビは走りで進む。コアに着いたら攻撃ボタン(ActionA)を押して、攻撃する。
  *          RunningZombie には付けていない。付けるときは、GetControllerSlot().Attach() で付ける。
  * @note アンガー値が溜まり切ったとき(本格ロックオン)の動きもまだ無いので、アンガー値は見ずに、常にコアへ向かう。
  */
@@ -48,9 +48,9 @@ namespace app
             /**
              * @brief 今フレームの入力を作る
              * @details コアへ向かう移動入力(長さ1)と、走りボタン(ActionB)を作る。
-             *          止まっている間(コアに着いた・コアがない)は、ボタンも押さない。
+             *          コアに着いたら、移動入力と走りボタンはなく、攻撃ボタン(ActionA)だけを押す。コアがないときは、ボタンも押さない。
              * @param context 操作対象の情報。座標からコアへの向きを決める
-             * @return 今フレームの入力。コアがない、またはコアに着いていれば無入力
+             * @return 今フレームの入力。コアがなければ無入力
              */
             CharacterInput Update(const ControllerContext& context) override;
 

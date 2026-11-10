@@ -62,6 +62,26 @@ namespace app
              */
             bool Approach(const ControllerContext& context, CharacterInput& input) const;
 
+            /**
+             * @brief コアに着いているかどうか
+             * @details コアへ向かうのをやめる距離(coreStopDistance 以内、または真上・真下)にいるかどうか。Approach() が false を返す理由のうち、「着いている」だけを調べる。
+             *          着いたあとの動き(攻撃など)を始めるかどうかを、使う側のControllerが決めるのに使う。
+             * @param context 操作対象の情報。座標からコアまでの距離を測る
+             * @return コアがあって、着いていれば true。コアがなければ false
+             */
+            bool IsArrived(const ControllerContext& context) const;
+
+
+        private:
+            /**
+             * @brief コアへの向きと、着いているかどうかを求める
+             * @param context 操作対象の情報
+             * @param[out] outToCore 座標からコアへの水平方向(XZ)のベクトル。長さは正規化していない
+             * @param[out] outIsArrived 着いたとみなす距離以内なら true
+             * @return コアがあって求められたら true。なければ false(出力は変更しない)
+             */
+            bool CalcToCore(const ControllerContext& context, Vector3& outToCore, bool& outIsArrived) const;
+
 
         private:
             /** パラメーター(ParamHolderが持つもの。アプリが終わるまで使える) */

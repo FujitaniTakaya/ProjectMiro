@@ -33,22 +33,32 @@ namespace app
         }
 
 
-        bool ZombieCoreApproach::Approach(const ControllerContext& context, CharacterInput& input) const
+        bool ZombieCoreApproach::CalcToCore(const ControllerContext& context, Vector3& outToCore, bool& outIsArrived) const
         {
-            // コアがなければ向かわない
+            // コアがなければ求められない
             Vector3 corePosition(Vector3::Zero);
             if (!m_corePositionProvider || !m_corePositionProvider(corePosition))
             {
                 return false;
             }
 
-            // 高さは無視して、XZ平面でコアへ向かう
-            Vector3 toCore(corePosition.x - context.position.x, 0.0f, corePosition.z - context.position.z);
-            const float distanceSq = toCore.LengthSq();
+            // 高さは無視して、XZ平面で測る
+            outToCore = Vector3(corePosition.x - context.position.x, 0.0f, corePosition.z - context.position.z);
+            const float distanceSq = outToCore.LengthSq();
 
-            // コアに着いていれば向かわない。真上・真下にいて向きが決まらないときも、動かない
+            // コアに着いたとみなす。真上・真下にいて向きが決まらないときも、着いた扱いにする
             const float stopDistance = m_parameter.coreStopDistance;
-            if (distanceSq <= stopDistance * stopDistance || distanceSq <= DIRECTION_NORMALIZE_SQ)
+            outIsArrived = distanceSq <= stopDistance * stopDistance || distanceSq <= DIRECTION_NORMALIZE_SQ;
+            return true;
+        }
+
+
+        bool ZombieCoreApproach::Approach(const ControllerContext& context, CharacterInput& input) const
+        {
+            // コアがなければ、コアに着いていれば向かわない
+            Vector3 toCore(Vector3::Zero);
+            bool isArrived = false;
+            if (!CalcToCore(context, toCore, isArrived) || isArrived)
             {
                 return false;
             }
@@ -56,6 +66,14 @@ namespace app
             toCore.Normalize();
             input.SetMove(toCore);
             return true;
+        }
+
+
+        bool ZombieCoreApproach::IsArrived(const ControllerContext& context) const
+        {
+            Vector3 toCore(Vector3::Zero);
+            bool isArrived = false;
+            return CalcToCore(context, toCore, isArrived) && isArrived;
         }
     } // namespace actor
 } // namespace app

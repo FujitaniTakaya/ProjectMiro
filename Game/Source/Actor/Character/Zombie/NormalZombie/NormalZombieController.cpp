@@ -27,8 +27,12 @@ namespace app
         {
             CharacterInput input;
 
-            // ボタンは押さない。移動入力だけで、ゾンビは歩きになる
-            m_coreApproach.Approach(context, input);
+            // コアへ向かう間は、ボタンを押さない。移動入力だけで、ゾンビは歩きになる。
+            // コアに着いたら、攻撃ボタンを押す。(コアがないときは押さない)
+            if (!m_coreApproach.Approach(context, input) && m_coreApproach.IsArrived(context))
+            {
+                input.SetPress(EnInputButton::ActionA);
+            }
             return input;
         }
     } // namespace actor

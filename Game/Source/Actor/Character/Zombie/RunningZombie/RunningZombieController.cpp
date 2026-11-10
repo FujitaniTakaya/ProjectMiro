@@ -27,10 +27,15 @@ namespace app
         {
             CharacterInput input;
 
-            // コアへ向かう間は、ずっと走りボタンを押す。止まっている間は押さない(待機になる)
+            // コアへ向かう間は、ずっと走りボタンを押す。
+            // コアに着いたら、走りボタンの代わりに攻撃ボタンを押す。(コアがないときは、どちらも押さない)
             if (m_coreApproach.Approach(context, input))
             {
                 input.SetPress(EnInputButton::ActionB);
+            }
+            else if (m_coreApproach.IsArrived(context))
+            {
+                input.SetPress(EnInputButton::ActionA);
             }
             return input;
         }
