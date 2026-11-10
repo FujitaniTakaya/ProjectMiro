@@ -8,6 +8,7 @@
 #include <memory>
 #include <vector>
 
+#include "ZombieAttackHandler.h"
 #include "ZombieCoreApproach.h"
 #include "ZombieSpawnRule.h"
 
@@ -56,6 +57,15 @@ namespace app
              * @param provider コアの位置を教える関数。nullptr ならコアなし(ゾンビは動かない)
              */
             void SetCorePositionProvider(const PositionProvider& provider);
+
+            /**
+             * @brief ゾンビの攻撃判定が何かに重なった時の処理を設定する
+             * @details 設定した後に湧いたゾンビへ渡される。湧いている最中のゾンビには渡されないので、湧かせ始める前に設定すること。
+             *          コアにダメージを与えるには、重なった判定がコアの箱なら Core::TakeDamage() を呼んで true を返す処理を渡す。
+             * @note コアを破棄する前に、このクラスを破棄するか、空の処理を設定すること(処理が持っているポインタが残らないように)
+             * @param handler 重なった時の処理。空なら何にも当たらない
+             */
+            void SetCoreAttackHandler(const ZombieAttackHandler& handler);
 
             /**
              * @brief ゾンビのモデルなどを、先に読み込んでおく
@@ -119,6 +129,8 @@ namespace app
             const ZombieSpawnParameter& m_parameter;
             /** コアの位置を教える関数。湧いたゾンビのControllerへ渡す */
             PositionProvider m_corePositionProvider;
+            /** ゾンビの攻撃判定が重なった時の処理。湧いたゾンビへ渡す */
+            ZombieAttackHandler m_coreAttackHandler;
             /** 生きているゾンビ */
             std::vector<std::unique_ptr<ZombieBase>> m_zombies;
             /** 最後に湧かせてからの経過時間(秒)。湧かせる間隔で止まる */

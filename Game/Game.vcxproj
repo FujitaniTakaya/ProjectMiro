@@ -411,6 +411,7 @@
     <ClInclude Include="Source\Actor\Character\Zombie\ZombieCoreApproach.h" />
     <ClInclude Include="Source\Actor\Character\Zombie\ZombieSpawnRule.h" />
     <ClInclude Include="Source\Actor\Character\Zombie\ZombieSpawner.h" />
+    <ClInclude Include="Source\Actor\Character\Zombie\ZombieAttackHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BalloonEngine\BalloonEngine.vcxproj">

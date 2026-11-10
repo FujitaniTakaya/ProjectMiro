@@ -6,6 +6,8 @@
 #include <memory>
 
 #include "Source/Actor/Character/CharacterBase.h"
+#include "ZombieAttackHandler.h"
+#include "physics/PhysicsGhostObject.h"
 
 
 namespace app
@@ -32,7 +34,13 @@ namespace app
          *          Update() の順は、ステートマシン(入力の作成 → ステートの更新) → モデルの更新。
          *          Miroと違い、Start() ではコントローラーを付けない。付けるまでは無入力(待機)になる。
          *          AIController を付けるなら、GetControllerSlot() から付ける。目標の設定も、ゾンビを置く側が行う。
+         *          攻撃のダメージは、攻撃アニメ(Zombie_Attack.tka)のイベントで決まる。
+         *          - AttackBegin : 右手(hand_r)に攻撃判定の箱を出す。大きさは ZombieParameter の attackBoxSize
+         *          - AttackEnd   : 攻撃判定の箱を消す
+         *          箱が出ている間、毎フレーム、重なっている物を SetAttackHandler() の処理に渡す。
+         *          処理が当たりとして扱ったら(true を返したら)、その振りではもう渡さない。(1振りで1回だけダメージが入る)
          * @note アンガー値の加算・本格ロックオンへの移行・周囲への伝播は、まだ無い。
+         *       攻撃判定は右手だけ。(攻撃アニメで振り下ろされるのが右手のため)
          *       初期座標は、Start() の前に SetPosition() で設定しておくこと。(キャラクターコントローラーが現在の座標に作られる)
          */
         class ZombieBase : public CharacterBase
@@ -75,6 +83,13 @@ namespace app
              */
             void SetAnger(const float anger);
 
+            /**
+             * @brief 攻撃判定が何かに重なった時の処理を設定
+             * @details Start() の前でも後でもよい。次の攻撃の振りから使われる。
+             * @param handler 重なった時の処理。空なら何にも当たらない
+             */
+            void SetAttackHandler(const ZombieAttackHandler& handler);
+
 
         public:
             /** デストラクタ。ZombieSpawner が ZombieBase のポインタで持って破棄するので、公開している(直接作れないのはコンストラクタが protected なため) */
@@ -100,6 +115,17 @@ namespace app
 
 
         private:
+            /**
+             * @brief アニメーションイベントを受け取る
+             * @param eventName イベント名(AttackBegin / AttackEnd 以外は無視する)
+             */
+            void OnAnimationEvent(const wchar_t* eventName);
+
+            /** 攻撃判定の箱を右手に合わせて、重なった物を攻撃の処理に渡す(箱が出ている間だけ) */
+            void UpdateAttackHitBox();
+
+
+        private:
             /** パラメーター(ParamHolderが持つもの。アプリが終わるまで使える) */
             const ZombieParameter& m_parameter;
             /** モデルデータ(アプリが終わるまで使えるもの) */
@@ -108,6 +134,16 @@ namespace app
             std::unique_ptr<ZombieStateMachine> m_stateMachine;
             /** 累積アンガー値 */
             float m_anger;
+            /** 攻撃判定の箱(AttackBegin から AttackEnd の間だけ、物理ワールドに登録される) */
+            PhysicsGhostObject m_attackHitBox;
+            /** 攻撃判定が重なった時の処理 */
+            ZombieAttackHandler m_attackHandler;
+            /** 攻撃判定を付ける右手のボーン(Start() の後に取る。見つからなければ nullptr で、攻撃判定は出ない) */
+            const Bone* m_attackBone;
+            /** 攻撃判定の箱が出ているか */
+            bool m_isAttackActive;
+            /** 今の振りで、もう当たったか */
+            bool m_hasAttackHit;
         };
     } // namespace actor
 } // namespace app

@@ -646,5 +646,8 @@
     <ClInclude Include="Source\Actor\Character\Zombie\ZombieSpawner.h">
       <Filter>Source\Actor\Character\Zombie</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Actor\Character\Zombie\ZombieAttackHandler.h">
+      <Filter>Source\Actor\Character\Zombie</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

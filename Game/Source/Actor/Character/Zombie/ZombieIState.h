@@ -128,7 +128,7 @@ namespace app
          * @brief 攻撃ステート
          * @details その場で攻撃のアニメーションを再生する。ActionA(攻撃)を押し続けている間は、終わるたびに最初から再生し直す。
          *          移動入力は使わないので、向きは変わらない。(コアへ向かってきた向きのまま攻撃する)
-         * @note ダメージを与える処理は、まだ無い。
+         * @note ダメージは、このステートでは与えない。攻撃アニメのイベント(AttackBegin / AttackEnd)で出る攻撃判定が、ZombieBase で当たりを調べる。
          */
         class ZombieAttackState : public CharacterIState
         {

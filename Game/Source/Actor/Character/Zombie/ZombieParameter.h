@@ -33,7 +33,7 @@ namespace app
             float walkSpeed;
             /** ロックオン時の移動速度。プレイヤーの走り速度に対する割合 */
             float runSpeed;
-            /** プレイヤーに与える固定ダメージ */
+            /** 攻撃が当たった時に与える固定ダメージ */
             float attackPower;
             /** 最初から保持しているアンガー値(種類ごとの固定値) */
             float initialAnger;
@@ -51,6 +51,8 @@ namespace app
             float height;
             /** コアに着いたとみなす距離。コアのXZ平面での距離がこの値以内になると、立ち止まる */
             float coreStopDistance;
+            /** 攻撃判定の箱の一辺(cm)。振り下ろしの間、右手に付く。コアなどの当たり判定に重なるとダメージが入る */
+            float attackBoxSize;
             // [PARAM_GEN end members]
         };
 

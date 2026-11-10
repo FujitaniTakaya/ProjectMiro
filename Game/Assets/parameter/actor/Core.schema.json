@@ -6,6 +6,8 @@
     "cpp": "Source/Actor/Stage/CoreParameter.cpp",
     "params": [
         { "name": "maxHp", "type": "float", "doc": "最大耐久値" },
-        { "name": "hpBarOffsetY", "type": "float", "doc": "耐久値バーの基準点の高さ(コアの中心から上へ。cm)" }
+        { "name": "hpBarOffsetY", "type": "float", "doc": "耐久値バーの基準点の高さ(コアの中心から上へ。cm)" },
+        { "name": "hitBoxWidth", "type": "float", "doc": "当たり判定の箱の幅(XとZ。cm)。ゾンビの攻撃判定が重なるとダメージを受ける" },
+        { "name": "hitBoxHeight", "type": "float", "doc": "当たり判定の箱の高さ(Y。cm)。箱の中心はコアの宝石の中心" }
     ]
 }

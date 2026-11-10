@@ -27,6 +27,7 @@ namespace app
             , radius(25.0f)
             , height(110.0f)
             , coreStopDistance(150.0f)
+            , attackBoxSize(60.0f)
         {
         }
         // [PARAM_GEN end ctor]
@@ -52,6 +53,7 @@ namespace app
             param.radius = ParamLoader::ToFloat(root, "radius", param.radius);
             param.height = ParamLoader::ToFloat(root, "height", param.height);
             param.coreStopDistance = ParamLoader::ToFloat(root, "coreStopDistance", param.coreStopDistance);
+            param.attackBoxSize = ParamLoader::ToFloat(root, "attackBoxSize", param.attackBoxSize);
             // [PARAM_GEN end load]
         }
 
@@ -72,6 +74,7 @@ namespace app
             ImGui::Text("radius: %.1f", param.radius);
             ImGui::Text("height: %.1f", param.height);
             ImGui::Text("coreStopDistance: %.1f", param.coreStopDistance);
+            ImGui::Text("attackBoxSize: %.1f", param.attackBoxSize);
             // [PARAM_GEN end draw]
 #endif // BALLOON_IMGUI_ENABLED
         }

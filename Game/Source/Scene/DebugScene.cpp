@@ -111,6 +111,16 @@ namespace app
             outPosition = core->GetTransform().m_position;
             return true;
         });
+        // ゾンビの攻撃判定がコアの箱に重なったら、コアにダメージを与える。(コア以外に重なった時は、何もしない)
+        // m_zombieSpawner は m_core より先に破棄されるので、破棄の間にこの関数は呼ばれない。
+        m_zombieSpawner->SetCoreAttackHandler([core = m_core.get()](const btCollisionObject& contact, const float damage) {
+            if (!core->IsHitBox(contact))
+            {
+                return false;
+            }
+            core->TakeDamage(damage);
+            return true;
+        });
         // ゾンビのモデルなどを先に読み込んでおく。(最初に湧く時に、引っかからないように)
         m_zombieSpawner->Preload();
 

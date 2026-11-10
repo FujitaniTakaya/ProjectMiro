@@ -47,6 +47,7 @@ namespace app
             : m_parameter(ParamHolder::Get().GetParameter<CoreParameter>(EnParamID::Core))
             , m_yawDeg(0.0f)
             , m_hp(0.0f)
+            , m_hitBox()
         {
             m_transform.m_scale = Vector3(MODEL_SCALE, MODEL_SCALE, MODEL_SCALE);
         }
@@ -89,6 +90,12 @@ namespace app
         }
 
 
+        bool Core::IsHitBox(const btCollisionObject& object) const
+        {
+            return m_hitBox.IsSelf(object);
+        }
+
+
         void Core::Start()
         {
             // アニメーションは無い。Z-upのモデル
@@ -96,6 +103,9 @@ namespace app
 
             // 初回の描画前にワールド行列を確定させる
             UpdateModel();
+
+            // 当たり判定の箱を、宝石の中心に置く。(物理ワールドに登録される。幅はXとZ、高さはY)
+            m_hitBox.CreateBox(CalcCenter(), Quaternion::Identity, Vector3(m_parameter.hitBoxWidth, m_parameter.hitBoxHeight, m_parameter.hitBoxWidth));
 
             // 現在の耐久値は、最大耐久値で始める。最初の耐久値を通知
             m_hp = GetMaxHp();
@@ -136,6 +146,9 @@ namespace app
             // 宝石の中心を、地面から浮かせた点に置く。原点は、回転した分だけずらして、中心が動かないようにする
             m_modelRender.SetTRS(CalcCenter() - centerOffset, m_transform.m_rotation, scale);
             m_modelRender.Update();
+
+            // 当たり判定の箱も、宝石の中心に合わせる(箱は回さない)
+            m_hitBox.SetPosition(CalcCenter());
         }
 
 

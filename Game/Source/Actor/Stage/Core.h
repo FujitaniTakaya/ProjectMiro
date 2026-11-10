@@ -4,6 +4,7 @@
  */
 #pragma once
 #include "Source/Actor/Actor.h"
+#include "physics/PhysicsGhostObject.h"
 
 
 namespace app
@@ -21,11 +22,14 @@ namespace app
          *          SetRotation() で設定した回転は、毎フレームの回転で上書きされる。
          *          耐久値(HP)を持つ。最大耐久値はCoreParameter(Core.json)で、現在の耐久値は最大耐久値で始まる。
          *          耐久値は、InGameInfoHub::NotifyCoreHp() でUIに伝える。(値が変わった時だけ伝わる)
+         *          宝石の中心に、箱の当たり判定(PhysicsGhostObject)を持つ。大きさはCoreParameterのhitBoxWidth・hitBoxHeight。
+         *          ゾンビの攻撃判定など、外から重なった判定が自分の箱かどうかは IsHitBox() で調べ、重なったら TakeDamage() を呼んでもらう。
          *          Start() を一度呼んでから、毎フレーム Update() と Render() を呼ぶ。
          * @note モデルは Assets/modelData/stage/core/Gemme.tkm(Z-up・アニメーション無し)。
          *       モデルはメートル単位で書き出されている(高さ1.32)。ワールドはcm単位なので、拡大率の初期値は100倍にしてあり、さらに1.6倍している。
          *       モデルの原点は中心から少しずれているので、宝石の中心を軸にして回す。
-         *       当たり判定は持たない。
+         *       当たり判定の箱は回転しない(軸に合わせたまま)。大きさはStart()で決まり、ホットリロードしても次に起動するまで反映されない。
+         *       箱はすり抜けるので、キャラクターの移動は邪魔しない。
          *       最大耐久値はホットリロードで変わる。現在の耐久値は丸められないので、最大耐久値を下げると、現在の耐久値が最大耐久値を超えることがある。
          */
         class Core : public Actor
@@ -70,6 +74,14 @@ namespace app
              */
             Vector3 GetHpBarWorldPosition() const;
 
+            /**
+             * @brief 渡された判定が、コアの当たり判定の箱かどうかを調べる
+             * @details 攻撃判定に重なった物のうち、コアのものだけを見分けるのに使う。
+             * @param object 物理ワールドで重なった判定
+             * @return コアの当たり判定の箱なら true
+             */
+            bool IsHitBox(const btCollisionObject& object) const;
+
 
         protected:
             /** 初期化処理。モデルをロードして、ワールド行列を確定させる */
@@ -104,6 +116,8 @@ namespace app
             float m_yawDeg;
             /** 現在の耐久値 */
             float m_hp;
+            /** 当たり判定の箱(宝石の中心に置く。物理ワールドに登録されるのは Start() から) */
+            PhysicsGhostObject m_hitBox;
         };
     } // namespace actor
 } // namespace app

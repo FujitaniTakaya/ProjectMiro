@@ -17,6 +17,8 @@ namespace app
         CoreParameter::CoreParameter()
             : maxHp(1000.0f)
             , hpBarOffsetY(150.0f)
+            , hitBoxWidth(240.0f)
+            , hitBoxHeight(220.0f)
         {
         }
         // [PARAM_GEN end ctor]
@@ -32,6 +34,8 @@ namespace app
             // [PARAM_GEN begin load] 自動生成(tools/param_gen.py)。手で編集しない
             param.maxHp = ParamLoader::ToFloat(root, "maxHp", param.maxHp);
             param.hpBarOffsetY = ParamLoader::ToFloat(root, "hpBarOffsetY", param.hpBarOffsetY);
+            param.hitBoxWidth = ParamLoader::ToFloat(root, "hitBoxWidth", param.hitBoxWidth);
+            param.hitBoxHeight = ParamLoader::ToFloat(root, "hitBoxHeight", param.hitBoxHeight);
             // [PARAM_GEN end load]
         }
 
@@ -42,6 +46,8 @@ namespace app
             // [PARAM_GEN begin draw] 自動生成(tools/param_gen.py)。手で編集しない
             ImGui::Text("maxHp: %.1f", param.maxHp);
             ImGui::Text("hpBarOffsetY: %.1f", param.hpBarOffsetY);
+            ImGui::Text("hitBoxWidth: %.1f", param.hitBoxWidth);
+            ImGui::Text("hitBoxHeight: %.1f", param.hitBoxHeight);
             // [PARAM_GEN end draw]
 #endif // BALLOON_IMGUI_ENABLED
         }

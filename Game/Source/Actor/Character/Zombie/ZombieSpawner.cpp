@@ -33,14 +33,16 @@ namespace app
              * @tparam TController 付けるControllerの型。コンストラクタにゾンビのパラメーターを取り、SetCorePositionProvider() を持つこと
              * @param position 湧かせる座標
              * @param provider コアの位置を教える関数
+             * @param attackHandler 攻撃判定が重なった時の処理
              * @return 作ったゾンビ
              */
             template <typename TZombie, typename TController>
-            std::unique_ptr<ZombieBase> CreateZombie(const Vector3& position, const ZombieSpawner::PositionProvider& provider)
+            std::unique_ptr<ZombieBase> CreateZombie(const Vector3& position, const ZombieSpawner::PositionProvider& provider, const ZombieAttackHandler& attackHandler)
             {
                 auto zombie = std::make_unique<TZombie>();
                 zombie->SetPosition(position);
                 zombie->StartWrapper();
+                zombie->SetAttackHandler(attackHandler);
 
                 auto controller = std::make_unique<TController>(zombie->GetParameter());
                 controller->SetCorePositionProvider(provider);
@@ -53,6 +55,7 @@ namespace app
         ZombieSpawner::ZombieSpawner()
             : m_parameter(ParamHolder::Get().GetParameter<ZombieSpawnParameter>(EnParamID::ZombieSpawn))
             , m_corePositionProvider(nullptr)
+            , m_coreAttackHandler(nullptr)
             , m_zombies()
             , m_elapsed(0.0f)
             , m_spawnedCount(0)
@@ -66,6 +69,12 @@ namespace app
         void ZombieSpawner::SetCorePositionProvider(const PositionProvider& provider)
         {
             m_corePositionProvider = provider;
+        }
+
+
+        void ZombieSpawner::SetCoreAttackHandler(const ZombieAttackHandler& handler)
+        {
+            m_coreAttackHandler = handler;
         }
 
 
@@ -135,10 +144,10 @@ namespace app
             switch (kind)
             {
             case EnZombieKind::Running:
-                return CreateZombie<RunningZombie, RunningZombieController>(position, m_corePositionProvider);
+                return CreateZombie<RunningZombie, RunningZombieController>(position, m_corePositionProvider, m_coreAttackHandler);
             case EnZombieKind::Normal:
             default:
-                return CreateZombie<NormalZombie, NormalZombieController>(position, m_corePositionProvider);
+                return CreateZombie<NormalZombie, NormalZombieController>(position, m_corePositionProvider, m_coreAttackHandler);
             }
         }
     } // namespace actor
