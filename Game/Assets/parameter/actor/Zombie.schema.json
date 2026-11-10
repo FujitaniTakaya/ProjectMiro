@@ -15,6 +15,7 @@
         { "name": "angerSpreadValue", "type": "float", "doc": "ばらまくアンガー値。本格ロックオンに達したとき、周囲のゾンビへ伝播させる値" },
         { "name": "angerSpreadRadius", "type": "float", "doc": "巻き込む範囲。アンガー値の伝播が届く距離(半径)" },
         { "name": "radius", "type": "float", "doc": "キャラクターコントローラーの半径" },
-        { "name": "height", "type": "float", "doc": "キャラクターコントローラーの高さ" }
+        { "name": "height", "type": "float", "doc": "キャラクターコントローラーの高さ" },
+        { "name": "coreStopDistance", "type": "float", "doc": "コアに着いたとみなす距離。コアのXZ平面での距離がこの値以内になると、立ち止まる" }
     ]
 }

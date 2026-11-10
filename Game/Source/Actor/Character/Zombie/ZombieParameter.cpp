@@ -26,6 +26,7 @@ namespace app
             , angerSpreadRadius(500.0f)
             , radius(25.0f)
             , height(110.0f)
+            , coreStopDistance(150.0f)
         {
         }
         // [PARAM_GEN end ctor]
@@ -50,6 +51,7 @@ namespace app
             param.angerSpreadRadius = ParamLoader::ToFloat(root, "angerSpreadRadius", param.angerSpreadRadius);
             param.radius = ParamLoader::ToFloat(root, "radius", param.radius);
             param.height = ParamLoader::ToFloat(root, "height", param.height);
+            param.coreStopDistance = ParamLoader::ToFloat(root, "coreStopDistance", param.coreStopDistance);
             // [PARAM_GEN end load]
         }
 
@@ -69,6 +71,7 @@ namespace app
             ImGui::Text("angerSpreadRadius: %.1f", param.angerSpreadRadius);
             ImGui::Text("radius: %.1f", param.radius);
             ImGui::Text("height: %.1f", param.height);
+            ImGui::Text("coreStopDistance: %.1f", param.coreStopDistance);
             // [PARAM_GEN end draw]
 #endif // BALLOON_IMGUI_ENABLED
         }

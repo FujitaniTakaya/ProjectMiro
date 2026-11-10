@@ -11,11 +11,13 @@
 
 #include "Source/Actor/Character/Miro/Miro.h"
 #include "Source/Actor/Character/Zombie/NormalZombie/NormalZombie.h"
+#include "Source/Actor/Character/Zombie/NormalZombie/NormalZombieController.h"
 #include "Source/Actor/Stage/Core.h"
 #include "Source/Actor/Stage/StageField.h"
 #include "Source/Actor/Weapon/Handgun/Handgun.h"
 #include "Source/Camera/PlayerCamera.h"
 #include "Source/Manager/InGameInfoHub.h"
+#include "Source/MoveBehavior/ControllerSlot.h"
 #include "Source/UI/HUD/CoreHP/CoreHPBarMenu.h"
 #include "Source/UI/HUD/Handgun/HandgunAmmoMenu.h"
 #include "Source/UI/HUD/PlayerHP/HPBarMenu.h"
@@ -109,6 +111,15 @@ namespace app
         m_normalZombie->StartWrapper();
         m_handgun->StartWrapper();
         m_playerCamera->Start();
+
+        // ゾンビにコアへ歩くControllerを付ける。コアの位置(地面の座標)は、関数で教える。
+        // m_core はゾンビより先に破棄されるが、破棄の間にこの関数は呼ばれない。
+        auto zombieController = std::make_unique<actor::NormalZombieController>(m_normalZombie->GetParameter());
+        zombieController->SetCorePositionProvider([core = m_core.get()](Vector3& outPosition) {
+            outPosition = core->GetTransform().m_position;
+            return true;
+        });
+        m_normalZombie->GetControllerSlot().Attach(std::move(zombieController));
 
         // ハンドガンをMiroの手に持たせる。ボーンはMiroのStart()でモデルをロードした後に取れる
         m_handgun->AttachToBone(m_miro->GetWeaponHandBone());

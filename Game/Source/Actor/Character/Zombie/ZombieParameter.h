@@ -48,6 +48,8 @@ namespace app
             float radius;
             /** キャラクターコントローラーの高さ */
             float height;
+            /** コアに着いたとみなす距離。コアのXZ平面での距離がこの値以内になると、立ち止まる */
+            float coreStopDistance;
             // [PARAM_GEN end members]
         };
 

@@ -58,7 +58,7 @@ namespace app
 
     private:
         std::unique_ptr<actor::Miro> m_miro;
-        /** 通常のゾンビ。コントローラーは付けない(待機する) */
+        /** 通常のゾンビ。Start() で NormalZombieController を付けて、コアへ一直線に歩かせる */
         std::unique_ptr<actor::NormalZombie> m_normalZombie;
         std::unique_ptr<camera::PlayerCamera> m_playerCamera;
         /** プレイヤーのHPバー。InGameInfoHubに通知されたHPを表示する */

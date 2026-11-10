@@ -328,6 +328,9 @@
     <ClCompile Include="Source\Actor\Character\Zombie\NormalZombie\NormalZombie.cpp">
       <Filter>Source\Actor\Character\Zombie\NormalZombie</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Actor\Character\Zombie\NormalZombie\NormalZombieController.cpp">
+      <Filter>Source\Actor\Character\Zombie\NormalZombie</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -602,6 +605,9 @@
       <Filter>Source\Actor\Character\Zombie</Filter>
     </ClInclude>
     <ClInclude Include="Source\Actor\Character\Zombie\NormalZombie\NormalZombie.h">
+      <Filter>Source\Actor\Character\Zombie\NormalZombie</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Character\Zombie\NormalZombie\NormalZombieController.h">
       <Filter>Source\Actor\Character\Zombie\NormalZombie</Filter>
     </ClInclude>
   </ItemGroup>

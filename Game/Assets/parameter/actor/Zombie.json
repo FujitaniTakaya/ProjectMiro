@@ -9,5 +9,6 @@
     "angerSpreadValue": 30.0,
     "angerSpreadRadius": 500.0,
     "radius": 25.0,
-    "height": 110.0
+    "height": 110.0,
+    "coreStopDistance": 150.0
 }
