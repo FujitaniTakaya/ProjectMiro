@@ -10,6 +10,7 @@
 #include <utility>
 
 #include "Source/Actor/Character/Miro/Miro.h"
+#include "Source/Actor/Character/Zombie/NormalZombie/NormalZombie.h"
 #include "Source/Actor/Stage/Core.h"
 #include "Source/Actor/Stage/StageField.h"
 #include "Source/Actor/Weapon/Handgun/Handgun.h"
@@ -36,6 +37,8 @@ namespace app
         const Vector3 CORE_POSITION(0.0f, 0.0f, 0.0f);
         /** Miroの初期座標 */
         const Vector3 MIRO_POSITION(100.0f, 100.0f, 0.0f);
+        /** 通常のゾンビの初期座標(Miroの近く) */
+        const Vector3 NORMAL_ZOMBIE_POSITION(400.0f, 100.0f, 0.0f);
         /** 空のキューブマップ(曇天の昼) */
         constexpr const wchar_t* SKY_CUBE_PATH = L"Assets/modelData/preset/skyCubeMapOvercast.dds";
         /** 空の明るさ(キューブマップの色に掛ける倍率) */
@@ -45,6 +48,7 @@ namespace app
 
     DebugScene::DebugScene()
         : m_miro(nullptr)
+        , m_normalZombie(nullptr)
         , m_playerCamera(nullptr)
         , m_hpBarPacket(nullptr)
         , m_handgun(nullptr)
@@ -80,6 +84,8 @@ namespace app
         m_core->SetPosition(CORE_POSITION);
         m_miro = std::make_unique<actor::Miro>();
         m_miro->SetPosition(MIRO_POSITION);
+        m_normalZombie = std::make_unique<actor::NormalZombie>();
+        m_normalZombie->SetPosition(NORMAL_ZOMBIE_POSITION);
         m_handgun = std::make_unique<actor::Handgun>();
         m_playerCamera = std::make_unique<camera::PlayerCamera>();
     }
@@ -100,6 +106,7 @@ namespace app
         RenderingEngine::Get().SetSkyCube(SKY_CUBE_PATH, SKY_LUMINANCE);
 
         m_miro->StartWrapper();
+        m_normalZombie->StartWrapper();
         m_handgun->StartWrapper();
         m_playerCamera->Start();
 
@@ -136,6 +143,7 @@ namespace app
         m_stageField->UpdateWrapper();
         m_core->UpdateWrapper();
         m_miro->UpdateWrapper();
+        m_normalZombie->UpdateWrapper();
         m_handgun->UpdateWrapper();
 
         // TEMP: 残段数UIの確認用。確認が終わったら取り除く
@@ -189,6 +197,7 @@ namespace app
         m_stageField->RenderWrapper(rc);
         m_core->RenderWrapper(rc);
         m_miro->RenderWrapper(rc);
+        m_normalZombie->RenderWrapper(rc);
         m_handgun->RenderWrapper(rc);
     }
 

@@ -17,6 +17,7 @@ namespace app
     {
 
         class Miro;
+        class NormalZombie;
         class Handgun;
         class StageField;
         class Core;
@@ -57,6 +58,8 @@ namespace app
 
     private:
         std::unique_ptr<actor::Miro> m_miro;
+        /** 通常のゾンビ。コントローラーは付けない(待機する) */
+        std::unique_ptr<actor::NormalZombie> m_normalZombie;
         std::unique_ptr<camera::PlayerCamera> m_playerCamera;
         /** プレイヤーのHPバー。InGameInfoHubに通知されたHPを表示する */
         ui::UIPacket<ui::HPBarMenu> m_hpBarPacket;

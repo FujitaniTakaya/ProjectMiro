@@ -1,0 +1,95 @@
+﻿/**
+ * @file ZombieIState.h
+ * @brief ゾンビ専用のステート
+ * @details ゾンビは進行方向を向いて動く(CharacterStateMachine の既定の向き)ので、歩き・走りのアニメーションは前進の1本ずつ。
+ *          待機は、キャラクター共通のステート(CharacterIdleState)を使う。
+ *          アニメーションは EnZombieAnimationClipID の番号で再生する。
+ */
+#pragma once
+#include "Source/Actor/Character/CharacterIState.h"
+#include "ZombieAnimationClipID.h"
+
+
+namespace app
+{
+    namespace actor
+    {
+        /**
+         * @brief 動くステートの基底
+         * @details 歩きと走りで共通の処理。入るときにクリップを再生して、毎フレーム移動速度を設定して移動する。
+         *          派生クラスは、移動速度と、再生するクリップを返す。
+         */
+        class ZombieMoveState : public CharacterIState
+        {
+        public:
+            // IStateの仮想関数のオーバーライド
+            void Enter() override final;
+            void Update() override final;
+            void Exit() override final;
+
+
+        protected:
+            /**
+             * @brief 移動速度を取得する
+             * @return 入力の倒し具合が最大のときの速さ
+             */
+            virtual float GetMoveSpeed() const = 0;
+            /**
+             * @brief 再生するアニメーションクリップを取得する
+             * @return アニメーションクリップID
+             */
+            virtual EnZombieAnimationClipID GetClip() const = 0;
+
+
+        protected:
+            explicit ZombieMoveState(CharacterStateMachine* owner);
+            ~ZombieMoveState() override = default;
+        };
+
+
+
+
+        /*************************************************************/
+
+
+        /**
+         * @brief 歩きステート
+         */
+        class ZombieWalkState : public ZombieMoveState
+        {
+            appState(ZombieWalkState);
+
+        protected:
+            float GetMoveSpeed() const override final;
+            EnZombieAnimationClipID GetClip() const override final;
+
+
+        public:
+            explicit ZombieWalkState(CharacterStateMachine* owner);
+            ~ZombieWalkState() override = default;
+        };
+
+
+
+
+        /*************************************************************/
+
+
+        /**
+         * @brief 走りステート
+         */
+        class ZombieRunState : public ZombieMoveState
+        {
+            appState(ZombieRunState);
+
+        protected:
+            float GetMoveSpeed() const override final;
+            EnZombieAnimationClipID GetClip() const override final;
+
+
+        public:
+            explicit ZombieRunState(CharacterStateMachine* owner);
+            ~ZombieRunState() override = default;
+        };
+    } // namespace actor
+} // namespace app

@@ -9,6 +9,7 @@
 #include "Source/Actor/Character/CharacterIState.h"
 #include "Source/Actor/Character/Miro/MiroParameter.h"
 #include "Source/Core/Param/ParamHolder.h"
+#include "ZombieIState.h"
 #include "ZombieParameter.h"
 
 
@@ -21,10 +22,10 @@ namespace app
             , m_parameter(parameter)
             , m_playerParameter(ParamHolder::Get().GetParameter<MiroParameter>(EnParamID::Miro))
         {
-            // 共通ステートを登録する
+            // 待機は共通ステート、歩き・走りはゾンビ専用のステートを登録する
             AddState<CharacterIdleState>(this);
-            AddState<CharacterWalkState>(this);
-            AddState<CharacterRunState>(this);
+            AddState<ZombieWalkState>(this);
+            AddState<ZombieRunState>(this);
         }
 
 
@@ -45,13 +46,13 @@ namespace app
             // 1. 走りに切り替えられるなら走りへ
             if (CanChangeRunState())
             {
-                return FindState(CharacterRunState::ID());
+                return FindState(ZombieRunState::ID());
             }
 
             // 2. 移動入力があるなら歩きへ
             if (CanChangeMoveState())
             {
-                return FindState(CharacterWalkState::ID());
+                return FindState(ZombieWalkState::ID());
             }
 
             // どれにも当てはまらなければ待機へ

@@ -27,8 +27,8 @@ namespace app
          *          - ZombieStateMachine : 入力から状態(待機・歩き・走り)を決める。入力を作る ControllerSlot もここが持つ
          *          - ZombieParameter : ParamHolderから取り出した参照。ホットリロードで値が変わる(最大HPもここ)
          *          - 累積アンガー値 : 現在のHPと同じように、ゾンビが実行中に持つ値。Start() で初期アンガー値から始まる
-         *          ゾンビの種類は、この派生クラスで作る。種類ごとのパラメーター(EnParamID と同じ ZombieParameter のjson)と
-         *          モデルデータを、コンストラクタで渡すこと。
+         *          ゾンビの種類は、この派生クラスで作る。(例: NormalZombie)種類ごとのパラメーター(EnParamID と同じ ZombieParameter のjson)と
+         *          モデルデータを、コンストラクタで渡すこと。モデルデータのアニメーションは、EnZombieAnimationClipID の順に並べる。
          *          Update() の順は、ステートマシン(入力の作成 → ステートの更新) → モデルの更新。
          *          Miroと違い、Start() ではコントローラーを付けない。付けるまでは無入力(待機)になる。
          *          AIController を付けるなら、GetControllerSlot() から付ける。目標の設定も、ゾンビを置く側が行う。

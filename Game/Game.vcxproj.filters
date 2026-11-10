@@ -109,6 +109,9 @@
     <Filter Include="Source\Actor\Character\Zombie">
       <UniqueIdentifier>{510496a3-2dc1-49a0-bcac-98f5bfe381ed}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Actor\Character\Zombie\NormalZombie">
+      <UniqueIdentifier>{ad71aac3-49db-4206-b125-9c89f86c638a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -318,6 +321,12 @@
     </ClCompile>
     <ClCompile Include="Source\Actor\Character\Zombie\ZombieStateMachine.cpp">
       <Filter>Source\Actor\Character\Zombie</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Actor\Character\Zombie\ZombieIState.cpp">
+      <Filter>Source\Actor\Character\Zombie</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Actor\Character\Zombie\NormalZombie\NormalZombie.cpp">
+      <Filter>Source\Actor\Character\Zombie\NormalZombie</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -588,6 +597,12 @@
     </ClInclude>
     <ClInclude Include="Source\Actor\Character\Zombie\ZombieStateMachine.h">
       <Filter>Source\Actor\Character\Zombie</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Character\Zombie\ZombieIState.h">
+      <Filter>Source\Actor\Character\Zombie</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Character\Zombie\NormalZombie\NormalZombie.h">
+      <Filter>Source\Actor\Character\Zombie\NormalZombie</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
