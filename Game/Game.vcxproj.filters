@@ -334,6 +334,9 @@
     <ClCompile Include="Source\Actor\Character\Zombie\NormalZombie\NormalZombieController.cpp">
       <Filter>Source\Actor\Character\Zombie\NormalZombie</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Actor\Character\Zombie\ZombieSpawnParameter.cpp">
+      <Filter>Source\Actor\Character\Zombie</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Actor\Character\Zombie\RunningZombie\RunningZombie.cpp">
       <Filter>Source\Actor\Character\Zombie\RunningZombie</Filter>
     </ClCompile>
@@ -341,6 +344,9 @@
       <Filter>Source\Actor\Character\Zombie\RunningZombie</Filter>
     </ClCompile>
     <ClCompile Include="Source\Actor\Character\Zombie\ZombieCoreApproach.cpp">
+      <Filter>Source\Actor\Character\Zombie</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Actor\Character\Zombie\ZombieSpawner.cpp">
       <Filter>Source\Actor\Character\Zombie</Filter>
     </ClCompile>
   </ItemGroup>
@@ -622,6 +628,9 @@
     <ClInclude Include="Source\Actor\Character\Zombie\NormalZombie\NormalZombieController.h">
       <Filter>Source\Actor\Character\Zombie\NormalZombie</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Actor\Character\Zombie\ZombieSpawnParameter.h">
+      <Filter>Source\Actor\Character\Zombie</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Actor\Character\Zombie\RunningZombie\RunningZombie.h">
       <Filter>Source\Actor\Character\Zombie\RunningZombie</Filter>
     </ClInclude>
@@ -629,6 +638,12 @@
       <Filter>Source\Actor\Character\Zombie\RunningZombie</Filter>
     </ClInclude>
     <ClInclude Include="Source\Actor\Character\Zombie\ZombieCoreApproach.h">
+      <Filter>Source\Actor\Character\Zombie</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Character\Zombie\ZombieSpawnRule.h">
+      <Filter>Source\Actor\Character\Zombie</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Character\Zombie\ZombieSpawner.h">
       <Filter>Source\Actor\Character\Zombie</Filter>
     </ClInclude>
   </ItemGroup>

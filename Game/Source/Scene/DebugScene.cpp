@@ -10,16 +10,12 @@
 #include <utility>
 
 #include "Source/Actor/Character/Miro/Miro.h"
-#include "Source/Actor/Character/Zombie/NormalZombie/NormalZombie.h"
-#include "Source/Actor/Character/Zombie/NormalZombie/NormalZombieController.h"
-#include "Source/Actor/Character/Zombie/RunningZombie/RunningZombie.h"
-#include "Source/Actor/Character/Zombie/RunningZombie/RunningZombieController.h"
+#include "Source/Actor/Character/Zombie/ZombieSpawner.h"
 #include "Source/Actor/Stage/Core.h"
 #include "Source/Actor/Stage/StageField.h"
 #include "Source/Actor/Weapon/Handgun/Handgun.h"
 #include "Source/Camera/PlayerCamera.h"
 #include "Source/Manager/InGameInfoHub.h"
-#include "Source/MoveBehavior/ControllerSlot.h"
 #include "Source/UI/HUD/CoreHP/CoreHPBarMenu.h"
 #include "Source/UI/HUD/Handgun/HandgunAmmoMenu.h"
 #include "Source/UI/HUD/PlayerHP/HPBarMenu.h"
@@ -41,10 +37,6 @@ namespace app
         const Vector3 CORE_POSITION(0.0f, 0.0f, 0.0f);
         /** Miroの初期座標 */
         const Vector3 MIRO_POSITION(100.0f, 100.0f, 0.0f);
-        /** 通常のゾンビの初期座標(Miroの近く) */
-        const Vector3 NORMAL_ZOMBIE_POSITION(400.0f, 100.0f, 0.0f);
-        /** 走り続けるゾンビの初期座標(通常のゾンビより遠く。歩きと走りを見比べられる) */
-        const Vector3 RUNNING_ZOMBIE_POSITION(1200.0f, 100.0f, 600.0f);
         /** 空のキューブマップ(曇天の昼) */
         constexpr const wchar_t* SKY_CUBE_PATH = L"Assets/modelData/preset/skyCubeMapOvercast.dds";
         /** 空の明るさ(キューブマップの色に掛ける倍率) */
@@ -54,8 +46,6 @@ namespace app
 
     DebugScene::DebugScene()
         : m_miro(nullptr)
-        , m_normalZombie(nullptr)
-        , m_runningZombie(nullptr)
         , m_playerCamera(nullptr)
         , m_hpBarPacket(nullptr)
         , m_handgun(nullptr)
@@ -91,10 +81,7 @@ namespace app
         m_core->SetPosition(CORE_POSITION);
         m_miro = std::make_unique<actor::Miro>();
         m_miro->SetPosition(MIRO_POSITION);
-        m_normalZombie = std::make_unique<actor::NormalZombie>();
-        m_normalZombie->SetPosition(NORMAL_ZOMBIE_POSITION);
-        m_runningZombie = std::make_unique<actor::RunningZombie>();
-        m_runningZombie->SetPosition(RUNNING_ZOMBIE_POSITION);
+        m_zombieSpawner = std::make_unique<actor::ZombieSpawner>();
         m_handgun = std::make_unique<actor::Handgun>();
         m_playerCamera = std::make_unique<camera::PlayerCamera>();
     }
@@ -115,27 +102,17 @@ namespace app
         RenderingEngine::Get().SetSkyCube(SKY_CUBE_PATH, SKY_LUMINANCE);
 
         m_miro->StartWrapper();
-        m_normalZombie->StartWrapper();
-        m_runningZombie->StartWrapper();
         m_handgun->StartWrapper();
         m_playerCamera->Start();
 
-        // ゾンビにコアへ歩くControllerを付ける。コアの位置(地面の座標)は、関数で教える。
-        // m_core はゾンビより先に破棄されるが、破棄の間にこの関数は呼ばれない。
-        auto zombieController = std::make_unique<actor::NormalZombieController>(m_normalZombie->GetParameter());
-        zombieController->SetCorePositionProvider([core = m_core.get()](Vector3& outPosition) {
+        // ゾンビのスポーナーに、コアの位置(地面の座標)を関数で教える。湧いたゾンビは、この位置へ向かう。
+        // m_zombieSpawner は m_core より先に破棄されるので、破棄の間にこの関数は呼ばれない。
+        m_zombieSpawner->SetCorePositionProvider([core = m_core.get()](Vector3& outPosition) {
             outPosition = core->GetTransform().m_position;
             return true;
         });
-        m_normalZombie->GetControllerSlot().Attach(std::move(zombieController));
-
-        // 走り続けるゾンビにも、コアへ走るControllerを付ける。コアの位置の教え方は同じ。
-        auto runningZombieController = std::make_unique<actor::RunningZombieController>(m_runningZombie->GetParameter());
-        runningZombieController->SetCorePositionProvider([core = m_core.get()](Vector3& outPosition) {
-            outPosition = core->GetTransform().m_position;
-            return true;
-        });
-        m_runningZombie->GetControllerSlot().Attach(std::move(runningZombieController));
+        // ゾンビのモデルなどを先に読み込んでおく。(最初に湧く時に、引っかからないように)
+        m_zombieSpawner->Preload();
 
         // ハンドガンをMiroの手に持たせる。ボーンはMiroのStart()でモデルをロードした後に取れる
         m_handgun->AttachToBone(m_miro->GetWeaponHandBone());
@@ -170,8 +147,7 @@ namespace app
         m_stageField->UpdateWrapper();
         m_core->UpdateWrapper();
         m_miro->UpdateWrapper();
-        m_normalZombie->UpdateWrapper();
-        m_runningZombie->UpdateWrapper();
+        m_zombieSpawner->Update();
         m_handgun->UpdateWrapper();
 
         // TEMP: 残段数UIの確認用。確認が終わったら取り除く
@@ -225,8 +201,7 @@ namespace app
         m_stageField->RenderWrapper(rc);
         m_core->RenderWrapper(rc);
         m_miro->RenderWrapper(rc);
-        m_normalZombie->RenderWrapper(rc);
-        m_runningZombie->RenderWrapper(rc);
+        m_zombieSpawner->Render(rc);
         m_handgun->RenderWrapper(rc);
     }
 

@@ -12,6 +12,7 @@
 
 #include "Source/Actor/Character/Miro/MiroParameter.h"
 #include "Source/Actor/Character/Zombie/ZombieParameter.h"
+#include "Source/Actor/Character/Zombie/ZombieSpawnParameter.h"
 #include "Source/Actor/Stage/CoreParameter.h"
 #include "Source/Actor/Weapon/WeaponParameter.h"
 #include "Source/Camera/PlayerCameraParameter.h"
@@ -28,6 +29,7 @@ namespace app
         holder.Register<actor::WeaponParameter>(EnParamID::Handgun, "Assets/parameter/actor/Handgun.json", &actor::LoadWeaponParameter, &actor::DrawWeaponParameter);
         holder.Register<actor::CoreParameter>(EnParamID::Core, "Assets/parameter/actor/Core.json", &actor::LoadCoreParameter, &actor::DrawCoreParameter);
         holder.Register<actor::ZombieParameter>(EnParamID::Zombie, "Assets/parameter/actor/Zombie.json", &actor::LoadZombieParameter, &actor::DrawZombieParameter);
+        holder.Register<actor::ZombieSpawnParameter>(EnParamID::ZombieSpawn, "Assets/parameter/actor/ZombieSpawn.json", &actor::LoadZombieSpawnParameter, &actor::DrawZombieSpawnParameter);
         holder.Register<actor::ZombieParameter>(EnParamID::RunningZombie, "Assets/parameter/actor/RunningZombie.json", &actor::LoadZombieParameter, &actor::DrawZombieParameter);
 
         // 例: holder.Register<MiniMapParameter>(EnParamID::MiniMap, "Assets/parameter/ui/MiniMap.json", &LoadMiniMap);

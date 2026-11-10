@@ -76,6 +76,11 @@ namespace app
             void SetAnger(const float anger);
 
 
+        public:
+            /** デストラクタ。ZombieSpawner が ZombieBase のポインタで持って破棄するので、公開している(直接作れないのはコンストラクタが protected なため) */
+            virtual ~ZombieBase() override;
+
+
         protected:
             /**
              * @brief コンストラクタ
@@ -83,7 +88,6 @@ namespace app
              * @param modelData このゾンビの種類のモデルデータ(アプリが終わるまで使えるもの。静的な定数を渡す)
              */
             ZombieBase(const ZombieParameter& parameter, const ModelData& modelData);
-            virtual ~ZombieBase() override;
 
 
         protected:

@@ -1,0 +1,18 @@
+{
+    "struct": "ZombieSpawnParameter",
+    "namespace": "actor",
+    "json": "Assets/parameter/actor/ZombieSpawn.json",
+    "h": "Source/Actor/Character/Zombie/ZombieSpawnParameter.h",
+    "cpp": "Source/Actor/Character/Zombie/ZombieSpawnParameter.cpp",
+    "params": [
+        { "name": "gateNorth", "type": "vector3", "digits": 1, "doc": "北のゲート(スポーン地点)の足元のワールド座標。Yはゲートが乗っている地面の高さ" },
+        { "name": "gateSouth", "type": "vector3", "digits": 1, "doc": "南のゲート(スポーン地点)の足元のワールド座標。Yはゲートが乗っている地面の高さ" },
+        { "name": "gateWest", "type": "vector3", "digits": 1, "doc": "西のゲート(スポーン地点)の足元のワールド座標。Yはゲートが乗っている地面の高さ" },
+        { "name": "gateEast", "type": "vector3", "digits": 1, "doc": "東のゲート(スポーン地点)の足元のワールド座標。Yはゲートが乗っている地面の高さ" },
+        { "name": "spawnOrder", "type": "string", "doc": "湧く順番。N=通常のゾンビ(歩き)、R=走り続けるゾンビ。左から順に使い、最後まで来たら先頭に戻る。例: NNNR = 3体歩き→1体走りの繰り返し。空や知らない文字はNとして扱う" },
+        { "name": "spawnInterval", "type": "float", "digits": 1, "doc": "1体湧かせてから、次を湧かせるまでの時間(秒)" },
+        { "name": "maxAliveCount", "type": "int", "doc": "同時に生きていられるゾンビの数の上限。上限の間は湧かない" },
+        { "name": "dropHeight", "type": "float", "digits": 1, "doc": "ゲートの足元の座標から、どれだけ浮かせて湧かせるか(cm)。高台のゲートでも落ちて接地する" },
+        { "name": "gateJitterRadius", "type": "float", "digits": 1, "doc": "ゲートの中心から、湧く位置をXZ平面でずらす半径(cm)。ゲートの開口(幅500)に収まる値にすること" }
+    ]
+}
