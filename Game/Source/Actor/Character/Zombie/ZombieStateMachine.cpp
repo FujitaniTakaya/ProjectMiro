@@ -22,8 +22,8 @@ namespace app
             , m_parameter(parameter)
             , m_playerParameter(ParamHolder::Get().GetParameter<MiroParameter>(EnParamID::Miro))
         {
-            // 待機は共通ステート、歩き・走りはゾンビ専用のステートを登録する
-            AddState<CharacterIdleState>(this);
+            // 待機(慣性を消すゾンビ用)・歩き・走りを登録する
+            AddState<ZombieIdleState>(this);
             AddState<ZombieWalkState>(this);
             AddState<ZombieRunState>(this);
         }
@@ -56,7 +56,7 @@ namespace app
             }
 
             // どれにも当てはまらなければ待機へ
-            return FindState(CharacterIdleState::ID());
+            return FindState(ZombieIdleState::ID());
         }
     } // namespace actor
 } // namespace app

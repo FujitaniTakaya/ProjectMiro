@@ -2,7 +2,7 @@
  * @file ZombieIState.h
  * @brief ゾンビ専用のステート
  * @details ゾンビは進行方向を向いて動く(CharacterStateMachine の既定の向き)ので、歩き・走りのアニメーションは前進の1本ずつ。
- *          待機は、キャラクター共通のステート(CharacterIdleState)を使う。
+ *          待機は、キャラクター共通の待機(CharacterIdleState)に、入るときに慣性を消す処理を足した ZombieIdleState を使う。
  *          アニメーションは EnZombieAnimationClipID の番号で再生する。
  */
 #pragma once
@@ -14,6 +14,31 @@ namespace app
 {
     namespace actor
     {
+        /**
+         * @brief 待機ステート
+         * @details キャラクター共通の待機に、入るときに水平方向の速度を0にする処理を足したもの。
+         *          コアに着いて入力がなくなったとき、摩擦による減速(慣性)で滑らずに、その場で止まる。
+         */
+        class ZombieIdleState : public CharacterIdleState
+        {
+            appState(ZombieIdleState);
+
+        public:
+            // IStateの仮想関数のオーバーライド
+            void Enter() override final;
+
+
+        public:
+            explicit ZombieIdleState(CharacterStateMachine* owner);
+            ~ZombieIdleState() override = default;
+        };
+
+
+
+
+        /*************************************************************/
+
+
         /**
          * @brief 動くステートの基底
          * @details 歩きと走りで共通の処理。入るときにクリップを再生して、毎フレーム移動速度を設定して移動する。

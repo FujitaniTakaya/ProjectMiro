@@ -13,6 +13,25 @@ namespace app
 {
     namespace actor
     {
+        void ZombieIdleState::Enter()
+        {
+            // 共通の待機(移動速度0・待機のアニメーション)に入ってから、慣性を消してその場で止める
+            CharacterIdleState::Enter();
+            m_owner->StopMoving();
+        }
+
+
+        ZombieIdleState::ZombieIdleState(CharacterStateMachine* owner)
+            : CharacterIdleState(owner)
+        {
+        }
+
+
+
+
+        /*************************************************************/
+
+
         void ZombieMoveState::Enter()
         {
             m_owner->SetMoveSpeed(GetMoveSpeed());

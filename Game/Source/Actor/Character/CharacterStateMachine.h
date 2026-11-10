@@ -71,6 +71,14 @@ namespace app
                 return m_ownerCharacter->GetCurrentVelocity();
             }
             /**
+             * @brief 水平方向(XZ)の現在の移動速度を0にして、その場で止める
+             * @details 慣性(摩擦による減速)を残さず、すぐに止めたいときに使う。垂直方向(Y)の速度は変えないので、落下中でも落下は続く。
+             */
+            inline void StopMoving()
+            {
+                m_ownerCharacter->SetCurrentVelocity(Vector3::Zero);
+            }
+            /**
              * @brief 垂直方向(Y)の速度を設定する
              * @note ジャンプは、上向きの速度を設定して行う。重力は Move() が足す。
              * @param verticalVelocity 垂直方向の速度。上向きが正

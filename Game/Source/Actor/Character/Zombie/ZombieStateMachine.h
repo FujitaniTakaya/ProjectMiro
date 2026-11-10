@@ -17,7 +17,8 @@ namespace app
 
         /**
          * @brief ゾンビのステートマシン
-         * @details 待機(キャラクター共通のステート)と、歩き・走り(ZombieIState.h のゾンビ専用のステート)を登録して、入力から遷移先を決める。
+         * @details 待機・歩き・走り(ZombieIState.h のゾンビ専用のステート)を登録して、入力から遷移先を決める。
+         *          待機は、入るときに慣性を消すので、入力がなくなる(コアに着く)と、滑らずにその場で止まる。
          *          入力は、CharacterStateMachine が持つ ControllerSlot から Update() で作る。(CharacterStateMachine を参照)
          *          歩き・走りの速度は、プレイヤーの走り速度に ZombieParameter の割合をかけた値を返す。
          *          ロックオン専用のステートができるまでは、歩き=通常時、走り=ロックオン時として扱う。(走りは、入力のダッシュで切り替わる)
