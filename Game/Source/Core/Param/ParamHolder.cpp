@@ -34,16 +34,15 @@ namespace app
     }
 
 
-    bool ParamHolder::GetDebugInfo(EnParamID id, ParamDebugInfo& outInfo) const
+    std::optional<ParamDebugInfo> ParamHolder::GetDebugInfo(EnParamID id) const
     {
         const IEntry* entry = FindEntry(id);
         if (entry == nullptr)
         {
-            return false;
+            return std::nullopt;
         }
 
-        outInfo = entry->GetDebugInfo();
-        return true;
+        return entry->GetDebugInfo();
     }
 
 
