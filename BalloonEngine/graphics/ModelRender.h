@@ -5,6 +5,7 @@
 #pragma once
 #include "IRenderObject.h"
 #include "ShadowRef.h"
+#include "animation/AnimationController.h"
 #include "math/Transform.h"
 
 
@@ -151,6 +152,46 @@ namespace nsBalloonEngine
         void AddAnimationEventListener(const AnimationEventListener& listener);
 
 
+        /**
+         * @brief レイヤーを指定してアニメーションを再生する
+         * @details Upper レイヤーは、SetLayerMask() で決めたボーンの範囲だけを、Base の上に重ねる。
+         *          休止中の Upper は、interpolateTime かけて重みが 1 になる。止めるには StopLayerAnimation() を呼ぶ。
+         *          PlayAnimation() は、Base レイヤーでこれを呼ぶのと同じ。
+         * @param layer 再生するレイヤー
+         * @param clipIndex 再生するアニメーションクリップのインデックス
+         * @param interpolateTime クロスフェードの時間(秒)
+         * @param isReplay 巻き戻して1から再生するか(フェードしない)
+         */
+        void PlayLayerAnimation(const EnAnimationLayer layer, const uint8_t clipIndex, const float interpolateTime = 0.0f, const bool isReplay = false);
+
+
+        /**
+         * @brief レイヤーのアニメーションを止める
+         * @details Base は止められない(何もしない)。
+         * @param layer 止めるレイヤー
+         * @param fadeTime フェードアウトの時間(秒)
+         */
+        void StopLayerAnimation(const EnAnimationLayer layer, const float fadeTime = 0.0f);
+
+
+        /**
+         * @brief レイヤーのアニメーションが再生中かどうか
+         * @param layer 調べるレイヤー
+         * @return 再生中なら true。アニメーションを持たないモデルは常に false
+         */
+        bool IsPlayingLayerAnimation(const EnAnimationLayer layer) const;
+
+
+        /**
+         * @brief レイヤーのボーンマスクを、ボーン名で設定する
+         * @details 指定したボーンとその子孫だけが、レイヤーの影響を受ける。例: 上半身は背骨の最下段(Miro は "Base HumanSpine1")。
+         * @param layer 設定するレイヤー(Base には設定できない)
+         * @param rootBoneName マスクの根になるボーンの名前
+         * @return 設定できたら true。アニメーションを持たないモデルや、ボーンが見つからない場合は false
+         */
+        bool SetLayerMask(const EnAnimationLayer layer, const wchar_t* rootBoneName);
+
+
     public:
         /**
          * @brief フォワードレンダリングモデルを使用するかどうかを設定する
@@ -184,8 +225,8 @@ namespace nsBalloonEngine
     private:
         /** モデルのボーン */
         Skeleton m_skeleton;
-        /** アニメーション */
-        Animation m_animation;
+        /** アニメーション(レイヤーブレンド・クロスフェード) */
+        AnimationController m_animationController;
         /** アニメーション再生速度 */
         float m_animationSpeed;
         /** アニメーションを渡されたか */

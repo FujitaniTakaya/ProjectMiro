@@ -4,6 +4,9 @@
     <Filter Include="graphics">
       <UniqueIdentifier>{3b9d5f21-8a64-4c0e-b1d7-6e2f4a9c8d53}</UniqueIdentifier>
     </Filter>
+    <Filter Include="graphics\animation">
+      <UniqueIdentifier>{d32676bc-d681-4945-a369-b05882b5318e}</UniqueIdentifier>
+    </Filter>
     <Filter Include="ui">
       <UniqueIdentifier>{5e2a7c14-9b3d-4f68-a1c0-d47e83b6f925}</UniqueIdentifier>
     </Filter>
@@ -13,6 +16,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BalloonEnginePreCompile.cpp" />
+    <ClCompile Include="graphics\animation\AnimationController.cpp"><Filter>graphics\animation</Filter></ClCompile>
+    <ClCompile Include="graphics\animation\AnimationLayer.cpp"><Filter>graphics\animation</Filter></ClCompile>
+    <ClCompile Include="graphics\animation\AnimationPose.cpp"><Filter>graphics\animation</Filter></ClCompile>
+    <ClCompile Include="graphics\animation\ClipPlayer.cpp"><Filter>graphics\animation</Filter></ClCompile>
+    <ClCompile Include="graphics\animation\ClipSampler.cpp"><Filter>graphics\animation</Filter></ClCompile>
+    <ClCompile Include="graphics\animation\CrossFader.cpp"><Filter>graphics\animation</Filter></ClCompile>
     <ClCompile Include="graphics\DualBlur.cpp"><Filter>graphics</Filter></ClCompile>
     <ClCompile Include="graphics\FontRender.cpp"><Filter>graphics</Filter></ClCompile>
     <ClCompile Include="graphics\ImGuiRenderer.cpp"><Filter>graphics</Filter></ClCompile>
@@ -30,6 +39,12 @@
   <ItemGroup>
     <ClInclude Include="BalloonEngine.h" />
     <ClInclude Include="BalloonEnginePreCompile.h" />
+    <ClInclude Include="graphics\animation\AnimationController.h"><Filter>graphics\animation</Filter></ClInclude>
+    <ClInclude Include="graphics\animation\AnimationLayer.h"><Filter>graphics\animation</Filter></ClInclude>
+    <ClInclude Include="graphics\animation\AnimationPose.h"><Filter>graphics\animation</Filter></ClInclude>
+    <ClInclude Include="graphics\animation\ClipPlayer.h"><Filter>graphics\animation</Filter></ClInclude>
+    <ClInclude Include="graphics\animation\ClipSampler.h"><Filter>graphics\animation</Filter></ClInclude>
+    <ClInclude Include="graphics\animation\CrossFader.h"><Filter>graphics\animation</Filter></ClInclude>
     <ClInclude Include="graphics\DualBlur.h"><Filter>graphics</Filter></ClInclude>
     <ClInclude Include="graphics\FontRender.h"><Filter>graphics</Filter></ClInclude>
     <ClInclude Include="graphics\ImGuiRenderer.h"><Filter>graphics</Filter></ClInclude>

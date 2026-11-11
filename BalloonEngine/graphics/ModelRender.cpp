@@ -89,15 +89,15 @@ namespace nsBalloonEngine
             }
         }
 
+        // ポーズを先に更新してから、ボーン行列を作る。(以前は前フレームのポーズで作っていて、1フレーム遅れていた)
+        if (m_isAnimated)
+        {
+            m_animationController.Update(g_gameTime->GetFrameDeltaTime() * m_animationSpeed);
+        }
+
         if (m_skeleton.IsInited())
         {
             m_skeleton.Update(m_forwardModel.GetWorldMatrix());
-        }
-
-
-        if (m_isAnimated)
-        {
-            m_animation.Progress(g_gameTime->GetFrameDeltaTime() * m_animationSpeed);
         }
     }
 
@@ -190,14 +190,13 @@ namespace nsBalloonEngine
     //=======================================================================
     void ModelRender::PlayAnimation(const uint8_t clipIndex, const float interpolateTime, const bool isReplay)
     {
-        m_animation.Play(clipIndex, interpolateTime, isReplay);
+        PlayLayerAnimation(EnAnimationLayer::Base, clipIndex, interpolateTime, isReplay);
     }
 
 
     bool ModelRender::IsPlayingAnimation() const
     {
-        // アニメーションを持たないモデルは Animation が初期化されていないので、問い合わせない
-        return m_isAnimated && m_animation.IsPlaying();
+        return IsPlayingLayerAnimation(EnAnimationLayer::Base);
     }
 
 
@@ -209,7 +208,38 @@ namespace nsBalloonEngine
 
     void ModelRender::AddAnimationEventListener(const AnimationEventListener& listener)
     {
-        m_animation.AddAnimationEventListener(listener);
+        m_animationController.AddEventListener(listener);
+    }
+
+
+    void ModelRender::PlayLayerAnimation(const EnAnimationLayer layer, const uint8_t clipIndex, const float interpolateTime, const bool isReplay)
+    {
+        // アニメーションを持たないモデルは AnimationController が初期化されていないので、渡さない
+        if (m_isAnimated)
+        {
+            m_animationController.Play(layer, clipIndex, interpolateTime, isReplay);
+        }
+    }
+
+
+    void ModelRender::StopLayerAnimation(const EnAnimationLayer layer, const float fadeTime)
+    {
+        if (m_isAnimated)
+        {
+            m_animationController.Stop(layer, fadeTime);
+        }
+    }
+
+
+    bool ModelRender::IsPlayingLayerAnimation(const EnAnimationLayer layer) const
+    {
+        return m_isAnimated && m_animationController.IsPlaying(layer);
+    }
+
+
+    bool ModelRender::SetLayerMask(const EnAnimationLayer layer, const wchar_t* rootBoneName)
+    {
+        return m_isAnimated && m_animationController.SetLayerMask(layer, rootBoneName);
     }
 
 
@@ -230,7 +260,7 @@ namespace nsBalloonEngine
 
         if (animationClips)
         {
-            m_animation.Init(m_skeleton, animationClips, animationClipNum);
+            m_animationController.Init(m_skeleton, animationClips, animationClipNum);
             m_isAnimated = true;
         }
     }
