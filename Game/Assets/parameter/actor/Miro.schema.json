@@ -7,8 +7,9 @@
     "params": [
         { "name": "walkSpeed", "type": "float", "doc": "歩きの移動速度(入力の倒し具合が最大のときの速さ)" },
         { "name": "runSpeed", "type": "float", "doc": "走りの移動速度(入力の倒し具合が最大のときの速さ)" },
-        { "name": "aimMoveSpeed", "type": "float", "doc": "構え中の移動速度(入力の倒し具合が最大のときの速さ)。歩きより遅くする" },
+        { "name": "aimMoveSpeed", "type": "float", "doc": "構え・リロード中の移動速度(入力の倒し具合が最大のときの速さ)。歩きより遅くする。下半身の歩きは、歩きとの速度の比だけ遅く再生される" },
         { "name": "aimTurnDegrees", "type": "float", "doc": "構え中に、カメラの向きから画面の中央側(右)へ体を回す角度(度)。正で右。ハンドガンが見える角度に合わせる" },
+        { "name": "upperBodyBlendTime", "type": "float", "digits": 2, "doc": "構え・発砲・リロードの上半身アニメーションの、出入りと切り替えのブレンド時間(秒)" },
         { "name": "radius", "type": "float", "doc": "キャラクターコントローラーの半径" },
         { "name": "height", "type": "float", "doc": "キャラクターコントローラーの高さ" },
         { "name": "maxHp", "type": "float", "doc": "最大HP" }

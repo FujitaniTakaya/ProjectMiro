@@ -72,6 +72,12 @@ namespace app
              */
             constexpr const wchar_t* WEAPON_HAND_BONE_NAME = L"Base HumanLPalm";
 
+            /**
+             * 上半身レイヤーが効くボーンの根の名前
+             * 背骨の最下段。ここから先(胸・両腕・首・頭)が上半身になり、構え・発砲・リロードのクリップで動く。腰と脚は、Base レイヤーの歩き・待機のまま。
+             */
+            constexpr const wchar_t* UPPER_BODY_ROOT_BONE_NAME = L"Base HumanSpine1";
+
             /** モデルデータ(Z-upのモデル) */
             const ModelData MODEL_DATA = {
                 MODEL_PATH,
@@ -127,6 +133,9 @@ namespace app
         {
             // モデル・アニメーションクリップのロードと、キャラクターコントローラーの初期化(現在のHPも最大HPで始まる)
             Init(MODEL_DATA, m_parameter.radius, m_parameter.height);
+
+            // 上半身レイヤー(構え・発砲・リロード)が効くボーンの範囲
+            m_modelRender.SetLayerMask(EnAnimationLayer::Upper, UPPER_BODY_ROOT_BONE_NAME);
 
             // 最初のHPを通知
             InGameInfoHub::Get().NotifyPlayerHp(GetHp(), GetMaxHp());

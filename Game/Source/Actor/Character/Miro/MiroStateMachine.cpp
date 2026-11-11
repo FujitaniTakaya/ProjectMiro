@@ -84,6 +84,63 @@ namespace app
         }
 
 
+        void MiroStateMachine::PlayLowerBodyAnimation()
+        {
+            if (GetInput().IsMoving())
+            {
+                PlayAnimation(GetMiroWalkClip(CalcMoveDirection()));
+
+                // 構え中の速度は歩きより遅い。足が地面を滑らないよう、速度の比だけ再生を遅くする。
+                // (毎フレーム読むので、速度のホットリロードに追従する)
+                const float ratio = (m_parameter.walkSpeed > 0.0f) ? (m_parameter.aimMoveSpeed / m_parameter.walkSpeed) : 1.0f;
+                SetLayerAnimationSpeed(EnAnimationLayer::Base, ratio);
+            }
+            else
+            {
+                PlayAnimation(EnMiroAnimationClipID::Idle);
+                SetLayerAnimationSpeed(EnAnimationLayer::Base, 1.0f);
+            }
+        }
+
+
+        EnMiroMoveDirection MiroStateMachine::CalcMoveDirection() const
+        {
+            // 向いている方向。Lookがなければ、今の体の向き
+            const CharacterInput& input = GetInput();
+            Vector3 look = Vector3::Front;
+            if (input.HasLook())
+            {
+                look = input.GetLook();
+            }
+            else
+            {
+                GetTransform().m_rotation.Apply(look);
+            }
+            return CalcMiroMoveDirection(look, input.GetMove());
+        }
+
+
+        float MiroStateMachine::GetUpperBodyBlendTime() const
+        {
+            return m_parameter.upperBodyBlendTime;
+        }
+
+
+        void MiroStateMachine::Update()
+        {
+            CharacterStateMachine::Update();
+
+            // 銃を扱っていなければ、上半身を止める。(止まっているレイヤーに呼んでも、何も起きない)
+            // 待機・歩き・走りのステートは、Base レイヤーの全身アニメーションだけを再生する。
+            // 下半身の再生速度も、構え中に遅くしたのを戻す
+            if (!IsHandlingGun())
+            {
+                StopLayerAnimation(EnAnimationLayer::Upper, m_parameter.upperBodyBlendTime);
+                SetLayerAnimationSpeed(EnAnimationLayer::Base, 1.0f);
+            }
+        }
+
+
         void MiroStateMachine::UpdateRotation()
         {
             // カメラの方向が指定されていれば、移動方向と関係なく、その方向を向く(入力がなくても向く)
@@ -112,15 +169,16 @@ namespace app
 
         bool MiroStateMachine::CanChangeAimEndState() const
         {
-            // 構えていた直後(ZLを離した)か、構えを解く動きの途中
-            return IsEqualCurrentState(MiroAimState::ID()) || (IsEqualCurrentState(MiroAimEndState::ID()) && IsPlayingAnimation());
+            // 構えていた直後(ZLを離した)か、構えを解く動きの途中。
+            // 動きは上半身のクリップ。(Base は歩き・待機のループなので、終わりが分からない)
+            return IsEqualCurrentState(MiroAimState::ID()) || (IsEqualCurrentState(MiroAimEndState::ID()) && IsPlayingLayerAnimation(EnAnimationLayer::Upper));
         }
 
 
         bool MiroStateMachine::CanChangeReloadState()
         {
-            // リロードのアニメーションが終わるまでは続ける
-            if (IsEqualCurrentState(MiroReloadState::ID()) && IsPlayingAnimation())
+            // リロードのアニメーション(上半身のクリップ)が終わるまでは続ける
+            if (IsEqualCurrentState(MiroReloadState::ID()) && IsPlayingLayerAnimation(EnAnimationLayer::Upper))
             {
                 return true;
             }

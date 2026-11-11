@@ -7,7 +7,11 @@
 #pragma once
 #include <cfloat>
 #include <cmath>
+#include <cstddef>
 #include <cstdint>
+#include <iterator>
+
+#include "MiroAnimationClipID.h"
 
 
 namespace app
@@ -71,6 +75,57 @@ namespace app
             // 45°ごとに丸める。(-4〜4。-4と4は同じ後ろ)
             const int sector = static_cast<int>(std::lround(angle / QUARTER_PI));
             return static_cast<EnMiroMoveDirection>((sector + DIRECTION_COUNT) % DIRECTION_COUNT);
+        }
+
+
+        /**
+         * @brief 向いている方向から見た移動方向に合う、歩きのクリップを取得する
+         * @details 歩きのステートと、構え・リロード中の下半身が使う。
+         * @note 真横(Right/Left)は、WalkRight/WalkLeft ではなく斜め前のクリップを使う。
+         *       WalkRight/WalkLeft は体が約60°横を向いたまま動く素材で、真横に歩くと後退のように見えるため。
+         *       体を正面に向けた横歩きの素材ができたら、WalkRight/WalkLeft に戻す。
+         * @param direction 向いている方向から見た移動方向
+         * @return 歩きのアニメーションクリップID
+         */
+        inline EnMiroAnimationClipID GetMiroWalkClip(const EnMiroMoveDirection direction)
+        {
+            // EnMiroMoveDirection の順に並べること
+            constexpr EnMiroAnimationClipID WALK_CLIPS[] = {
+                EnMiroAnimationClipID::WalkFwd,
+                EnMiroAnimationClipID::WalkFwdRight,
+                EnMiroAnimationClipID::WalkFwdRight,
+                EnMiroAnimationClipID::WalkBwdRight,
+                EnMiroAnimationClipID::WalkBwd,
+                EnMiroAnimationClipID::WalkBwdLeft,
+                EnMiroAnimationClipID::WalkFwdLeft,
+                EnMiroAnimationClipID::WalkFwdLeft,
+            };
+            static_assert(std::size(WALK_CLIPS) == static_cast<size_t>(EnMiroMoveDirection::Max), "歩きのクリップの数を方向と合わせること");
+            return WALK_CLIPS[static_cast<size_t>(direction)];
+        }
+
+
+        /**
+         * @brief 向いている方向から見た移動方向に合う、走りのクリップを取得する
+         * @note 真横(Right/Left)は、歩きと同じ理由で、RunRight/RunLeft ではなく斜め前のクリップを使う。
+         * @param direction 向いている方向から見た移動方向
+         * @return 走りのアニメーションクリップID
+         */
+        inline EnMiroAnimationClipID GetMiroRunClip(const EnMiroMoveDirection direction)
+        {
+            // EnMiroMoveDirection の順に並べること
+            constexpr EnMiroAnimationClipID RUN_CLIPS[] = {
+                EnMiroAnimationClipID::RunFwd,
+                EnMiroAnimationClipID::RunFwdRight,
+                EnMiroAnimationClipID::RunFwdRight,
+                EnMiroAnimationClipID::RunBwdRight,
+                EnMiroAnimationClipID::RunBwd,
+                EnMiroAnimationClipID::RunBwdLeft,
+                EnMiroAnimationClipID::RunFwdLeft,
+                EnMiroAnimationClipID::RunFwdLeft,
+            };
+            static_assert(std::size(RUN_CLIPS) == static_cast<size_t>(EnMiroMoveDirection::Max), "走りのクリップの数を方向と合わせること");
+            return RUN_CLIPS[static_cast<size_t>(direction)];
         }
     } // namespace actor
 } // namespace app
