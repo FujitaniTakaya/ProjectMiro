@@ -1,23 +1,21 @@
 ﻿/**
- * @file ZombieSpawner.cpp
- * @brief ゾンビを湧かせて、コアへ向かわせるクラス
+ * @file ZombieManager.cpp
+ * @brief ゾンビの生成・破棄・保持を行うクラス
  */
 #include "stdafx.h"
 
-#include "ZombieSpawner.h"
+#include "ZombieManager.h"
 
-#include <cmath>
 #include <utility>
 
-#include "NormalZombie/NormalZombie.h"
-#include "NormalZombie/NormalZombieController.h"
-#include "RunningZombie/RunningZombie.h"
-#include "RunningZombie/RunningZombieController.h"
+#include "Source/Actor/Character/Zombie/NormalZombie/NormalZombie.h"
+#include "Source/Actor/Character/Zombie/NormalZombie/NormalZombieController.h"
+#include "Source/Actor/Character/Zombie/RunningZombie/RunningZombie.h"
+#include "Source/Actor/Character/Zombie/RunningZombie/RunningZombieController.h"
+#include "Source/Actor/Character/Zombie/Spawn/ZombieSpawnParameter.h"
 #include "Source/Core/Param/ParamHolder.h"
-#include "Source/Core/Util/RandomDevice.h"
 #include "Source/MoveBehavior/ControllerSlot.h"
 #include "ZombieBase.h"
-#include "ZombieSpawnParameter.h"
 
 
 namespace app
@@ -37,7 +35,7 @@ namespace app
              * @return 作ったゾンビ
              */
             template <typename TZombie, typename TController>
-            std::unique_ptr<ZombieBase> CreateZombie(const Vector3& position, const ZombieSpawner::PositionProvider& provider, const ZombieAttackHandler& attackHandler)
+            std::unique_ptr<ZombieBase> CreateZombie(const Vector3& position, const ZombieManager::PositionProvider& provider, const ZombieAttackHandler& attackHandler)
             {
                 auto zombie = std::make_unique<TZombie>();
                 zombie->SetPosition(position);
@@ -52,54 +50,52 @@ namespace app
         } // namespace
 
 
-        ZombieSpawner::ZombieSpawner()
+        ZombieManager::ZombieManager()
             : m_parameter(ParamHolder::Get().GetParameter<ZombieSpawnParameter>(EnParamID::ZombieSpawn))
             , m_corePositionProvider(nullptr)
             , m_coreAttackHandler(nullptr)
+            , m_spawner()
             , m_zombies()
-            , m_elapsed(0.0f)
-            , m_spawnedCount(0)
         {
         }
 
 
-        ZombieSpawner::~ZombieSpawner() = default;
+        ZombieManager::~ZombieManager() = default;
 
 
-        void ZombieSpawner::SetCorePositionProvider(const PositionProvider& provider)
+        void ZombieManager::SetCorePositionProvider(const PositionProvider& provider)
         {
             m_corePositionProvider = provider;
         }
 
 
-        void ZombieSpawner::SetCoreAttackHandler(const ZombieAttackHandler& handler)
+        void ZombieManager::SetCoreAttackHandler(const ZombieAttackHandler& handler)
         {
             m_coreAttackHandler = handler;
         }
 
 
-        void ZombieSpawner::Preload()
+        void ZombieManager::Preload()
         {
             // 種類ごとに1体作って、すぐに捨てる。座標はどこでもよい(Update() は呼ばないので、動かない)
             const Vector3& position = GetGatePosition(m_parameter, EnZombieGate::West);
             for (int kind = 0; kind < static_cast<int>(EnZombieKind::Max); ++kind)
             {
+                // 戻り値を受けないので、この文の終わりで破棄される
                 Create(static_cast<EnZombieKind>(kind), position);
             }
         }
 
 
-        void ZombieSpawner::Update()
+        void ZombieManager::Update()
         {
             // 死んだゾンビを外す
             RemoveDeadZombies(m_zombies);
 
-            // 湧かせる時間で、数にも空きがあれば、1体湧かせる
-            m_elapsed = AdvanceSpawnTimer(m_elapsed, g_gameTime->GetFrameDeltaTime(), m_parameter.spawnInterval);
-            if (CanSpawn(m_elapsed, m_parameter.spawnInterval, m_zombies.size(), m_parameter.maxAliveCount))
+            // 湧かせる時間で、数にも空きがあれば、1体作る
+            if (const std::optional<ZombieSpawnRequest> request = m_spawner.Update(m_zombies.size()))
             {
-                SpawnOne();
-                m_elapsed = 0.0f;
+                m_zombies.push_back(Create(request->kind, request->position));
             }
 
             // 湧いたばかりのゾンビも、描画の前に1回更新する
@@ -110,7 +106,7 @@ namespace app
         }
 
 
-        void ZombieSpawner::Render(RenderContext& rc)
+        void ZombieManager::Render(RenderContext& rc)
         {
             for (const std::unique_ptr<ZombieBase>& zombie : m_zombies)
             {
@@ -119,27 +115,7 @@ namespace app
         }
 
 
-        void ZombieSpawner::SpawnOne()
-        {
-            // ゲートを、4つからランダムに選ぶ
-            const int gateIndex = util::RandomDevice::Random(0, static_cast<int>(EnZombieGate::Max) - 1);
-            Vector3 position = GetGatePosition(m_parameter, static_cast<EnZombieGate>(gateIndex));
-
-            // ゲートの中心から、円の中でずらす。(同じ点に湧くとゾンビ同士がぶつかって詰まる。半径の平方根をとって、円の中で一様にばらけさせる)
-            const float angle = util::RandomDevice::Random(0.0f, Math::PI2);
-            const float radius = m_parameter.gateJitterRadius * std::sqrt(util::RandomDevice::Random(0.0f, 1.0f));
-            position.x += std::cos(angle) * radius;
-            position.z += std::sin(angle) * radius;
-
-            // 浮かせて湧かせる。高台のゲートでも、落ちて接地する
-            position.y += m_parameter.dropHeight;
-
-            m_zombies.push_back(Create(PickZombieKind(m_parameter.spawnOrder, m_spawnedCount), position));
-            ++m_spawnedCount;
-        }
-
-
-        std::unique_ptr<ZombieBase> ZombieSpawner::Create(const EnZombieKind kind, const Vector3& position) const
+        std::unique_ptr<ZombieBase> ZombieManager::Create(const EnZombieKind kind, const Vector3& position) const
         {
             switch (kind)
             {

@@ -1,8 +1,8 @@
 ﻿/**
  * @file ZombieSpawnRule.h
  * @brief ゾンビを湧かせる規則
- * @details ZombieSpawner が使う、どのゾンビをいつ湧かせるか・いつ外すかの規則。
- *          エンジンに依存しない関数だけを置く(単体でテストできるように、ZombieSpawner から分けてある)。
+ * @details ZombieSpawner と ZombieManager が使う、どのゾンビをいつ湧かせるか・いつ外すかの規則。
+ *          エンジンに依存しない関数だけを置く(単体でテストできるように、ZombieSpawner・ZombieManager から分けてある)。
  */
 #pragma once
 #include <algorithm>

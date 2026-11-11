@@ -11,8 +11,8 @@
 #include "Source/Core/Param/ParamList.h"
 
 #include "Source/Actor/Character/Miro/MiroParameter.h"
+#include "Source/Actor/Character/Zombie/Spawn/ZombieSpawnParameter.h"
 #include "Source/Actor/Character/Zombie/ZombieParameter.h"
-#include "Source/Actor/Character/Zombie/ZombieSpawnParameter.h"
 #include "Source/Actor/Stage/CoreParameter.h"
 #include "Source/Actor/Weapon/WeaponParameter.h"
 #include "Source/Camera/PlayerCameraParameter.h"

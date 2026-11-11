@@ -1,6 +1,6 @@
 ﻿/**
- * @file ZombieSpawner.h
- * @brief ゾンビを湧かせて、コアへ向かわせるクラス
+ * @file ZombieManager.h
+ * @brief ゾンビの生成・破棄・保持を行うクラス
  */
 #pragma once
 #include <cstddef>
@@ -8,9 +8,10 @@
 #include <memory>
 #include <vector>
 
+#include "Source/Actor/Character/Zombie/AI/ZombieCoreApproach.h"
+#include "Source/Actor/Character/Zombie/Spawn/ZombieSpawnRule.h"
+#include "Source/Actor/Character/Zombie/Spawn/ZombieSpawner.h"
 #include "ZombieAttackHandler.h"
-#include "ZombieCoreApproach.h"
-#include "ZombieSpawnRule.h"
 
 
 namespace app
@@ -23,22 +24,23 @@ namespace app
 
 
         /**
-         * @brief ゾンビを湧かせて、コアへ向かわせるクラス
-         * @details 4つのゲートのどれかから、一定の間隔でゾンビを1体ずつ湧かせる。湧いたゾンビには、コアへ向かうControllerを付ける。
-         *          湧かせたゾンビは、このクラスが持つ。更新・描画・破棄も、このクラスが行う。
-         *          - ゲート : 4つからランダムに選ぶ。ゲートの中心から、少しずらした位置に、少し浮かせて湧かせる
-         *          - 種類 : ZombieSpawnParameter::spawnOrder の順(例: NNNR = 3体歩き→1体走りの繰り返し)
-         *          - 間隔・上限 : ZombieSpawnParameter の spawnInterval・maxAliveCount。生きている数が上限の間は湧かない
+         * @brief ゾンビの生成・破棄・保持を行うクラス
+         * @details 生きているゾンビを全部ここが持つ。作る・更新する・描画する・破棄するも、ここが行う。
+         *          湧かせる判断(ゲート・間隔・種類)は、中の ZombieSpawner が行う。ここは、その結果(ZombieSpawnRequest)を受けて作るだけ。
+         *          湧いたゾンビには、コアへ向かうControllerを付ける。
          *          HPが0以下になったゾンビは、Update() の頭で外して破棄する。
-         *          Update() は、シーンの Update() から毎フレーム呼ぶ。経過時間はこのクラスが自分で足すので、ポーズ中(Update()が呼ばれない間)は止まる。
-         *          例: spawner.SetCorePositionProvider(provider);
-         *              spawner.Update();       // シーンのUpdate()
-         *              spawner.Render(rc);     // シーンのRender()
+         *          Update() は、シーンの Update() から毎フレーム呼ぶ。ポーズ中(Update()が呼ばれない間)は、湧かせるタイマーも止まる。
+         *          例: manager.SetCorePositionProvider(provider);
+         *              manager.SetCoreAttackHandler(handler);
+         *              manager.Preload();      // シーンのStart()
+         *              manager.Update();       // シーンのUpdate()
+         *              manager.Render(rc);     // シーンのRender()
          * @note 1回の Update() で湧かせるのは1体まで。ゾンビ1体を作るとモデル・当たり判定の生成で負荷がかかるので、同じフレームにまとめて作らない。
          *       破棄は Update() の中でだけ行う。(描画の途中でゾンビが無くならないように)
-         *       経路探索が無いので、ゲートからコアまで障害物があっても、ゾンビは真っ直ぐ向かう。
+         *       シーンが持つこと。コアを参照する関数を渡すので、シーンのメンバーはコアより後に宣言して、コアより先に破棄されるようにする。
+         *       ゾンビを外から指す方法(ハンドルなど)は、まだ無い。
          */
-        class ZombieSpawner
+        class ZombieManager : public Noncopyable
         {
         public:
             /** コアの位置を教える関数(ZombieCoreApproach と同じ) */
@@ -46,8 +48,8 @@ namespace app
 
 
         public:
-            ZombieSpawner();
-            ~ZombieSpawner();
+            ZombieManager();
+            ~ZombieManager();
 
 
             /**
@@ -69,15 +71,16 @@ namespace app
 
             /**
              * @brief ゾンビのモデルなどを、先に読み込んでおく
-             * @details 種類ごとに1体作って、すぐに捨てる。モデル・アニメーション・テクスチャなどは、一度読み込むと使い回されるので、
+             * @details 種類ごとに1体作って、すぐに捨てる。モデル・アニメーション・テクスチャなどは、一度読み込むとエンジンのバンクに残って使い回されるので、
              *          最初に湧かせる時の負荷(最初の1体だけ、1秒近くかかる)が無くなる。
              *          シーンの Start() など、画面が暗転している間に呼ぶこと。
+             * @note Update() は呼ばないので、作ったゾンビは動かない。ゾンビを持つリストにも入れない。
              */
             void Preload();
 
             /**
              * @brief 更新処理
-             * @details HPが0以下のゾンビを外す → タイマーを進めて、湧かせる時間なら1体湧かせる → 全ゾンビを更新する、の順。
+             * @details HPが0以下のゾンビを外す → スポーナーに聞いて、湧かせる時なら1体作る → 全ゾンビを更新する、の順。
              *          湧いたゾンビは、同じ Update() の中で最初の更新が行われる。(描画の前にモデルの位置が確定する)
              */
             void Update();
@@ -103,17 +106,11 @@ namespace app
              */
             inline uint32_t GetSpawnedCount() const
             {
-                return m_spawnedCount;
+                return m_spawner.GetSpawnedCount();
             }
 
 
         private:
-            /**
-             * @brief ゾンビを1体湧かせる
-             * @details ゲートと位置をランダムに決め、湧く順番から種類を決めて、作る。作ったゾンビは m_zombies に入れる。
-             */
-            void SpawnOne();
-
             /**
              * @brief 指定した種類のゾンビを1体作る
              * @details 座標を設定して Start() まで行い、コアへ向かうControllerを付ける。Update() はまだ呼ばれていない。
@@ -125,18 +122,16 @@ namespace app
 
 
         private:
-            /** パラメーター(ParamHolderが持つもの。アプリが終わるまで使える) */
+            /** パラメーター(ParamHolderが持つもの。アプリが終わるまで使える)。Preload() のゲート座標に使う */
             const ZombieSpawnParameter& m_parameter;
             /** コアの位置を教える関数。湧いたゾンビのControllerへ渡す */
             PositionProvider m_corePositionProvider;
             /** ゾンビの攻撃判定が重なった時の処理。湧いたゾンビへ渡す */
             ZombieAttackHandler m_coreAttackHandler;
+            /** 湧かせる判断を行うもの */
+            ZombieSpawner m_spawner;
             /** 生きているゾンビ */
             std::vector<std::unique_ptr<ZombieBase>> m_zombies;
-            /** 最後に湧かせてからの経過時間(秒)。湧かせる間隔で止まる */
-            float m_elapsed;
-            /** これまでに湧かせた数。湧く順番のどこを使うかを決める */
-            uint32_t m_spawnedCount;
         };
     } // namespace actor
 } // namespace app

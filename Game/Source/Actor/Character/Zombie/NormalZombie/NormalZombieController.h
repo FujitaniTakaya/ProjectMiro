@@ -7,7 +7,7 @@
  * @note アンガー値が溜まり切ったとき(本格ロックオン)の動きもまだ無いので、アンガー値は見ずに、常にコアへ向かう。
  */
 #pragma once
-#include "Source/Actor/Character/Zombie/ZombieCoreApproach.h"
+#include "Source/Actor/Character/Zombie/AI/ZombieCoreApproach.h"
 #include "Source/MoveBehavior/IController.h"
 
 

@@ -9,11 +9,11 @@
 #include <algorithm>
 #include <vector>
 
+#include "Source/Actor/Character/Zombie/ZombieParameter.h"
 #include "Source/Core/Param/ParamHolder.h"
 #include "Source/Core/Param/ParamList.h"
 #include "Source/Navigation/NavigationParameter.h"
 #include "Source/Navigation/NavigationService.h"
-#include "ZombieParameter.h"
 
 
 namespace app

@@ -303,11 +303,8 @@
     <ClCompile Include="Source\Actor\Character\Zombie\ZombieIState.cpp" />
     <ClCompile Include="Source\Actor\Character\Zombie\NormalZombie\NormalZombie.cpp" />
     <ClCompile Include="Source\Actor\Character\Zombie\NormalZombie\NormalZombieController.cpp" />
-    <ClCompile Include="Source\Actor\Character\Zombie\ZombieSpawnParameter.cpp" />
     <ClCompile Include="Source\Actor\Character\Zombie\RunningZombie\RunningZombie.cpp" />
     <ClCompile Include="Source\Actor\Character\Zombie\RunningZombie\RunningZombieController.cpp" />
-    <ClCompile Include="Source\Actor\Character\Zombie\ZombieCoreApproach.cpp" />
-    <ClCompile Include="Source\Actor\Character\Zombie\ZombieSpawner.cpp" />
     <ClCompile Include="Source\Navigation\NavGrid.cpp" />
     <ClCompile Include="Source\Navigation\NavGridBuilder.cpp" />
     <ClCompile Include="Source\Navigation\NavigationParameter.cpp" />
@@ -316,6 +313,10 @@
     <ClCompile Include="Source\Navigation\PathFollower.cpp" />
     <ClCompile Include="Source\Navigation\StageTriangleSource.cpp" />
     <ClCompile Include="Source\Navigation\NavDebugDraw.cpp" />
+    <ClCompile Include="Source\Actor\Character\Zombie\AI\ZombieCoreApproach.cpp" />
+    <ClCompile Include="Source\Actor\Character\Zombie\Spawn\ZombieSpawnParameter.cpp" />
+    <ClCompile Include="Source\Actor\Character\Zombie\Spawn\ZombieSpawner.cpp" />
+    <ClCompile Include="Source\Actor\Character\Zombie\ZombieManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -413,12 +414,11 @@
     <ClInclude Include="Source\Actor\Character\Zombie\ZombieIState.h" />
     <ClInclude Include="Source\Actor\Character\Zombie\NormalZombie\NormalZombie.h" />
     <ClInclude Include="Source\Actor\Character\Zombie\NormalZombie\NormalZombieController.h" />
-    <ClInclude Include="Source\Actor\Character\Zombie\ZombieSpawnParameter.h" />
+    <ClInclude Include="Source\Actor\Character\Zombie\Spawn\ZombieSpawnParameter.h" />
     <ClInclude Include="Source\Actor\Character\Zombie\RunningZombie\RunningZombie.h" />
     <ClInclude Include="Source\Actor\Character\Zombie\RunningZombie\RunningZombieController.h" />
-    <ClInclude Include="Source\Actor\Character\Zombie\ZombieCoreApproach.h" />
-    <ClInclude Include="Source\Actor\Character\Zombie\ZombieSpawnRule.h" />
-    <ClInclude Include="Source\Actor\Character\Zombie\ZombieSpawner.h" />
+    <ClInclude Include="Source\Actor\Character\Zombie\AI\ZombieCoreApproach.h" />
+    <ClInclude Include="Source\Actor\Character\Zombie\Spawn\ZombieSpawnRule.h" />
     <ClInclude Include="Source\Actor\Character\Zombie\ZombieAttackHandler.h" />
     <ClInclude Include="Source\Navigation\NavGrid.h" />
     <ClInclude Include="Source\Navigation\NavGridBuilder.h" />
@@ -429,6 +429,8 @@
     <ClInclude Include="Source\Navigation\PathFollower.h" />
     <ClInclude Include="Source\Navigation\StageTriangleSource.h" />
     <ClInclude Include="Source\Navigation\NavDebugDraw.h" />
+    <ClInclude Include="Source\Actor\Character\Zombie\Spawn\ZombieSpawner.h" />
+    <ClInclude Include="Source\Actor\Character\Zombie\ZombieManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BalloonEngine\BalloonEngine.vcxproj">

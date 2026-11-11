@@ -11,8 +11,8 @@
 #include <vector>
 
 #include "Source/Actor/Character/Miro/Miro.h"
-#include "Source/Actor/Character/Zombie/ZombieSpawnParameter.h"
-#include "Source/Actor/Character/Zombie/ZombieSpawner.h"
+#include "Source/Actor/Character/Zombie/Spawn/ZombieSpawnParameter.h"
+#include "Source/Actor/Character/Zombie/ZombieManager.h"
 #include "Source/Actor/Stage/Core.h"
 #include "Source/Actor/Stage/StageField.h"
 #include "Source/Actor/Weapon/Handgun/Handgun.h"
@@ -87,7 +87,7 @@ namespace app
         m_core->SetPosition(CORE_POSITION);
         m_miro = std::make_unique<actor::Miro>();
         m_miro->SetPosition(MIRO_POSITION);
-        m_zombieSpawner = std::make_unique<actor::ZombieSpawner>();
+        m_zombieManager = std::make_unique<actor::ZombieManager>();
         m_handgun = std::make_unique<actor::Handgun>();
         m_playerCamera = std::make_unique<camera::PlayerCamera>();
     }
@@ -114,15 +114,15 @@ namespace app
         m_handgun->StartWrapper();
         m_playerCamera->Start();
 
-        // ゾンビのスポーナーに、コアの位置(地面の座標)を関数で教える。湧いたゾンビは、この位置へ向かう。
-        // m_zombieSpawner は m_core より先に破棄されるので、破棄の間にこの関数は呼ばれない。
-        m_zombieSpawner->SetCorePositionProvider([core = m_core.get()](Vector3& outPosition) {
+        // ゾンビのマネージャーに、コアの位置(地面の座標)を関数で教える。湧いたゾンビは、この位置へ向かう。
+        // m_zombieManager は m_core より先に破棄されるので、破棄の間にこの関数は呼ばれない。
+        m_zombieManager->SetCorePositionProvider([core = m_core.get()](Vector3& outPosition) {
             outPosition = core->GetTransform().m_position;
             return true;
         });
         // ゾンビの攻撃判定がコアの箱に重なったら、コアにダメージを与える。(コア以外に重なった時は、何もしない)
-        // m_zombieSpawner は m_core より先に破棄されるので、破棄の間にこの関数は呼ばれない。
-        m_zombieSpawner->SetCoreAttackHandler([core = m_core.get()](const btCollisionObject& contact, const float damage) {
+        // m_zombieManager は m_core より先に破棄されるので、破棄の間にこの関数は呼ばれない。
+        m_zombieManager->SetCoreAttackHandler([core = m_core.get()](const btCollisionObject& contact, const float damage) {
             if (!core->IsHitBox(contact))
             {
                 return false;
@@ -131,7 +131,7 @@ namespace app
             return true;
         });
         // ゾンビのモデルなどを先に読み込んでおく。(最初に湧く時に、引っかからないように)
-        m_zombieSpawner->Preload();
+        m_zombieManager->Preload();
 
         // ハンドガンをMiroの手に持たせる。ボーンはMiroのStart()でモデルをロードした後に取れる
         m_handgun->AttachToBone(m_miro->GetWeaponHandBone());
@@ -169,7 +169,7 @@ namespace app
         m_stageField->UpdateWrapper();
         m_core->UpdateWrapper();
         m_miro->UpdateWrapper();
-        m_zombieSpawner->Update();
+        m_zombieManager->Update();
         m_handgun->UpdateWrapper();
 
         // TEMP: 残段数UIの確認用。確認が終わったら取り除く
@@ -236,7 +236,7 @@ namespace app
         m_stageField->RenderWrapper(rc);
         m_core->RenderWrapper(rc);
         m_miro->RenderWrapper(rc);
-        m_zombieSpawner->Render(rc);
+        m_zombieManager->Render(rc);
         m_handgun->RenderWrapper(rc);
     }
 
