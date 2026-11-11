@@ -1,8 +1,8 @@
 {
-    "gateNorth": [2600.0, 300.0, -3100.0],
-    "gateSouth": [-2600.0, 300.0, 2700.0],
-    "gateWest": [-4400.0, 0.0, 0.0],
-    "gateEast": [4400.0, 0.0, 0.0],
+    "gateNorth": [2850.0, 300.0, -2900.0],
+    "gateSouth": [-2850.0, 300.0, 2900.0],
+    "gateWest": [-3650.0, 0.0, -1900.0],
+    "gateEast": [3650.0, 0.0, 1900.0],
     "spawnOrder": "NNNR",
     "spawnInterval": 3.0,
     "maxAliveCount": 20,

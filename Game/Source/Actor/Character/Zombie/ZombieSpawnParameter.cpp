@@ -15,10 +15,10 @@ namespace app
     {
         // [PARAM_GEN begin ctor] 自動生成(tools/param_gen.py)。手で編集しない
         ZombieSpawnParameter::ZombieSpawnParameter()
-            : gateNorth(2600.0f, 300.0f, -3100.0f)
-            , gateSouth(-2600.0f, 300.0f, 2700.0f)
-            , gateWest(-4400.0f, 0.0f, 0.0f)
-            , gateEast(4400.0f, 0.0f, 0.0f)
+            : gateNorth(2850.0f, 300.0f, -2900.0f)
+            , gateSouth(-2850.0f, 300.0f, 2900.0f)
+            , gateWest(-3650.0f, 0.0f, -1900.0f)
+            , gateEast(3650.0f, 0.0f, 1900.0f)
             , spawnOrder("NNNR")
             , spawnInterval(3.0f)
             , maxAliveCount(20)
