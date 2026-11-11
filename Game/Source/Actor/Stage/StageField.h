@@ -25,6 +25,14 @@ namespace app
             virtual ~StageField() override;
 
 
+            /**
+             * @brief ステージのモデル(tkm)のファイルパスを取得する
+             * @details 当たり判定や経路探索の格子など、モデルの形を別に読む処理が使う。
+             * @return tkmファイルのパス
+             */
+            static const char* GetModelPath();
+
+
         protected:
             /** 初期化処理。モデルをロードして、ワールド行列を確定させる */
             virtual void Start() override;

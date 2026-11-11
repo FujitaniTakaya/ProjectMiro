@@ -1,0 +1,20 @@
+{
+    "struct": "NavigationParameter",
+    "namespace": "nav",
+    "json": "Assets/parameter/navigation/Navigation.json",
+    "h": "Source/Navigation/NavigationParameter.h",
+    "cpp": "Source/Navigation/NavigationParameter.cpp",
+    "params": [
+        { "name": "cellSize", "type": "float", "digits": 1, "doc": "格子のセル1辺の長さ(cm)。小さいほど細かいが、重くなる。格子を作るとき(NavigationService::Build)に1回だけ使う" },
+        { "name": "maxSlopeDegrees", "type": "float", "digits": 1, "doc": "歩ける斜面の最大の傾き(度)。これより急な面は床にならない。格子を作るときだけ使う" },
+        { "name": "maxStep", "type": "float", "digits": 1, "doc": "隣のセルへ上り下りできる高さの差の最大(cm)。これを超える段差(崖)は越えない。格子を作るときと、経路を探すときに使う" },
+        { "name": "agentRadius", "type": "float", "digits": 1, "doc": "歩く者の半径(cm)。歩けない所・崖からこの距離以内のセルは通らない。格子を作るときだけ使う" },
+        { "name": "agentHeight", "type": "float", "digits": 1, "doc": "歩く者の高さ(cm)。頭上にこの高さの空きが無い床は歩けない。格子を作るときだけ使う" },
+        { "name": "snapRadiusCells", "type": "int", "doc": "始点・終点が歩けないセルにあるとき、近くの歩けるセルを探す範囲(セル数)" },
+        { "name": "reachRadius", "type": "float", "digits": 1, "doc": "ウェイポイントに着いたとみなす水平の距離(cm)" },
+        { "name": "maxDeviation", "type": "float", "digits": 1, "doc": "経路(直前のウェイポイントから、いま向かう点までの線)から外れたとみなす水平の距離(cm)。外れたら探し直す" },
+        { "name": "stallTime", "type": "float", "digits": 2, "doc": "この時間(秒)のあいだ stallDistance 以上動けなければ、進めなくなったとみなして探し直す" },
+        { "name": "stallDistance", "type": "float", "digits": 1, "doc": "進めなくなったかを調べるときに、動いたとみなす水平の距離(cm)" },
+        { "name": "repathInterval", "type": "float", "digits": 2, "doc": "探し直すのを試す間隔の最小(秒)。探し直しに失敗したときに、毎フレーム探さないため" }
+    ]
+}

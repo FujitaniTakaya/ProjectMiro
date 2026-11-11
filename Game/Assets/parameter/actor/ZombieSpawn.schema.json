@@ -2,8 +2,8 @@
     "struct": "ZombieSpawnParameter",
     "namespace": "actor",
     "json": "Assets/parameter/actor/ZombieSpawn.json",
-    "h": "Source/Actor/Character/Zombie/ZombieSpawnParameter.h",
-    "cpp": "Source/Actor/Character/Zombie/ZombieSpawnParameter.cpp",
+    "h": "Source/Actor/Character/Zombie/Spawn/ZombieSpawnParameter.h",
+    "cpp": "Source/Actor/Character/Zombie/Spawn/ZombieSpawnParameter.cpp",
     "params": [
         { "name": "gateNorth", "type": "vector3", "digits": 1, "doc": "北のゲート(スポーン地点)の足元のワールド座標。Yはゲートが乗っている地面の高さ" },
         { "name": "gateSouth", "type": "vector3", "digits": 1, "doc": "南のゲート(スポーン地点)の足元のワールド座標。Yはゲートが乗っている地面の高さ" },

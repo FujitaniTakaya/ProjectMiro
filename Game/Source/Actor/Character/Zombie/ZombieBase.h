@@ -92,7 +92,7 @@ namespace app
 
 
         public:
-            /** デストラクタ。ZombieSpawner が ZombieBase のポインタで持って破棄するので、公開している(直接作れないのはコンストラクタが protected なため) */
+            /** デストラクタ。ZombieManager が ZombieBase のポインタで持って破棄するので、公開している(直接作れないのはコンストラクタが protected なため) */
             virtual ~ZombieBase() override;
 
 

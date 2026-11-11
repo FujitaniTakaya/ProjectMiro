@@ -1,0 +1,13 @@
+{
+    "cellSize": 25.0,
+    "maxSlopeDegrees": 45.0,
+    "maxStep": 35.0,
+    "agentRadius": 25.0,
+    "agentHeight": 110.0,
+    "snapRadiusCells": 8,
+    "reachRadius": 60.0,
+    "maxDeviation": 200.0,
+    "stallTime": 1.5,
+    "stallDistance": 20.0,
+    "repathInterval": 1.0
+}

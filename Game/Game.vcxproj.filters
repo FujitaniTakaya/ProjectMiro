@@ -115,6 +115,15 @@
     <Filter Include="Source\Actor\Character\Zombie\RunningZombie">
       <UniqueIdentifier>{5558cced-cc08-41f0-8323-5b6bd5033e89}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Navigation">
+      <UniqueIdentifier>{a3c79504-b159-44d4-812d-f1d8705d49c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Actor\Character\Zombie\AI">
+      <UniqueIdentifier>{b330347c-0b97-476c-b90b-6722536ad561}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Actor\Character\Zombie\Spawn">
+      <UniqueIdentifier>{664df4d1-41ee-4b4f-9bc2-4027c26a0a38}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -334,19 +343,46 @@
     <ClCompile Include="Source\Actor\Character\Zombie\NormalZombie\NormalZombieController.cpp">
       <Filter>Source\Actor\Character\Zombie\NormalZombie</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Actor\Character\Zombie\ZombieSpawnParameter.cpp">
-      <Filter>Source\Actor\Character\Zombie</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Actor\Character\Zombie\RunningZombie\RunningZombie.cpp">
       <Filter>Source\Actor\Character\Zombie\RunningZombie</Filter>
     </ClCompile>
     <ClCompile Include="Source\Actor\Character\Zombie\RunningZombie\RunningZombieController.cpp">
       <Filter>Source\Actor\Character\Zombie\RunningZombie</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Actor\Character\Zombie\ZombieCoreApproach.cpp">
-      <Filter>Source\Actor\Character\Zombie</Filter>
+    <ClCompile Include="Source\Navigation\NavGrid.cpp">
+      <Filter>Source\Navigation</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Actor\Character\Zombie\ZombieSpawner.cpp">
+    <ClCompile Include="Source\Navigation\NavGridBuilder.cpp">
+      <Filter>Source\Navigation</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Navigation\NavigationParameter.cpp">
+      <Filter>Source\Navigation</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Navigation\NavigationService.cpp">
+      <Filter>Source\Navigation</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Navigation\PathFinder.cpp">
+      <Filter>Source\Navigation</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Navigation\PathFollower.cpp">
+      <Filter>Source\Navigation</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Navigation\StageTriangleSource.cpp">
+      <Filter>Source\Navigation</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Navigation\NavDebugDraw.cpp">
+      <Filter>Source\Navigation</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Actor\Character\Zombie\AI\ZombieCoreApproach.cpp">
+      <Filter>Source\Actor\Character\Zombie\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Actor\Character\Zombie\Spawn\ZombieSpawnParameter.cpp">
+      <Filter>Source\Actor\Character\Zombie\Spawn</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Actor\Character\Zombie\Spawn\ZombieSpawner.cpp">
+      <Filter>Source\Actor\Character\Zombie\Spawn</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Actor\Character\Zombie\ZombieManager.cpp">
       <Filter>Source\Actor\Character\Zombie</Filter>
     </ClCompile>
   </ItemGroup>
@@ -628,8 +664,8 @@
     <ClInclude Include="Source\Actor\Character\Zombie\NormalZombie\NormalZombieController.h">
       <Filter>Source\Actor\Character\Zombie\NormalZombie</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Actor\Character\Zombie\ZombieSpawnParameter.h">
-      <Filter>Source\Actor\Character\Zombie</Filter>
+    <ClInclude Include="Source\Actor\Character\Zombie\Spawn\ZombieSpawnParameter.h">
+      <Filter>Source\Actor\Character\Zombie\Spawn</Filter>
     </ClInclude>
     <ClInclude Include="Source\Actor\Character\Zombie\RunningZombie\RunningZombie.h">
       <Filter>Source\Actor\Character\Zombie\RunningZombie</Filter>
@@ -637,16 +673,46 @@
     <ClInclude Include="Source\Actor\Character\Zombie\RunningZombie\RunningZombieController.h">
       <Filter>Source\Actor\Character\Zombie\RunningZombie</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Actor\Character\Zombie\ZombieCoreApproach.h">
-      <Filter>Source\Actor\Character\Zombie</Filter>
+    <ClInclude Include="Source\Actor\Character\Zombie\AI\ZombieCoreApproach.h">
+      <Filter>Source\Actor\Character\Zombie\AI</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Actor\Character\Zombie\ZombieSpawnRule.h">
-      <Filter>Source\Actor\Character\Zombie</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Actor\Character\Zombie\ZombieSpawner.h">
-      <Filter>Source\Actor\Character\Zombie</Filter>
+    <ClInclude Include="Source\Actor\Character\Zombie\Spawn\ZombieSpawnRule.h">
+      <Filter>Source\Actor\Character\Zombie\Spawn</Filter>
     </ClInclude>
     <ClInclude Include="Source\Actor\Character\Zombie\ZombieAttackHandler.h">
+      <Filter>Source\Actor\Character\Zombie</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Navigation\NavGrid.h">
+      <Filter>Source\Navigation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Navigation\NavGridBuilder.h">
+      <Filter>Source\Navigation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Navigation\NavTypes.h">
+      <Filter>Source\Navigation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Navigation\NavigationParameter.h">
+      <Filter>Source\Navigation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Navigation\NavigationService.h">
+      <Filter>Source\Navigation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Navigation\PathFinder.h">
+      <Filter>Source\Navigation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Navigation\PathFollower.h">
+      <Filter>Source\Navigation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Navigation\StageTriangleSource.h">
+      <Filter>Source\Navigation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Navigation\NavDebugDraw.h">
+      <Filter>Source\Navigation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Character\Zombie\Spawn\ZombieSpawner.h">
+      <Filter>Source\Actor\Character\Zombie\Spawn</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Character\Zombie\ZombieManager.h">
       <Filter>Source\Actor\Character\Zombie</Filter>
     </ClInclude>
   </ItemGroup>

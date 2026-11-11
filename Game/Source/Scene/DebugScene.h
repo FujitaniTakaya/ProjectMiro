@@ -17,7 +17,7 @@ namespace app
     {
 
         class Miro;
-        class ZombieSpawner;
+        class ZombieManager;
         class Handgun;
         class StageField;
         class Core;
@@ -71,8 +71,8 @@ namespace app
         std::unique_ptr<actor::StageField> m_stageField;
         /** ステージのコア(宝石のモデル)。当たり判定は無い */
         std::unique_ptr<actor::Core> m_core;
-        /** ゾンビのスポーナー。4つのゲートからゾンビを湧かせて、コアへ向かわせる。コアの位置の関数を持つので、m_core より後ろに置く(先に破棄される) */
-        std::unique_ptr<actor::ZombieSpawner> m_zombieSpawner;
+        /** ゾンビのマネージャー。4つのゲートからゾンビを湧かせて、コアへ向かわせる。ゾンビの生成・破棄・保持も行う。コアの位置の関数を持つので、m_core より後ろに置く(先に破棄される) */
+        std::unique_ptr<actor::ZombieManager> m_zombieManager;
         /** コアの耐久値バー。InGameInfoHubに通知された耐久値を、コアの頭上の画面位置に表示する */
         ui::UIPacket<ui::CoreHPBarMenu> m_coreHpBarPacket;
         /** 背景の当たり判定。m_stageFieldのモデルの形そのままのメッシュコライダー(キャラクターコントローラーが床や壁として扱う) */
