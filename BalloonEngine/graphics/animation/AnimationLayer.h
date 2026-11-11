@@ -68,8 +68,10 @@ namespace nsBalloonEngine
         /**
          * @brief ボーンマスクを設定する
          * @param weights ボーンごとの重み(0〜1)。ボーン数と同じ長さ
+         * @param rootBone マスクの根のボーン番号。根がない(全身など)なら -1
+         * @param keepRootOrientation 根のボーンが、親の向きに関わらず、このレイヤーのクリップのモデル空間の向きを保つか
          */
-        void SetMask(const std::vector<float>& weights);
+        void SetMask(const std::vector<float>& weights, const int rootBone, const bool keepRootOrientation);
 
 
         /**
@@ -78,6 +80,19 @@ namespace nsBalloonEngine
          * @param speed 再生速度(1.0f=通常速度)
          */
         void SetSpeed(const float speed);
+
+
+        /**
+         * @brief Base のボーンを、このレイヤーのクリップへ近づける設定
+         * @details レイヤーが動いている間、Base のそのボーンの回転を、このレイヤーのクリップの回転へ近づける。(AnimationController が使う)
+         * @param bone ボーン番号。無効にするなら -1
+         */
+        void SetFollowBone(const int bone);
+        /**
+         * @brief 近づける割合を設定する
+         * @param ratio 0〜1。範囲外は丸められる
+         */
+        void SetFollowRatio(const float ratio);
 
 
         /**
@@ -107,6 +122,26 @@ namespace nsBalloonEngine
          * @return ボーンごとの重み
          */
         const std::vector<float>& GetMask() const;
+        /**
+         * @brief マスクの根のボーン番号を取得
+         * @return 根のボーン番号。設定されていなければ -1
+         */
+        int GetMaskRootBone() const;
+        /**
+         * @brief 根のボーンが、このレイヤーのクリップのモデル空間の向きを保つか
+         * @return 保つなら true
+         */
+        bool KeepsRootOrientation() const;
+        /**
+         * @brief 近づけるボーンの番号を取得
+         * @return ボーン番号。なければ -1
+         */
+        int GetFollowBone() const;
+        /**
+         * @brief 近づける割合を取得
+         * @return 0〜1
+         */
+        float GetFollowRatio() const;
 
 
     private:
@@ -127,6 +162,14 @@ namespace nsBalloonEngine
         AnimationPose m_pose;
         /** ボーンごとの重み */
         std::vector<float> m_mask;
+        /** マスクの根のボーン番号。なければ -1 */
+        int m_maskRootBone;
+        /** 根のボーンが、このレイヤーのクリップのモデル空間の向きを保つか */
+        bool m_keepRootOrientation;
+        /** Base から近づけるボーンの番号。なければ -1 */
+        int m_followBone;
+        /** 近づける割合(0〜1) */
+        float m_followRatio;
         /** クリップの再生速度(1が通常) */
         float m_speed;
         /** ベースレイヤーか */

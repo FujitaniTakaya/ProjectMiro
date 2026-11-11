@@ -187,9 +187,10 @@ namespace nsBalloonEngine
          * @details 指定したボーンとその子孫だけが、レイヤーの影響を受ける。例: 上半身は背骨の最下段(Miro は "Base HumanSpine1")。
          * @param layer 設定するレイヤー(Base には設定できない)
          * @param rootBoneName マスクの根になるボーンの名前
+         * @param keepRootOrientation 根のボーンが、Base の親の向き(歩きでねじれる骨盤など)に関わらず、このレイヤーのクリップのモデル空間の向きを保つか。既定は false
          * @return 設定できたら true。アニメーションを持たないモデルや、ボーンが見つからない場合は false
          */
-        bool SetLayerMask(const EnAnimationLayer layer, const wchar_t* rootBoneName);
+        bool SetLayerMask(const EnAnimationLayer layer, const wchar_t* rootBoneName, const bool keepRootOrientation = false);
 
 
         /**
@@ -200,6 +201,25 @@ namespace nsBalloonEngine
          * @param speed 再生速度(1.0f=通常速度)。0.01 未満は 0.01 になる
          */
         void SetLayerAnimationSpeed(const EnAnimationLayer layer, const float speed);
+
+
+        /**
+         * @brief レイヤーが動いている間、Base のボーンの回転を、そのレイヤーのクリップへ近づけるボーンを設定する
+         * @details 例: 構え中、斜め歩きでねじれる骨盤(Miro は "Base HumanPelvis")を、構えたポーズの向きへ近づける。割合は SetLayerFollowRatio()。
+         *          ボーンの子で、レイヤーのマスクの外のもの(脚)は、モデル空間の向きを保つ。
+         * @param layer 設定するレイヤー(Base には設定できない)
+         * @param boneName 近づけるボーンの名前
+         * @return 設定できたら true。アニメーションを持たないモデルや、ボーンが見つからない場合は false
+         */
+        bool SetLayerFollowBone(const EnAnimationLayer layer, const wchar_t* boneName);
+
+
+        /**
+         * @brief SetLayerFollowBone() のボーンを、レイヤーのクリップへ近づける割合を設定する
+         * @param layer 設定するレイヤー
+         * @param ratio 0〜1。0 なら何もしない(初期値)
+         */
+        void SetLayerFollowRatio(const EnAnimationLayer layer, const float ratio);
 
 
     public:

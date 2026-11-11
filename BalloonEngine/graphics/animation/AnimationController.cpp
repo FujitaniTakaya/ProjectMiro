@@ -16,6 +16,7 @@ namespace nsBalloonEngine
         , m_finalPose()
         , m_parentIndices()
         , m_modelMatrices()
+        , m_adjustedUpperPose()
         , m_layers()
         , m_listeners()
         , m_settings()
@@ -93,7 +94,19 @@ namespace nsBalloonEngine
         const AnimationLayer& upperLayer = m_layers[static_cast<size_t>(EnAnimationLayer::Upper)];
         if (upperLayer.IsActive())
         {
-            animationpose::OverlayPose(m_finalPose, upperLayer.GetPose(), upperLayer.GetMask(), upperLayer.GetBlendWeight(m_settings));
+            // 指定したボーン(骨盤)を、Upper のクリップの向きへ近づける。脚は、モデル空間の向きを保つ
+            animationpose::FollowBoneRotation(m_finalPose, upperLayer.GetPose(), m_parentIndices, upperLayer.GetMask(), upperLayer.GetFollowBone(), upperLayer.GetFollowRatio() * upperLayer.GetBlendWeight(m_settings));
+
+            const AnimationPose* overlay = &upperLayer.GetPose();
+            if (upperLayer.KeepsRootOrientation() && upperLayer.GetMaskRootBone() >= 0)
+            {
+                // 根の回転だけ、Base の親の向きに合わせて補正したコピーを重ねる
+                const int rootBone = upperLayer.GetMaskRootBone();
+                m_adjustedUpperPose = *overlay;
+                m_adjustedUpperPose[rootBone].m_rotation = animationpose::KeepModelOrientation(m_finalPose, *overlay, m_parentIndices, rootBone);
+                overlay = &m_adjustedUpperPose;
+            }
+            animationpose::OverlayPose(m_finalPose, *overlay, upperLayer.GetMask(), upperLayer.GetBlendWeight(m_settings));
         }
 
         //========================================================================
@@ -139,7 +152,7 @@ namespace nsBalloonEngine
     }
 
 
-    bool AnimationController::SetLayerMask(const EnAnimationLayer layer, const wchar_t* rootBoneName)
+    bool AnimationController::SetLayerMask(const EnAnimationLayer layer, const wchar_t* rootBoneName, const bool keepRootOrientation)
     {
         if (!m_isInited || layer == EnAnimationLayer::Base || layer >= EnAnimationLayer::Max)
         {
@@ -166,8 +179,35 @@ namespace nsBalloonEngine
                 }
             }
         }
-        m_layers[static_cast<size_t>(layer)].SetMask(mask);
+        m_layers[static_cast<size_t>(layer)].SetMask(mask, rootBone, keepRootOrientation);
         return true;
+    }
+
+
+    bool AnimationController::SetLayerFollowBone(const EnAnimationLayer layer, const wchar_t* boneName)
+    {
+        if (!m_isInited || layer == EnAnimationLayer::Base || layer >= EnAnimationLayer::Max)
+        {
+            return false;
+        }
+        const int bone = m_skeleton->FindBoneID(boneName);
+        if (bone < 0)
+        {
+            K2_LOG("AnimationController: the follow bone was not found: %ls\n", boneName);
+            return false;
+        }
+        m_layers[static_cast<size_t>(layer)].SetFollowBone(bone);
+        return true;
+    }
+
+
+    void AnimationController::SetLayerFollowRatio(const EnAnimationLayer layer, const float ratio)
+    {
+        if (!m_isInited || layer >= EnAnimationLayer::Max)
+        {
+            return;
+        }
+        m_layers[static_cast<size_t>(layer)].SetFollowRatio(ratio);
     }
 
 

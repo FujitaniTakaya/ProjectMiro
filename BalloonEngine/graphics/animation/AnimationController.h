@@ -93,11 +93,34 @@ namespace nsBalloonEngine
          * @details 指定したボーンとその子孫(サブツリー)の重みを 1、それ以外を 0 にする。
          *          初期値は全ボーン 1(レイヤーが全身を上書きする)。Base には設定できない。
          *          名前が重複するボーンは、最初に見つかったものを使う。
+         *          keepRootOrientation が true なら、根のボーンの向きを、親(Base の歩きでねじれる骨盤)の向きに関わらず、このレイヤーのクリップのモデル空間の向きに保つ。
+         *          上半身が、下半身の斜めのねじれにつられず、常に正面を向く。(animationpose::KeepModelOrientation)
          * @param layer 設定するレイヤー
          * @param rootBoneName マスクの根になるボーンの名前(例: 上半身なら背骨の最下段)
+         * @param keepRootOrientation 根のボーンが、このレイヤーのクリップのモデル空間の向きを保つか(既定は false で、親ローカルの回転をそのまま重ねる)
          * @return 設定できたら true。ボーンが見つからない場合は false で、マスクは変わらない
          */
-        bool SetLayerMask(const EnAnimationLayer layer, const wchar_t* rootBoneName);
+        bool SetLayerMask(const EnAnimationLayer layer, const wchar_t* rootBoneName, const bool keepRootOrientation = false);
+
+
+        /**
+         * @brief レイヤーが動いている間、Base のボーンの回転を、このレイヤーのクリップへ近づける
+         * @details 例: 構え中、斜め歩きでねじれる骨盤を、構えたポーズの向きへ近づける。近づける割合は SetLayerFollowRatio()(初期値 0 で、何もしない)。
+         *          レイヤーの出入りの重みを掛ける。ボーンの子のうち、レイヤーのマスクの外のもの(脚)は、モデル空間の向きを保つ。(animationpose::FollowBoneRotation)
+         *          Base には設定できない。名前が重複するボーンは、最初に見つかったものを使う。
+         * @param layer 設定するレイヤー
+         * @param boneName 近づけるボーンの名前
+         * @return 設定できたら true。ボーンが見つからない場合は false で、設定は変わらない
+         */
+        bool SetLayerFollowBone(const EnAnimationLayer layer, const wchar_t* boneName);
+
+
+        /**
+         * @brief SetLayerFollowBone() で決めたボーンを、レイヤーのクリップへ近づける割合を設定する
+         * @param layer 設定するレイヤー
+         * @param ratio 0〜1。0 なら何もしない。範囲外は丸められる
+         */
+        void SetLayerFollowRatio(const EnAnimationLayer layer, const float ratio);
 
 
         /**
@@ -143,6 +166,8 @@ namespace nsBalloonEngine
         std::vector<int> m_parentIndices;
         /** モデル空間の行列(作業用) */
         std::vector<Matrix> m_modelMatrices;
+        /** マスクの根の向きを補正した、Upper のポーズ(作業用。毎フレーム使い回す) */
+        AnimationPose m_adjustedUpperPose;
         /** レイヤー */
         std::array<AnimationLayer, static_cast<size_t>(EnAnimationLayer::Max)> m_layers;
         /** イベントのリスナー */

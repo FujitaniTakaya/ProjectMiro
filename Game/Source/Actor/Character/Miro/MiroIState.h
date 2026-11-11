@@ -7,6 +7,7 @@
  *          リロードは、Xを押した時とマガジンが0になった時のステート。リロードのアニメーションが終わるまで続く。
  *          構え・構えを解く・リロードは、上半身(Upper レイヤー)が銃の動き、下半身(Base レイヤー)が歩き・待機のアニメーション。(MiroStateMachine::PlayLowerBodyAnimation())
  *          上半身のレイヤーは、銃を扱わなくなった時に MiroStateMachine::Update() が止める。
+ *          上半身は、下半身の歩きクリップが腰を斜めにねじっても、常に正面(アクターの向き)を保つ。(Miro::Start の SetLayerMask の keepRootOrientation)
  *          待機は、キャラクター共通のステート(CharacterIdleState)を使う。
  */
 #pragma once

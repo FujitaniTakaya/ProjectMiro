@@ -148,5 +148,63 @@ namespace nsBalloonEngine
                 modelMatrices[i] = (parent < 0) ? localMatrix : (localMatrix * modelMatrices[parent]);
             }
         }
+
+
+        Matrix ModelMatrixOf(const AnimationPose& pose, const std::vector<int>& parentIndices, const int bone)
+        {
+            Matrix result = Compose(pose[bone]);
+            for (int parent = parentIndices[bone]; parent >= 0; parent = parentIndices[parent])
+            {
+                // 行ベクトル規約なので、子 * 親
+                result = result * Compose(pose[parent]);
+            }
+            return result;
+        }
+
+
+        Quaternion KeepModelOrientation(const AnimationPose& basePose, const AnimationPose& overlayPose, const std::vector<int>& parentIndices, const int rootBone)
+        {
+            const int parent = parentIndices[rootBone];
+            if (parent < 0)
+            {
+                // 親がなければ、補正するものがない
+                return overlayPose[rootBone].m_rotation;
+            }
+
+            const Matrix parentBase = ModelMatrixOf(basePose, parentIndices, parent);
+            const Matrix parentOverlay = ModelMatrixOf(overlayPose, parentIndices, parent);
+            Matrix parentBaseInverse;
+            parentBaseInverse.Inverse(parentBase);
+
+            // 重ねるクリップでの根のモデル空間の行列を、土台の親の空間へ戻して、親ローカルの回転を取り出す
+            const Matrix local = Compose(overlayPose[rootBone]) * parentOverlay * parentBaseInverse;
+            return Decompose(local).m_rotation;
+        }
+
+
+        void FollowBoneRotation(AnimationPose& basePose, const AnimationPose& overlayPose, const std::vector<int>& parentIndices, const std::vector<float>& overlayMask, const int bone, const float weight)
+        {
+            if (bone < 0 || weight <= 0.0f)
+            {
+                return;
+            }
+
+            const Matrix boneBefore = ModelMatrixOf(basePose, parentIndices, bone);
+            basePose[bone].m_rotation.Slerp((std::min)(weight, 1.0f), basePose[bone].m_rotation, overlayPose[bone].m_rotation);
+            const Matrix boneAfter = ModelMatrixOf(basePose, parentIndices, bone);
+            Matrix boneAfterInverse;
+            boneAfterInverse.Inverse(boneAfter);
+
+            // 重ねるポーズが効かない子(脚)は、ボーンが回っても回らないよう、モデル空間の向きを保つ
+            for (size_t child = 0; child < basePose.size(); ++child)
+            {
+                if (parentIndices[child] != bone || (child < overlayMask.size() && overlayMask[child] > 0.0f))
+                {
+                    continue;
+                }
+                const Matrix local = Compose(basePose[child]) * boneBefore * boneAfterInverse;
+                basePose[child].m_rotation = Decompose(local).m_rotation;
+            }
+        }
     } // namespace animationpose
 } // namespace nsBalloonEngine

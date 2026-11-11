@@ -17,6 +17,10 @@ namespace nsBalloonEngine
         , m_fader()
         , m_pose()
         , m_mask()
+        , m_maskRootBone(-1)
+        , m_keepRootOrientation(false)
+        , m_followBone(-1)
+        , m_followRatio(0.0f)
         , m_speed(1.0f)
         , m_isBase(false)
         , m_weight(0.0f)
@@ -34,6 +38,8 @@ namespace nsBalloonEngine
         m_pose = *bindPose;
         // 初期のマスクは全ボーン 1(レイヤーが全身に効く)
         m_mask.assign(bindPose->size(), 1.0f);
+        m_maskRootBone = -1;
+        m_keepRootOrientation = false;
         m_speed = 1.0f;
         m_weight = isBase ? 1.0f : 0.0f;
         m_targetWeight = m_weight;
@@ -137,9 +143,23 @@ namespace nsBalloonEngine
     }
 
 
-    void AnimationLayer::SetMask(const std::vector<float>& weights)
+    void AnimationLayer::SetMask(const std::vector<float>& weights, const int rootBone, const bool keepRootOrientation)
     {
         m_mask = weights;
+        m_maskRootBone = rootBone;
+        m_keepRootOrientation = keepRootOrientation;
+    }
+
+
+    void AnimationLayer::SetFollowBone(const int bone)
+    {
+        m_followBone = bone;
+    }
+
+
+    void AnimationLayer::SetFollowRatio(const float ratio)
+    {
+        m_followRatio = std::clamp(ratio, 0.0f, 1.0f);
     }
 
 
@@ -180,6 +200,30 @@ namespace nsBalloonEngine
     const std::vector<float>& AnimationLayer::GetMask() const
     {
         return m_mask;
+    }
+
+
+    int AnimationLayer::GetMaskRootBone() const
+    {
+        return m_maskRootBone;
+    }
+
+
+    bool AnimationLayer::KeepsRootOrientation() const
+    {
+        return m_keepRootOrientation;
+    }
+
+
+    int AnimationLayer::GetFollowBone() const
+    {
+        return m_followBone;
+    }
+
+
+    float AnimationLayer::GetFollowRatio() const
+    {
+        return m_followRatio;
     }
 
 

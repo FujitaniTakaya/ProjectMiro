@@ -20,6 +20,7 @@ namespace app
             , aimMoveSpeed(150.0f)
             , aimTurnDegrees(20.0f)
             , upperBodyBlendTime(0.15f)
+            , aimHipFollow(0.6f)
             , radius(25.0f)
             , height(110.0f)
             , maxHp(100.0f)
@@ -41,6 +42,7 @@ namespace app
             param.aimMoveSpeed = ParamLoader::ToFloat(root, "aimMoveSpeed", param.aimMoveSpeed);
             param.aimTurnDegrees = ParamLoader::ToFloat(root, "aimTurnDegrees", param.aimTurnDegrees);
             param.upperBodyBlendTime = ParamLoader::ToFloat(root, "upperBodyBlendTime", param.upperBodyBlendTime);
+            param.aimHipFollow = ParamLoader::ToFloat(root, "aimHipFollow", param.aimHipFollow);
             param.radius = ParamLoader::ToFloat(root, "radius", param.radius);
             param.height = ParamLoader::ToFloat(root, "height", param.height);
             param.maxHp = ParamLoader::ToFloat(root, "maxHp", param.maxHp);
@@ -57,6 +59,7 @@ namespace app
             ImGui::Text("aimMoveSpeed: %.1f", param.aimMoveSpeed);
             ImGui::Text("aimTurnDegrees: %.1f", param.aimTurnDegrees);
             ImGui::Text("upperBodyBlendTime: %.2f", param.upperBodyBlendTime);
+            ImGui::Text("aimHipFollow: %.2f", param.aimHipFollow);
             ImGui::Text("radius: %.1f", param.radius);
             ImGui::Text("height: %.1f", param.height);
             ImGui::Text("maxHp: %.1f", param.maxHp);

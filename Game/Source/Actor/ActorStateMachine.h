@@ -103,6 +103,16 @@ namespace app
                 m_ownerActor->GetModelRender().SetLayerAnimationSpeed(layer, speed);
             }
             /**
+             * @brief レイヤーが動いている間、Base のボーンを、そのレイヤーのクリップへ近づける割合を設定する
+             * @details 近づけるボーンは、ModelRender::SetLayerFollowBone() で決めておく。
+             * @param layer 設定するレイヤー
+             * @param ratio 0〜1。0 なら何もしない
+             */
+            inline void SetLayerFollowRatio(const EnAnimationLayer layer, const float ratio)
+            {
+                m_ownerActor->GetModelRender().SetLayerFollowRatio(layer, ratio);
+            }
+            /**
              * @brief トランスフォームを取得する
              * @return 持ち主のトランスフォームの参照
              */

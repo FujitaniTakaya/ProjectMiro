@@ -75,8 +75,15 @@ namespace app
             /**
              * 上半身レイヤーが効くボーンの根の名前
              * 背骨の最下段。ここから先(胸・両腕・首・頭)が上半身になり、構え・発砲・リロードのクリップで動く。腰と脚は、Base レイヤーの歩き・待機のまま。
+             * 上半身は、腰がねじれても、クリップのモデル空間の向き(正面)を保つ。(Miro::Start の SetLayerMask)
              */
             constexpr const wchar_t* UPPER_BODY_ROOT_BONE_NAME = L"Base HumanSpine1";
+
+            /**
+             * 構え中に、構えたポーズの向きへ近づける腰のボーンの名前
+             * 歩きクリップは、斜め歩きで骨盤を±45°ねじる。MiroParameter の aimHipFollow だけ、構えたポーズ(正面)へ戻す。脚は歩きクリップの向きのまま。
+             */
+            constexpr const wchar_t* HIP_BONE_NAME = L"Base HumanPelvis";
 
             /** モデルデータ(Z-upのモデル) */
             const ModelData MODEL_DATA = {
@@ -134,8 +141,11 @@ namespace app
             // モデル・アニメーションクリップのロードと、キャラクターコントローラーの初期化(現在のHPも最大HPで始まる)
             Init(MODEL_DATA, m_parameter.radius, m_parameter.height);
 
-            // 上半身レイヤー(構え・発砲・リロード)が効くボーンの範囲
-            m_modelRender.SetLayerMask(EnAnimationLayer::Upper, UPPER_BODY_ROOT_BONE_NAME);
+            // 上半身レイヤー(構え・発砲・リロード)が効くボーンの範囲。
+            // 歩きクリップの斜めのねじれ(骨盤が±45°回る)が上半身に伝わらないよう、上半身はクリップの向き(正面)を保つ
+            m_modelRender.SetLayerMask(EnAnimationLayer::Upper, UPPER_BODY_ROOT_BONE_NAME, true);
+            // 腰は、構え中に、割合(aimHipFollow)だけ構えたポーズの向きへ近づける
+            m_modelRender.SetLayerFollowBone(EnAnimationLayer::Upper, HIP_BONE_NAME);
 
             // 最初のHPを通知
             InGameInfoHub::Get().NotifyPlayerHp(GetHp(), GetMaxHp());

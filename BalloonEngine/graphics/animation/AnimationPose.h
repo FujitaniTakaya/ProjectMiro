@@ -124,5 +124,45 @@ namespace nsBalloonEngine
          * @param[out] modelMatrices モデル空間の行列。ボーン数に resize される
          */
         void ToModelSpace(const AnimationPose& pose, const std::vector<int>& parentIndices, std::vector<Matrix>& modelMatrices);
+
+
+        /**
+         * @brief 1本のボーンのモデル空間の行列を求める
+         * @details 親をたどって、親ローカルの行列を掛ける。ToModelSpace() の1本分。
+         * @param pose 親ローカルのポーズ
+         * @param parentIndices ボーンごとの親のボーン番号。ルートは -1
+         * @param bone ボーン番号
+         * @return モデル空間の行列
+         */
+        Matrix ModelMatrixOf(const AnimationPose& pose, const std::vector<int>& parentIndices, const int bone);
+
+
+        /**
+         * @brief 親の向きに関わらず、重ねるクリップのモデル空間の向きを保つ、親ローカルの回転を求める
+         * @details 根のボーンの、重ねるクリップでの回転 Lu を、親の向きの差 Pu * Pb^-1 で補正する。(Pu=重ねるクリップでの親のモデル空間の行列、Pb=土台での親のモデル空間の行列)
+         *          補正した回転を、土台の親(Pb)に掛けると、重ねるクリップの親(Pu)に Lu を掛けたものと同じ向きになる。
+         *          土台の親が(歩きで)ねじれていても、根のボーンは、重ねるクリップのモデル空間の向きになる。
+         * @param basePose 土台のポーズ
+         * @param overlayPose 重ねるクリップのポーズ
+         * @param parentIndices ボーンごとの親のボーン番号。ルートは -1
+         * @param rootBone マスクの根のボーン番号
+         * @return 根のボーンの、補正した親ローカルの回転。根が親を持たなければ、重ねるクリップの回転そのまま
+         */
+        Quaternion KeepModelOrientation(const AnimationPose& basePose, const AnimationPose& overlayPose, const std::vector<int>& parentIndices, const int rootBone);
+
+
+        /**
+         * @brief 土台のボーンの回転を、重ねるポーズの回転へ近づける
+         * @details 回転は球面線形補間。ボーンの子のうち、重ねるポーズが効かないもの(overlayMask が 0 以下。脚など)は、
+         *          モデル空間の向きを保つよう、親ローカルの回転を補正する。(Lc' = Lc * Pb * Pa^-1。Pb/Pa=ボーンのモデル行列の変更前/後)
+         *          ボーンの位置と、重ねるポーズが効く子(上半身の根など)の回転は変えない。
+         * @param[in,out] basePose 土台のポーズ
+         * @param overlayPose 重ねるポーズ。ボーンの親は土台と同じ前提
+         * @param parentIndices ボーンごとの親のボーン番号。ルートは -1
+         * @param overlayMask 重ねるポーズのボーンごとの重み
+         * @param bone 近づけるボーンの番号。0 未満なら何もしない
+         * @param weight 近づける割合(0〜1)。0 以下なら何もしない
+         */
+        void FollowBoneRotation(AnimationPose& basePose, const AnimationPose& overlayPose, const std::vector<int>& parentIndices, const std::vector<float>& overlayMask, const int bone, const float weight);
     } // namespace animationpose
 } // namespace nsBalloonEngine

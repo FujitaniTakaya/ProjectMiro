@@ -4,6 +4,7 @@
     "aimMoveSpeed": 150.0,
     "aimTurnDegrees": 20.0,
     "upperBodyBlendTime": 0.15,
+    "aimHipFollow": 0.6,
     "radius": 25.0,
     "height": 110.0,
     "maxHp": 100.0

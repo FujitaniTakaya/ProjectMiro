@@ -6,6 +6,7 @@
 
 #include "MiroStateMachine.h"
 
+#include <algorithm>
 #include <cmath>
 #include <utility>
 
@@ -86,6 +87,9 @@ namespace app
 
         void MiroStateMachine::PlayLowerBodyAnimation()
         {
+            // 腰を構えたポーズの向きへ近づける割合。毎フレーム読むので、ホットリロードが効く(上半身が止まっている間は効かない)
+            SetLayerFollowRatio(EnAnimationLayer::Upper, std::clamp(m_parameter.aimHipFollow, 0.0f, 1.0f));
+
             if (GetInput().IsMoving())
             {
                 PlayAnimation(GetMiroWalkClip(CalcMoveDirection()));

@@ -237,9 +237,9 @@ namespace nsBalloonEngine
     }
 
 
-    bool ModelRender::SetLayerMask(const EnAnimationLayer layer, const wchar_t* rootBoneName)
+    bool ModelRender::SetLayerMask(const EnAnimationLayer layer, const wchar_t* rootBoneName, const bool keepRootOrientation)
     {
-        return m_isAnimated && m_animationController.SetLayerMask(layer, rootBoneName);
+        return m_isAnimated && m_animationController.SetLayerMask(layer, rootBoneName, keepRootOrientation);
     }
 
 
@@ -248,6 +248,21 @@ namespace nsBalloonEngine
         if (m_isAnimated)
         {
             m_animationController.SetLayerSpeed(layer, std::max<float>(0.01f, speed));
+        }
+    }
+
+
+    bool ModelRender::SetLayerFollowBone(const EnAnimationLayer layer, const wchar_t* boneName)
+    {
+        return m_isAnimated && m_animationController.SetLayerFollowBone(layer, boneName);
+    }
+
+
+    void ModelRender::SetLayerFollowRatio(const EnAnimationLayer layer, const float ratio)
+    {
+        if (m_isAnimated)
+        {
+            m_animationController.SetLayerFollowRatio(layer, ratio);
         }
     }
 
