@@ -192,6 +192,16 @@ namespace nsBalloonEngine
         bool SetLayerMask(const EnAnimationLayer layer, const wchar_t* rootBoneName);
 
 
+        /**
+         * @brief レイヤーのアニメーション再生速度を設定する
+         * @details そのレイヤーのクリップの時間とイベントの発火時刻にだけ掛ける。クロスフェードとレイヤーの出入りの長さは、実時間のまま。
+         *          SetAnimationSpeed() の全体の速度との積になる。例: 構え中の下半身(Base)だけを、移動速度に合わせて遅くする。
+         * @param layer 設定するレイヤー
+         * @param speed 再生速度(1.0f=通常速度)。0.01 未満は 0.01 になる
+         */
+        void SetLayerAnimationSpeed(const EnAnimationLayer layer, const float speed);
+
+
     public:
         /**
          * @brief フォワードレンダリングモデルを使用するかどうかを設定する

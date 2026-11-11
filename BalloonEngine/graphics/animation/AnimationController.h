@@ -101,6 +101,16 @@ namespace nsBalloonEngine
 
 
         /**
+         * @brief レイヤーのクリップの再生速度を設定する
+         * @details クリップの時間とイベントの発火時刻にだけ掛ける。クロスフェードやレイヤーの出入りの長さは、実時間のまま。
+         *          ModelRender の全体の再生速度は、Update() に渡す時間にすでに掛かっているので、その積になる。
+         * @param layer 設定するレイヤー
+         * @param speed 再生速度(1.0f=通常速度)
+         */
+        void SetLayerSpeed(const EnAnimationLayer layer, const float speed);
+
+
+        /**
          * @brief アニメーションイベントのリスナーを登録する
          * @details 全レイヤーのイベントが、登録した全てのリスナーに通知される。
          * @param listener リスナー。引数はクリップ名とイベント名

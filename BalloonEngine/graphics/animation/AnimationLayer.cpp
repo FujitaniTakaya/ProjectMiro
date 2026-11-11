@@ -17,6 +17,7 @@ namespace nsBalloonEngine
         , m_fader()
         , m_pose()
         , m_mask()
+        , m_speed(1.0f)
         , m_isBase(false)
         , m_weight(0.0f)
         , m_targetWeight(0.0f)
@@ -33,6 +34,7 @@ namespace nsBalloonEngine
         m_pose = *bindPose;
         // 初期のマスクは全ボーン 1(レイヤーが全身に効く)
         m_mask.assign(bindPose->size(), 1.0f);
+        m_speed = 1.0f;
         m_weight = isBase ? 1.0f : 0.0f;
         m_targetWeight = m_weight;
         m_weightSpeed = 0.0f;
@@ -128,8 +130,9 @@ namespace nsBalloonEngine
 
         //========================================================================
         // クリップを進めてサンプリングし、クロスフェードをかける
+        // (再生速度はクリップの時間にだけ掛ける。フェードは実時間)
         //========================================================================
-        m_player.Update(deltaTime, settings.m_interpolateKeyframes, listeners, m_pose);
+        m_player.Update(deltaTime * m_speed, settings.m_interpolateKeyframes, listeners, m_pose);
         m_fader.Apply(m_pose, deltaTime, settings.m_easeFade);
     }
 
@@ -137,6 +140,12 @@ namespace nsBalloonEngine
     void AnimationLayer::SetMask(const std::vector<float>& weights)
     {
         m_mask = weights;
+    }
+
+
+    void AnimationLayer::SetSpeed(const float speed)
+    {
+        m_speed = speed;
     }
 
 

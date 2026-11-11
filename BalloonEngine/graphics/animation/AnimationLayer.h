@@ -73,6 +73,14 @@ namespace nsBalloonEngine
 
 
         /**
+         * @brief クリップの再生速度を設定する
+         * @details クリップの時間の進み方(とイベントの発火時刻)にだけ掛ける。クロスフェードとレイヤーの重みの変化は、実時間のまま。
+         * @param speed 再生速度(1.0f=通常速度)
+         */
+        void SetSpeed(const float speed);
+
+
+        /**
          * @brief クリップが割り当てられているか(休止していないか)
          * @return 割り当てられているなら true
          */
@@ -119,6 +127,8 @@ namespace nsBalloonEngine
         AnimationPose m_pose;
         /** ボーンごとの重み */
         std::vector<float> m_mask;
+        /** クリップの再生速度(1が通常) */
+        float m_speed;
         /** ベースレイヤーか */
         bool m_isBase;
         /** レイヤーの重み(0〜1) */

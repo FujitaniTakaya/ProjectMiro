@@ -171,6 +171,16 @@ namespace nsBalloonEngine
     }
 
 
+    void AnimationController::SetLayerSpeed(const EnAnimationLayer layer, const float speed)
+    {
+        if (!m_isInited || layer >= EnAnimationLayer::Max)
+        {
+            return;
+        }
+        m_layers[static_cast<size_t>(layer)].SetSpeed(speed);
+    }
+
+
     void AnimationController::AddEventListener(const AnimationEventListener& listener)
     {
         m_listeners.push_back(listener);

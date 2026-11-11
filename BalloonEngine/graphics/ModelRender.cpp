@@ -243,6 +243,15 @@ namespace nsBalloonEngine
     }
 
 
+    void ModelRender::SetLayerAnimationSpeed(const EnAnimationLayer layer, const float speed)
+    {
+        if (m_isAnimated)
+        {
+            m_animationController.SetLayerSpeed(layer, std::max<float>(0.01f, speed));
+        }
+    }
+
+
     void ModelRender::SetForwardOption(const bool isForwardOption)
     {
         m_useForwardRendering = isForwardOption;
