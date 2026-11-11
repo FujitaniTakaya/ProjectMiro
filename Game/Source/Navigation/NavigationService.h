@@ -6,6 +6,7 @@
  * @note このステージ専用。格子は1つだけ持つ。
  */
 #pragma once
+#include <optional>
 #include <vector>
 
 #include "NavGrid.h"
@@ -56,10 +57,9 @@ namespace app
              * @details 探し方の値(段差の上限など)は、パラメーターを使う。高さは使わず、水平(XZ)の位置で探す。
              * @param start 始点(ワールド座標)
              * @param goal 終点(ワールド座標)
-             * @param[out] outPath 経路のウェイポイント。見つからなかったときは空
-             * @return 見つかったら true。格子ができていない・たどり着けないときは false
+             * @return 経路のウェイポイント。格子ができていない・たどり着けないときは std::nullopt
              */
-            bool FindPath(const Vector3& start, const Vector3& goal, std::vector<NavVec3>& outPath) const;
+            std::optional<std::vector<NavVec3>> FindPath(const Vector3& start, const Vector3& goal) const;
 
             /**
              * @brief 格子を取得する

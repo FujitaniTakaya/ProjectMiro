@@ -12,6 +12,30 @@ namespace app
     namespace nav
     {
         /**
+         * @brief 水平(XZ平面)の2次元ベクトル
+         */
+        struct NavVec2
+        {
+            /** X成分 */
+            float x;
+            /** Z成分 */
+            float z;
+        };
+
+
+        /**
+         * @brief 格子のセルの番号
+         */
+        struct CellCoord
+        {
+            /** セルのX番号 */
+            int x;
+            /** セルのZ番号 */
+            int z;
+        };
+
+
+        /**
          * @brief 3次元の座標
          */
         struct NavVec3

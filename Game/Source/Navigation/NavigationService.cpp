@@ -66,19 +66,18 @@ namespace app
         }
 
 
-        bool NavigationService::FindPath(const Vector3& start, const Vector3& goal, std::vector<NavVec3>& outPath) const
+        std::optional<std::vector<NavVec3>> NavigationService::FindPath(const Vector3& start, const Vector3& goal) const
         {
-            outPath.clear();
             if (m_grid.IsEmpty())
             {
-                return false;
+                return std::nullopt;
             }
 
             const NavigationParameter& parameter = ParamHolder::Get().GetParameter<NavigationParameter>(EnParamID::Navigation);
             PathFindSettings settings;
             settings.maxStep = parameter.maxStep;
             settings.snapRadiusCells = parameter.snapRadiusCells;
-            return nav::FindPath(m_grid, NavVec3{ start.x, start.y, start.z }, NavVec3{ goal.x, goal.y, goal.z }, settings, outPath);
+            return nav::FindPath(m_grid, NavVec3{ start.x, start.y, start.z }, NavVec3{ goal.x, goal.y, goal.z }, settings);
         }
 
 

@@ -8,6 +8,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <optional>
 
 #include "NavGrid.h"
 #include "NavigationService.h"
@@ -45,14 +46,13 @@ namespace app
             /**
              * @brief ワールド座標を、ImGuiの画面座標にする
              * @param worldPosition ワールド座標
-             * @param[out] outScreen ImGuiの画面座標(左上が原点)
-             * @return 画面の中に見える位置なら true。カメラの後ろ・視錐台の外なら false
+             * @return ImGuiの画面座標(左上が原点)。カメラの後ろ・視錐台の外なら std::nullopt
              */
-            bool WorldToScreen(const Vector3& worldPosition, ImVec2& outScreen)
+            std::optional<ImVec2> WorldToScreen(const Vector3& worldPosition)
             {
                 if (g_camera3D == nullptr)
                 {
-                    return false;
+                    return std::nullopt;
                 }
 
                 // カメラの後ろ(w <= 0)や視錐台の外の点は、割り算の結果が画面の反対側になってしまうので、先に弾く
@@ -60,13 +60,11 @@ namespace app
                 g_camera3D->GetViewProjectionMatrix().Apply(clip);
                 if (clip.w <= 0.0f || std::fabs(clip.x) > clip.w || std::fabs(clip.y) > clip.w || clip.z < 0.0f || clip.z > clip.w)
                 {
-                    return false;
+                    return std::nullopt;
                 }
 
                 const ImVec2 displaySize = ImGui::GetIO().DisplaySize;
-                outScreen.x = (clip.x / clip.w * 0.5f + 0.5f) * displaySize.x;
-                outScreen.y = (1.0f - (clip.y / clip.w * 0.5f + 0.5f)) * displaySize.y;
-                return true;
+                return ImVec2((clip.x / clip.w * 0.5f + 0.5f) * displaySize.x, (1.0f - (clip.y / clip.w * 0.5f + 0.5f)) * displaySize.y);
             }
         } // namespace
 #endif // BALLOON_IMGUI_ENABLED
@@ -131,7 +129,8 @@ namespace app
                 m_paths.assign(starts.size(), std::vector<NavVec3>());
                 for (size_t i = 0; i < starts.size(); ++i)
                 {
-                    navigation.FindPath(starts[i], goal, m_paths[i]);
+                    // 経路が見つからなければ、空のまま(何も描かない)
+                    m_paths[i] = navigation.FindPath(starts[i], goal).value_or(std::vector<NavVec3>());
                 }
                 m_pathGridWidth = grid.GetWidth();
                 m_isPathDirty = false;
@@ -148,10 +147,9 @@ namespace app
                     for (int cellX = 0; cellX < grid.GetWidth(); cellX += stride)
                     {
                         const NavGrid::Cell& cell = grid.GetCell(cellX, cellZ);
-                        ImVec2 screen;
-                        if (WorldToScreen(Vector3(grid.CellCenterX(cellX), cell.height, grid.CellCenterZ(cellZ)), screen))
+                        if (const std::optional<ImVec2> screen = WorldToScreen(Vector3(grid.CellCenterX(cellX), cell.height, grid.CellCenterZ(cellZ))))
                         {
-                            drawList->AddCircleFilled(screen, CELL_DOT_RADIUS, cell.walkable ? WALKABLE_COLOR : BLOCKED_COLOR, 4);
+                            drawList->AddCircleFilled(*screen, CELL_DOT_RADIUS, cell.walkable ? WALKABLE_COLOR : BLOCKED_COLOR, 4);
                         }
                     }
                 }
@@ -162,22 +160,20 @@ namespace app
             {
                 for (const std::vector<NavVec3>& path : m_paths)
                 {
-                    ImVec2 previous;
-                    bool hasPrevious = false;
+                    // 直前のウェイポイントの画面座標。見えなかったときは無し(線をつなげない)
+                    std::optional<ImVec2> previous;
                     for (const NavVec3& waypoint : path)
                     {
-                        ImVec2 screen;
-                        const bool isVisible = WorldToScreen(Vector3(waypoint.x, waypoint.y + PATH_LIFT, waypoint.z), screen);
-                        if (isVisible)
+                        const std::optional<ImVec2> screen = WorldToScreen(Vector3(waypoint.x, waypoint.y + PATH_LIFT, waypoint.z));
+                        if (screen)
                         {
-                            if (hasPrevious)
+                            if (previous)
                             {
-                                drawList->AddLine(previous, screen, PATH_COLOR, PATH_THICKNESS);
+                                drawList->AddLine(*previous, *screen, PATH_COLOR, PATH_THICKNESS);
                             }
-                            drawList->AddCircleFilled(screen, WAYPOINT_RADIUS, WAYPOINT_COLOR, 8);
-                            previous = screen;
+                            drawList->AddCircleFilled(*screen, WAYPOINT_RADIUS, WAYPOINT_COLOR, 8);
                         }
-                        hasPrevious = isVisible;
+                        previous = screen;
                     }
                 }
             }

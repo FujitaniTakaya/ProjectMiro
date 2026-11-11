@@ -10,6 +10,7 @@
 #include <cmath>
 #include <cstdint>
 #include <limits>
+#include <optional>
 #include <queue>
 #include <utility>
 
@@ -87,11 +88,11 @@ namespace app
         } // namespace
 
 
-        bool FindNearestWalkableCell(const NavGrid& grid, const float x, const float z, const int maxRadiusCells, int& outCellX, int& outCellZ)
+        std::optional<CellCoord> FindNearestWalkableCell(const NavGrid& grid, const float x, const float z, const int maxRadiusCells)
         {
             if (grid.IsEmpty())
             {
-                return false;
+                return std::nullopt;
             }
 
             // 座標が格子の外でも、一番近い端のセルから探す
@@ -100,17 +101,14 @@ namespace app
             const int baseZ = std::clamp(static_cast<int>(std::floor((z - grid.GetOriginZ()) / cellSize)), 0, grid.GetDepth() - 1);
 
             // 座標のセルが歩けるなら、それを使う(セルの境目では、隣の中心の方が近いことがあるため)
-            int insideX = 0;
-            int insideZ = 0;
-            if (grid.WorldToCell(x, z, insideX, insideZ) && grid.IsWalkable(insideX, insideZ))
+            const std::optional<CellCoord> inside = grid.WorldToCell(x, z);
+            if (inside && grid.IsWalkable(inside->x, inside->z))
             {
-                outCellX = insideX;
-                outCellZ = insideZ;
-                return true;
+                return inside;
             }
 
             // 座標からの距離が一番小さい歩けるセルを選ぶ
-            bool found = false;
+            std::optional<CellCoord> best;
             float bestDistanceSq = (std::numeric_limits<float>::max)();
             const int radius = std::max<int>(maxRadiusCells, 0);
             for (int offsetZ = -radius; offsetZ <= radius; ++offsetZ)
@@ -130,13 +128,11 @@ namespace app
                     if (distanceSq < bestDistanceSq)
                     {
                         bestDistanceSq = distanceSq;
-                        outCellX = cellX;
-                        outCellZ = cellZ;
-                        found = true;
+                        best = CellCoord{ cellX, cellZ };
                     }
                 }
             }
-            return found;
+            return best;
         }
 
 
@@ -182,19 +178,18 @@ namespace app
         }
 
 
-        bool FindPath(const NavGrid& grid, const NavVec3& start, const NavVec3& goal, const PathFindSettings& settings, std::vector<NavVec3>& outPath)
+        std::optional<std::vector<NavVec3>> FindPath(const NavGrid& grid, const NavVec3& start, const NavVec3& goal, const PathFindSettings& settings)
         {
-            outPath.clear();
-
-            int startX = 0;
-            int startZ = 0;
-            int goalX = 0;
-            int goalZ = 0;
-            if (!FindNearestWalkableCell(grid, start.x, start.z, settings.snapRadiusCells, startX, startZ) ||
-                !FindNearestWalkableCell(grid, goal.x, goal.z, settings.snapRadiusCells, goalX, goalZ))
+            const std::optional<CellCoord> startCell = FindNearestWalkableCell(grid, start.x, start.z, settings.snapRadiusCells);
+            const std::optional<CellCoord> goalCell = FindNearestWalkableCell(grid, goal.x, goal.z, settings.snapRadiusCells);
+            if (!startCell || !goalCell)
             {
-                return false;
+                return std::nullopt;
             }
+            const int startX = startCell->x;
+            const int startZ = startCell->z;
+            const int goalX = goalCell->x;
+            const int goalZ = goalCell->z;
 
             const int width = grid.GetWidth();
             const size_t cellCount = static_cast<size_t>(width) * static_cast<size_t>(grid.GetDepth());
@@ -265,7 +260,7 @@ namespace app
 
             if (closed[goalIndex] == 0)
             {
-                return false;
+                return std::nullopt;
             }
 
             // 終点から始点へたどって、始点から終点の順に並べ直す
@@ -277,7 +272,8 @@ namespace app
             std::reverse(chain.begin(), chain.end());
 
             // 真っ直ぐ通れる範囲で間引いて、曲がり角だけを残す
-            const auto addWaypoint = [&](const std::pair<int, int>& cell) { outPath.push_back({ grid.CellCenterX(cell.first), grid.GetCell(cell.first, cell.second).height, grid.CellCenterZ(cell.second) }); };
+            std::vector<NavVec3> path;
+            const auto addWaypoint = [&](const std::pair<int, int>& cell) { path.push_back({ grid.CellCenterX(cell.first), grid.GetCell(cell.first, cell.second).height, grid.CellCenterZ(cell.second) }); };
             addWaypoint(chain.front());
             size_t anchor = 0;
             while (anchor + 1 < chain.size())
@@ -290,7 +286,7 @@ namespace app
                 addWaypoint(chain[farthest]);
                 anchor = farthest;
             }
-            return true;
+            return path;
         }
     } // namespace nav
 } // namespace app

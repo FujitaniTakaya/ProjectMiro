@@ -7,6 +7,7 @@
  *          エンジンに依存しない。
  */
 #pragma once
+#include <optional>
 #include <vector>
 
 #include "NavGrid.h"
@@ -44,11 +45,9 @@ namespace app
          * @param x ワールドX
          * @param z ワールドZ
          * @param maxRadiusCells 探す範囲(セル数)。0なら座標のセルだけ
-         * @param[out] outCellX 見つけたセルのX番号
-         * @param[out] outCellZ 見つけたセルのZ番号
-         * @return 見つかったら true
+         * @return 見つけたセルの番号。見つからなければ std::nullopt
          */
-        bool FindNearestWalkableCell(const NavGrid& grid, float x, float z, int maxRadiusCells, int& outCellX, int& outCellZ);
+        std::optional<CellCoord> FindNearestWalkableCell(const NavGrid& grid, float x, float z, int maxRadiusCells);
 
 
         /**
@@ -74,9 +73,8 @@ namespace app
          * @param start 始点(ワールド座標)。高さは使わない
          * @param goal 終点(ワールド座標)。高さは使わない
          * @param settings 設定
-         * @param[out] outPath 経路のウェイポイント。見つからなかったときは空
-         * @return 見つかったら true。始点・終点を寄せられない・たどり着けないときは false
+         * @return 経路のウェイポイント。始点・終点を寄せられない・たどり着けないときは std::nullopt
          */
-        bool FindPath(const NavGrid& grid, const NavVec3& start, const NavVec3& goal, const PathFindSettings& settings, std::vector<NavVec3>& outPath);
+        std::optional<std::vector<NavVec3>> FindPath(const NavGrid& grid, const NavVec3& start, const NavVec3& goal, const PathFindSettings& settings);
     } // namespace nav
 } // namespace app

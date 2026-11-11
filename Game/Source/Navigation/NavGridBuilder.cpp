@@ -10,6 +10,7 @@
 #include <cmath>
 #include <cstdint>
 #include <limits>
+#include <optional>
 #include <utility>
 
 
@@ -134,16 +135,14 @@ namespace app
              * @details 頭上に agentHeight 以上の空きがある床のうち、一番低いものを選ぶ。
              * @param surfaces セルの床・天井の高さ
              * @param agentHeight 歩く者の高さ
-             * @param[out] outHeight 選んだ床の高さ
-             * @return 床があれば true
+             * @return 選んだ床の高さ。床が無ければ std::nullopt
              */
-            bool PickFloor(const CellSurfaces& surfaces, const float agentHeight, float& outHeight)
+            std::optional<float> PickFloor(const CellSurfaces& surfaces, const float agentHeight)
             {
-                bool found = false;
-                float lowest = (std::numeric_limits<float>::max)();
+                std::optional<float> lowest;
                 for (const float floorHeight : surfaces.floors)
                 {
-                    if (found && floorHeight >= lowest)
+                    if (lowest && floorHeight >= *lowest)
                     {
                         continue;
                     }
@@ -161,15 +160,9 @@ namespace app
                     if (clearance >= agentHeight)
                     {
                         lowest = floorHeight;
-                        found = true;
                     }
                 }
-
-                if (found)
-                {
-                    outHeight = lowest;
-                }
-                return found;
+                return lowest;
             }
         } // namespace
 
@@ -216,12 +209,11 @@ namespace app
             {
                 for (int cellX = 0; cellX < width; ++cellX)
                 {
-                    float height = 0.0f;
                     const size_t index = static_cast<size_t>(cellZ) * static_cast<size_t>(width) + static_cast<size_t>(cellX);
-                    if (PickFloor(surfaces[index], settings.agentHeight, height))
+                    if (const std::optional<float> height = PickFloor(surfaces[index], settings.agentHeight))
                     {
                         hasFloor[index] = 1;
-                        grid.SetCell(cellX, cellZ, NavGrid::Cell(true, height));
+                        grid.SetCell(cellX, cellZ, NavGrid::Cell(true, *height));
                     }
                 }
             }

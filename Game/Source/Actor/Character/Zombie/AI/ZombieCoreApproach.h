@@ -10,6 +10,7 @@
  */
 #pragma once
 #include <functional>
+#include <optional>
 
 #include "Source/MoveBehavior/CharacterInput.h"
 #include "Source/MoveBehavior/ControllerContext.h"
@@ -39,10 +40,9 @@ namespace app
         public:
             /**
              * @brief コアの位置を教える関数
-             * @param outPosition コアの足元(地面)のワールド座標を入れる。高さは使わない
-             * @return コアがあれば true。なければ false
+             * @return コアの足元(地面)のワールド座標。高さは使わない。コアがなければ std::nullopt
              */
-            using PositionProvider = std::function<bool(Vector3& outPosition)>;
+            using PositionProvider = std::function<std::optional<Vector3>()>;
 
 
         public:
@@ -85,24 +85,35 @@ namespace app
 
         private:
             /**
+             * @brief コアへの向きと、着いているかどうか
+             */
+            struct CoreApproachInfo
+            {
+                /** コアの足元のワールド座標 */
+                Vector3 corePosition;
+                /** 座標からコアへの水平方向(XZ)のベクトル。長さは正規化していない */
+                Vector3 toCore;
+                /** 着いたとみなす距離以内なら true */
+                bool isArrived;
+            };
+
+
+        private:
+            /**
              * @brief コアへの向きと、着いているかどうかを求める
              * @param context 操作対象の情報
-             * @param[out] outCorePosition コアの足元のワールド座標
-             * @param[out] outToCore 座標からコアへの水平方向(XZ)のベクトル。長さは正規化していない
-             * @param[out] outIsArrived 着いたとみなす距離以内なら true
-             * @return コアがあって求められたら true。なければ false(出力は変更しない)
+             * @return コアへの向きと、着いているかどうか。コアがなければ std::nullopt
              */
-            bool CalcToCore(const ControllerContext& context, Vector3& outCorePosition, Vector3& outToCore, bool& outIsArrived) const;
+            std::optional<CoreApproachInfo> CalcToCore(const ControllerContext& context) const;
 
             /**
              * @brief 経路に沿って向かう水平方向を求める
              * @details 経路をたどる状況を進めて、経路が無い・終わった・外れた・進めなくなったときは、探し直す(間隔は repathInterval)。
              * @param context 操作対象の情報
              * @param corePosition コアの足元のワールド座標
-             * @param[out] outDirection 向かう水平方向(長さ1)。Yは0
-             * @return 経路に沿った向きを求められたら true。格子が無い・経路が見つからないときは false(出力は変更しない)
+             * @return 向かう水平方向(長さ1)。Yは0。格子が無い・経路が見つからないときは std::nullopt
              */
-            bool CalcPathDirection(const ControllerContext& context, const Vector3& corePosition, Vector3& outDirection);
+            std::optional<Vector3> CalcPathDirection(const ControllerContext& context, const Vector3& corePosition);
 
 
         private:

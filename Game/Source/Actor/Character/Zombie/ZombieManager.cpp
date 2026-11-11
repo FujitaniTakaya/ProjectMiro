@@ -6,6 +6,7 @@
 
 #include "ZombieManager.h"
 
+#include <optional>
 #include <utility>
 
 #include "Source/Actor/Character/Zombie/NormalZombie/NormalZombie.h"

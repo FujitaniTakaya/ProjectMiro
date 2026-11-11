@@ -152,11 +152,11 @@ namespace app
         }
 
 
-        bool PathFollower::GetMoveDirection(const float x, const float z, float& outX, float& outZ) const
+        std::optional<NavVec2> PathFollower::GetMoveDirection(const float x, const float z) const
         {
             if (m_targetIndex >= m_path.size())
             {
-                return false;
+                return std::nullopt;
             }
 
             const float toX = m_path[m_targetIndex].x - x;
@@ -164,13 +164,11 @@ namespace app
             const float lengthSq = toX * toX + toZ * toZ;
             if (lengthSq <= DIRECTION_NORMALIZE_SQ)
             {
-                return false;
+                return std::nullopt;
             }
 
             const float length = std::sqrt(lengthSq);
-            outX = toX / length;
-            outZ = toZ / length;
-            return true;
+            return NavVec2{ toX / length, toZ / length };
         }
     } // namespace nav
 } // namespace app
