@@ -8,14 +8,20 @@
 
 #include <memory>
 #include <utility>
+#include <vector>
 
 #include "Source/Actor/Character/Miro/Miro.h"
+#include "Source/Actor/Character/Zombie/ZombieSpawnParameter.h"
 #include "Source/Actor/Character/Zombie/ZombieSpawner.h"
 #include "Source/Actor/Stage/Core.h"
 #include "Source/Actor/Stage/StageField.h"
 #include "Source/Actor/Weapon/Handgun/Handgun.h"
 #include "Source/Camera/PlayerCamera.h"
+#include "Source/Core/Param/ParamHolder.h"
+#include "Source/Core/Param/ParamList.h"
 #include "Source/Manager/InGameInfoHub.h"
+#include "Source/Navigation/NavDebugDraw.h"
+#include "Source/Navigation/NavigationService.h"
 #include "Source/UI/HUD/CoreHP/CoreHPBarMenu.h"
 #include "Source/UI/HUD/Handgun/HandgunAmmoMenu.h"
 #include "Source/UI/HUD/PlayerHP/HPBarMenu.h"
@@ -94,6 +100,9 @@ namespace app
 
         // 空はエンジンが持っているので、このシーンのものを描かなくする
         RenderingEngine::Get().ClearSkyCube();
+
+        // 経路探索の格子はこのシーンのステージから作ったもの
+        nav::NavigationService::Get().Clear();
     }
 
 
@@ -146,6 +155,9 @@ namespace app
         ModelRender& stageModelRender = m_stageField->GetModelRender();
         m_bgPhysicsStaticObject.CreateFromModel(stageModelRender.GetModel(), stageModelRender.GetModel().GetWorldMatrix());
 
+        // 経路探索の格子。同じくワールド行列が確定した後に作る。ゾンビが最初に歩き出すまでに必要
+        nav::NavigationService::Get().Build(actor::StageField::GetModelPath(), stageModelRender.GetModel().GetWorldMatrix());
+
         // 最初の残弾数を通知
         InGameInfoHub::Get().NotifyPlayerAmmo(m_handgun->GetRemainingAmmo());
         return true;
@@ -185,6 +197,19 @@ namespace app
         m_playerCamera->SetTargetPosition(m_miro->GetTransform().m_position);
         m_playerCamera->SetAiming(m_miro->IsAiming());
         m_playerCamera->Update();
+
+        // 経路探索のデバッグ表示。カメラが更新された後に描く。始点は4つのゲート、終点はコア
+#ifdef BALLOON_IMGUI_ENABLED
+        {
+            const actor::ZombieSpawnParameter& spawnParameter = ParamHolder::Get().GetParameter<actor::ZombieSpawnParameter>(EnParamID::ZombieSpawn);
+            std::vector<Vector3> gatePositions;
+            for (uint8_t gate = 0; gate < static_cast<uint8_t>(actor::EnZombieGate::Max); ++gate)
+            {
+                gatePositions.push_back(actor::GetGatePosition(spawnParameter, static_cast<actor::EnZombieGate>(gate)));
+            }
+            nav::NavDebugDraw::Get().Draw(gatePositions, m_core->GetTransform().m_position);
+        }
+#endif // BALLOON_IMGUI_ENABLED
 
         // MiroがHPを通知した後に、HPバーを更新する
         m_hpBarPacket->Update();

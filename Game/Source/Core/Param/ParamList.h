@@ -38,6 +38,8 @@ namespace app
         ZombieSpawn,
         /** 走り続けるゾンビ(構造体は Zombie と同じ ZombieParameter) */
         RunningZombie,
+        /** 経路探索(格子の作り方・経路のたどり方) */
+        Navigation,
 
         Max,
         None = Max

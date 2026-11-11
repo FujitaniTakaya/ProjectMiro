@@ -28,6 +28,12 @@ namespace app
         StageField::~StageField() = default;
 
 
+        const char* StageField::GetModelPath()
+        {
+            return MODEL_PATH;
+        }
+
+
         void StageField::Start()
         {
             // アニメーションは無い。Z-upのモデル
