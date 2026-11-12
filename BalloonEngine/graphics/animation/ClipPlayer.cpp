@@ -6,6 +6,7 @@
 
 #include "ClipPlayer.h"
 
+#include <algorithm>
 #include <cmath>
 
 
@@ -33,12 +34,19 @@ namespace nsBalloonEngine
     }
 
 
-    void ClipPlayer::Play(const int clipIndex)
+    void ClipPlayer::Play(const int clipIndex, const float startTime)
     {
         m_clipIndex = clipIndex;
-        m_time = 0.0f;
+        m_time = (std::max)(startTime, 0.0f);
         m_isPlaying = true;
         RearmEvents();
+
+        // 開始より前のイベントは鳴らさない。(Update() は m_time > 発火時刻 で通知するので、同じ比較で発火済みにする)
+        const auto& events = (*m_samplers)[m_clipIndex].GetEvents();
+        for (size_t i = 0; i < events.size(); ++i)
+        {
+            m_eventInvoked[i] = (m_time > events[i].m_invokeTime) ? 1 : 0;
+        }
     }
 
 
@@ -104,6 +112,34 @@ namespace nsBalloonEngine
     float ClipPlayer::GetTime() const
     {
         return m_time;
+    }
+
+
+    float ClipPlayer::GetPhase() const
+    {
+        if (m_clipIndex < 0)
+        {
+            return -1.0f;
+        }
+        const ClipSampler& sampler = (*m_samplers)[m_clipIndex];
+        const float duration = sampler.GetDuration();
+        if (!sampler.IsLoop() || duration <= 0.0f)
+        {
+            return -1.0f;
+        }
+        return std::fmod(m_time, duration) / duration;
+    }
+
+
+    bool ClipPlayer::IsLoop(const int clipIndex) const
+    {
+        return CanPlay(clipIndex) && (*m_samplers)[clipIndex].IsLoop();
+    }
+
+
+    float ClipPlayer::GetDuration(const int clipIndex) const
+    {
+        return CanPlay(clipIndex) ? (*m_samplers)[clipIndex].GetDuration() : 0.0f;
     }
 
 

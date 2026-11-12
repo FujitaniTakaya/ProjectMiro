@@ -47,7 +47,7 @@ namespace nsBalloonEngine
     }
 
 
-    void AnimationLayer::Play(const int clipIndex, const float fadeTime, const bool isReplay)
+    void AnimationLayer::Play(const int clipIndex, const float fadeTime, const bool isReplay, const EnAnimationStart start)
     {
         if (!m_player.CanPlay(clipIndex))
         {
@@ -63,6 +63,20 @@ namespace nsBalloonEngine
         const float fade = isReplay ? 0.0f : (std::max)(fadeTime, 0.0f);
 
         //========================================================================
+        // 位相の引き継ぎ: 今のクリップの位相(時刻 / 長さ)を、新しいクリップの長さに掛けた時刻から始める。
+        // クリップの長さが違っても、同じ割合の位置になる。(切り替える前に、今の時刻を読む)
+        //========================================================================
+        float startTime = 0.0f;
+        if (!isReplay && start == EnAnimationStart::KeepPhase && wasActive && m_targetWeight > 0.0f)
+        {
+            const float phase = m_player.GetPhase();
+            if (phase >= 0.0f && m_player.IsLoop(clipIndex))
+            {
+                startTime = phase * m_player.GetDuration(clipIndex);
+            }
+        }
+
+        //========================================================================
         // クロスフェード: 切り替える瞬間の出力を保存して、そこから新しいクリップへ向かう
         //========================================================================
         if (wasActive && m_targetWeight > 0.0f)
@@ -74,7 +88,7 @@ namespace nsBalloonEngine
             m_fader.Cancel();
         }
 
-        m_player.Play(clipIndex);
+        m_player.Play(clipIndex, startTime);
         // キーの無いボーンに前のクリップの値が残らないよう、バインドポーズから始める
         m_pose = *m_bindPose;
 
@@ -172,6 +186,12 @@ namespace nsBalloonEngine
     bool AnimationLayer::IsActive() const
     {
         return m_player.HasClip();
+    }
+
+
+    int AnimationLayer::GetClipIndex() const
+    {
+        return m_player.GetClipIndex();
     }
 
 

@@ -42,11 +42,13 @@ namespace nsBalloonEngine
 
 
         /**
-         * @brief クリップを最初から再生する
-         * @details 時刻を0に戻し、イベントを再武装する。同じクリップでも巻き戻す。
+         * @brief クリップを再生する
+         * @details 時刻を startTime にして、イベントを再武装する。同じクリップでも巻き戻す。
+         *          startTime より前のイベントは発火済みにして、通知しない。
          * @param clipIndex クリップの番号。CanPlay() で確かめてあること
+         * @param startTime 開始時刻(秒)。省略時は最初から。負の値は 0 になる
          */
-        void Play(const int clipIndex);
+        void Play(const int clipIndex, const float startTime = 0.0f);
 
 
         /**
@@ -89,6 +91,24 @@ namespace nsBalloonEngine
          * @return 時刻(秒)
          */
         float GetTime() const;
+        /**
+         * @brief 再生位置の割合(位相)を取得
+         * @details ループするクリップの、時刻 / 長さ。クリップの長さが違っても、割合なら比べられる。
+         * @return 0以上1未満の割合。ループしないクリップ、長さが0のクリップ、割り当てが無い場合は -1
+         */
+        float GetPhase() const;
+        /**
+         * @brief クリップがループするか
+         * @param clipIndex クリップの番号
+         * @return ループするなら true。番号が無効なら false
+         */
+        bool IsLoop(const int clipIndex) const;
+        /**
+         * @brief クリップの長さを取得
+         * @param clipIndex クリップの番号
+         * @return 長さ(秒)。番号が無効なら 0
+         */
+        float GetDuration(const int clipIndex) const;
 
 
     private:

@@ -13,6 +13,22 @@
 namespace nsBalloonEngine
 {
     /**
+     * @brief クリップを再生し始める位置
+     */
+    enum class EnAnimationStart : uint8_t
+    {
+        /** 最初から始める */
+        FromBeginning,
+        /**
+         * 再生中のクリップの位相(時刻 / 長さ)を引き継ぐ。
+         * 切り替える前後のクリップが、どちらもループする時だけ効く。そうでなければ、最初から始める。
+         * 歩きの方向を切り替える時など、足の周期をそろえたい時に使う。
+         */
+        KeepPhase,
+    };
+
+
+    /**
      * @brief 1レイヤー分のアニメーション
      * @details ClipPlayer(クリップの再生)と CrossFader(クリップ切り替えのフェード)を1つずつ持ち、
      *          これに、レイヤーの重み(出入りのフェード)とボーンマスクを加える。
@@ -43,8 +59,9 @@ namespace nsBalloonEngine
          * @param clipIndex クリップの番号
          * @param fadeTime クロスフェードの時間(秒)。0 なら切り替わる
          * @param isReplay 巻き戻して再生し直すか
+         * @param start 再生し始める位置。isReplay が true の時は、常に最初から
          */
-        void Play(const int clipIndex, const float fadeTime, const bool isReplay);
+        void Play(const int clipIndex, const float fadeTime, const bool isReplay, const EnAnimationStart start = EnAnimationStart::FromBeginning);
 
 
         /**
@@ -100,6 +117,11 @@ namespace nsBalloonEngine
          * @return 割り当てられているなら true
          */
         bool IsActive() const;
+        /**
+         * @brief 再生中のクリップの番号を取得
+         * @return クリップの番号。割り当てられていなければ(休止中)-1
+         */
+        int GetClipIndex() const;
         /**
          * @brief クリップが再生中か
          * @details ループしないクリップは、最後まで再生すると false になる。Stop() した後も false。

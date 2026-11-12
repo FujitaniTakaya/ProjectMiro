@@ -121,8 +121,9 @@ namespace nsBalloonEngine
          * @param clipIndex 再生するアニメーションクリップのインデックス
          * @param interpolateTime インターポレーション時間
          * @param isReplay 巻き戻して1から再生するか
+         * @param start 再生し始める位置。KeepPhase なら、再生中のクリップの割合(時刻 / 長さ)の位置から始める
          */
-        void PlayAnimation(const uint8_t clipIndex, const float interpolateTime = 0.0f, const bool isReplay = false);
+        void PlayAnimation(const uint8_t clipIndex, const float interpolateTime = 0.0f, const bool isReplay = false, const EnAnimationStart start = EnAnimationStart::FromBeginning);
 
 
         /**
@@ -161,8 +162,10 @@ namespace nsBalloonEngine
          * @param clipIndex 再生するアニメーションクリップのインデックス
          * @param interpolateTime クロスフェードの時間(秒)
          * @param isReplay 巻き戻して1から再生するか(フェードしない)
+         * @param start 再生し始める位置。KeepPhase なら、再生中のクリップの割合(時刻 / 長さ)の位置から始める。
+         *              今のクリップと新しいクリップのどちらかがループしない時や、休止中のレイヤーは、最初から始める
          */
-        void PlayLayerAnimation(const EnAnimationLayer layer, const uint8_t clipIndex, const float interpolateTime = 0.0f, const bool isReplay = false);
+        void PlayLayerAnimation(const EnAnimationLayer layer, const uint8_t clipIndex, const float interpolateTime = 0.0f, const bool isReplay = false, const EnAnimationStart start = EnAnimationStart::FromBeginning);
 
 
         /**
@@ -180,6 +183,14 @@ namespace nsBalloonEngine
          * @return 再生中なら true。アニメーションを持たないモデルは常に false
          */
         bool IsPlayingLayerAnimation(const EnAnimationLayer layer) const;
+
+
+        /**
+         * @brief レイヤーで再生中のクリップの番号を取得する
+         * @param layer 調べるレイヤー
+         * @return クリップの番号。休止中のレイヤーと、アニメーションを持たないモデルは -1
+         */
+        int GetLayerClipIndex(const EnAnimationLayer layer) const;
 
 
         /**

@@ -122,13 +122,23 @@ namespace nsBalloonEngine
     }
 
 
-    void AnimationController::Play(const EnAnimationLayer layer, const int clipIndex, const float fadeTime, const bool isReplay)
+    void AnimationController::Play(const EnAnimationLayer layer, const int clipIndex, const float fadeTime, const bool isReplay, const EnAnimationStart start)
     {
         if (!m_isInited || layer >= EnAnimationLayer::Max)
         {
             return;
         }
-        m_layers[static_cast<size_t>(layer)].Play(clipIndex, fadeTime, isReplay);
+        m_layers[static_cast<size_t>(layer)].Play(clipIndex, fadeTime, isReplay, start);
+    }
+
+
+    int AnimationController::GetClipIndex(const EnAnimationLayer layer) const
+    {
+        if (!m_isInited || layer >= EnAnimationLayer::Max)
+        {
+            return -1;
+        }
+        return m_layers[static_cast<size_t>(layer)].GetClipIndex();
     }
 
 

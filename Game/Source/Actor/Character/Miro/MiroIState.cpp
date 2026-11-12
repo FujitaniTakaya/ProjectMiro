@@ -37,7 +37,7 @@ namespace app
 
         void MiroMoveState::PlayDirectionalAnimation()
         {
-            m_owner->PlayAnimation(GetClip(m_miroOwner->CalcMoveDirection()));
+            m_miroOwner->PlayLocomotionClip(GetClip(m_miroOwner->CalcMoveDirection()));
         }
 
 

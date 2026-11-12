@@ -36,11 +36,21 @@ namespace app
              * @param animationID アニメーションID。アニメーションクリップの並びの番号になる
              * @param interpolateTime ブレンド時間(秒)。省略時は標準ブレンド
              * @param isReplay 今のクリップと同じでも、最初から巻き戻して再生する。(連続して撃つ動きなど)巻き戻す時は、ブレンドしない
+             * @param start 再生し始める位置。KeepPhase なら、今のクリップの割合(時刻 / 長さ)の位置から始める。(歩きの方向の切り替えなど)
              */
             template <typename TEnum>
-            inline void PlayAnimation(const TEnum animationID, const float interpolateTime = ANIMATION_INTERPOLATE_TIME, const bool isReplay = false)
+            inline void PlayAnimation(const TEnum animationID, const float interpolateTime = ANIMATION_INTERPOLATE_TIME, const bool isReplay = false, const EnAnimationStart start = EnAnimationStart::FromBeginning)
             {
-                m_ownerActor->GetModelRender().PlayAnimation(static_cast<uint8_t>(animationID), interpolateTime, isReplay);
+                m_ownerActor->GetModelRender().PlayAnimation(static_cast<uint8_t>(animationID), interpolateTime, isReplay, start);
+            }
+            /**
+             * @brief レイヤーで再生中のアニメーションクリップの番号を取得する
+             * @param layer 調べるレイヤー
+             * @return アニメーションクリップの番号。休止中のレイヤーは -1
+             */
+            inline int GetPlayingClip(const EnAnimationLayer layer) const
+            {
+                return m_ownerActor->GetModelRender().GetLayerClipIndex(layer);
             }
             /**
              * @brief アニメーションの再生速度を設定する
@@ -66,11 +76,12 @@ namespace app
              * @param animationID アニメーションID。アニメーションクリップの並びの番号になる
              * @param interpolateTime ブレンド時間(秒)。省略時は標準ブレンド。休止中の Upper では、レイヤーのフェードインの時間にもなる
              * @param isReplay 今のクリップと同じでも、最初から巻き戻して再生する。巻き戻す時は、ブレンドしない
+             * @param start 再生し始める位置。KeepPhase なら、そのレイヤーの今のクリップの割合(時刻 / 長さ)の位置から始める
              */
             template <typename TEnum>
-            inline void PlayLayerAnimation(const EnAnimationLayer layer, const TEnum animationID, const float interpolateTime = ANIMATION_INTERPOLATE_TIME, const bool isReplay = false)
+            inline void PlayLayerAnimation(const EnAnimationLayer layer, const TEnum animationID, const float interpolateTime = ANIMATION_INTERPOLATE_TIME, const bool isReplay = false, const EnAnimationStart start = EnAnimationStart::FromBeginning)
             {
-                m_ownerActor->GetModelRender().PlayLayerAnimation(layer, static_cast<uint8_t>(animationID), interpolateTime, isReplay);
+                m_ownerActor->GetModelRender().PlayLayerAnimation(layer, static_cast<uint8_t>(animationID), interpolateTime, isReplay, start);
             }
             /**
              * @brief レイヤーのアニメーションを止める

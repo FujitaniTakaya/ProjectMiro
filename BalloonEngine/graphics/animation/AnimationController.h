@@ -67,8 +67,17 @@ namespace nsBalloonEngine
          * @param clipIndex クリップの番号
          * @param fadeTime クロスフェードの時間(秒)。休止中の Upper では、レイヤーのフェードインの時間にもなる
          * @param isReplay 巻き戻して再生し直すか。その時はフェードしない
+         * @param start 再生し始める位置。isReplay が true の時は、常に最初から
          */
-        void Play(const EnAnimationLayer layer, const int clipIndex, const float fadeTime, const bool isReplay);
+        void Play(const EnAnimationLayer layer, const int clipIndex, const float fadeTime, const bool isReplay, const EnAnimationStart start = EnAnimationStart::FromBeginning);
+
+
+        /**
+         * @brief レイヤーで再生中のクリップの番号を取得
+         * @param layer 調べるレイヤー
+         * @return クリップの番号。休止中のレイヤーや、無効なレイヤーは -1
+         */
+        int GetClipIndex(const EnAnimationLayer layer) const;
 
 
         /**

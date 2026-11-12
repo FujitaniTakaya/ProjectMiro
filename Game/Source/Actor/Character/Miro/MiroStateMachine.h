@@ -94,6 +94,15 @@ namespace app
              */
             void PlayLowerBodyAnimation();
             /**
+             * @brief 歩き・走りのクリップを再生する(Base レイヤー)
+             * @details 今のクリップと同じ族(EnMiroGait。例: 歩きの前・前左・前右)なら、今のクリップの再生位置の割合を引き継いで再生する。
+             *          方向を切り替えるたびに0秒から始めると、W と WD を素早く入れ替えた時に、最初の足の出ているポーズばかりが再生されてしまうため。
+             *          族が違う(待機から、前進から後退へ、歩きから走りへ)切り替えは、足の位相がずれているので、最初から始める。
+             *          同じクリップの再生は何もしないので、毎フレーム呼んでよい。
+             * @param clip 歩きか走りのクリップ
+             */
+            void PlayLocomotionClip(const EnMiroAnimationClipID clip);
+            /**
              * @brief 向いている方向から見た、移動方向を求める
              * @details 向いている方向は、入力の Look。無ければ、今の体の向き。
              * @return 8方向のどれか

@@ -92,7 +92,7 @@ namespace app
 
             if (GetInput().IsMoving())
             {
-                PlayAnimation(GetMiroWalkClip(CalcMoveDirection()));
+                PlayLocomotionClip(GetMiroWalkClip(CalcMoveDirection()));
 
                 // 構え中の速度は歩きより遅い。足が地面を滑らないよう、速度の比だけ再生を遅くする。
                 // (毎フレーム読むので、速度のホットリロードに追従する)
@@ -104,6 +104,15 @@ namespace app
                 PlayAnimation(EnMiroAnimationClipID::Idle);
                 SetLayerAnimationSpeed(EnAnimationLayer::Base, 1.0f);
             }
+        }
+
+
+        void MiroStateMachine::PlayLocomotionClip(const EnMiroAnimationClipID clip)
+        {
+            // 今のクリップと同じ族の間だけ、再生位置を引き継ぐ。(待機などの None は、族が揃わないので最初から)
+            const EnMiroGait current = GetMiroGait(GetPlayingClip(EnAnimationLayer::Base));
+            const bool keepPhase = (current != EnMiroGait::None) && (current == GetMiroGait(static_cast<int>(clip)));
+            PlayAnimation(clip, ANIMATION_INTERPOLATE_TIME, false, keepPhase ? EnAnimationStart::KeepPhase : EnAnimationStart::FromBeginning);
         }
 
 

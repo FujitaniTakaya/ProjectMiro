@@ -63,13 +63,13 @@ namespace app
 
 
         private:
-            /** 移動方向に合うクリップを再生する */
+            /** 移動方向に合うクリップを再生する。同じ族のクリップから切り替える時は、再生位置を引き継ぐ(MiroStateMachine::PlayLocomotionClip()) */
             void PlayDirectionalAnimation();
 
 
         private:
-            /** 移動方向を求めるための、Miroのステートマシン */
-            const MiroStateMachine* m_miroOwner;
+            /** 移動方向を求め、歩き・走りのクリップを再生するための、Miroのステートマシン */
+            MiroStateMachine* m_miroOwner;
         };
 
 

@@ -188,9 +188,9 @@ namespace nsBalloonEngine
     //=======================================================================
     // アニメーション
     //=======================================================================
-    void ModelRender::PlayAnimation(const uint8_t clipIndex, const float interpolateTime, const bool isReplay)
+    void ModelRender::PlayAnimation(const uint8_t clipIndex, const float interpolateTime, const bool isReplay, const EnAnimationStart start)
     {
-        PlayLayerAnimation(EnAnimationLayer::Base, clipIndex, interpolateTime, isReplay);
+        PlayLayerAnimation(EnAnimationLayer::Base, clipIndex, interpolateTime, isReplay, start);
     }
 
 
@@ -212,12 +212,12 @@ namespace nsBalloonEngine
     }
 
 
-    void ModelRender::PlayLayerAnimation(const EnAnimationLayer layer, const uint8_t clipIndex, const float interpolateTime, const bool isReplay)
+    void ModelRender::PlayLayerAnimation(const EnAnimationLayer layer, const uint8_t clipIndex, const float interpolateTime, const bool isReplay, const EnAnimationStart start)
     {
         // アニメーションを持たないモデルは AnimationController が初期化されていないので、渡さない
         if (m_isAnimated)
         {
-            m_animationController.Play(layer, clipIndex, interpolateTime, isReplay);
+            m_animationController.Play(layer, clipIndex, interpolateTime, isReplay, start);
         }
     }
 
@@ -234,6 +234,12 @@ namespace nsBalloonEngine
     bool ModelRender::IsPlayingLayerAnimation(const EnAnimationLayer layer) const
     {
         return m_isAnimated && m_animationController.IsPlaying(layer);
+    }
+
+
+    int ModelRender::GetLayerClipIndex(const EnAnimationLayer layer) const
+    {
+        return m_isAnimated ? m_animationController.GetClipIndex(layer) : -1;
     }
 
 
