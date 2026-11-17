@@ -8,11 +8,15 @@
 #include <memory>
 
 #include "IScene.h"
+#include "Source/Scene/InGame/StartCountdown.h"
 #include "Source/UI/Foundation/SystemPacket.h"
 
 
 namespace app
 {
+    class IController;
+
+
     namespace actor
     {
 
@@ -28,6 +32,7 @@ namespace app
     }
     namespace ui
     {
+        class CountdownMenu;
         class CoreHPBarMenu;
         class HPBarMenu;
         class HandgunAmmoMenu;
@@ -57,6 +62,15 @@ namespace app
 
 
     private:
+        /**
+         * @brief 開始前のカウントダウンを進める
+         * @details 数字の表示と、0になった時の操作の開始(Miroへパッドのコントローラーを付け直す)を行う。
+         *          0になった後は、何もしない。
+         */
+        void UpdateCountdown();
+
+
+    private:
         std::unique_ptr<actor::Miro> m_miro;
         std::unique_ptr<camera::PlayerCamera> m_playerCamera;
         /** プレイヤーのHPバー。InGameInfoHubに通知されたHPを表示する */
@@ -77,5 +91,11 @@ namespace app
         ui::UIPacket<ui::CoreHPBarMenu> m_coreHpBarPacket;
         /** 背景の当たり判定。m_stageFieldのモデルの形そのままのメッシュコライダー(キャラクターコントローラーが床や壁として扱う) */
         PhysicsStaticObject m_bgPhysicsStaticObject;
+        /** 開始前のカウントダウンの時間。0になるまでは、Miroを操作できず、ゾンビも湧かず、ポーズもできない */
+        StartCountdown m_countdown;
+        /** カウントダウンの数字のUI */
+        ui::UIPacket<ui::CountdownMenu> m_countdownPacket;
+        /** カウントダウン中に、Miroから外しておいたパッドのコントローラー。0になったら、Miroへ付け直す */
+        std::unique_ptr<IController> m_playerController;
     };
 } // namespace app

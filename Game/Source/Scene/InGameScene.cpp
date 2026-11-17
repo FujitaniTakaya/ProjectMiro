@@ -6,10 +6,12 @@
 
 #include "InGameScene.h"
 
+#include <cstdint>
 #include <memory>
 #include <utility>
 #include <vector>
 
+#include "Fade.h"
 #include "Source/Actor/Character/Miro/Miro.h"
 #include "Source/Actor/Character/Zombie/Spawn/ZombieSpawnParameter.h"
 #include "Source/Actor/Character/Zombie/ZombieManager.h"
@@ -20,9 +22,11 @@
 #include "Source/Core/Param/ParamHolder.h"
 #include "Source/Core/Param/ParamList.h"
 #include "Source/Manager/InGameInfoHub.h"
+#include "Source/MoveBehavior/ControllerSlot.h"
 #include "Source/Navigation/NavDebugDraw.h"
 #include "Source/Navigation/NavigationService.h"
 #include "Source/UI/HUD/CoreHP/CoreHPBarMenu.h"
+#include "Source/UI/HUD/Countdown/CountdownMenu.h"
 #include "Source/UI/HUD/Handgun/HandgunAmmoMenu.h"
 #include "Source/UI/HUD/PlayerHP/HPBarMenu.h"
 
@@ -39,6 +43,14 @@ namespace app
         constexpr const char* HANDGUN_AMMO_JSON_PATH = "Assets/parameter/ui/HandgunAmmo.json";
         /** レティクルのレイアウトのjson */
         constexpr const char* RETICLE_JSON_PATH = "Assets/parameter/ui/Reticle.json";
+        /** カウントダウンの数字のレイアウトのjson */
+        constexpr const char* COUNTDOWN_JSON_PATH = "Assets/parameter/ui/Countdown.json";
+        /** フェードインが終わってから、数え始めるまでの待ち時間(秒) */
+        constexpr float COUNTDOWN_START_DELAY = 1.0f;
+        /** カウントダウンで最初に出す数(3なら 3,2,1 の順に出して、0でゲームを始める) */
+        constexpr int32_t COUNTDOWN_COUNT = 3;
+        /** カウントダウンの数字を切り替える間隔(秒) */
+        constexpr float COUNTDOWN_INTERVAL = 1.0f;
         /** コアを置く座標。コアの真下の地面(y=0)の座標を渡す。浮かせる高さはCore側で足す */
         const Vector3 CORE_POSITION(0.0f, 0.0f, 0.0f);
         /** Miroの初期座標 */
@@ -58,6 +70,9 @@ namespace app
         , m_ammoPacket(nullptr)
         , m_reticlePacket(nullptr)
         , m_coreHpBarPacket(nullptr)
+        , m_countdown(COUNTDOWN_START_DELAY, COUNTDOWN_COUNT, COUNTDOWN_INTERVAL)
+        , m_countdownPacket(nullptr)
+        , m_playerController(nullptr)
     {
         // プレイヤーのHPバー。Miroより先に作って、InGameInfoHubに通知されたHPを受け取る
         ui::InitUIPacket(m_hpBarPacket, HP_BAR_JSON_PATH);
@@ -74,6 +89,7 @@ namespace app
         }
 
         ui::InitUIPacket(m_reticlePacket, RETICLE_JSON_PATH);
+        ui::InitUIPacket(m_countdownPacket, COUNTDOWN_JSON_PATH);
 
         // コアの耐久値バー。コアより先に作って、InGameInfoHubに通知された耐久値を受け取る
         ui::InitUIPacket(m_coreHpBarPacket, CORE_HP_BAR_JSON_PATH);
@@ -111,6 +127,8 @@ namespace app
         RenderingEngine::Get().SetSkyCube(SKY_CUBE_PATH, SKY_LUMINANCE);
 
         m_miro->StartWrapper();
+        // カウントダウンの間は、Miroを操作させない。パッドのコントローラーを外して持っておき、0になったら付け直す
+        m_playerController = m_miro->GetControllerSlot().Detach();
         m_handgun->StartWrapper();
         m_playerCamera->Start();
 
@@ -161,12 +179,48 @@ namespace app
     }
 
 
+    void InGameScene::UpdateCountdown()
+    {
+        if (m_countdown.IsFinished())
+        {
+            return;
+        }
+
+        // フェードイン中(まだ画面が暗い間)は数えない。(カウントダウン中はポーズできないので、途中で止まることはない)
+        if (!Fade::Get().IsFading())
+        {
+            m_countdown.Update(g_gameTime->GetFrameDeltaTime());
+        }
+
+        ui::CountdownMenu* countdownMenu = m_countdownPacket->GetMenu();
+        if (m_countdown.IsFinished())
+        {
+            // 0になった:「Start」を出して、Miroを操作できるようにする。(「Start」は、メニューが一定の時間で自分で消す)
+            m_miro->GetControllerSlot().Attach(std::move(m_playerController));
+            if (countdownMenu)
+            {
+                countdownMenu->ShowStart();
+            }
+        }
+        else if (countdownMenu && m_countdown.IsCounting())
+        {
+            countdownMenu->Show(m_countdown.GetNumber(), m_countdown.GetNumberElapsed());
+        }
+    }
+
+
     void InGameScene::Update()
     {
+        UpdateCountdown();
+
         m_stageField->UpdateWrapper();
         m_core->UpdateWrapper();
         m_miro->UpdateWrapper();
-        m_zombieManager->Update();
+        // カウントダウンの間は、ゾンビを湧かせない
+        if (m_countdown.IsFinished())
+        {
+            m_zombieManager->Update();
+        }
         m_handgun->UpdateWrapper();
 
         // TEMP: 残段数UIの確認用。確認が終わったら取り除く
@@ -221,6 +275,9 @@ namespace app
         // ハンドガンが残弾数を通知した後に、残段数UIを更新する
         m_ammoPacket->Update();
         m_reticlePacket->Update();
+
+        // カウントダウンの数字。この関数の先頭で、数字を設定してある
+        m_countdownPacket->Update();
     }
 
 
@@ -244,6 +301,7 @@ namespace app
         m_coreHpBarPacket->Render(rc);
         m_ammoPacket->Render(rc);
         m_reticlePacket->Render(rc);
+        m_countdownPacket->Render(rc);
     }
 
 
@@ -255,6 +313,7 @@ namespace app
 
     bool InGameScene::IsPausable() const
     {
-        return true;
+        // カウントダウンの間は、ポーズさせない
+        return m_countdown.IsFinished();
     }
 } // namespace app

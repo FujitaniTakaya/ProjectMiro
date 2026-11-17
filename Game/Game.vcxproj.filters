@@ -124,6 +124,12 @@
     <Filter Include="Source\Actor\Character\Zombie\Spawn">
       <UniqueIdentifier>{664df4d1-41ee-4b4f-9bc2-4027c26a0a38}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Scene\InGame">
+      <UniqueIdentifier>{a23b1c15-3ac2-4fe7-b489-310826421968}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\UI\HUD\Countdown">
+      <UniqueIdentifier>{dc929d0c-1c77-4bdb-80af-a57230c71c2a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -384,6 +390,12 @@
     </ClCompile>
     <ClCompile Include="Source\Actor\Character\Zombie\ZombieManager.cpp">
       <Filter>Source\Actor\Character\Zombie</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\InGame\StartCountdown.cpp">
+      <Filter>Source\Scene\InGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI\HUD\Countdown\CountdownMenu.cpp">
+      <Filter>Source\UI\HUD\Countdown</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -714,6 +726,12 @@
     </ClInclude>
     <ClInclude Include="Source\Actor\Character\Zombie\ZombieManager.h">
       <Filter>Source\Actor\Character\Zombie</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene\InGame\StartCountdown.h">
+      <Filter>Source\Scene\InGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\HUD\Countdown\CountdownMenu.h">
+      <Filter>Source\UI\HUD\Countdown</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

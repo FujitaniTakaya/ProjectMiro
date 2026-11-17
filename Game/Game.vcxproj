@@ -317,6 +317,8 @@
     <ClCompile Include="Source\Actor\Character\Zombie\Spawn\ZombieSpawnParameter.cpp" />
     <ClCompile Include="Source\Actor\Character\Zombie\Spawn\ZombieSpawner.cpp" />
     <ClCompile Include="Source\Actor\Character\Zombie\ZombieManager.cpp" />
+    <ClCompile Include="Source\Scene\InGame\StartCountdown.cpp" />
+    <ClCompile Include="Source\UI\HUD\Countdown\CountdownMenu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -431,6 +433,8 @@
     <ClInclude Include="Source\Navigation\NavDebugDraw.h" />
     <ClInclude Include="Source\Actor\Character\Zombie\Spawn\ZombieSpawner.h" />
     <ClInclude Include="Source\Actor\Character\Zombie\ZombieManager.h" />
+    <ClInclude Include="Source\Scene\InGame\StartCountdown.h" />
+    <ClInclude Include="Source\UI\HUD\Countdown\CountdownMenu.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BalloonEngine\BalloonEngine.vcxproj">
