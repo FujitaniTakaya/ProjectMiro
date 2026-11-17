@@ -43,34 +43,37 @@ namespace app
         }
 
 
-        bool ZombieCoreApproach::CalcToCore(const ControllerContext& context, Vector3& outCorePosition, Vector3& outToCore, bool& outIsArrived) const
+        std::optional<ZombieCoreApproach::CoreApproachInfo> ZombieCoreApproach::CalcToCore(const ControllerContext& context) const
         {
             // コアがなければ求められない
-            Vector3 corePosition(Vector3::Zero);
-            if (!m_corePositionProvider || !m_corePositionProvider(corePosition))
+            if (!m_corePositionProvider)
             {
-                return false;
+                return std::nullopt;
             }
-            outCorePosition = corePosition;
+            const std::optional<Vector3> corePosition = m_corePositionProvider();
+            if (!corePosition)
+            {
+                return std::nullopt;
+            }
 
             // 高さは無視して、XZ平面で測る
-            outToCore = Vector3(corePosition.x - context.position.x, 0.0f, corePosition.z - context.position.z);
-            const float distanceSq = outToCore.LengthSq();
+            const Vector3 toCore(corePosition->x - context.position.x, 0.0f, corePosition->z - context.position.z);
+            const float distanceSq = toCore.LengthSq();
 
             // コアに着いたとみなす。真上・真下にいて向きが決まらないときも、着いた扱いにする
             const float stopDistance = m_parameter.coreStopDistance;
-            outIsArrived = distanceSq <= stopDistance * stopDistance || distanceSq <= DIRECTION_NORMALIZE_SQ;
-            return true;
+            const bool isArrived = distanceSq <= stopDistance * stopDistance || distanceSq <= DIRECTION_NORMALIZE_SQ;
+            return CoreApproachInfo{ *corePosition, toCore, isArrived };
         }
 
 
-        bool ZombieCoreApproach::CalcPathDirection(const ControllerContext& context, const Vector3& corePosition, Vector3& outDirection)
+        std::optional<Vector3> ZombieCoreApproach::CalcPathDirection(const ControllerContext& context, const Vector3& corePosition)
         {
             nav::NavigationService& navigation = nav::NavigationService::Get();
             if (!navigation.IsReady())
             {
                 m_pathFollower.Clear();
-                return false;
+                return std::nullopt;
             }
 
             // 経路をたどる状況を進める
@@ -86,10 +89,10 @@ namespace app
             if (status != nav::EnFollowStatus::Following && m_repathCooldown <= 0.0f)
             {
                 m_repathCooldown = m_navParameter.repathInterval;
-                std::vector<nav::NavVec3> path;
-                if (navigation.FindPath(context.position, corePosition, path))
+                const std::optional<std::vector<nav::NavVec3>> path = navigation.FindPath(context.position, corePosition);
+                if (path)
                 {
-                    m_pathFollower.SetPath(path);
+                    m_pathFollower.SetPath(*path);
                 }
                 else
                 {
@@ -97,24 +100,20 @@ namespace app
                 }
             }
 
-            float directionX = 0.0f;
-            float directionZ = 0.0f;
-            if (!m_pathFollower.GetMoveDirection(context.position.x, context.position.z, directionX, directionZ))
+            const std::optional<nav::NavVec2> direction = m_pathFollower.GetMoveDirection(context.position.x, context.position.z);
+            if (!direction)
             {
-                return false;
+                return std::nullopt;
             }
-            outDirection = Vector3(directionX, 0.0f, directionZ);
-            return true;
+            return Vector3(direction->x, 0.0f, direction->z);
         }
 
 
         bool ZombieCoreApproach::Approach(const ControllerContext& context, CharacterInput& input)
         {
             // コアがなければ、コアに着いていれば向かわない
-            Vector3 corePosition(Vector3::Zero);
-            Vector3 toCore(Vector3::Zero);
-            bool isArrived = false;
-            if (!CalcToCore(context, corePosition, toCore, isArrived) || isArrived)
+            const std::optional<CoreApproachInfo> core = CalcToCore(context);
+            if (!core || core->isArrived)
             {
                 m_pathFollower.Clear();
                 return false;
@@ -122,9 +121,13 @@ namespace app
 
             // 経路があれば経路に沿って、無ければコアへ真っ直ぐ向かう
             Vector3 direction(Vector3::Zero);
-            if (!CalcPathDirection(context, corePosition, direction))
+            if (const std::optional<Vector3> pathDirection = CalcPathDirection(context, core->corePosition))
             {
-                direction = toCore;
+                direction = *pathDirection;
+            }
+            else
+            {
+                direction = core->toCore;
                 direction.Normalize();
             }
             input.SetMove(direction);
@@ -134,10 +137,8 @@ namespace app
 
         bool ZombieCoreApproach::IsArrived(const ControllerContext& context) const
         {
-            Vector3 corePosition(Vector3::Zero);
-            Vector3 toCore(Vector3::Zero);
-            bool isArrived = false;
-            return CalcToCore(context, corePosition, toCore, isArrived) && isArrived;
+            const std::optional<CoreApproachInfo> core = CalcToCore(context);
+            return core && core->isArrived;
         }
     } // namespace actor
 } // namespace app

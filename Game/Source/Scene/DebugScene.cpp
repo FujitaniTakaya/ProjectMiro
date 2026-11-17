@@ -116,10 +116,7 @@ namespace app
 
         // ゾンビのマネージャーに、コアの位置(地面の座標)を関数で教える。湧いたゾンビは、この位置へ向かう。
         // m_zombieManager は m_core より先に破棄されるので、破棄の間にこの関数は呼ばれない。
-        m_zombieManager->SetCorePositionProvider([core = m_core.get()](Vector3& outPosition) {
-            outPosition = core->GetTransform().m_position;
-            return true;
-        });
+        m_zombieManager->SetCorePositionProvider([core = m_core.get()]() { return core->GetTransform().m_position; });
         // ゾンビの攻撃判定がコアの箱に重なったら、コアにダメージを与える。(コア以外に重なった時は、何もしない)
         // m_zombieManager は m_core より先に破棄されるので、破棄の間にこの関数は呼ばれない。
         m_zombieManager->SetCoreAttackHandler([core = m_core.get()](const btCollisionObject& contact, const float damage) {

@@ -12,13 +12,14 @@
  *          ホームから離れすぎると ReturnHome へ。追跡は、離されすぎたり、時間が尽きたりすると諦めて ReturnHome へ。
  *
  *          目標は SetTargetProvider() で教える。AIは特定のキャラクターへのポインタを持たない。
- *          例: ai->SetTargetProvider([&player](Vector3& outPosition) { outPosition = player.GetPosition(); return true; });
+ *          例: ai->SetTargetProvider([&player]() { return player.GetPosition(); });
  * @note 目標の元になるオブジェクトを破棄する前に、SetTargetProvider(nullptr) で外すこと。(捕まえているポインタが残らないように)
  */
 #pragma once
 #include <cstdint>
 #include <functional>
 #include <memory>
+#include <optional>
 #include <vector>
 
 #include "AIControllerConfig.h"
@@ -35,10 +36,9 @@ namespace app
     public:
         /**
          * @brief 目標の位置を教える関数
-         * @param outPosition 目標の足元のワールド座標を入れる
-         * @return 目標がいれば true。いなければ false
+         * @return 目標の足元のワールド座標。目標がいなければ std::nullopt
          */
-        using TargetProvider = std::function<bool(Vector3& outPosition)>;
+        using TargetProvider = std::function<std::optional<Vector3>()>;
 
         /** AIの状態 */
         enum class EnAIState : uint8_t

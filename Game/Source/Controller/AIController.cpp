@@ -276,12 +276,12 @@ namespace app
         const AIControllerConfig& config = m_ai.m_config;
 
         // 目標の位置を追う。目標がいなくなっていたら、最後に見た位置へ向かう
-        Vector3 livePosition(Vector3::Zero);
-        if (m_ai.m_targetProvider && m_ai.m_targetProvider(livePosition))
+        const std::optional<Vector3> livePosition = m_ai.m_targetProvider ? m_ai.m_targetProvider() : std::nullopt;
+        if (livePosition)
         {
             m_ai.m_hasTarget = true;
-            m_ai.m_targetPosition = livePosition;
-            m_ai.m_lastKnownTargetPosition = livePosition;
+            m_ai.m_targetPosition = *livePosition;
+            m_ai.m_lastKnownTargetPosition = *livePosition;
         }
         else
         {
@@ -438,11 +438,16 @@ namespace app
 
     bool AIController::TryFindTarget()
     {
-        Vector3 targetPosition(Vector3::Zero);
-        if (!m_targetProvider || !m_targetProvider(targetPosition))
+        if (!m_targetProvider)
         {
             return false;
         }
+        const std::optional<Vector3> providedPosition = m_targetProvider();
+        if (!providedPosition)
+        {
+            return false;
+        }
+        const Vector3 targetPosition = *providedPosition;
 
         // 距離
         Vector3 toTarget = ToFlat(targetPosition - m_context.position);

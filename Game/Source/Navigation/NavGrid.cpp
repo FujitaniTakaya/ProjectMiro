@@ -105,17 +105,15 @@ namespace app
         }
 
 
-        bool NavGrid::WorldToCell(const float x, const float z, int& outCellX, int& outCellZ) const
+        std::optional<CellCoord> NavGrid::WorldToCell(const float x, const float z) const
         {
             const int cellX = static_cast<int>(std::floor((x - m_originX) / m_cellSize));
             const int cellZ = static_cast<int>(std::floor((z - m_originZ) / m_cellSize));
             if (!InBounds(cellX, cellZ))
             {
-                return false;
+                return std::nullopt;
             }
-            outCellX = cellX;
-            outCellZ = cellZ;
-            return true;
+            return CellCoord{ cellX, cellZ };
         }
 
 

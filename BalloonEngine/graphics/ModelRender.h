@@ -5,6 +5,7 @@
 #pragma once
 #include "IRenderObject.h"
 #include "ShadowRef.h"
+#include "animation/AnimationController.h"
 #include "math/Transform.h"
 
 
@@ -120,8 +121,9 @@ namespace nsBalloonEngine
          * @param clipIndex 再生するアニメーションクリップのインデックス
          * @param interpolateTime インターポレーション時間
          * @param isReplay 巻き戻して1から再生するか
+         * @param start 再生し始める位置。KeepPhase なら、再生中のクリップの割合(時刻 / 長さ)の位置から始める
          */
-        void PlayAnimation(const uint8_t clipIndex, const float interpolateTime = 0.0f, const bool isReplay = false);
+        void PlayAnimation(const uint8_t clipIndex, const float interpolateTime = 0.0f, const bool isReplay = false, const EnAnimationStart start = EnAnimationStart::FromBeginning);
 
 
         /**
@@ -149,6 +151,86 @@ namespace nsBalloonEngine
          * @param listener リスナー。引数はイベントを起こしたクリップの名前とイベント名
          */
         void AddAnimationEventListener(const AnimationEventListener& listener);
+
+
+        /**
+         * @brief レイヤーを指定してアニメーションを再生する
+         * @details Upper レイヤーは、SetLayerMask() で決めたボーンの範囲だけを、Base の上に重ねる。
+         *          休止中の Upper は、interpolateTime かけて重みが 1 になる。止めるには StopLayerAnimation() を呼ぶ。
+         *          PlayAnimation() は、Base レイヤーでこれを呼ぶのと同じ。
+         * @param layer 再生するレイヤー
+         * @param clipIndex 再生するアニメーションクリップのインデックス
+         * @param interpolateTime クロスフェードの時間(秒)
+         * @param isReplay 巻き戻して1から再生するか(フェードしない)
+         * @param start 再生し始める位置。KeepPhase なら、再生中のクリップの割合(時刻 / 長さ)の位置から始める。
+         *              今のクリップと新しいクリップのどちらかがループしない時や、休止中のレイヤーは、最初から始める
+         */
+        void PlayLayerAnimation(const EnAnimationLayer layer, const uint8_t clipIndex, const float interpolateTime = 0.0f, const bool isReplay = false, const EnAnimationStart start = EnAnimationStart::FromBeginning);
+
+
+        /**
+         * @brief レイヤーのアニメーションを止める
+         * @details Base は止められない(何もしない)。
+         * @param layer 止めるレイヤー
+         * @param fadeTime フェードアウトの時間(秒)
+         */
+        void StopLayerAnimation(const EnAnimationLayer layer, const float fadeTime = 0.0f);
+
+
+        /**
+         * @brief レイヤーのアニメーションが再生中かどうか
+         * @param layer 調べるレイヤー
+         * @return 再生中なら true。アニメーションを持たないモデルは常に false
+         */
+        bool IsPlayingLayerAnimation(const EnAnimationLayer layer) const;
+
+
+        /**
+         * @brief レイヤーで再生中のクリップの番号を取得する
+         * @param layer 調べるレイヤー
+         * @return クリップの番号。休止中のレイヤーと、アニメーションを持たないモデルは -1
+         */
+        int GetLayerClipIndex(const EnAnimationLayer layer) const;
+
+
+        /**
+         * @brief レイヤーのボーンマスクを、ボーン名で設定する
+         * @details 指定したボーンとその子孫だけが、レイヤーの影響を受ける。例: 上半身は背骨の最下段(Miro は "Base HumanSpine1")。
+         * @param layer 設定するレイヤー(Base には設定できない)
+         * @param rootBoneName マスクの根になるボーンの名前
+         * @param keepRootOrientation 根のボーンが、Base の親の向き(歩きでねじれる骨盤など)に関わらず、このレイヤーのクリップのモデル空間の向きを保つか。既定は false
+         * @return 設定できたら true。アニメーションを持たないモデルや、ボーンが見つからない場合は false
+         */
+        bool SetLayerMask(const EnAnimationLayer layer, const wchar_t* rootBoneName, const bool keepRootOrientation = false);
+
+
+        /**
+         * @brief レイヤーのアニメーション再生速度を設定する
+         * @details そのレイヤーのクリップの時間とイベントの発火時刻にだけ掛ける。クロスフェードとレイヤーの出入りの長さは、実時間のまま。
+         *          SetAnimationSpeed() の全体の速度との積になる。例: 構え中の下半身(Base)だけを、移動速度に合わせて遅くする。
+         * @param layer 設定するレイヤー
+         * @param speed 再生速度(1.0f=通常速度)。0.01 未満は 0.01 になる
+         */
+        void SetLayerAnimationSpeed(const EnAnimationLayer layer, const float speed);
+
+
+        /**
+         * @brief レイヤーが動いている間、Base のボーンの回転を、そのレイヤーのクリップへ近づけるボーンを設定する
+         * @details 例: 構え中、斜め歩きでねじれる骨盤(Miro は "Base HumanPelvis")を、構えたポーズの向きへ近づける。割合は SetLayerFollowRatio()。
+         *          ボーンの子で、レイヤーのマスクの外のもの(脚)は、モデル空間の向きを保つ。
+         * @param layer 設定するレイヤー(Base には設定できない)
+         * @param boneName 近づけるボーンの名前
+         * @return 設定できたら true。アニメーションを持たないモデルや、ボーンが見つからない場合は false
+         */
+        bool SetLayerFollowBone(const EnAnimationLayer layer, const wchar_t* boneName);
+
+
+        /**
+         * @brief SetLayerFollowBone() のボーンを、レイヤーのクリップへ近づける割合を設定する
+         * @param layer 設定するレイヤー
+         * @param ratio 0〜1。0 なら何もしない(初期値)
+         */
+        void SetLayerFollowRatio(const EnAnimationLayer layer, const float ratio);
 
 
     public:
@@ -184,8 +266,8 @@ namespace nsBalloonEngine
     private:
         /** モデルのボーン */
         Skeleton m_skeleton;
-        /** アニメーション */
-        Animation m_animation;
+        /** アニメーション(レイヤーブレンド・クロスフェード) */
+        AnimationController m_animationController;
         /** アニメーション再生速度 */
         float m_animationSpeed;
         /** アニメーションを渡されたか */

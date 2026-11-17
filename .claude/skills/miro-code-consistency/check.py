@@ -40,6 +40,7 @@ STD_TOKENS = {
     "array": r"std::array\b",
     "chrono": r"std::chrono\b",
     "limits": r"std::numeric_limits\b",
+    "optional": r"std::(optional|nullopt)\b",
 }
 
 

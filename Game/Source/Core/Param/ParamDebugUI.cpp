@@ -7,6 +7,7 @@
 #include "ParamDebugUI.h"
 
 #include <cstring>
+#include <optional>
 
 #include "ParamHolder.h"
 
@@ -113,22 +114,22 @@ namespace app
             int drawFuncCount = 0;
             for (size_t i = 0; i < PARAM_COUNT; ++i)
             {
-                ParamDebugInfo info = {};
-                if (!holder.GetDebugInfo(static_cast<EnParamID>(i), info))
+                const std::optional<ParamDebugInfo> info = holder.GetDebugInfo(static_cast<EnParamID>(i));
+                if (!info)
                 {
                     continue;
                 }
 
                 ++registeredCount;
-                if (info.m_isLoaded)
+                if (info->m_isLoaded)
                 {
                     ++loadedCount;
                 }
-                if (info.m_isLastLoadFailed)
+                if (info->m_isLastLoadFailed)
                 {
                     ++failedCount;
                 }
-                if (info.m_hasDrawFunc)
+                if (info->m_hasDrawFunc)
                 {
                     ++drawFuncCount;
                 }
@@ -166,8 +167,8 @@ namespace app
                     for (size_t i = 0; i < PARAM_COUNT; ++i)
                     {
                         const EnParamID id = static_cast<EnParamID>(i);
-                        ParamDebugInfo info = {};
-                        if (!holder.GetDebugInfo(id, info))
+                        const std::optional<ParamDebugInfo> info = holder.GetDebugInfo(id);
+                        if (!info)
                         {
                             continue;
                         }
@@ -179,21 +180,21 @@ namespace app
                         ImGui::TableSetColumnIndex(0);
                         ImGui::Text("%d", static_cast<int>(i));
                         ImGui::TableSetColumnIndex(1);
-                        ImGui::TextUnformatted(StripTypeName(info.m_typeName));
+                        ImGui::TextUnformatted(StripTypeName(info->m_typeName));
                         ImGui::TableSetColumnIndex(2);
-                        ImGui::TextUnformatted(info.m_path->c_str());
+                        ImGui::TextUnformatted(info->m_path->c_str());
                         ImGui::TableSetColumnIndex(3);
-                        DrawState(info);
+                        DrawState(*info);
                         ImGui::TableSetColumnIndex(4);
-                        ImGui::Text("%u", info.m_loadCount);
+                        ImGui::Text("%u", info->m_loadCount);
                         ImGui::TableSetColumnIndex(5);
-                        if (info.m_secondsSinceLastLoad < 0.0f)
+                        if (info->m_secondsSinceLastLoad < 0.0f)
                         {
                             ImGui::TextDisabled("-");
                         }
                         else
                         {
-                            ImGui::Text("%.1f s ago", info.m_secondsSinceLastLoad);
+                            ImGui::Text("%.1f s ago", info->m_secondsSinceLastLoad);
                         }
                         ImGui::TableSetColumnIndex(6);
                         if (ImGui::SmallButton("Reload"))
@@ -214,14 +215,14 @@ namespace app
                     for (size_t i = 0; i < PARAM_COUNT; ++i)
                     {
                         const EnParamID id = static_cast<EnParamID>(i);
-                        ParamDebugInfo info = {};
-                        if (!holder.GetDebugInfo(id, info) || !info.m_hasDrawFunc)
+                        const std::optional<ParamDebugInfo> info = holder.GetDebugInfo(id);
+                        if (!info || !info->m_hasDrawFunc)
                         {
                             continue;
                         }
 
                         ImGui::PushID(static_cast<int>(i));
-                        if (ImGui::TreeNode("value", "[%d] %s", static_cast<int>(i), StripTypeName(info.m_typeName)))
+                        if (ImGui::TreeNode("value", "[%d] %s", static_cast<int>(i), StripTypeName(info->m_typeName)))
                         {
                             holder.DrawValue(id);
                             ImGui::TreePop();

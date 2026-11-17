@@ -15,6 +15,7 @@
 #include <cstdint>
 #include <functional>
 #include <memory>
+#include <optional>
 #include <string>
 #include <typeinfo>
 #include <utility>
@@ -249,10 +250,9 @@ namespace app
         /**
          * @brief デバッグ表示用の情報を取得する
          * @param id パラメーターのID
-         * @param outInfo 情報の格納先
-         * @return 取得できたらtrue。登録されていないIDの場合はfalse。(outInfoは変更しない。)
+         * @return 情報。登録されていないIDの場合はstd::nullopt。
          */
-        bool GetDebugInfo(EnParamID id, ParamDebugInfo& outInfo) const;
+        std::optional<ParamDebugInfo> GetDebugInfo(EnParamID id) const;
 
 
         /**

@@ -195,6 +195,12 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Preview|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="graphics\animation\AnimationController.cpp" />
+    <ClCompile Include="graphics\animation\AnimationLayer.cpp" />
+    <ClCompile Include="graphics\animation\AnimationPose.cpp" />
+    <ClCompile Include="graphics\animation\ClipPlayer.cpp" />
+    <ClCompile Include="graphics\animation\ClipSampler.cpp" />
+    <ClCompile Include="graphics\animation\CrossFader.cpp" />
     <ClCompile Include="graphics\DualBlur.cpp" />
     <ClCompile Include="graphics\FontRender.cpp" />
     <ClCompile Include="graphics\ImGuiRenderer.cpp" />
@@ -240,6 +246,12 @@
   <ItemGroup>
     <ClInclude Include="BalloonEngine.h" />
     <ClInclude Include="BalloonEnginePreCompile.h" />
+    <ClInclude Include="graphics\animation\AnimationController.h" />
+    <ClInclude Include="graphics\animation\AnimationLayer.h" />
+    <ClInclude Include="graphics\animation\AnimationPose.h" />
+    <ClInclude Include="graphics\animation\ClipPlayer.h" />
+    <ClInclude Include="graphics\animation\ClipSampler.h" />
+    <ClInclude Include="graphics\animation\CrossFader.h" />
     <ClInclude Include="graphics\DualBlur.h" />
     <ClInclude Include="graphics\FontRender.h" />
     <ClInclude Include="graphics\ImGuiRenderer.h" />

@@ -7,7 +7,10 @@
  */
 #pragma once
 #include <cstddef>
+#include <optional>
 #include <vector>
+
+#include "NavTypes.h"
 
 
 namespace app
@@ -138,11 +141,9 @@ namespace app
              * @brief ワールドのXZ座標を含むセルの番号を求める
              * @param x ワールドX
              * @param z ワールドZ
-             * @param[out] outCellX セルのX番号
-             * @param[out] outCellZ セルのZ番号
-             * @return 格子の中なら true。外なら false(出力は変更しない)
+             * @return セルの番号。格子の外なら std::nullopt
              */
-            bool WorldToCell(float x, float z, int& outCellX, int& outCellZ) const;
+            std::optional<CellCoord> WorldToCell(float x, float z) const;
 
             /**
              * @brief セルの中心のワールドXを求める

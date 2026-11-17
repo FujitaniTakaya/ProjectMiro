@@ -8,6 +8,7 @@
 #pragma once
 #include <cstddef>
 #include <cstdint>
+#include <optional>
 #include <vector>
 
 #include "NavTypes.h"
@@ -116,11 +117,9 @@ namespace app
              * @brief いま向かっているウェイポイントへの、水平方向の向きを求める
              * @param x 現在のワールドX
              * @param z 現在のワールドZ
-             * @param[out] outX 向き(長さ1)のX成分
-             * @param[out] outZ 向き(長さ1)のZ成分
-             * @return 求められたら true。経路が無い・終わっている・ウェイポイントの真上や真下にいて向きが決まらないときは false(出力は変更しない)
+             * @return 向き(長さ1)。経路が無い・終わっている・ウェイポイントの真上や真下にいて向きが決まらないときは std::nullopt
              */
-            bool GetMoveDirection(float x, float z, float& outX, float& outZ) const;
+            std::optional<NavVec2> GetMoveDirection(float x, float z) const;
 
 
         private:

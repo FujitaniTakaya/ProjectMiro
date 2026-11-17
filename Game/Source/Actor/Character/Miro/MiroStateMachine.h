@@ -3,6 +3,7 @@
  * @brief Miroのステートマシン
  */
 #pragma once
+#include "MiroMoveDirection.h"
 #include "MiroWeaponHandler.h"
 #include "Source/Actor/Character/CharacterStateMachine.h"
 
@@ -21,6 +22,9 @@ namespace app
          *          入力は、CharacterStateMachine が持つ ControllerSlot から Update() で作る。(CharacterStateMachine を参照)
          *          歩き・走りの速度は、MiroParameter の値を返す。
          *          向きは、移動方向ではなくカメラの方向(入力のLook)にそろえる。
+         *          構え・構えを解く・リロードの間は、上半身(Upper レイヤー)が銃の動き、下半身(Base レイヤー)が歩き・待機になる。
+         *          上半身は、下半身の歩きクリップが腰を斜めにねじっても、常に正面(アクターの向き)を保つ。(Miro::Start の SetLayerMask の keepRootOrientation)
+         *          銃を扱っていない間は、Update() が上半身のレイヤーを止める。待機・歩き・走りのステートは、Base レイヤーの全身アニメーションだけを再生する。
          *          Miro専用のステートが要るようになったら、ここで追加する。
          * @note MiroParameter は ParamHolder が持つものの参照なので、ホットリロードで速度が変わる。
          */
@@ -39,7 +43,8 @@ namespace app
             virtual float GetRunSpeed() const override;
             /**
              * @brief 構え中の移動速度を取得する
-             * @details 構えながら動くアニメーションがないので、構えのポーズのまま滑るように動く。歩きより遅くする。
+             * @details 構え・構えを解く・リロードの間の速度。歩きより遅くする。
+             *          下半身は歩きクリップを再生するので、歩きとの速度の比だけ遅く再生して、足が滑らないようにする。(PlayLowerBodyAnimation())
              * @return MiroParameter の構え中の移動速度(入力の倒し具合が最大のときの速さ)
              */
             float GetAimMoveSpeed() const;
@@ -78,6 +83,42 @@ namespace app
              * @details 処理が設定されていない時は何もしない。
              */
             void StartReload() const;
+
+            /**
+             * @brief 下半身(Base レイヤー)のアニメーションを再生する
+             * @details 構え・構えを解く・リロードのステートが、Enter() と毎フレームの Update() で呼ぶ。上半身(Upper レイヤー)は、そのステートが銃の動きを再生している。
+             *          移動入力があれば、向いている方向から見た8方向の歩きクリップを、速度の比(aimMoveSpeed / walkSpeed)で遅くして再生する。
+             *          構え中は歩きより遅く動くので、等速で再生すると足が地面を滑って見える。入力が無ければ、待機を通常の速さで再生する。
+             *          また、斜め歩きで骨盤がねじれる分を、MiroParameter の aimHipFollow の割合だけ、構えたポーズの向きへ戻す。(脚は歩きクリップの向きのまま)
+             *          同じクリップの再生は何もしないので、毎フレーム呼んでよい。方向が変わった時だけ、標準のブレンドで切り替わる。
+             */
+            void PlayLowerBodyAnimation();
+            /**
+             * @brief 歩き・走りのクリップを再生する(Base レイヤー)
+             * @details 今のクリップと同じ族(EnMiroGait。例: 歩きの前・前左・前右)なら、今のクリップの再生位置の割合を引き継いで再生する。
+             *          方向を切り替えるたびに0秒から始めると、W と WD を素早く入れ替えた時に、最初の足の出ているポーズばかりが再生されてしまうため。
+             *          族が違う(待機から、前進から後退へ、歩きから走りへ)切り替えは、足の位相がずれているので、最初から始める。
+             *          同じクリップの再生は何もしないので、毎フレーム呼んでよい。
+             * @param clip 歩きか走りのクリップ
+             */
+            void PlayLocomotionClip(const EnMiroAnimationClipID clip);
+            /**
+             * @brief 向いている方向から見た、移動方向を求める
+             * @details 向いている方向は、入力の Look。無ければ、今の体の向き。
+             * @return 8方向のどれか
+             */
+            EnMiroMoveDirection CalcMoveDirection() const;
+            /**
+             * @brief 上半身アニメーションのブレンド時間を取得する
+             * @return MiroParameter の上半身アニメーションのブレンド時間(秒)
+             */
+            float GetUpperBodyBlendTime() const;
+
+            /**
+             * @brief 更新
+             * @details 基底の更新(入力の作成とステートの更新)の後に、銃を扱っていない間は上半身のレイヤーを止め、下半身の再生速度を元に戻す。
+             */
+            virtual void Update() override;
 
 
         protected:

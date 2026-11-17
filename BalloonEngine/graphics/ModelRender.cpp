@@ -89,15 +89,15 @@ namespace nsBalloonEngine
             }
         }
 
+        // ポーズを先に更新してから、ボーン行列を作る。(以前は前フレームのポーズで作っていて、1フレーム遅れていた)
+        if (m_isAnimated)
+        {
+            m_animationController.Update(g_gameTime->GetFrameDeltaTime() * m_animationSpeed);
+        }
+
         if (m_skeleton.IsInited())
         {
             m_skeleton.Update(m_forwardModel.GetWorldMatrix());
-        }
-
-
-        if (m_isAnimated)
-        {
-            m_animation.Progress(g_gameTime->GetFrameDeltaTime() * m_animationSpeed);
         }
     }
 
@@ -188,16 +188,15 @@ namespace nsBalloonEngine
     //=======================================================================
     // アニメーション
     //=======================================================================
-    void ModelRender::PlayAnimation(const uint8_t clipIndex, const float interpolateTime, const bool isReplay)
+    void ModelRender::PlayAnimation(const uint8_t clipIndex, const float interpolateTime, const bool isReplay, const EnAnimationStart start)
     {
-        m_animation.Play(clipIndex, interpolateTime, isReplay);
+        PlayLayerAnimation(EnAnimationLayer::Base, clipIndex, interpolateTime, isReplay, start);
     }
 
 
     bool ModelRender::IsPlayingAnimation() const
     {
-        // アニメーションを持たないモデルは Animation が初期化されていないので、問い合わせない
-        return m_isAnimated && m_animation.IsPlaying();
+        return IsPlayingLayerAnimation(EnAnimationLayer::Base);
     }
 
 
@@ -209,7 +208,68 @@ namespace nsBalloonEngine
 
     void ModelRender::AddAnimationEventListener(const AnimationEventListener& listener)
     {
-        m_animation.AddAnimationEventListener(listener);
+        m_animationController.AddEventListener(listener);
+    }
+
+
+    void ModelRender::PlayLayerAnimation(const EnAnimationLayer layer, const uint8_t clipIndex, const float interpolateTime, const bool isReplay, const EnAnimationStart start)
+    {
+        // アニメーションを持たないモデルは AnimationController が初期化されていないので、渡さない
+        if (m_isAnimated)
+        {
+            m_animationController.Play(layer, clipIndex, interpolateTime, isReplay, start);
+        }
+    }
+
+
+    void ModelRender::StopLayerAnimation(const EnAnimationLayer layer, const float fadeTime)
+    {
+        if (m_isAnimated)
+        {
+            m_animationController.Stop(layer, fadeTime);
+        }
+    }
+
+
+    bool ModelRender::IsPlayingLayerAnimation(const EnAnimationLayer layer) const
+    {
+        return m_isAnimated && m_animationController.IsPlaying(layer);
+    }
+
+
+    int ModelRender::GetLayerClipIndex(const EnAnimationLayer layer) const
+    {
+        return m_isAnimated ? m_animationController.GetClipIndex(layer) : -1;
+    }
+
+
+    bool ModelRender::SetLayerMask(const EnAnimationLayer layer, const wchar_t* rootBoneName, const bool keepRootOrientation)
+    {
+        return m_isAnimated && m_animationController.SetLayerMask(layer, rootBoneName, keepRootOrientation);
+    }
+
+
+    void ModelRender::SetLayerAnimationSpeed(const EnAnimationLayer layer, const float speed)
+    {
+        if (m_isAnimated)
+        {
+            m_animationController.SetLayerSpeed(layer, std::max<float>(0.01f, speed));
+        }
+    }
+
+
+    bool ModelRender::SetLayerFollowBone(const EnAnimationLayer layer, const wchar_t* boneName)
+    {
+        return m_isAnimated && m_animationController.SetLayerFollowBone(layer, boneName);
+    }
+
+
+    void ModelRender::SetLayerFollowRatio(const EnAnimationLayer layer, const float ratio)
+    {
+        if (m_isAnimated)
+        {
+            m_animationController.SetLayerFollowRatio(layer, ratio);
+        }
     }
 
 
@@ -230,7 +290,7 @@ namespace nsBalloonEngine
 
         if (animationClips)
         {
-            m_animation.Init(m_skeleton, animationClips, animationClipNum);
+            m_animationController.Init(m_skeleton, animationClips, animationClipNum);
             m_isAnimated = true;
         }
     }
