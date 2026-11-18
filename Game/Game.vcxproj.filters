@@ -130,6 +130,9 @@
     <Filter Include="Source\UI\HUD\Countdown">
       <UniqueIdentifier>{dc929d0c-1c77-4bdb-80af-a57230c71c2a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\UI\HUD\GameTimer">
+      <UniqueIdentifier>{f641c494-ebc3-470c-a681-649d836d3cbf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -399,6 +402,9 @@
     </ClCompile>
     <ClCompile Include="Source\Scene\InGame\InGameScene.cpp">
       <Filter>Source\Scene\InGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI\HUD\GameTimer\GameTimerMenu.cpp">
+      <Filter>Source\UI\HUD\GameTimer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -738,6 +744,9 @@
     </ClInclude>
     <ClInclude Include="Source\Scene\InGame\InGameScene.h">
       <Filter>Source\Scene\InGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\HUD\GameTimer\GameTimerMenu.h">
+      <Filter>Source\UI\HUD\GameTimer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

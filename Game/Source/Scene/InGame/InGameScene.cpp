@@ -40,6 +40,8 @@ namespace app
         constexpr int32_t COUNTDOWN_COUNT = 3;
         /** カウントダウンの数字を切り替える間隔(秒) */
         constexpr float COUNTDOWN_INTERVAL = 1.0f;
+        /** ゲームの制限時間(秒)。カウントダウンが終わってから数える */
+        constexpr float GAME_TIME_LIMIT = 180.0f;
         /** コアを置く座標。コアの真下の地面(y=0)の座標を渡す。浮かせる高さはCore側で足す */
         const Vector3 CORE_POSITION(0.0f, 0.0f, 0.0f);
         /** Miroの初期座標 */
@@ -57,9 +59,11 @@ namespace app
         , m_playerCamera(nullptr)
         , m_handgun(nullptr)
         , m_countdown(COUNTDOWN_START_DELAY, COUNTDOWN_COUNT, COUNTDOWN_INTERVAL)
+        , m_gameTimer()
         , m_countdownPacket(nullptr)
         , m_playerController(nullptr)
     {
+        m_gameTimer.SetTimeLimit(GAME_TIME_LIMIT);
         ui::InitUIPacket(m_countdownPacket, COUNTDOWN_JSON_PATH);
 
         m_stageField = std::make_unique<actor::StageField>();
@@ -179,9 +183,10 @@ namespace app
         m_stageField->UpdateWrapper();
         m_core->UpdateWrapper();
         m_miro->UpdateWrapper();
-        // カウントダウンの間は、ゾンビを湧かせない
+        // カウントダウンの間は、ゾンビを湧かせず、制限時間も進めない。(ポーズ中は Update() が呼ばれないので、止まる)
         if (m_countdown.IsFinished())
         {
+            m_gameTimer.Update(g_gameTime->GetFrameDeltaTime());
             m_zombieManager->Update();
         }
         m_handgun->UpdateWrapper();
@@ -228,6 +233,7 @@ namespace app
         // HUD。コアの耐久値バーの画面位置は、カメラが更新された後に求める。
         // Miro・コア・ハンドガンが値を通知した後に、更新する
         m_hud.SetCoreHpBarWorldPosition(m_core->GetHpBarWorldPosition());
+        m_hud.SetRemainingTime(m_gameTimer.GetRemainingTime());
         m_hud.Update();
 
         // カウントダウンの数字。この関数の先頭で、数字を設定してある

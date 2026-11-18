@@ -10,6 +10,7 @@
 
 #include "Source/Manager/InGameInfoHub.h"
 #include "Source/UI/HUD/CoreHP/CoreHPBarMenu.h"
+#include "Source/UI/HUD/GameTimer/GameTimerMenu.h"
 #include "Source/UI/HUD/Handgun/HandgunAmmoMenu.h"
 #include "Source/UI/HUD/PlayerHP/HPBarMenu.h"
 
@@ -26,6 +27,8 @@ namespace app
         constexpr const char* HANDGUN_AMMO_JSON_PATH = "Assets/parameter/ui/HandgunAmmo.json";
         /** レティクルのレイアウトのjson */
         constexpr const char* RETICLE_JSON_PATH = "Assets/parameter/ui/Reticle.json";
+        /** 残り時間のレイアウトのjson */
+        constexpr const char* GAME_TIMER_JSON_PATH = "Assets/parameter/ui/GameTimer.json";
     } // namespace
 
 
@@ -34,6 +37,7 @@ namespace app
         , m_ammoPacket(nullptr)
         , m_reticlePacket(nullptr)
         , m_coreHpBarPacket(nullptr)
+        , m_gameTimerPacket(nullptr)
     {
         // プレイヤーのHPバー。Miroより先に作って、InGameInfoHubに通知されたHPを受け取る
         ui::InitUIPacket(m_hpBarPacket, HP_BAR_JSON_PATH);
@@ -57,6 +61,9 @@ namespace app
         {
             InGameInfoHub::Get().SetOnCoreHpChanged([coreHpBarMenu](const float hp, const float maxHp) { coreHpBarMenu->SetHp(hp, maxHp); });
         }
+
+        // 残り時間。値の持ち主はシーンなので、InGameInfoHubは通さず、SetRemainingTime() で直接受け取る
+        ui::InitUIPacket(m_gameTimerPacket, GAME_TIMER_JSON_PATH);
     }
 
 
@@ -76,12 +83,22 @@ namespace app
     }
 
 
+    void InGameHud::SetRemainingTime(const float seconds)
+    {
+        if (ui::GameTimerMenu* gameTimerMenu = m_gameTimerPacket->GetMenu())
+        {
+            gameTimerMenu->SetRemainingTime(seconds);
+        }
+    }
+
+
     void InGameHud::Update()
     {
         m_hpBarPacket->Update();
         m_coreHpBarPacket->Update();
         m_ammoPacket->Update();
         m_reticlePacket->Update();
+        m_gameTimerPacket->Update();
     }
 
 
@@ -91,5 +108,6 @@ namespace app
         m_coreHpBarPacket->Render(rc);
         m_ammoPacket->Render(rc);
         m_reticlePacket->Render(rc);
+        m_gameTimerPacket->Render(rc);
     }
 } // namespace app

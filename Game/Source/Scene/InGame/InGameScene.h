@@ -8,6 +8,7 @@
 #include <memory>
 
 #include "InGameHud.h"
+#include "Source/Core/Timer/Timer.h"
 #include "Source/Scene/IScene.h"
 #include "Source/UI/Foundation/SystemPacket.h"
 #include "StartCountdown.h"
@@ -88,6 +89,8 @@ namespace app
         PhysicsStaticObject m_bgPhysicsStaticObject;
         /** 開始前のカウントダウンの時間。0になるまでは、Miroを操作できず、ゾンビも湧かず、ポーズもできない */
         StartCountdown m_countdown;
+        /** ゲームの制限時間のタイマー。カウントダウンが終わってから進む。0になっても今は何も起きない(右上の表示が0:00で止まるだけ) */
+        Timer m_gameTimer;
         /** カウントダウンの数字のUI */
         ui::UIPacket<ui::CountdownMenu> m_countdownPacket;
         /** カウントダウン中に、Miroから外しておいたパッドのコントローラー。0になったら、Miroへ付け直す */
