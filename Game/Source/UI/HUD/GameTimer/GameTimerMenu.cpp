@@ -1,12 +1,11 @@
 ﻿/**
  * @file GameTimerMenu.cpp
- * @brief インゲームの残り時間を動かすMenu
+ * @brief インゲームの経過時間を動かすMenu
  */
 #include "stdafx.h"
 
 #include "GameTimerMenu.h"
 
-#include <cmath>
 #include <cstdint>
 #include <string>
 
@@ -19,7 +18,7 @@ namespace app
     {
         namespace
         {
-            /** 残り時間の文字のUIの名前(ハッシュ値) */
+            /** 経過時間の文字のUIの名前(ハッシュ値) */
             constexpr uint32_t TIMER_TEXT_KEY = Hash32("TimerText");
             /** 1分の秒数 */
             constexpr int32_t SECONDS_PER_MINUTE = 60;
@@ -49,9 +48,10 @@ namespace app
         }
 
 
-        void GameTimerMenu::SetRemainingTime(const float seconds)
+        void GameTimerMenu::SetElapsedTime(const float seconds)
         {
-            const int32_t displaySeconds = seconds > 0.0f ? static_cast<int32_t>(std::ceil(seconds)) : 0;
+            // NaNも0にするため、「0より大きい」の否定で判定する。正の値のintへのキャストは切り捨て
+            const int32_t displaySeconds = seconds > 0.0f ? static_cast<int32_t>(seconds) : 0;
             if (displaySeconds == m_displaySeconds)
             {
                 return;

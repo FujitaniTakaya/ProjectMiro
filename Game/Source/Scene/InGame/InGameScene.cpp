@@ -26,6 +26,7 @@
 #include "Source/Navigation/NavigationService.h"
 #include "Source/Scene/Fade.h"
 #include "Source/UI/HUD/Countdown/CountdownMenu.h"
+#include "Source/UI/HUD/GameSet/GameSetMenu.h"
 
 
 namespace app
@@ -40,8 +41,8 @@ namespace app
         constexpr int32_t COUNTDOWN_COUNT = 3;
         /** カウントダウンの数字を切り替える間隔(秒) */
         constexpr float COUNTDOWN_INTERVAL = 1.0f;
-        /** ゲームの制限時間(秒)。カウントダウンが終わってから数える */
-        constexpr float GAME_TIME_LIMIT = 180.0f;
+        /** 「GAME SET」の文字のレイアウトのjson */
+        constexpr const char* GAME_SET_JSON_PATH = "Assets/parameter/ui/GameSet.json";
         /** コアを置く座標。コアの真下の地面(y=0)の座標を渡す。浮かせる高さはCore側で足す */
         const Vector3 CORE_POSITION(0.0f, 0.0f, 0.0f);
         /** Miroの初期座標 */
@@ -59,12 +60,14 @@ namespace app
         , m_playerCamera(nullptr)
         , m_handgun(nullptr)
         , m_countdown(COUNTDOWN_START_DELAY, COUNTDOWN_COUNT, COUNTDOWN_INTERVAL)
-        , m_gameTimer()
+        , m_elapsedTime(0.0f)
+        , m_isGameOver(false)
         , m_countdownPacket(nullptr)
+        , m_gameSetPacket(nullptr)
         , m_playerController(nullptr)
     {
-        m_gameTimer.SetTimeLimit(GAME_TIME_LIMIT);
         ui::InitUIPacket(m_countdownPacket, COUNTDOWN_JSON_PATH);
+        ui::InitUIPacket(m_gameSetPacket, GAME_SET_JSON_PATH);
 
         m_stageField = std::make_unique<actor::StageField>();
         m_core = std::make_unique<actor::Core>();
@@ -176,6 +179,30 @@ namespace app
     }
 
 
+    void InGameScene::UpdateGameOver()
+    {
+        if (m_isGameOver)
+        {
+            return;
+        }
+
+        // コアの耐久値もMiroのHPも残っていれば続ける
+        if (m_core->GetHp() > 0.0f && m_miro->GetHp() > 0.0f)
+        {
+            return;
+        }
+
+        m_isGameOver = true;
+        // Miroを操作できなくする。(カウントダウンの時と同じく、パッドのコントローラーを外す)
+        m_playerController = m_miro->GetControllerSlot().Detach();
+        // 「GAME SET」を出す
+        if (ui::GameSetMenu* gameSetMenu = m_gameSetPacket->GetMenu())
+        {
+            gameSetMenu->Show();
+        }
+    }
+
+
     void InGameScene::Update()
     {
         UpdateCountdown();
@@ -183,10 +210,13 @@ namespace app
         m_stageField->UpdateWrapper();
         m_core->UpdateWrapper();
         m_miro->UpdateWrapper();
-        // カウントダウンの間は、ゾンビを湧かせず、制限時間も進めない。(ポーズ中は Update() が呼ばれないので、止まる)
-        if (m_countdown.IsFinished())
+        // 前のフレームまでのゾンビの攻撃・Miroの更新でHPが0になっていたら、ゲームセットにする
+        UpdateGameOver();
+        // カウントダウンの間とゲームセット後は、ゾンビを湧かせず(動かさず)、経過時間も進めない。
+        // (ポーズ中は Update() が呼ばれないので、止まる)
+        if (m_countdown.IsFinished() && !m_isGameOver)
         {
-            m_gameTimer.Update(g_gameTime->GetFrameDeltaTime());
+            m_elapsedTime += g_gameTime->GetFrameDeltaTime();
             m_zombieManager->Update();
         }
         m_handgun->UpdateWrapper();
@@ -233,11 +263,12 @@ namespace app
         // HUD。コアの耐久値バーの画面位置は、カメラが更新された後に求める。
         // Miro・コア・ハンドガンが値を通知した後に、更新する
         m_hud.SetCoreHpBarWorldPosition(m_core->GetHpBarWorldPosition());
-        m_hud.SetRemainingTime(m_gameTimer.GetRemainingTime());
+        m_hud.SetElapsedTime(m_elapsedTime);
         m_hud.Update();
 
         // カウントダウンの数字。この関数の先頭で、数字を設定してある
         m_countdownPacket->Update();
+        m_gameSetPacket->Update();
     }
 
 
@@ -259,6 +290,7 @@ namespace app
     {
         m_hud.Render(rc);
         m_countdownPacket->Render(rc);
+        m_gameSetPacket->Render(rc);
     }
 
 

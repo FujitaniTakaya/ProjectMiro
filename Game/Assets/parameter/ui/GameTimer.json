@@ -5,7 +5,7 @@
                 "type": "UIText",
                 "name": "TimerText",
                 "font": "RoundedMplus",
-                "text": "3:00",
+                "text": "0:00",
                 "size": 64,
                 "pivot": [
                     1,

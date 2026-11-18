@@ -1,7 +1,7 @@
 ﻿/**
  * @file InGameHud.h
  * @brief インゲームのHUD
- * @details プレイヤーのHPバー・コアの耐久値バー・ハンドガンの残段数・レティクル・残り時間をまとめて持つ。
+ * @details プレイヤーのHPバー・コアの耐久値バー・ハンドガンの残段数・レティクル・経過時間をまとめて持つ。
  *          HPバー・コアの耐久値バー・残段数は、InGameInfoHubに通知された値を表示する。(コンストラクタで登録し、デストラクタで解除する)
  *          コアの耐久値バーは、コアの頭上の画面位置に出すので、世界座標だけは、シーンが SetCoreHpBarWorldPosition() で毎フレーム教える。
  *          例: InGameHud hud;                                          // アクターより先に作る
@@ -52,11 +52,11 @@ namespace app
         void SetCoreHpBarWorldPosition(const Vector3& worldPosition);
 
         /**
-         * @brief 残り時間を教える
-         * @details 右上の残り時間は、この値を表示する。毎フレーム呼ぶこと。
-         * @param seconds 残り時間(秒)
+         * @brief 経過時間を教える
+         * @details 右上の経過時間は、この値を表示する。毎フレーム呼ぶこと。
+         * @param seconds 経過時間(秒)
          */
-        void SetRemainingTime(const float seconds);
+        void SetElapsedTime(const float seconds);
 
         /**
          * @brief 更新処理
@@ -81,7 +81,7 @@ namespace app
         ui::UIPacket<ui::MenuBase> m_reticlePacket;
         /** コアの耐久値バー。InGameInfoHubに通知された耐久値を、コアの頭上の画面位置に表示する */
         ui::UIPacket<ui::CoreHPBarMenu> m_coreHpBarPacket;
-        /** 残り時間のUI。SetRemainingTime() で教えられた残り時間を、右上に表示する */
+        /** 経過時間のUI。SetElapsedTime() で教えられた経過時間を、右上に表示する */
         ui::UIPacket<ui::GameTimerMenu> m_gameTimerPacket;
     };
 } // namespace app

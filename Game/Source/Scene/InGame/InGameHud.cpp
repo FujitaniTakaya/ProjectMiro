@@ -27,7 +27,7 @@ namespace app
         constexpr const char* HANDGUN_AMMO_JSON_PATH = "Assets/parameter/ui/HandgunAmmo.json";
         /** レティクルのレイアウトのjson */
         constexpr const char* RETICLE_JSON_PATH = "Assets/parameter/ui/Reticle.json";
-        /** 残り時間のレイアウトのjson */
+        /** 経過時間のレイアウトのjson */
         constexpr const char* GAME_TIMER_JSON_PATH = "Assets/parameter/ui/GameTimer.json";
     } // namespace
 
@@ -62,7 +62,7 @@ namespace app
             InGameInfoHub::Get().SetOnCoreHpChanged([coreHpBarMenu](const float hp, const float maxHp) { coreHpBarMenu->SetHp(hp, maxHp); });
         }
 
-        // 残り時間。値の持ち主はシーンなので、InGameInfoHubは通さず、SetRemainingTime() で直接受け取る
+        // 経過時間。値の持ち主はシーンなので、InGameInfoHubは通さず、SetElapsedTime() で直接受け取る
         ui::InitUIPacket(m_gameTimerPacket, GAME_TIMER_JSON_PATH);
     }
 
@@ -83,11 +83,11 @@ namespace app
     }
 
 
-    void InGameHud::SetRemainingTime(const float seconds)
+    void InGameHud::SetElapsedTime(const float seconds)
     {
         if (ui::GameTimerMenu* gameTimerMenu = m_gameTimerPacket->GetMenu())
         {
-            gameTimerMenu->SetRemainingTime(seconds);
+            gameTimerMenu->SetElapsedTime(seconds);
         }
     }
 

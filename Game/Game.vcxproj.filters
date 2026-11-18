@@ -133,6 +133,9 @@
     <Filter Include="Source\UI\HUD\GameTimer">
       <UniqueIdentifier>{f641c494-ebc3-470c-a681-649d836d3cbf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\UI\HUD\GameSet">
+      <UniqueIdentifier>{1051fcd7-bcdd-42b1-bd88-a69873ce0530}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -405,6 +408,9 @@
     </ClCompile>
     <ClCompile Include="Source\UI\HUD\GameTimer\GameTimerMenu.cpp">
       <Filter>Source\UI\HUD\GameTimer</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI\HUD\GameSet\GameSetMenu.cpp">
+      <Filter>Source\UI\HUD\GameSet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -747,6 +753,9 @@
     </ClInclude>
     <ClInclude Include="Source\UI\HUD\GameTimer\GameTimerMenu.h">
       <Filter>Source\UI\HUD\GameTimer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\HUD\GameSet\GameSetMenu.h">
+      <Filter>Source\UI\HUD\GameSet</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
