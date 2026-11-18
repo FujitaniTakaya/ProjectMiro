@@ -8,8 +8,8 @@
 
 #include "DebugScene.h"
 #include "Fade.h"
-#include "InGameScene.h"
 #include "ResultScene.h"
+#include "Source/Scene/InGame/InGameScene.h"
 #include "TitleScene.h"
 
 

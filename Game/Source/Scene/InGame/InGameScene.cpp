@@ -11,7 +11,6 @@
 #include <utility>
 #include <vector>
 
-#include "Fade.h"
 #include "Source/Actor/Character/Miro/Miro.h"
 #include "Source/Actor/Character/Zombie/Spawn/ZombieSpawnParameter.h"
 #include "Source/Actor/Character/Zombie/ZombieManager.h"
@@ -25,24 +24,14 @@
 #include "Source/MoveBehavior/ControllerSlot.h"
 #include "Source/Navigation/NavDebugDraw.h"
 #include "Source/Navigation/NavigationService.h"
-#include "Source/UI/HUD/CoreHP/CoreHPBarMenu.h"
+#include "Source/Scene/Fade.h"
 #include "Source/UI/HUD/Countdown/CountdownMenu.h"
-#include "Source/UI/HUD/Handgun/HandgunAmmoMenu.h"
-#include "Source/UI/HUD/PlayerHP/HPBarMenu.h"
 
 
 namespace app
 {
     namespace
     {
-        /** プレイヤーのHPバーのレイアウトのjson */
-        constexpr const char* HP_BAR_JSON_PATH = "Assets/parameter/ui/HPBar.json";
-        /** コアの耐久値バーのレイアウトのjson */
-        constexpr const char* CORE_HP_BAR_JSON_PATH = "Assets/parameter/ui/CoreHPBar.json";
-        /** ハンドガンの残段数UIのレイアウトのjson */
-        constexpr const char* HANDGUN_AMMO_JSON_PATH = "Assets/parameter/ui/HandgunAmmo.json";
-        /** レティクルのレイアウトのjson */
-        constexpr const char* RETICLE_JSON_PATH = "Assets/parameter/ui/Reticle.json";
         /** カウントダウンの数字のレイアウトのjson */
         constexpr const char* COUNTDOWN_JSON_PATH = "Assets/parameter/ui/Countdown.json";
         /** フェードインが終わってから、数え始めるまでの待ち時間(秒) */
@@ -63,40 +52,15 @@ namespace app
 
 
     InGameScene::InGameScene()
-        : m_miro(nullptr)
+        : m_hud()
+        , m_miro(nullptr)
         , m_playerCamera(nullptr)
-        , m_hpBarPacket(nullptr)
         , m_handgun(nullptr)
-        , m_ammoPacket(nullptr)
-        , m_reticlePacket(nullptr)
-        , m_coreHpBarPacket(nullptr)
         , m_countdown(COUNTDOWN_START_DELAY, COUNTDOWN_COUNT, COUNTDOWN_INTERVAL)
         , m_countdownPacket(nullptr)
         , m_playerController(nullptr)
     {
-        // プレイヤーのHPバー。Miroより先に作って、InGameInfoHubに通知されたHPを受け取る
-        ui::InitUIPacket(m_hpBarPacket, HP_BAR_JSON_PATH);
-        if (ui::HPBarMenu* hpBarMenu = m_hpBarPacket->GetMenu())
-        {
-            InGameInfoHub::Get().SetOnPlayerHpChanged([hpBarMenu](const float hp, const float maxHp) { hpBarMenu->SetHp(hp, maxHp); });
-        }
-
-        // ハンドガンの残段数UI。ハンドガンより先に作って、InGameInfoHubに通知された残弾数を受け取る
-        ui::InitUIPacket(m_ammoPacket, HANDGUN_AMMO_JSON_PATH);
-        if (ui::HandgunAmmoMenu* ammoMenu = m_ammoPacket->GetMenu())
-        {
-            InGameInfoHub::Get().SetOnPlayerAmmoChanged([ammoMenu](const uint32_t remainingAmmo) { ammoMenu->SetAmmo(remainingAmmo); });
-        }
-
-        ui::InitUIPacket(m_reticlePacket, RETICLE_JSON_PATH);
         ui::InitUIPacket(m_countdownPacket, COUNTDOWN_JSON_PATH);
-
-        // コアの耐久値バー。コアより先に作って、InGameInfoHubに通知された耐久値を受け取る
-        ui::InitUIPacket(m_coreHpBarPacket, CORE_HP_BAR_JSON_PATH);
-        if (ui::CoreHPBarMenu* coreHpBarMenu = m_coreHpBarPacket->GetMenu())
-        {
-            InGameInfoHub::Get().SetOnCoreHpChanged([coreHpBarMenu](const float hp, const float maxHp) { coreHpBarMenu->SetHp(hp, maxHp); });
-        }
 
         m_stageField = std::make_unique<actor::StageField>();
         m_core = std::make_unique<actor::Core>();
@@ -111,8 +75,7 @@ namespace app
 
     InGameScene::~InGameScene()
     {
-        // 登録した関数は、HPバーを参照している。HPバーが無くなる前に解除する
-        InGameInfoHub::Get().ResetObservers();
+        // InGameInfoHubの登録の解除は、InGameHudのデストラクタが行う
 
         // 空はエンジンが持っているので、このシーンのものを描かなくする
         RenderingEngine::Get().ClearSkyCube();
@@ -262,19 +225,10 @@ namespace app
         }
 #endif // BALLOON_IMGUI_ENABLED
 
-        // MiroがHPを通知した後に、HPバーを更新する
-        m_hpBarPacket->Update();
-
-        // コアの耐久値バー。カメラが更新された後に画面位置を求めて、コアが耐久値を通知した後に更新する
-        if (ui::CoreHPBarMenu* coreHpBarMenu = m_coreHpBarPacket->GetMenu())
-        {
-            coreHpBarMenu->UpdateScreenPosition(m_core->GetHpBarWorldPosition());
-        }
-        m_coreHpBarPacket->Update();
-
-        // ハンドガンが残弾数を通知した後に、残段数UIを更新する
-        m_ammoPacket->Update();
-        m_reticlePacket->Update();
+        // HUD。コアの耐久値バーの画面位置は、カメラが更新された後に求める。
+        // Miro・コア・ハンドガンが値を通知した後に、更新する
+        m_hud.SetCoreHpBarWorldPosition(m_core->GetHpBarWorldPosition());
+        m_hud.Update();
 
         // カウントダウンの数字。この関数の先頭で、数字を設定してある
         m_countdownPacket->Update();
@@ -297,10 +251,7 @@ namespace app
 
     void InGameScene::RenderUI(RenderContext& rc)
     {
-        m_hpBarPacket->Render(rc);
-        m_coreHpBarPacket->Render(rc);
-        m_ammoPacket->Render(rc);
-        m_reticlePacket->Render(rc);
+        m_hud.Render(rc);
         m_countdownPacket->Render(rc);
     }
 

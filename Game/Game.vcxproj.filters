@@ -295,9 +295,6 @@
     <ClCompile Include="Source\UI\HUD\CoreHP\CoreHPBarMenu.cpp">
       <Filter>Source\UI\HUD\CoreHP</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Scene\InGameScene.cpp">
-      <Filter>Source\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Scene\ResultScene.cpp">
       <Filter>Source\Scene</Filter>
     </ClCompile>
@@ -396,6 +393,12 @@
     </ClCompile>
     <ClCompile Include="Source\UI\HUD\Countdown\CountdownMenu.cpp">
       <Filter>Source\UI\HUD\Countdown</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\InGame\InGameHud.cpp">
+      <Filter>Source\Scene\InGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\InGame\InGameScene.cpp">
+      <Filter>Source\Scene\InGame</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -604,9 +607,6 @@
     <ClInclude Include="Source\Actor\Stage\CoreParameter.h">
       <Filter>Source\Actor\Stage</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Scene\InGameScene.h">
-      <Filter>Source\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Scene\ResultScene.h">
       <Filter>Source\Scene</Filter>
     </ClInclude>
@@ -732,6 +732,12 @@
     </ClInclude>
     <ClInclude Include="Source\UI\HUD\Countdown\CountdownMenu.h">
       <Filter>Source\UI\HUD\Countdown</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene\InGame\InGameHud.h">
+      <Filter>Source\Scene\InGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene\InGame\InGameScene.h">
+      <Filter>Source\Scene\InGame</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

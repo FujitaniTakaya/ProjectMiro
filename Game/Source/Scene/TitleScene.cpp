@@ -6,7 +6,7 @@
 
 #include "TitleScene.h"
 
-#include "InGameScene.h"
+#include "Source/Scene/InGame/InGameScene.h"
 #include "Source/UI/Screen/Option/OptionMenu.h"
 #include "Source/UI/Screen/Title/TitleMenu.h"
 

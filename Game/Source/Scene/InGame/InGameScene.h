@@ -7,9 +7,10 @@
 #include <cstdint>
 #include <memory>
 
-#include "IScene.h"
-#include "Source/Scene/InGame/StartCountdown.h"
+#include "InGameHud.h"
+#include "Source/Scene/IScene.h"
 #include "Source/UI/Foundation/SystemPacket.h"
+#include "StartCountdown.h"
 
 
 namespace app
@@ -33,9 +34,6 @@ namespace app
     namespace ui
     {
         class CountdownMenu;
-        class CoreHPBarMenu;
-        class HPBarMenu;
-        class HandgunAmmoMenu;
     } // namespace ui
 
     /**
@@ -71,24 +69,21 @@ namespace app
 
 
     private:
+        /**
+         * HUD(HPバー・コアの耐久値バー・残段数・レティクル)。InGameInfoHubへの登録を持つので、アクターより先に作る。
+         * 宣言順の先頭に置くことで、アクターより後に破棄される(アクターの破棄中も、登録先が生きている)
+         */
+        InGameHud m_hud;
         std::unique_ptr<actor::Miro> m_miro;
         std::unique_ptr<camera::PlayerCamera> m_playerCamera;
-        /** プレイヤーのHPバー。InGameInfoHubに通知されたHPを表示する */
-        ui::UIPacket<ui::HPBarMenu> m_hpBarPacket;
         /** ハンドガン。弾が減ったら、InGameInfoHubに残弾数を通知する(手に持たせるまでは、このシーンが持つ) */
         std::unique_ptr<actor::Handgun> m_handgun;
-        /** ハンドガンの残段数UI。InGameInfoHubに通知された残弾数を表示する */
-        ui::UIPacket<ui::HandgunAmmoMenu> m_ammoPacket;
-        /** レティクル。動かさないので、Menuは基底クラスのまま */
-        ui::UIPacket<ui::MenuBase> m_reticlePacket;
         /** ステージのフィールド(背景のstage.tkm) */
         std::unique_ptr<actor::StageField> m_stageField;
         /** ステージのコア(宝石のモデル)。当たり判定は無い */
         std::unique_ptr<actor::Core> m_core;
         /** ゾンビのマネージャー。4つのゲートからゾンビを湧かせて、コアへ向かわせる。ゾンビの生成・破棄・保持も行う。コアの位置の関数を持つので、m_core より後ろに置く(先に破棄される) */
         std::unique_ptr<actor::ZombieManager> m_zombieManager;
-        /** コアの耐久値バー。InGameInfoHubに通知された耐久値を、コアの頭上の画面位置に表示する */
-        ui::UIPacket<ui::CoreHPBarMenu> m_coreHpBarPacket;
         /** 背景の当たり判定。m_stageFieldのモデルの形そのままのメッシュコライダー(キャラクターコントローラーが床や壁として扱う) */
         PhysicsStaticObject m_bgPhysicsStaticObject;
         /** 開始前のカウントダウンの時間。0になるまでは、Miroを操作できず、ゾンビも湧かず、ポーズもできない */
