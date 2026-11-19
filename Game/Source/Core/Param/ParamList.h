@@ -40,6 +40,8 @@ namespace app
         RunningZombie,
         /** 経路探索(格子の作り方・経路のたどり方) */
         Navigation,
+        /** 弾(生存時間・モデルの拡大率) */
+        Bullet,
 
         Max,
         None = Max

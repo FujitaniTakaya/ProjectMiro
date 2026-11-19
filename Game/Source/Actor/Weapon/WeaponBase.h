@@ -57,6 +57,18 @@ namespace app
             void Detach();
 
             /**
+             * @brief 弾を出す位置と向きをワールド座標で求める
+             * @details muzzleBoneName のボーンの今のワールド行列に、muzzlePosition・muzzleRotation を掛ける。
+             *          弾は、返した rotation で Vector3::Front を回した向きへ飛ぶ。
+             *          ボーンは呼ぶたびに探すので、jsonのホットリロードがすぐ反映される。
+             * @note ボーンのワールド行列は、直前の Update()(モデルの更新)の値。
+             * @param[out] position 発射位置
+             * @param[out] rotation 発射角度
+             * @return 求められたらtrue。パラメーターが未設定・ボーンが見つからない時はfalse(骨名の間違いはログに出す)
+             */
+            bool CalcMuzzle(Vector3& position, Quaternion& rotation) const;
+
+            /**
              * @brief ボーンに取り付けているかどうか
              * @return 取り付けていればtrue
              */

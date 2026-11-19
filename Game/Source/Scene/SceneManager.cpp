@@ -40,6 +40,7 @@ namespace app
         AddSceneMap<ResultScene>();
 
         // 最初のシーンもここで生成する。
+        // NOTE: ハンドガンと弾の調整中は、ここを DebugScene::ID() にすると DebugScene から始まる。
         CreateScene(TitleScene::ID());
     }
 

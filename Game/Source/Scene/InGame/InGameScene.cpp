@@ -16,6 +16,8 @@
 #include "Source/Actor/Character/Zombie/ZombieManager.h"
 #include "Source/Actor/Stage/Core.h"
 #include "Source/Actor/Stage/StageField.h"
+#include "Source/Actor/Weapon/Bullet/BulletManager.h"
+#include "Source/Actor/Weapon/Bullet/BulletParameter.h"
 #include "Source/Actor/Weapon/Handgun/Handgun.h"
 #include "Source/Camera/PlayerCamera.h"
 #include "Source/Core/Param/ParamHolder.h"
@@ -93,6 +95,9 @@ namespace app
     {
         // InGameInfoHubの登録の解除は、InGameHudのデストラクタが行う
 
+        // 弾はエンジンの資源(モデル)を持つので、シーンの終了時に片付ける
+        actor::BulletManager::Get().Clear();
+
         // 空はエンジンが持っているので、このシーンのものを描かなくする
         RenderingEngine::Get().ClearSkyCube();
 
@@ -135,7 +140,7 @@ namespace app
         // canReload・isEmpty: リロードステートに入るかの判定。Xを押した時と、マガジンが空になった時に使う
         // reload: リロードステートに入った時
         actor::MiroWeaponHandler weaponHandler;
-        weaponHandler.fire = [this]() { return m_handgun->Fire(); };
+        weaponHandler.fire = [this]() { return FireHandgun(); };
         weaponHandler.canReload = [this]() { return m_handgun->CanReload(); };
         weaponHandler.isEmpty = [this]() { return m_handgun->GetRemainingAmmo() == 0; };
         weaponHandler.reload = [this]() { m_handgun->Reload(); };
@@ -214,6 +219,26 @@ namespace app
     }
 
 
+    bool InGameScene::FireHandgun()
+    {
+        // 弾切れ・リロード中は撃てない
+        if (!m_handgun->Fire())
+        {
+            return false;
+        }
+
+        Vector3 position;
+        Quaternion rotation;
+        if (m_handgun->CalcMuzzle(position, rotation))
+        {
+            // 発射スピードは、毎回パラメーターから読む。(jsonのホットリロードがすぐ反映される)
+            const actor::BulletParameter& bulletParameter = ParamHolder::Get().GetParameter<actor::BulletParameter>(EnParamID::Bullet);
+            actor::BulletManager::Get().Shot(rotation, position, bulletParameter.shotSpeed);
+        }
+        return true;
+    }
+
+
     void InGameScene::Update()
     {
         UpdateCountdown();
@@ -231,6 +256,8 @@ namespace app
             m_zombieManager->Update();
         }
         m_handgun->UpdateWrapper();
+        // 弾を進める。(ポーズ中は Update() が呼ばれないので、弾も止まる)
+        actor::BulletManager::Get().Update();
 
         // TEMP: 残段数UIの確認用。確認が終わったら取り除く
 #ifdef BALLOON_IMGUI_ENABLED
@@ -239,7 +266,7 @@ namespace app
             ImGui::Text("ammo: %u / %u%s", m_handgun->GetRemainingAmmo(), m_handgun->GetMagazineSize(), m_handgun->IsReloading() ? " (reloading)" : "");
             if (ImGui::Button("Fire"))
             {
-                m_handgun->Fire();
+                FireHandgun();
             }
             ImGui::SameLine();
             if (ImGui::Button("Reload"))
@@ -294,6 +321,7 @@ namespace app
         m_miro->RenderWrapper(rc);
         m_zombieManager->Render(rc);
         m_handgun->RenderWrapper(rc);
+        actor::BulletManager::Get().Render(rc);
     }
 
 

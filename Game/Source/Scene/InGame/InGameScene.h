@@ -76,6 +76,14 @@ namespace app
          */
         void UpdateGameOver();
 
+        /**
+         * @brief ハンドガンを1発撃つ
+         * @details ハンドガンが撃てたら、銃口(WeaponBase::CalcMuzzle)の位置と向きから、弾を1発出す。
+         *          弾切れ・リロード中は撃てない。弾は BulletManager が持つ。
+         * @return 撃てたらtrue(Miroの武器ハンドラの fire に返す)
+         */
+        bool FireHandgun();
+
 
     private:
         /**

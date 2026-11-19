@@ -139,6 +139,9 @@
     <Filter Include="Source\UI\Screen\Result">
       <UniqueIdentifier>{3e906111-3699-4c8e-9939-2fee1dd6d8bd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Actor\Weapon\Bullet">
+      <UniqueIdentifier>{37d821fb-fdd5-4af9-8b76-957cd34749f3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -417,6 +420,15 @@
     </ClCompile>
     <ClCompile Include="Source\UI\Screen\Result\ResultMenu.cpp">
       <Filter>Source\UI\Screen\Result</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Actor\Weapon\Bullet\Bullet.cpp">
+      <Filter>Source\Actor\Weapon\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Actor\Weapon\Bullet\BulletManager.cpp">
+      <Filter>Source\Actor\Weapon\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Actor\Weapon\Bullet\BulletParameter.cpp">
+      <Filter>Source\Actor\Weapon\Bullet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -765,6 +777,15 @@
     </ClInclude>
     <ClInclude Include="Source\UI\Screen\Result\ResultMenu.h">
       <Filter>Source\UI\Screen\Result</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Weapon\Bullet\Bullet.h">
+      <Filter>Source\Actor\Weapon\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Weapon\Bullet\BulletManager.h">
+      <Filter>Source\Actor\Weapon\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Weapon\Bullet\BulletParameter.h">
+      <Filter>Source\Actor\Weapon\Bullet</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
