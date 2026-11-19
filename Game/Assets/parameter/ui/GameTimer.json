@@ -1,0 +1,34 @@
+{
+    "canvas": {
+        "elements": [
+            {
+                "type": "UIText",
+                "name": "TimerText",
+                "font": "RoundedMplus",
+                "text": "0:00",
+                "size": 64,
+                "pivot": [
+                    1,
+                    0.5
+                ],
+                "position": [
+                    900,
+                    480,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                ]
+            }
+        ]
+    }
+}

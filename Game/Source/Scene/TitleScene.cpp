@@ -6,7 +6,7 @@
 
 #include "TitleScene.h"
 
-#include "DebugScene.h"
+#include "Source/Scene/InGame/InGameScene.h"
 #include "Source/UI/Screen/Option/OptionMenu.h"
 #include "Source/UI/Screen/Title/TitleMenu.h"
 
@@ -23,8 +23,8 @@ namespace app
         constexpr int PAD_INDEX = 0;
         /** スタートを押した後の、暗転・明転にかける時間(秒) */
         constexpr float FADE_DURATION = 1.0f;
-        /** 次のシーン。仮で、InGameScene の中身ができるまでは、遊べる DebugScene に進む */
-        constexpr uint32_t NEXT_SCENE_ID = DebugScene::ID();
+        /** 次のシーン。スタートを決めたら、インゲームシーンに進む */
+        constexpr uint32_t NEXT_SCENE_ID = InGameScene::ID();
     } // namespace
 
 
