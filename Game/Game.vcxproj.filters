@@ -136,6 +136,9 @@
     <Filter Include="Source\UI\HUD\GameSet">
       <UniqueIdentifier>{1051fcd7-bcdd-42b1-bd88-a69873ce0530}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\UI\Screen\Result">
+      <UniqueIdentifier>{3e906111-3699-4c8e-9939-2fee1dd6d8bd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -411,6 +414,9 @@
     </ClCompile>
     <ClCompile Include="Source\UI\HUD\GameSet\GameSetMenu.cpp">
       <Filter>Source\UI\HUD\GameSet</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI\Screen\Result\ResultMenu.cpp">
+      <Filter>Source\UI\Screen\Result</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -756,6 +762,9 @@
     </ClInclude>
     <ClInclude Include="Source\UI\HUD\GameSet\GameSetMenu.h">
       <Filter>Source\UI\HUD\GameSet</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\Screen\Result\ResultMenu.h">
+      <Filter>Source\UI\Screen\Result</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

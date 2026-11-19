@@ -322,6 +322,7 @@
     <ClCompile Include="Source\Scene\InGame\InGameScene.cpp" />
     <ClCompile Include="Source\UI\HUD\GameTimer\GameTimerMenu.cpp" />
     <ClCompile Include="Source\UI\HUD\GameSet\GameSetMenu.cpp" />
+    <ClCompile Include="Source\UI\Screen\Result\ResultMenu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -441,6 +442,7 @@
     <ClInclude Include="Source\Scene\InGame\InGameScene.h" />
     <ClInclude Include="Source\UI\HUD\GameTimer\GameTimerMenu.h" />
     <ClInclude Include="Source\UI\HUD\GameSet\GameSetMenu.h" />
+    <ClInclude Include="Source\UI\Screen\Result\ResultMenu.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BalloonEngine\BalloonEngine.vcxproj">

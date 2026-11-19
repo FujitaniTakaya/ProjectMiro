@@ -8,6 +8,7 @@
 #include <memory>
 
 #include "InGameHud.h"
+#include "Source/Core/Timer/Timer.h"
 #include "Source/Scene/IScene.h"
 #include "Source/UI/Foundation/SystemPacket.h"
 #include "StartCountdown.h"
@@ -70,8 +71,8 @@ namespace app
 
         /**
          * @brief コアの耐久値かMiroのHPが0になったかを調べて、ゲームセットにする
-         * @details 0になったら m_isGameOver を立て、Miroからパッドのコントローラーを外し、「GAME SET」を出す。一度なったら、何もしない。
-         *          NOTE: シーンの遷移は、まだ無い。(ゲームが止まって、「GAME SET」が出たままになる)
+         * @details 0になったら m_isGameOver を立て、Miroからパッドのコントローラーを外し、「Finish」を出す。一度なったら、リザルトへ進むまでの待ち時間を進める。
+         *          待ち時間が過ぎると、RequestScene() がリザルトシーンへの遷移を要求する。
          */
         void UpdateGameOver();
 
@@ -100,9 +101,11 @@ namespace app
         float m_elapsedTime;
         /** ゲームセットになったか。立つと、経過時間・ゾンビの更新が止まり、Miroは操作できなくなる */
         bool m_isGameOver;
+        /** 「Finish」を出してから、リザルトへ進むまでの待ち時間のタイマー。ゲームセットになってから進み、時間切れになったらリザルトへ遷移する */
+        Timer m_finishTimer;
         /** カウントダウンの数字のUI */
         ui::UIPacket<ui::CountdownMenu> m_countdownPacket;
-        /** 「GAME SET」の文字のUI。ゲームセットになった時に出す */
+        /** 「Finish」の文字のUI。ゲームセットになった時に出す */
         ui::UIPacket<ui::GameSetMenu> m_gameSetPacket;
         /** カウントダウン中に、Miroから外しておいたパッドのコントローラー。0になったら、Miroへ付け直す。ゲームセットの時にも、外したものをここへ入れる */
         std::unique_ptr<IController> m_playerController;

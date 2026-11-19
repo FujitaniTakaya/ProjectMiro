@@ -17,7 +17,7 @@ namespace app
     {
         namespace
         {
-            /** 「GAME SET」の文字のUIの名前(ハッシュ値) */
+            /** 「Finish」の文字のUIの名前(ハッシュ値) */
             constexpr uint32_t TEXT_KEY = Hash32("GameSetText");
 
             /** 出た瞬間の大きさの倍率(1.0が、jsonで決めた大きさ) */

@@ -1,0 +1,90 @@
+{
+    "canvas": {
+        "elements": [
+            {
+                "type": "UIText",
+                "name": "ItemTitle",
+                "font": "RoundedMplus",
+                "text": "タイトルへ",
+                "size": 48,
+                "pivot": [
+                    0,
+                    0.5
+                ],
+                "position": [
+                    560,
+                    -380,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                ]
+            },
+            {
+                "type": "UIText",
+                "name": "ItemQuit",
+                "font": "RoundedMplus",
+                "text": "ゲームをやめる",
+                "size": 48,
+                "pivot": [
+                    0,
+                    0.5
+                ],
+                "position": [
+                    560,
+                    -452,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                ]
+            },
+            {
+                "type": "UIText",
+                "name": "Cursor",
+                "font": "RoundedMplus",
+                "text": "→",
+                "size": 24,
+                "pivot": [
+                    1,
+                    0.5
+                ],
+                "position": [
+                    544,
+                    -380,
+                    0
+                ],
+                "scale": [
+                    1.35,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                ]
+            }
+        ]
+    }
+}

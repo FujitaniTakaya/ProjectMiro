@@ -25,6 +25,7 @@
 #include "Source/Navigation/NavDebugDraw.h"
 #include "Source/Navigation/NavigationService.h"
 #include "Source/Scene/Fade.h"
+#include "Source/Scene/ResultScene.h"
 #include "Source/UI/HUD/Countdown/CountdownMenu.h"
 #include "Source/UI/HUD/GameSet/GameSetMenu.h"
 
@@ -41,8 +42,14 @@ namespace app
         constexpr int32_t COUNTDOWN_COUNT = 3;
         /** カウントダウンの数字を切り替える間隔(秒) */
         constexpr float COUNTDOWN_INTERVAL = 1.0f;
-        /** 「GAME SET」の文字のレイアウトのjson */
+        /** 「Finish」の文字のレイアウトのjson */
         constexpr const char* GAME_SET_JSON_PATH = "Assets/parameter/ui/GameSet.json";
+        /** 「Finish」を出してから、フェードアウトを始めるまでの待ち時間(秒) */
+        constexpr float FINISH_WAIT_TIME = 3.0f;
+        /** リザルトへ進む時の、暗転・明転にかける時間(秒)。タイトルからインゲームへ進む時と同じ */
+        constexpr float RESULT_FADE_DURATION = 1.0f;
+        /** 次のシーン。ゲームセットになったら、リザルトシーンに進む */
+        constexpr uint32_t RESULT_SCENE_ID = ResultScene::ID();
         /** コアを置く座標。コアの真下の地面(y=0)の座標を渡す。浮かせる高さはCore側で足す */
         const Vector3 CORE_POSITION(0.0f, 0.0f, 0.0f);
         /** Miroの初期座標 */
@@ -62,10 +69,12 @@ namespace app
         , m_countdown(COUNTDOWN_START_DELAY, COUNTDOWN_COUNT, COUNTDOWN_INTERVAL)
         , m_elapsedTime(0.0f)
         , m_isGameOver(false)
+        , m_finishTimer()
         , m_countdownPacket(nullptr)
         , m_gameSetPacket(nullptr)
         , m_playerController(nullptr)
     {
+        m_finishTimer.SetTimeLimit(FINISH_WAIT_TIME);
         ui::InitUIPacket(m_countdownPacket, COUNTDOWN_JSON_PATH);
         ui::InitUIPacket(m_gameSetPacket, GAME_SET_JSON_PATH);
 
@@ -181,8 +190,10 @@ namespace app
 
     void InGameScene::UpdateGameOver()
     {
+        // ゲームセットの後は、リザルトへ進むまでの待ち時間を進める。(「Finish」を出したフレームは数えず、次のフレームから数える)
         if (m_isGameOver)
         {
+            m_finishTimer.Update(g_gameTime->GetFrameDeltaTime());
             return;
         }
 
@@ -195,7 +206,7 @@ namespace app
         m_isGameOver = true;
         // Miroを操作できなくする。(カウントダウンの時と同じく、パッドのコントローラーを外す)
         m_playerController = m_miro->GetControllerSlot().Detach();
-        // 「GAME SET」を出す
+        // 「Finish」を出す
         if (ui::GameSetMenu* gameSetMenu = m_gameSetPacket->GetMenu())
         {
             gameSetMenu->Show();
@@ -296,7 +307,15 @@ namespace app
 
     bool InGameScene::RequestScene(uint32_t& id, float& waitTime)
     {
-        return false;
+        // ゲームセットになって、「Finish」を出してから一定の時間が経ったら、リザルトへ進む
+        if (!m_isGameOver || !m_finishTimer.IsTimeUp())
+        {
+            return false;
+        }
+
+        id = RESULT_SCENE_ID;
+        waitTime = RESULT_FADE_DURATION;
+        return true;
     }
 
 

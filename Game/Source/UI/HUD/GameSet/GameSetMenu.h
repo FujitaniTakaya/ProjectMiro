@@ -1,9 +1,9 @@
 ﻿/**
  * @file GameSetMenu.h
  * @brief ゲームセットの文字を動かすMenu
- * @details 画面中央に「GAME SET」を出す。(Assets/parameter/ui/GameSet.json)
+ * @details 画面中央に「Finish」を出す。(Assets/parameter/ui/GameSet.json)
  *          jsonに、次の名前のUIText(フォントの文字)を書く。基点は中央(0.5, 0.5)にすると、座標を中心に文字が出る。
- *          - "GameSetText" : 「GAME SET」の文字。
+ *          - "GameSetText" : 「Finish」の文字。
  */
 #pragma once
 #include "Source/UI/Foundation/Menu.h"
@@ -15,7 +15,7 @@ namespace app
     {
         /**
          * @brief ゲームセットの文字を動かすMenu
-         * @details Show() で「GAME SET」を出す。出た瞬間は大きく、少しの間に元の大きさへ縮み、その後は出たままになる。
+         * @details Show() で「Finish」を出す。出た瞬間は大きく、少しの間に元の大きさへ縮み、その後は出たままになる。
          *          消す操作は無い。(ゲームセットの後は、シーンごと破棄される)
          */
         class GameSetMenu : public MenuBase
@@ -41,7 +41,7 @@ namespace app
 
         public:
             /**
-             * @brief 「GAME SET」を出す
+             * @brief 「Finish」を出す
              * @details すでに出している時は、何もしない。(動きをやり直さない)
              */
             void Show();
@@ -53,7 +53,7 @@ namespace app
 
 
         private:
-            /** 「GAME SET」の文字。(所有はキャンバス) */
+            /** 「Finish」の文字。(所有はキャンバス) */
             UIText* m_text;
             /** 出している間かどうか */
             bool m_isShowing;
