@@ -294,10 +294,9 @@ namespace nsBalloonEngine
     void RenderingEngine::ExecuteGBuffer(RenderContext& rc)
     {
         // ジオメトリ生成
-        if (m_deferredRendering3dObjects.empty())
-        {
-            return;
-        }
+        // NOTE: 描くモデルが1つも無いフレームでも、G-Bufferはクリアする。
+        //       ここで抜けると、前のシーンのG-Bufferが消えずに残り、ライティングで合成され続ける。
+        //       (インゲームからモデルの無いリザルトへ切り替えると、Miro・ステージ・ゾンビが映ったままになる)
 
 
         std::array<RenderTarget*, static_cast<size_t>(RTType::Max)> rts;
