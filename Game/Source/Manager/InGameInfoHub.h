@@ -9,6 +9,8 @@
  *              InGameInfoHub::Get().NotifyPlayerHp(miro.GetHp(), miro.GetMaxHp());
  *          プレイヤーの武器の残弾数も同じ形で、SetOnPlayerAmmoChanged() / NotifyPlayerAmmo() を使う。
  *          ステージのコアの耐久値も同じ形で、SetOnCoreHpChanged() / NotifyCoreHp() を使う。
+ *          プレイヤーの構えも同じ形で、SetOnPlayerAimChanged() / NotifyPlayerAim() を使う。
+ *          弾を撃った出来事は、SetOnPlayerFired() / NotifyPlayerFired() を使う。(値ではないので、呼ぶたびに通知される)
  * @note 登録した関数が参照するもの(UIなど)を破棄する前に、ResetObservers() を呼ぶこと。
  */
 #pragma once
@@ -91,6 +93,39 @@ namespace app
          */
         void NotifyCoreHp(const float hp, const float maxHp);
 
+        /** プレイヤーの構えが変わった時に呼ぶ関数(引数: 構えているか) */
+        using PlayerAimCallback = std::function<void(const bool isAiming)>;
+
+        /**
+         * @brief プレイヤーの構えが変わった時に呼ぶ関数を登録
+         * @details すでに登録されている場合は、置き換える。通知済みの値があれば、登録した時に最新値で1回呼ぶ。
+         * @param func 登録する関数。空の関数を渡すと、登録を解除する
+         */
+        void SetOnPlayerAimChanged(PlayerAimCallback func);
+
+        /**
+         * @brief プレイヤーの構えを通知
+         * @details 前回の通知から値が変わった時だけ、登録された関数を呼ぶ。毎フレーム呼んでよい。
+         * @param isAiming 構えているならtrue
+         */
+        void NotifyPlayerAim(const bool isAiming);
+
+        /** プレイヤーが弾を撃った時に呼ぶ関数 */
+        using PlayerFiredCallback = std::function<void()>;
+
+        /**
+         * @brief プレイヤーが弾を撃った時に呼ぶ関数を登録
+         * @details すでに登録されている場合は、置き換える。値ではなく出来事なので、登録時に呼ぶことはない。
+         * @param func 登録する関数。空の関数を渡すと、登録を解除する
+         */
+        void SetOnPlayerFired(PlayerFiredCallback func);
+
+        /**
+         * @brief プレイヤーが弾を撃ったことを通知
+         * @details 出来事なので、呼ぶたびに登録された関数を呼ぶ。(値が変わった時だけ呼ぶ他の通知とは違う)
+         */
+        void NotifyPlayerFired();
+
         /**
          * @brief 登録された関数を全て解除し、通知された値も忘れる
          * @details シーンの破棄など、ゲームの区切りで呼ぶ。
@@ -121,5 +156,13 @@ namespace app
         float m_coreHp;
         /** 最後に通知された、ステージのコアの最大耐久値 */
         float m_coreMaxHp;
+        /** プレイヤーの構えが変わった時に呼ぶ関数 */
+        PlayerAimCallback m_onPlayerAimChanged;
+        /** プレイヤーの構えが通知済みか */
+        bool m_hasPlayerAim;
+        /** 最後に通知された、プレイヤーが構えているか */
+        bool m_playerAim;
+        /** プレイヤーが弾を撃った時に呼ぶ関数 */
+        PlayerFiredCallback m_onPlayerFired;
     };
 } // namespace app

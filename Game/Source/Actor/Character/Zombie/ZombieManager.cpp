@@ -6,6 +6,7 @@
 
 #include "ZombieManager.h"
 
+#include <algorithm>
 #include <optional>
 #include <utility>
 
@@ -17,6 +18,7 @@
 #include "Source/Core/Param/ParamHolder.h"
 #include "Source/MoveBehavior/ControllerSlot.h"
 #include "ZombieBase.h"
+#include "ZombieParameter.h"
 
 
 namespace app
@@ -45,6 +47,8 @@ namespace app
 
                 auto controller = std::make_unique<TController>(zombie->GetParameter());
                 controller->SetCorePositionProvider(provider);
+                // ロックオンしているかは、ゾンビに聞く。(Controllerはゾンビが持つので、ゾンビが生きている間、ポインタは有効)
+                controller->SetLockOnQuery([target = zombie.get()]() { return target->IsLockedOn(); });
                 zombie->GetControllerSlot().Attach(std::move(controller));
                 return zombie;
             }
@@ -57,6 +61,7 @@ namespace app
             , m_coreAttackHandler(nullptr)
             , m_spawner()
             , m_zombies()
+            , m_killCounts()
         {
         }
 
@@ -90,11 +95,14 @@ namespace app
 
         void ZombieManager::Update()
         {
-            // 死んだゾンビを外す
-            RemoveDeadZombies(m_zombies);
+            // 死亡の動きが終わったゾンビを外す。外す前に、種類別に倒した数を数える
+            RemoveDeadZombies(m_zombies, [this](const ZombieBase& zombie) { ++m_killCounts[static_cast<size_t>(zombie.GetKind())]; });
+
+            // ロックオンしたゾンビから、周囲へアンガー値をばらまく
+            SpreadAnger();
 
             // 湧かせる時間で、数にも空きがあれば、1体作る
-            if (const std::optional<ZombieSpawnRequest> request = m_spawner.Update(m_zombies.size()))
+            if (const std::optional<ZombieSpawnRequest> request = m_spawner.Update(GetAliveCount()))
             {
                 m_zombies.push_back(Create(request->kind, request->position));
             }
@@ -104,6 +112,68 @@ namespace app
             {
                 zombie->UpdateWrapper();
             }
+        }
+
+
+        void ZombieManager::SpreadAnger()
+        {
+            // ロックオンの通知が出ているゾンビを集める。連鎖でロックオンしたゾンビは、この後ろに足される
+            std::vector<ZombieBase*> sources;
+            for (const std::unique_ptr<ZombieBase>& zombie : m_zombies)
+            {
+                if (zombie->ConsumeLockOnEvent())
+                {
+                    sources.push_back(zombie.get());
+                }
+            }
+
+            for (size_t i = 0; i < sources.size(); ++i)
+            {
+                ZombieBase* source = sources[i];
+                const ZombieParameter& sourceParameter = source->GetParameter();
+                const float radiusSq = sourceParameter.angerSpreadRadius * sourceParameter.angerSpreadRadius;
+                const Vector3 origin = source->GetTransform().m_position;
+
+                for (const std::unique_ptr<ZombieBase>& other : m_zombies)
+                {
+                    ZombieBase* target = other.get();
+                    if (target == source || target->IsLockedOn() || target->IsDead())
+                    {
+                        continue;
+                    }
+                    const Vector3 toTarget = target->GetTransform().m_position - origin;
+                    if (toTarget.x * toTarget.x + toTarget.z * toTarget.z > radiusSq)
+                    {
+                        continue;
+                    }
+                    target->AddAnger(sourceParameter.angerSpreadValue);
+                    // 受け取ってロックオンしたら、続けてばらまく
+                    if (target->ConsumeLockOnEvent())
+                    {
+                        sources.push_back(target);
+                    }
+                }
+            }
+        }
+
+
+        size_t ZombieManager::GetAliveCount() const
+        {
+            // 死亡アニメーション中のゾンビは、湧かせる上限の枠を占めない
+            return static_cast<size_t>(std::count_if(m_zombies.begin(), m_zombies.end(), [](const std::unique_ptr<ZombieBase>& zombie) { return !zombie->IsDead(); }));
+        }
+
+
+        ZombieBase* ZombieManager::FindByBody(const btCollisionObject& object)
+        {
+            for (const std::unique_ptr<ZombieBase>& zombie : m_zombies)
+            {
+                if (zombie->IsBody(object))
+                {
+                    return zombie.get();
+                }
+            }
+            return nullptr;
         }
 
 

@@ -17,13 +17,14 @@ namespace app
 
         /**
          * @brief ゾンビのステートマシン
-         * @details 待機・歩き・走り・攻撃(ZombieIState.h のゾンビ専用のステート)を登録して、入力から遷移先を決める。
+         * @details 待機・歩き・走り・攻撃・死亡(ZombieIState.h のゾンビ専用のステート)を登録して、入力から遷移先を決める。
+         *          死亡は最優先で、HPが0になると入る。一度入ったら抜けない。
          *          待機は、入るときに慣性を消すので、入力がなくなる(コアに着く)と、滑らずにその場で止まる。
          *          攻撃は、ActionA(攻撃ボタン)を押している間に入る。動きが終わるまでは、ボタンを離しても続ける。
          *          入力は、CharacterStateMachine が持つ ControllerSlot から Update() で作る。(CharacterStateMachine を参照)
          *          歩き・走りの速度は、プレイヤーの走り速度に ZombieParameter の割合をかけた値を返す。
          *          ロックオン専用のステートができるまでは、歩き=通常時、走り=ロックオン時として扱う。(走りは、入力のダッシュで切り替わる)
-         *          ゾンビ専用のステート(ロックオン・死亡など)が要るようになったら、ここで追加する。
+         *          ゾンビ専用のステート(ロックオンなど)が要るようになったら、ここで追加する。
          * @note ZombieParameter・MiroParameter は ParamHolder が持つものの参照なので、ホットリロードで速度が変わる。
          */
         class ZombieStateMachine : public CharacterStateMachine
@@ -40,6 +41,12 @@ namespace app
              */
             virtual float GetRunSpeed() const override;
 
+            /**
+             * @brief 死亡の動きが終わったか
+             * @return 死亡ステートに入っていて、死亡アニメーションの再生が終わっていれば true
+             */
+            bool IsDeathFinished() const;
+
 
         protected:
             /**
@@ -50,7 +57,7 @@ namespace app
 
             /**
              * @brief ステートの変更先を取得する
-             * @details 優先度の高い順に判定する。攻撃に入る(続ける)なら攻撃、走りに切り替えられるなら走り、移動入力があれば歩き、どれにも当てはまらなければ待機。
+             * @details 優先度の高い順に判定する。死亡していれば死亡、攻撃に入る(続ける)なら攻撃、走りに切り替えられるなら走り、移動入力があれば歩き、どれにも当てはまらなければ待機。
              * @return 変更先のステートポインタ
              */
             virtual IState* GetChangeState() override;

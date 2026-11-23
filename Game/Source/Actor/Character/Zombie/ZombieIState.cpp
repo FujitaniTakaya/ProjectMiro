@@ -140,5 +140,36 @@ namespace app
             : CharacterIState(owner)
         {
         }
+
+
+
+
+        /*************************************************************/
+
+
+        void ZombieDeathState::Enter()
+        {
+            // 慣性で滑らないよう止めて、死亡アニメーションを再生する
+            m_owner->SetMoveSpeed(0.0f);
+            m_owner->StopMoving();
+            m_owner->PlayAnimation(EnZombieAnimationClipID::Death);
+        }
+
+
+        void ZombieDeathState::Update()
+        {
+            // 何もしない。体は物理ワールドから外れているので、Move() も呼ばない
+        }
+
+
+        void ZombieDeathState::Exit()
+        {
+        }
+
+
+        ZombieDeathState::ZombieDeathState(CharacterStateMachine* owner)
+            : CharacterIState(owner)
+        {
+        }
     } // namespace actor
 } // namespace app

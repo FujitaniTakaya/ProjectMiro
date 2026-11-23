@@ -36,6 +36,8 @@ namespace app
             , maxToCameraDirY(0.9f)
             , nearClip(1.0f)
             , farClip(10000.0f)
+            , aimDistanceScale(0.6f)
+            , aimBlendSeconds(0.2f)
         {
         }
         // [PARAM_GEN end ctor]
@@ -52,6 +54,8 @@ namespace app
             param.targetOffsetUp = ParamLoader::ToFloat(root, "targetOffsetUp", param.targetOffsetUp);
             param.targetOffsetRight = ParamLoader::ToFloat(root, "targetOffsetRight", param.targetOffsetRight);
             param.rotateSpeed = ParamLoader::ToFloat(root, "rotateSpeed", param.rotateSpeed);
+            param.aimDistanceScale = ParamLoader::ToFloat(root, "aimDistanceScale", param.aimDistanceScale);
+            param.aimBlendSeconds = ParamLoader::ToFloat(root, "aimBlendSeconds", param.aimBlendSeconds);
             // [PARAM_GEN end load]
 
             // 注視点から視点までのベクトル。水平成分が0だと、カメラの右方向が決まらない。
@@ -105,6 +109,8 @@ namespace app
             ImGui::Text("maxToCameraDirY: %.2f", param.maxToCameraDirY);
             ImGui::Text("nearClip: %.1f", param.nearClip);
             ImGui::Text("farClip: %.1f", param.farClip);
+            ImGui::Text("aimDistanceScale: %.1f", param.aimDistanceScale);
+            ImGui::Text("aimBlendSeconds: %.1f", param.aimBlendSeconds);
             // [PARAM_GEN end draw]
 #endif // BALLOON_IMGUI_ENABLED
         }

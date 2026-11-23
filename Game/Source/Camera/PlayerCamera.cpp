@@ -6,10 +6,12 @@
 
 #include "PlayerCamera.h"
 
+#include <algorithm>
 #include <cfloat>
 
 #include "PlayerCameraParameter.h"
 #include "Source/Core/Param/ParamHolder.h"
+#include "Source/Core/Util/Curve.h"
 #include "Source/Option/OptionSettings.h"
 
 
@@ -23,6 +25,7 @@ namespace app
             , m_toCameraPos(Vector3::Zero)
             , m_targetPosition(Vector3::Zero)
             , m_isAiming(false)
+            , m_aimRate(0.0f)
         {
         }
 
@@ -89,8 +92,14 @@ namespace app
             Vector3 target = m_targetPosition + cameraRight * m_parameter.targetOffsetRight;
             target.y += m_parameter.targetOffsetUp;
 
-            // 視点を計算する。
-            const Vector3 pos = target + m_toCameraPos;
+            // 構えの度合いを、構え中は1へ、そうでなければ0へ動かす。(切り替えの時間が0以下なら、一瞬で切り替える)
+            const float aimStep = m_parameter.aimBlendSeconds > FLT_EPSILON ? g_gameTime->GetFrameDeltaTime() / m_parameter.aimBlendSeconds : 1.0f;
+            m_aimRate = m_isAiming ? (std::min)(m_aimRate + aimStep, 1.0f) : (std::max)(m_aimRate - aimStep, 0.0f);
+            const float aimEased = util::ApplyEasing(util::EasingType::EaseInOut, m_aimRate);
+
+            // 視点を計算する。構え中は、回転後のベクトルは触らずに、距離だけ縮めたものを使う。
+            const float distanceScale = 1.0f + (m_parameter.aimDistanceScale - 1.0f) * aimEased;
+            const Vector3 pos = target + m_toCameraPos * distanceScale;
 
             // メインカメラに設定して更新する。
             g_camera3D->SetNear(m_parameter.nearClip);

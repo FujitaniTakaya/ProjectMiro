@@ -41,6 +41,10 @@ namespace app
             float nearClip;
             /** ファークリップ */
             float farClip;
+            /** 構え中の、注視点から視点までの距離の倍率(1より小さいほど近づく) */
+            float aimDistanceScale;
+            /** 構えの切り替えで、カメラが近づく/戻る時間(秒) */
+            float aimBlendSeconds;
             // [PARAM_GEN end members]
         };
 

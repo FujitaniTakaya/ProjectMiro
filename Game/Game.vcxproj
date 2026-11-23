@@ -323,6 +323,12 @@
     <ClCompile Include="Source\UI\HUD\GameTimer\GameTimerMenu.cpp" />
     <ClCompile Include="Source\UI\HUD\GameSet\GameSetMenu.cpp" />
     <ClCompile Include="Source\UI\Screen\Result\ResultMenu.cpp" />
+    <ClCompile Include="Source\Actor\Weapon\Bullet\Bullet.cpp" />
+    <ClCompile Include="Source\Actor\Weapon\Bullet\BulletManager.cpp" />
+    <ClCompile Include="Source\Actor\Weapon\Bullet\BulletParameter.cpp" />
+    <ClCompile Include="Source\Actor\Weapon\Bullet\BulletSweep.cpp" />
+    <ClCompile Include="Source\Score\GameResult.cpp" />
+    <ClCompile Include="Source\UI\HUD\Reticle\ReticleMenu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -443,6 +449,14 @@
     <ClInclude Include="Source\UI\HUD\GameTimer\GameTimerMenu.h" />
     <ClInclude Include="Source\UI\HUD\GameSet\GameSetMenu.h" />
     <ClInclude Include="Source\UI\Screen\Result\ResultMenu.h" />
+    <ClInclude Include="Source\Actor\Weapon\Bullet\Bullet.h" />
+    <ClInclude Include="Source\Actor\Weapon\Bullet\BulletManager.h" />
+    <ClInclude Include="Source\Actor\Weapon\Bullet\BulletParameter.h" />
+    <ClInclude Include="Source\Actor\Weapon\Bullet\BulletHit.h" />
+    <ClInclude Include="Source\Actor\Weapon\Bullet\BulletSweep.h" />
+    <ClInclude Include="Source\Score\GameResult.h" />
+    <ClInclude Include="Source\Score\ScoreRule.h" />
+    <ClInclude Include="Source\UI\HUD\Reticle\ReticleMenu.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BalloonEngine\BalloonEngine.vcxproj">

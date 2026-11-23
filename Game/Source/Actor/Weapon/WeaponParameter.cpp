@@ -18,6 +18,9 @@ namespace app
             , magazineSize(0)
             , gripPosition(Vector3::Zero)
             , gripRotation(Quaternion::Identity)
+            , muzzleBoneName()
+            , muzzlePosition(Vector3::Zero)
+            , muzzleRotation(Quaternion::Identity)
         {
         }
 
@@ -33,6 +36,9 @@ namespace app
             param.magazineSize = ParamLoader::ToUInt32(root, "magazineSize", param.magazineSize);
             param.gripPosition = ParamLoader::ToVector3(root, "gripPosition", param.gripPosition);
             param.gripRotation = ParamLoader::ToRotation(root, "gripRotation", true, param.gripRotation);
+            param.muzzleBoneName = ParamLoader::ToString(root, "muzzleBoneName", param.muzzleBoneName);
+            param.muzzlePosition = ParamLoader::ToVector3(root, "muzzlePosition", param.muzzlePosition);
+            param.muzzleRotation = ParamLoader::ToRotation(root, "muzzleRotation", true, param.muzzleRotation);
         }
 
 
@@ -43,6 +49,9 @@ namespace app
             ImGui::Text("magazineSize: %u", param.magazineSize);
             ImGui::Text("gripPosition: (%.2f, %.2f, %.2f)", param.gripPosition.x, param.gripPosition.y, param.gripPosition.z);
             ImGui::Text("gripRotation: (%.3f, %.3f, %.3f, %.3f)", param.gripRotation.x, param.gripRotation.y, param.gripRotation.z, param.gripRotation.w);
+            ImGui::Text("muzzleBoneName: %s", param.muzzleBoneName.c_str());
+            ImGui::Text("muzzlePosition: (%.2f, %.2f, %.2f)", param.muzzlePosition.x, param.muzzlePosition.y, param.muzzlePosition.z);
+            ImGui::Text("muzzleRotation: (%.3f, %.3f, %.3f, %.3f)", param.muzzleRotation.x, param.muzzleRotation.y, param.muzzleRotation.z, param.muzzleRotation.w);
 #endif // BALLOON_IMGUI_ENABLED
         }
     } // namespace actor

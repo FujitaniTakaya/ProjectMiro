@@ -23,6 +23,10 @@ namespace app
         , m_hasCoreHp(false)
         , m_coreHp(0.0f)
         , m_coreMaxHp(0.0f)
+        , m_onPlayerAimChanged(nullptr)
+        , m_hasPlayerAim(false)
+        , m_playerAim(false)
+        , m_onPlayerFired(nullptr)
     {}
 
 
@@ -125,6 +129,50 @@ namespace app
     }
 
 
+    void InGameInfoHub::SetOnPlayerAimChanged(PlayerAimCallback func)
+    {
+        m_onPlayerAimChanged = std::move(func);
+
+        // 通知済みの最新値を、登録した側にも渡す
+        if (m_onPlayerAimChanged && m_hasPlayerAim)
+        {
+            m_onPlayerAimChanged(m_playerAim);
+        }
+    }
+
+
+    void InGameInfoHub::NotifyPlayerAim(const bool isAiming)
+    {
+        if (m_hasPlayerAim && m_playerAim == isAiming)
+        {
+            return;
+        }
+
+        m_hasPlayerAim = true;
+        m_playerAim = isAiming;
+
+        if (m_onPlayerAimChanged)
+        {
+            m_onPlayerAimChanged(m_playerAim);
+        }
+    }
+
+
+    void InGameInfoHub::SetOnPlayerFired(PlayerFiredCallback func)
+    {
+        m_onPlayerFired = std::move(func);
+    }
+
+
+    void InGameInfoHub::NotifyPlayerFired()
+    {
+        if (m_onPlayerFired)
+        {
+            m_onPlayerFired();
+        }
+    }
+
+
     void InGameInfoHub::ResetObservers()
     {
         m_onPlayerHpChanged = nullptr;
@@ -138,5 +186,9 @@ namespace app
         m_hasCoreHp = false;
         m_coreHp = 0.0f;
         m_coreMaxHp = 0.0f;
+        m_onPlayerAimChanged = nullptr;
+        m_hasPlayerAim = false;
+        m_playerAim = false;
+        m_onPlayerFired = nullptr;
     }
 } // namespace app

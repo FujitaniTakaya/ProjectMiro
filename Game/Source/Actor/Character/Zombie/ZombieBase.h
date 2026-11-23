@@ -6,6 +6,7 @@
 #include <memory>
 
 #include "Source/Actor/Character/CharacterBase.h"
+#include "Source/Actor/Character/Zombie/Spawn/ZombieSpawnRule.h"
 #include "ZombieAttackHandler.h"
 #include "physics/PhysicsGhostObject.h"
 
@@ -39,7 +40,8 @@ namespace app
          *          - AttackEnd   : 攻撃判定の箱を消す
          *          箱が出ている間、毎フレーム、重なっている物を SetAttackHandler() の処理に渡す。
          *          処理が当たりとして扱ったら(true を返したら)、その振りではもう渡さない。(1振りで1回だけダメージが入る)
-         * @note アンガー値の加算・本格ロックオンへの移行・周囲への伝播は、まだ無い。
+         * @note アンガー値は、弾に撃たれた時(TakeShotDamage)と、周囲のゾンビからの伝播(AddAnger)で増える。
+         *       angerThreshold に達するとロックオンになり(IsLockedOn)、周囲へ伝播する。伝播は ZombieManager が行う。
          *       攻撃判定は右手だけ。(攻撃アニメで振り下ろされるのが右手のため)
          *       初期座標は、Start() の前に SetPosition() で設定しておくこと。(キャラクターコントローラーが現在の座標に作られる)
          */
@@ -64,6 +66,13 @@ namespace app
             }
 
             /**
+             * @brief ゾンビの種類を取得
+             * @details 倒した数を種類別に数えるために使う。派生クラスが、自分の種類を返す。
+             * @return ゾンビの種類
+             */
+            virtual EnZombieKind GetKind() const = 0;
+
+            /**
              * @brief 最大HPを取得
              * @return ZombieParameter の最大HP
              */
@@ -84,11 +93,59 @@ namespace app
             void SetAnger(const float anger);
 
             /**
+             * @brief ロックオンしているか調べる
+             * @details 累積アンガー値が angerThreshold に達したことがあれば true。一度なったら戻らない。
+             *          ロックオンしたゾンビは、コアではなくMiroへ向かう。(向かう先は、持ち主の処理が選ぶ)
+             * @return ロックオンしていれば true
+             */
+            inline bool IsLockedOn() const
+            {
+                return m_isLockedOn;
+            }
+
+            /**
+             * @brief 累積アンガー値を加算する
+             * @details 初めて angerThreshold に達した時、ロックオンにして、周囲へアンガー値をばらまくための通知を1回だけ予約する。
+             * @param amount 加算する値。0以下なら何もしない
+             */
+            void AddAnger(const float amount);
+
+            /**
+             * @brief 弾に撃たれた時の処理
+             * @details HPを damage だけ減らし、damage × angerGainRate を累積アンガー値に加える。
+             * @param damage 弾のダメージ
+             */
+            void TakeShotDamage(const float damage);
+
+            /**
+             * @brief ロックオンした時の通知を取り出す
+             * @details 初めてロックオンした時に1回だけ予約される。取り出すと消える。周囲へアンガー値をばらまく側(ZombieManager)が使う。
+             * @return ロックオンして、まだ取り出していなければ true
+             */
+            bool ConsumeLockOnEvent();
+
+            /**
              * @brief 攻撃判定が何かに重なった時の処理を設定
              * @details Start() の前でも後でもよい。次の攻撃の振りから使われる。
              * @param handler 重なった時の処理。空なら何にも当たらない
              */
             void SetAttackHandler(const ZombieAttackHandler& handler);
+
+            /**
+             * @brief 物理ワールドの判定が、このゾンビの体か調べる
+             * @details 弾が当たった物理オブジェクト(btCollisionObject)から、当たったゾンビを探す時に使う。(Core::IsHitBox() と同じ作り)
+             *          体は、キャラクターコントローラーのカプセル1つ。攻撃判定の箱は体ではない。
+             * @param object 調べる物理ワールドの判定
+             * @return このゾンビの体なら true
+             */
+            bool IsBody(const btCollisionObject& object);
+
+            /**
+             * @brief 死亡の動き(死亡アニメーション)が終わったか
+             * @details HPが0になっても、死亡アニメーションが終わるまでは false。ZombieManager が、true になったゾンビを破棄する。
+             * @return 死亡の動きが終わっていれば true
+             */
+            bool IsDeathFinished() const;
 
 
         public:
@@ -124,6 +181,14 @@ namespace app
             /** 攻撃判定の箱を右手に合わせて、重なった物を攻撃の処理に渡す(箱が出ている間だけ) */
             void UpdateAttackHitBox();
 
+            /**
+             * @brief 死亡した瞬間の後始末(1度だけ)
+             * @details 攻撃判定の箱を消して、体を物理ワールドから外す。
+             *          振りの途中で死んでも AttackEnd のイベントは来ないので、ここで箱を消す。(死にかけでコアを殴らせない)
+             *          体を外すので、死体に弾は当たらない。
+             */
+            void OnDead();
+
 
         private:
             /** パラメーター(ParamHolderが持つもの。アプリが終わるまで使える) */
@@ -134,6 +199,10 @@ namespace app
             std::unique_ptr<ZombieStateMachine> m_stateMachine;
             /** 累積アンガー値 */
             float m_anger;
+            /** ロックオンしているか。一度なったら戻らない */
+            bool m_isLockedOn;
+            /** ロックオンした時の通知が、まだ取り出されていないか */
+            bool m_hasLockOnEvent;
             /** 攻撃判定の箱(AttackBegin から AttackEnd の間だけ、物理ワールドに登録される) */
             PhysicsGhostObject m_attackHitBox;
             /** 攻撃判定が重なった時の処理 */
@@ -144,6 +213,8 @@ namespace app
             bool m_isAttackActive;
             /** 今の振りで、もう当たったか */
             bool m_hasAttackHit;
+            /** 死亡した後始末(OnDead())が済んだか */
+            bool m_isDead;
         };
     } // namespace actor
 } // namespace app

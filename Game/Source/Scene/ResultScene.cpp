@@ -7,6 +7,8 @@
 #include "ResultScene.h"
 
 #include "Fade.h"
+#include "Source/Score/GameResult.h"
+#include "Source/Score/ScoreRule.h"
 #include "Source/UI/Screen/Result/ResultMenu.h"
 #include "TitleScene.h"
 
@@ -41,6 +43,12 @@ namespace app
 
     bool ResultScene::Start()
     {
+        // インゲームが書いた結果から、スコアを計算して表示する
+        const GameResultData& data = GameResult::Get().Data();
+        if (ui::ResultMenu* menu = m_resultPacket->GetMenu())
+        {
+            menu->SetResult(data, CalcScore(data.survivedSeconds, data.normalKills, data.runningKills));
+        }
         return true;
     }
 

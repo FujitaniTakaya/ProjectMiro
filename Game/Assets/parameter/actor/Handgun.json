@@ -10,5 +10,16 @@
         -185.7,
         -168.1,
         -89.5
+    ],
+    "muzzleBoneName": "Mantle_joint",
+    "muzzlePosition": [
+        0.0,
+        0.0,
+        0.0
+    ],
+    "muzzleRotation": [
+        0.0,
+        0.0,
+        0.0
     ]
 }

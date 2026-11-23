@@ -7,6 +7,7 @@
  */
 #pragma once
 #include <cstdint>
+#include <string>
 
 #include "Source/Core/Json/JsonView.h"
 
@@ -32,6 +33,12 @@ namespace app
             Vector3 gripPosition;
             /** 手のボーンから見た、武器の向き。jsonは [rotX, rotY, rotZ](度)で書く */
             Quaternion gripRotation;
+            /** 弾を出すボーンの名前(武器のモデルのボーン)。jsonは "muzzleBoneName": "Root_joint" */
+            std::string muzzleBoneName;
+            /** 弾を出す位置。上のボーンから見たずれ(cm) */
+            Vector3 muzzlePosition;
+            /** 弾の向き。上のボーンから見た回転。jsonは [rotX, rotY, rotZ](度) */
+            Quaternion muzzleRotation;
         };
 
 

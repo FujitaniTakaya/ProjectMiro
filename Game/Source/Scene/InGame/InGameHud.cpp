@@ -13,6 +13,7 @@
 #include "Source/UI/HUD/GameTimer/GameTimerMenu.h"
 #include "Source/UI/HUD/Handgun/HandgunAmmoMenu.h"
 #include "Source/UI/HUD/PlayerHP/HPBarMenu.h"
+#include "Source/UI/HUD/Reticle/ReticleMenu.h"
 
 
 namespace app
@@ -53,7 +54,13 @@ namespace app
             InGameInfoHub::Get().SetOnPlayerAmmoChanged([ammoMenu](const uint32_t remainingAmmo) { ammoMenu->SetAmmo(remainingAmmo); });
         }
 
+        // レティクル。InGameInfoHubに通知された構えと発砲を受け取る
         ui::InitUIPacket(m_reticlePacket, RETICLE_JSON_PATH);
+        if (ui::ReticleMenu* reticleMenu = m_reticlePacket->GetMenu())
+        {
+            InGameInfoHub::Get().SetOnPlayerAimChanged([reticleMenu](const bool isAiming) { reticleMenu->SetAiming(isAiming); });
+            InGameInfoHub::Get().SetOnPlayerFired([reticleMenu]() { reticleMenu->OnFired(); });
+        }
 
         // コアの耐久値バー。コアより先に作って、InGameInfoHubに通知された耐久値を受け取る
         ui::InitUIPacket(m_coreHpBarPacket, CORE_HP_BAR_JSON_PATH);

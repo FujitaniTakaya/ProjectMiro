@@ -12,6 +12,8 @@
         { "name": "minToCameraDirY", "type": "float", "doc": "注視点から視点までのベクトルを正規化したときの、y成分の下限(これより下に回さない。上向きすぎの制限)", "digits": 2, "load": "custom" },
         { "name": "maxToCameraDirY", "type": "float", "doc": "注視点から視点までのベクトルを正規化したときの、y成分の上限(これより上に回さない。下向きすぎの制限)", "digits": 2, "load": "custom" },
         { "name": "nearClip", "type": "float", "doc": "ニアクリップ", "load": "custom" },
-        { "name": "farClip", "type": "float", "doc": "ファークリップ", "load": "custom" }
+        { "name": "farClip", "type": "float", "doc": "ファークリップ", "load": "custom" },
+        { "name": "aimDistanceScale", "type": "float", "doc": "構え中の、注視点から視点までの距離の倍率(1より小さいほど近づく)" },
+        { "name": "aimBlendSeconds", "type": "float", "doc": "構えの切り替えで、カメラが近づく/戻る時間(秒)" }
     ]
 }

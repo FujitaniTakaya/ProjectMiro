@@ -75,6 +75,15 @@ namespace app
                 return m_hp;
             }
             /**
+             * @brief 死亡しているか
+             * @note Init() の前は現在のHPが0なので true になる。
+             * @return 現在のHPが0以下なら true
+             */
+            inline bool IsDead() const
+            {
+                return m_hp <= 0.0f;
+            }
+            /**
              * @brief 最大HPを取得
              * @details キャラクターごとのパラメーター(statusのmaxHp)を返す。
              * @return 最大HP

@@ -22,6 +22,12 @@ namespace app
         public:
             NormalZombie();
             virtual ~NormalZombie() override;
+
+            /**
+             * @brief ゾンビの種類を取得
+             * @return EnZombieKind::Normal
+             */
+            virtual EnZombieKind GetKind() const override;
         };
     } // namespace actor
 } // namespace app

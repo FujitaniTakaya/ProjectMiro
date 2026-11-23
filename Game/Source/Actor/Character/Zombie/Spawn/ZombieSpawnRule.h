@@ -89,17 +89,27 @@ namespace app
 
 
         /**
-         * @brief HPが0以下のゾンビを外す
-         * @details 外れたゾンビは破棄される。他のゾンビの順番は変わらない。
-         * @note 死亡ステートがまだ無いので、HPが0になった瞬間に外す。死亡ステートを足したら、死亡アニメーションが終わったら外す形に変えること。
-         * @tparam TZombie ゾンビの型。GetHp() を持つこと
+         * @brief 死亡の動きが終わったゾンビを外す
+         * @details 外れたゾンビは破棄される。他のゾンビの順番は変わらない。HPが0になっても、死亡アニメーションが終わるまでは残る。
+         *          外す前に、外すゾンビ1体ごとに onRemove を呼ぶ。(倒した数を種類別に数えるなど。外した後は破棄されて触れない)
+         * @tparam TZombie ゾンビの型。IsDeathFinished() を持つこと
+         * @tparam TOnRemove 外すゾンビを受け取る関数の型。const TZombie& を1つ取る
          * @param[in,out] zombies ゾンビのリスト
+         * @param onRemove 外すゾンビ1体ごとに、外す前に呼ぶ関数
          * @return 外した数
          */
-        template <typename TZombie>
-        size_t RemoveDeadZombies(std::vector<std::unique_ptr<TZombie>>& zombies)
+        template <typename TZombie, typename TOnRemove>
+        size_t RemoveDeadZombies(std::vector<std::unique_ptr<TZombie>>& zombies, TOnRemove&& onRemove)
         {
-            const auto newEnd = std::remove_if(zombies.begin(), zombies.end(), [](const std::unique_ptr<TZombie>& zombie) { return zombie->GetHp() <= 0.0f; });
+            for (const std::unique_ptr<TZombie>& zombie : zombies)
+            {
+                if (zombie->IsDeathFinished())
+                {
+                    onRemove(*zombie);
+                }
+            }
+
+            const auto newEnd = std::remove_if(zombies.begin(), zombies.end(), [](const std::unique_ptr<TZombie>& zombie) { return zombie->IsDeathFinished(); });
             const size_t removedCount = static_cast<size_t>(std::distance(newEnd, zombies.end()));
             zombies.erase(newEnd, zombies.end());
             return removedCount;

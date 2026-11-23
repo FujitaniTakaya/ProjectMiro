@@ -46,11 +46,14 @@ namespace app
             , m_modelData(modelData)
             , m_stateMachine(nullptr)
             , m_anger(0.0f)
+            , m_isLockedOn(false)
+            , m_hasLockOnEvent(false)
             , m_attackHitBox()
             , m_attackHandler(nullptr)
             , m_attackBone(nullptr)
             , m_isAttackActive(false)
             , m_hasAttackHit(false)
+            , m_isDead(false)
         {
             m_stateMachine = std::make_unique<ZombieStateMachine>(this, m_parameter);
         }
@@ -77,9 +80,53 @@ namespace app
         }
 
 
+        void ZombieBase::AddAnger(const float amount)
+        {
+            if (amount <= 0.0f)
+            {
+                return;
+            }
+            SetAnger(m_anger + amount);
+            // 初めてしきい値に達した時だけ、ロックオンにして、伝播の通知を予約する
+            if (!m_isLockedOn && m_anger >= m_parameter.angerThreshold)
+            {
+                m_isLockedOn = true;
+                m_hasLockOnEvent = true;
+            }
+        }
+
+
+        void ZombieBase::TakeShotDamage(const float damage)
+        {
+            TakeDamage(damage);
+            AddAnger(damage * m_parameter.angerGainRate);
+        }
+
+
+        bool ZombieBase::ConsumeLockOnEvent()
+        {
+            const bool hasEvent = m_hasLockOnEvent;
+            m_hasLockOnEvent = false;
+            return hasEvent;
+        }
+
+
         void ZombieBase::SetAttackHandler(const ZombieAttackHandler& handler)
         {
             m_attackHandler = handler;
+        }
+
+
+        bool ZombieBase::IsBody(const btCollisionObject& object)
+        {
+            return &object == m_characterController.GetRigidBody()->GetBody();
+        }
+
+
+        bool ZombieBase::IsDeathFinished() const
+        {
+            // m_isDead を条件に含めるのは、Init() 前(HPが初期値の0)に、死亡扱いされないため
+            return m_isDead && m_stateMachine->IsDeathFinished();
         }
 
 
@@ -92,13 +139,22 @@ namespace app
             m_attackBone = m_modelRender.FindBone(ATTACK_BONE_NAME);
             m_modelRender.AddAnimationEventListener([this]([[maybe_unused]] const wchar_t* clipName, const wchar_t* eventName) { OnAnimationEvent(eventName); });
 
-            // 累積アンガー値は、初期アンガー値から始める
-            m_anger = m_parameter.initialAnger;
+            // 累積アンガー値は、初期アンガー値から始める。(初期値がしきい値以上なら、最初からロックオン)
+            m_anger = 0.0f;
+            m_isLockedOn = false;
+            m_hasLockOnEvent = false;
+            AddAnger(m_parameter.initialAnger);
         }
 
 
         void ZombieBase::Update()
         {
+            // 死亡した瞬間に、1度だけ後始末する。(ステートマシンの更新より前なので、死亡ステートの1フレーム目から体は無い)
+            if (!m_isDead && IsDead())
+            {
+                OnDead();
+            }
+
             // 入力の作成とステートの更新(入力はステートマシンが持つコントローラーから作る)
             m_stateMachine->Update();
 
@@ -116,8 +172,26 @@ namespace app
         }
 
 
+        void ZombieBase::OnDead()
+        {
+            m_isDead = true;
+
+            m_attackHitBox.Release();
+            m_isAttackActive = false;
+
+            // デストラクタの RemoveRigidBoby() で二重に外れるが、bullet 側では無害
+            m_characterController.RemoveRigidBoby();
+        }
+
+
         void ZombieBase::OnAnimationEvent(const wchar_t* eventName)
         {
+            // 死亡した後に届いたイベントで、攻撃判定を出さない
+            if (m_isDead)
+            {
+                return;
+            }
+
             if (std::wcscmp(eventName, ATTACK_BEGIN_EVENT) == 0)
             {
                 // 右手のボーンが無ければ、攻撃判定は出ない

@@ -23,6 +23,12 @@ namespace app
         }
 
 
+        void RunningZombieController::SetLockOnQuery(const ZombieCoreApproach::LockOnQuery& query)
+        {
+            m_coreApproach.SetLockOnQuery(query);
+        }
+
+
         CharacterInput RunningZombieController::Update(const ControllerContext& context)
         {
             CharacterInput input;

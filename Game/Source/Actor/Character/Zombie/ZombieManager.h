@@ -3,6 +3,7 @@
  * @brief ゾンビの生成・破棄・保持を行うクラス
  */
 #pragma once
+#include <array>
 #include <cstddef>
 #include <cstdint>
 #include <memory>
@@ -28,8 +29,9 @@ namespace app
          * @details 生きているゾンビを全部ここが持つ。作る・更新する・描画する・破棄するも、ここが行う。
          *          湧かせる判断(ゲート・間隔・種類)は、中の ZombieSpawner が行う。ここは、その結果(ZombieSpawnRequest)を受けて作るだけ。
          *          湧いたゾンビには、コアへ向かうControllerを付ける。
-         *          HPが0以下になったゾンビは、Update() の頭で外して破棄する。
+         *          HPが0になったゾンビは死亡アニメーションを再生して、それが終わったら Update() の頭で外して破棄する。外す時に、種類別の倒した数(GetKillCount())を数える。
          *          Update() は、シーンの Update() から毎フレーム呼ぶ。ポーズ中(Update()が呼ばれない間)は、湧かせるタイマーも止まる。
+         *          ロックオンしたゾンビ(アンガー値がしきい値に達した)は、周囲のゾンビへアンガー値をばらまく。(SpreadAnger())
          *          例: manager.SetCorePositionProvider(provider);
          *              manager.SetCoreAttackHandler(handler);
          *              manager.Preload();      // シーンのStart()
@@ -53,8 +55,9 @@ namespace app
 
 
             /**
-             * @brief コアの位置を教える関数を設定する
-             * @details 設定した後に湧いたゾンビへ渡される。湧いている最中のゾンビには渡されないので、湧かせ始める前に設定すること。
+             * @brief 向かう先の位置を教える関数を設定する
+             * @details ゾンビの位置と、ロックオンしているかを渡して、向かう先(コアかMiro)を返す関数。名前はコアのまま。
+             *          設定した後に湧いたゾンビへ渡される。湧いている最中のゾンビには渡されないので、湧かせ始める前に設定すること。
              * @note コアを破棄する前に、このクラスを破棄するか、nullptr を設定すること(関数が持っているポインタが残らないように)
              * @param provider コアの位置を教える関数。nullptr ならコアなし(ゾンビは動かない)
              */
@@ -92,13 +95,19 @@ namespace app
             void Render(RenderContext& rc);
 
             /**
-             * @brief 生きているゾンビの数を取得
-             * @return 今このクラスが持っているゾンビの数
+             * @brief 物理ワールドの判定から、そのゾンビを探す
+             * @details 弾が当たった物理オブジェクトから、当たったゾンビを知るために使う。
+             * @param object 探す物理ワールドの判定(ゾンビの体)
+             * @return 見つかったゾンビ。どのゾンビの体でもなければ nullptr(ステージ・コアなど)。破棄されるまで(次の Update() まで)有効
              */
-            inline size_t GetAliveCount() const
-            {
-                return m_zombies.size();
-            }
+            ZombieBase* FindByBody(const btCollisionObject& object);
+
+            /**
+             * @brief 生きているゾンビの数を取得
+             * @details 死亡アニメーション中のゾンビは含まない。湧かせる上限の判定にも使う。
+             * @return HPが残っているゾンビの数
+             */
+            size_t GetAliveCount() const;
 
             /**
              * @brief これまでに湧かせた数を取得
@@ -109,8 +118,28 @@ namespace app
                 return m_spawner.GetSpawnedCount();
             }
 
+            /**
+             * @brief 倒した数を取得
+             * @details HPが0以下になって外したゾンビを、種類別に数えたもの。Miroに倒されたかどうかは区別しない。(今はHPを減らすのは弾だけ)
+             * @param kind ゾンビの種類
+             * @return その種類を倒した数。EnZombieKind::Max など範囲外の種類は0
+             */
+            inline uint32_t GetKillCount(const EnZombieKind kind) const
+            {
+                const size_t index = static_cast<size_t>(kind);
+                return index < m_killCounts.size() ? m_killCounts[index] : 0;
+            }
+
 
         private:
+            /**
+             * @brief ロックオンしたゾンビから、周囲のゾンビへアンガー値をばらまく
+             * @details ロックオンの通知が出ているゾンビごとに、半径(そのゾンビの angerSpreadRadius。XZ平面)以内の、まだロックオンしていない生きたゾンビへ、
+             *          そのゾンビの angerSpreadValue を加える。受け取ってロックオンしたゾンビも、続けて同じようにばらまく。(連鎖)
+             *          各ゾンビがロックオンするのは1回だけなので、必ず終わる。
+             */
+            void SpreadAnger();
+
             /**
              * @brief 指定した種類のゾンビを1体作る
              * @details 座標を設定して Start() まで行い、コアへ向かうControllerを付ける。Update() はまだ呼ばれていない。
@@ -132,6 +161,8 @@ namespace app
             ZombieSpawner m_spawner;
             /** 生きているゾンビ */
             std::vector<std::unique_ptr<ZombieBase>> m_zombies;
+            /** 倒した数。EnZombieKind の順 */
+            std::array<uint32_t, static_cast<size_t>(EnZombieKind::Max)> m_killCounts;
         };
     } // namespace actor
 } // namespace app

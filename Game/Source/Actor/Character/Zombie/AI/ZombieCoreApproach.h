@@ -39,10 +39,20 @@ namespace app
         {
         public:
             /**
-             * @brief コアの位置を教える関数
-             * @return コアの足元(地面)のワールド座標。高さは使わない。コアがなければ std::nullopt
+             * @brief 向かう先の位置を教える関数
+             * @details 名前はコアのままだが、向かう先はコアとは限らない。持ち主(シーン)が、ロックオンしているかを見て、コアかMiroかを選んで返す。
+             *          毎フレーム呼ばれる。
+             * @param from 向かうゾンビの今の座標
+             * @param isLockedOn 向かうゾンビがロックオンしているか(アンガー値がしきい値に達したか)
+             * @return 向かう先の足元(地面)のワールド座標。高さは使わない。向かう先がなければ std::nullopt
              */
-            using PositionProvider = std::function<std::optional<Vector3>()>;
+            using PositionProvider = std::function<std::optional<Vector3>(const Vector3& from, bool isLockedOn)>;
+
+            /**
+             * @brief 向かうゾンビがロックオンしているかを教える関数
+             * @return ロックオンしていれば true
+             */
+            using LockOnQuery = std::function<bool()>;
 
 
         public:
@@ -59,6 +69,13 @@ namespace app
              * @param provider コアの位置を教える関数。nullptr ならコアなし
              */
             void SetCorePositionProvider(const PositionProvider& provider);
+
+
+            /**
+             * @brief ロックオンしているかを教える関数を設定する
+             * @param query ロックオンしているかを教える関数。nullptr ならロックオンしていない扱い
+             */
+            void SetLockOnQuery(const LockOnQuery& query);
 
 
             /**
@@ -121,12 +138,16 @@ namespace app
             const ZombieParameter& m_parameter;
             /** 経路探索のパラメーター(ParamHolderが持つもの。アプリが終わるまで使える) */
             const nav::NavigationParameter& m_navParameter;
-            /** コアの位置を教える関数 */
+            /** 向かう先の位置を教える関数 */
             PositionProvider m_corePositionProvider;
+            /** ロックオンしているかを教える関数 */
+            LockOnQuery m_lockOnQuery;
             /** 経路をたどる処理 */
             nav::PathFollower m_pathFollower;
             /** 次に経路を探してよくなるまでの残り時間(秒) */
             float m_repathCooldown;
+            /** 今の経路を探した時の、向かう先の座標。向かう先が動いたかどうかを調べるのに使う */
+            Vector3 m_pathGoal;
         };
     } // namespace actor
 } // namespace app

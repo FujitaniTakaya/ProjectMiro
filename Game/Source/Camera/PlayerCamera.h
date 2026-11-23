@@ -9,6 +9,7 @@
  *          キーボードでは、矢印キーが右スティックになる。
  *          回る速さは、PlayerCameraParameter の rotateSpeed に、オプションの感度(OptionSettings)を掛けたもの。
  *          通常はカメラ感度、ハンドガンを構えている間(SetAiming(true))はエイム感度を掛ける。
+ *          構えている間は、視点が注視点に近づく。(距離の倍率と切り替えの時間は PlayerCameraParameter)
  */
 #pragma once
 
@@ -60,7 +61,7 @@ namespace app
 
             /**
              * @brief ハンドガンを構えているかどうかを設定
-             * @details 構えている間は、カメラ感度の代わりにエイム感度で回る。毎フレーム、Update() の前に設定すること。
+             * @details 構えている間は、カメラ感度の代わりにエイム感度で回り、視点が注視点に近づく。毎フレーム、Update() の前に設定すること。
              * @param isAiming 構えているならtrue
              */
             void SetAiming(const bool isAiming)
@@ -80,6 +81,8 @@ namespace app
             Vector3 m_targetPosition;
             /** ハンドガンを構えているかどうか */
             bool m_isAiming;
+            /** 構えの度合い(0=通常、1=構え切った状態)。SetAiming() の向きへ、aimBlendSeconds かけて動く */
+            float m_aimRate;
         };
     } // namespace camera
 } // namespace app
