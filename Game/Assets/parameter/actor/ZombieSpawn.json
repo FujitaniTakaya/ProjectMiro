@@ -3,9 +3,15 @@
     "gateSouth": [-2850.0, 300.0, 2900.0],
     "gateWest": [-3650.0, 0.0, -1900.0],
     "gateEast": [3650.0, 0.0, 1900.0],
-    "spawnOrder": "NNNR",
-    "spawnInterval": 3.0,
-    "maxAliveCount": 20,
+    "groupMinCount": 1,
+    "groupMaxCount": 3,
+    "groupPeakCount": 2,
+    "intervalMinSeconds": 6,
+    "intervalMaxSeconds": 10,
+    "runningPeriod": 4,
+    "runningChancePercent": 30.0,
+    "runningGuaranteedPeriod": 20,
+    "maxAliveCount": 60,
     "dropHeight": 200.0,
     "gateJitterRadius": 120.0
 }

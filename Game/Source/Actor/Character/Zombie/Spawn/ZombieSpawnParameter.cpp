@@ -19,9 +19,15 @@ namespace app
             , gateSouth(-2850.0f, 300.0f, 2900.0f)
             , gateWest(-3650.0f, 0.0f, -1900.0f)
             , gateEast(3650.0f, 0.0f, 1900.0f)
-            , spawnOrder("NNNR")
-            , spawnInterval(3.0f)
-            , maxAliveCount(20)
+            , groupMinCount(1)
+            , groupMaxCount(3)
+            , groupPeakCount(2)
+            , intervalMinSeconds(6)
+            , intervalMaxSeconds(10)
+            , runningPeriod(4)
+            , runningChancePercent(30.0f)
+            , runningGuaranteedPeriod(20)
+            , maxAliveCount(60)
             , dropHeight(200.0f)
             , gateJitterRadius(120.0f)
         {
@@ -63,8 +69,14 @@ namespace app
             param.gateSouth = ParamLoader::ToVector3(root, "gateSouth", param.gateSouth);
             param.gateWest = ParamLoader::ToVector3(root, "gateWest", param.gateWest);
             param.gateEast = ParamLoader::ToVector3(root, "gateEast", param.gateEast);
-            param.spawnOrder = ParamLoader::ToString(root, "spawnOrder", param.spawnOrder);
-            param.spawnInterval = ParamLoader::ToFloat(root, "spawnInterval", param.spawnInterval);
+            param.groupMinCount = ParamLoader::ToInt(root, "groupMinCount", param.groupMinCount);
+            param.groupMaxCount = ParamLoader::ToInt(root, "groupMaxCount", param.groupMaxCount);
+            param.groupPeakCount = ParamLoader::ToInt(root, "groupPeakCount", param.groupPeakCount);
+            param.intervalMinSeconds = ParamLoader::ToInt(root, "intervalMinSeconds", param.intervalMinSeconds);
+            param.intervalMaxSeconds = ParamLoader::ToInt(root, "intervalMaxSeconds", param.intervalMaxSeconds);
+            param.runningPeriod = ParamLoader::ToInt(root, "runningPeriod", param.runningPeriod);
+            param.runningChancePercent = ParamLoader::ToFloat(root, "runningChancePercent", param.runningChancePercent);
+            param.runningGuaranteedPeriod = ParamLoader::ToInt(root, "runningGuaranteedPeriod", param.runningGuaranteedPeriod);
             param.maxAliveCount = ParamLoader::ToInt(root, "maxAliveCount", param.maxAliveCount);
             param.dropHeight = ParamLoader::ToFloat(root, "dropHeight", param.dropHeight);
             param.gateJitterRadius = ParamLoader::ToFloat(root, "gateJitterRadius", param.gateJitterRadius);
@@ -80,8 +92,14 @@ namespace app
             ImGui::Text("gateSouth: (%.1f, %.1f, %.1f)", param.gateSouth.x, param.gateSouth.y, param.gateSouth.z);
             ImGui::Text("gateWest: (%.1f, %.1f, %.1f)", param.gateWest.x, param.gateWest.y, param.gateWest.z);
             ImGui::Text("gateEast: (%.1f, %.1f, %.1f)", param.gateEast.x, param.gateEast.y, param.gateEast.z);
-            ImGui::Text("spawnOrder: %s", param.spawnOrder.c_str());
-            ImGui::Text("spawnInterval: %.1f", param.spawnInterval);
+            ImGui::Text("groupMinCount: %d", param.groupMinCount);
+            ImGui::Text("groupMaxCount: %d", param.groupMaxCount);
+            ImGui::Text("groupPeakCount: %d", param.groupPeakCount);
+            ImGui::Text("intervalMinSeconds: %d", param.intervalMinSeconds);
+            ImGui::Text("intervalMaxSeconds: %d", param.intervalMaxSeconds);
+            ImGui::Text("runningPeriod: %d", param.runningPeriod);
+            ImGui::Text("runningChancePercent: %.1f", param.runningChancePercent);
+            ImGui::Text("runningGuaranteedPeriod: %d", param.runningGuaranteedPeriod);
             ImGui::Text("maxAliveCount: %d", param.maxAliveCount);
             ImGui::Text("dropHeight: %.1f", param.dropHeight);
             ImGui::Text("gateJitterRadius: %.1f", param.gateJitterRadius);
