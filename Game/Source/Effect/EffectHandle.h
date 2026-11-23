@@ -22,8 +22,8 @@ namespace app
      */
     enum class EnEffectKind : uint8_t
     {
-        /** プレースホルダー。エフェクトを追加したら置き換えること。 */
-        Sample = 0,
+        /** マズルフラッシュ(銃口の発砲炎)。+Zが銃口の向き。単位はcm。(tools/make_muzzle_flash.py で作る) */
+        MuzzleFlash = 0,
         Max,
         None = Max
     };
@@ -48,7 +48,7 @@ namespace app
 
 
     inline constexpr EffectInformation EFFECT_LIST[] = {
-        EffectInformation(u"")
+        EffectInformation(u"Assets/effect/MuzzleFlash/MuzzleFlash.efkefc")
     };
 
     static_assert(
