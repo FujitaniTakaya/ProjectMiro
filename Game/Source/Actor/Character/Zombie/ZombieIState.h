@@ -2,7 +2,7 @@
  * @file ZombieIState.h
  * @brief ゾンビ専用のステート
  * @details ゾンビは進行方向を向いて動く(CharacterStateMachine の既定の向き)ので、歩き・走りのアニメーションは前進の1本ずつ。
- *          攻撃は、その場で止まって行う。
+ *          攻撃は、その場で止まって行う。死亡は、その場で止まって死亡アニメーションを再生する。
  *          待機は、キャラクター共通の待機(CharacterIdleState)に、入るときに慣性を消す処理を足した ZombieIdleState を使う。
  *          アニメーションは EnZombieAnimationClipID の番号で再生する。
  */
@@ -144,6 +144,34 @@ namespace app
         public:
             explicit ZombieAttackState(CharacterStateMachine* owner);
             ~ZombieAttackState() override = default;
+        };
+
+
+
+
+        /*************************************************************/
+
+
+        /**
+         * @brief 死亡ステート
+         * @details その場で止まって、死亡アニメーション(非ループ)を再生する。入力は使わず、動かない。
+         *          一度入ったら抜けない。(ステートマシン側で固定する)最後のポーズのまま残り、再生が終わったら ZombieManager が破棄する。
+         * @note 体は ZombieBase が物理ワールドから外すので、Move() は呼ばない。
+         */
+        class ZombieDeathState : public CharacterIState
+        {
+            appState(ZombieDeathState);
+
+        public:
+            // IStateの仮想関数のオーバーライド
+            void Enter() override final;
+            void Update() override final;
+            void Exit() override final;
+
+
+        public:
+            explicit ZombieDeathState(CharacterStateMachine* owner);
+            ~ZombieDeathState() override = default;
         };
     } // namespace actor
 } // namespace app

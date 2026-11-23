@@ -29,7 +29,7 @@ namespace app
          * @details 生きているゾンビを全部ここが持つ。作る・更新する・描画する・破棄するも、ここが行う。
          *          湧かせる判断(ゲート・間隔・種類)は、中の ZombieSpawner が行う。ここは、その結果(ZombieSpawnRequest)を受けて作るだけ。
          *          湧いたゾンビには、コアへ向かうControllerを付ける。
-         *          HPが0以下になったゾンビは、Update() の頭で外して破棄する。外す時に、種類別の倒した数(GetKillCount())を数える。
+         *          HPが0になったゾンビは死亡アニメーションを再生して、それが終わったら Update() の頭で外して破棄する。外す時に、種類別の倒した数(GetKillCount())を数える。
          *          Update() は、シーンの Update() から毎フレーム呼ぶ。ポーズ中(Update()が呼ばれない間)は、湧かせるタイマーも止まる。
          *          ロックオンしたゾンビ(アンガー値がしきい値に達した)は、周囲のゾンビへアンガー値をばらまく。(SpreadAnger())
          *          例: manager.SetCorePositionProvider(provider);
@@ -104,12 +104,10 @@ namespace app
 
             /**
              * @brief 生きているゾンビの数を取得
-             * @return 今このクラスが持っているゾンビの数
+             * @details 死亡アニメーション中のゾンビは含まない。湧かせる上限の判定にも使う。
+             * @return HPが残っているゾンビの数
              */
-            inline size_t GetAliveCount() const
-            {
-                return m_zombies.size();
-            }
+            size_t GetAliveCount() const;
 
             /**
              * @brief これまでに湧かせた数を取得

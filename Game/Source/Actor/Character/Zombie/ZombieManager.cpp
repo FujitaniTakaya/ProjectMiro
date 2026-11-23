@@ -6,6 +6,7 @@
 
 #include "ZombieManager.h"
 
+#include <algorithm>
 #include <optional>
 #include <utility>
 
@@ -94,14 +95,14 @@ namespace app
 
         void ZombieManager::Update()
         {
-            // 死んだゾンビを外す。外す前に、種類別に倒した数を数える
+            // 死亡の動きが終わったゾンビを外す。外す前に、種類別に倒した数を数える
             RemoveDeadZombies(m_zombies, [this](const ZombieBase& zombie) { ++m_killCounts[static_cast<size_t>(zombie.GetKind())]; });
 
             // ロックオンしたゾンビから、周囲へアンガー値をばらまく
             SpreadAnger();
 
             // 湧かせる時間で、数にも空きがあれば、1体作る
-            if (const std::optional<ZombieSpawnRequest> request = m_spawner.Update(m_zombies.size()))
+            if (const std::optional<ZombieSpawnRequest> request = m_spawner.Update(GetAliveCount()))
             {
                 m_zombies.push_back(Create(request->kind, request->position));
             }
@@ -136,7 +137,7 @@ namespace app
                 for (const std::unique_ptr<ZombieBase>& other : m_zombies)
                 {
                     ZombieBase* target = other.get();
-                    if (target == source || target->IsLockedOn() || target->GetHp() <= 0.0f)
+                    if (target == source || target->IsLockedOn() || target->IsDead())
                     {
                         continue;
                     }
@@ -153,6 +154,13 @@ namespace app
                     }
                 }
             }
+        }
+
+
+        size_t ZombieManager::GetAliveCount() const
+        {
+            // 死亡アニメーション中のゾンビは、湧かせる上限の枠を占めない
+            return static_cast<size_t>(std::count_if(m_zombies.begin(), m_zombies.end(), [](const std::unique_ptr<ZombieBase>& zombie) { return !zombie->IsDead(); }));
         }
 
 

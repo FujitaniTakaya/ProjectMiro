@@ -53,6 +53,7 @@ namespace app
             , m_attackBone(nullptr)
             , m_isAttackActive(false)
             , m_hasAttackHit(false)
+            , m_isDead(false)
         {
             m_stateMachine = std::make_unique<ZombieStateMachine>(this, m_parameter);
         }
@@ -122,6 +123,13 @@ namespace app
         }
 
 
+        bool ZombieBase::IsDeathFinished() const
+        {
+            // m_isDead を条件に含めるのは、Init() 前(HPが初期値の0)に、死亡扱いされないため
+            return m_isDead && m_stateMachine->IsDeathFinished();
+        }
+
+
         void ZombieBase::Start()
         {
             // モデル・アニメーションクリップのロードと、キャラクターコントローラーの初期化(現在のHPも最大HPで始まる)
@@ -141,6 +149,12 @@ namespace app
 
         void ZombieBase::Update()
         {
+            // 死亡した瞬間に、1度だけ後始末する。(ステートマシンの更新より前なので、死亡ステートの1フレーム目から体は無い)
+            if (!m_isDead && IsDead())
+            {
+                OnDead();
+            }
+
             // 入力の作成とステートの更新(入力はステートマシンが持つコントローラーから作る)
             m_stateMachine->Update();
 
@@ -158,8 +172,26 @@ namespace app
         }
 
 
+        void ZombieBase::OnDead()
+        {
+            m_isDead = true;
+
+            m_attackHitBox.Release();
+            m_isAttackActive = false;
+
+            // デストラクタの RemoveRigidBoby() で二重に外れるが、bullet 側では無害
+            m_characterController.RemoveRigidBoby();
+        }
+
+
         void ZombieBase::OnAnimationEvent(const wchar_t* eventName)
         {
+            // 死亡した後に届いたイベントで、攻撃判定を出さない
+            if (m_isDead)
+            {
+                return;
+            }
+
             if (std::wcscmp(eventName, ATTACK_BEGIN_EVENT) == 0)
             {
                 // 右手のボーンが無ければ、攻撃判定は出ない

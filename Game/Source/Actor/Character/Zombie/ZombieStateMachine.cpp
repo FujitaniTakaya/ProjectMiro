@@ -22,11 +22,12 @@ namespace app
             , m_parameter(parameter)
             , m_playerParameter(ParamHolder::Get().GetParameter<MiroParameter>(EnParamID::Miro))
         {
-            // 待機(慣性を消すゾンビ用)・歩き・走り・攻撃を登録する
+            // 待機(慣性を消すゾンビ用)・歩き・走り・攻撃・死亡を登録する
             AddState<ZombieIdleState>(this);
             AddState<ZombieWalkState>(this);
             AddState<ZombieRunState>(this);
             AddState<ZombieAttackState>(this);
+            AddState<ZombieDeathState>(this);
         }
 
 
@@ -55,8 +56,21 @@ namespace app
         }
 
 
+        bool ZombieStateMachine::IsDeathFinished() const
+        {
+            // 死亡ステートに入っていて、死亡アニメーションの再生が終わった
+            return IsEqualCurrentState(ZombieDeathState::ID()) && !IsPlayingAnimation();
+        }
+
+
         IState* ZombieStateMachine::GetChangeState()
         {
+            // 0. 死亡していれば、死亡へ。(一度入ったら抜けない。HPが回復しても生き返らない)
+            if (IsEqualCurrentState(ZombieDeathState::ID()) || m_ownerCharacter->IsDead())
+            {
+                return FindState(ZombieDeathState::ID());
+            }
+
             // 1. 攻撃に入る(続ける)なら、攻撃へ
             if (CanChangeAttackState())
             {

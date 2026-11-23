@@ -140,6 +140,13 @@ namespace app
              */
             bool IsBody(const btCollisionObject& object);
 
+            /**
+             * @brief 死亡の動き(死亡アニメーション)が終わったか
+             * @details HPが0になっても、死亡アニメーションが終わるまでは false。ZombieManager が、true になったゾンビを破棄する。
+             * @return 死亡の動きが終わっていれば true
+             */
+            bool IsDeathFinished() const;
+
 
         public:
             /** デストラクタ。ZombieManager が ZombieBase のポインタで持って破棄するので、公開している(直接作れないのはコンストラクタが protected なため) */
@@ -174,6 +181,14 @@ namespace app
             /** 攻撃判定の箱を右手に合わせて、重なった物を攻撃の処理に渡す(箱が出ている間だけ) */
             void UpdateAttackHitBox();
 
+            /**
+             * @brief 死亡した瞬間の後始末(1度だけ)
+             * @details 攻撃判定の箱を消して、体を物理ワールドから外す。
+             *          振りの途中で死んでも AttackEnd のイベントは来ないので、ここで箱を消す。(死にかけでコアを殴らせない)
+             *          体を外すので、死体に弾は当たらない。
+             */
+            void OnDead();
+
 
         private:
             /** パラメーター(ParamHolderが持つもの。アプリが終わるまで使える) */
@@ -198,6 +213,8 @@ namespace app
             bool m_isAttackActive;
             /** 今の振りで、もう当たったか */
             bool m_hasAttackHit;
+            /** 死亡した後始末(OnDead())が済んだか */
+            bool m_isDead;
         };
     } // namespace actor
 } // namespace app
