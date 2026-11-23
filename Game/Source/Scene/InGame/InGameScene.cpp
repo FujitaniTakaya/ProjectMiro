@@ -25,6 +25,7 @@
 #include "Source/Camera/PlayerCamera.h"
 #include "Source/Core/Param/ParamHolder.h"
 #include "Source/Core/Param/ParamList.h"
+#include "Source/Effect/EffectManager.h"
 #include "Source/Manager/InGameInfoHub.h"
 #include "Source/MoveBehavior/ControllerSlot.h"
 #include "Source/Navigation/NavDebugDraw.h"
@@ -259,6 +260,8 @@ namespace app
         {
             return false;
         }
+        // 撃った。レティクルが広がる
+        InGameInfoHub::Get().NotifyPlayerFired();
 
         Vector3 muzzle;
         Quaternion barrelRotation;
@@ -292,6 +295,8 @@ namespace app
             barrelRotation
         );
         actor::BulletManager::Get().Shot(rotation, muzzle, bulletParameter.shotSpeed, selfBody);
+        // 銃口の発砲炎。弾と同じ向きに出す。(エフェクトの+Zが向き)
+        EffectManager::Get().PlayEffect(EnEffectKind::MuzzleFlash, muzzle, rotation, Vector3::One);
         return true;
     }
 
@@ -337,7 +342,10 @@ namespace app
         // ハンドガンが更新された後の残弾数を通知する(値が変わった時だけ、UIに伝わる)
         InGameInfoHub::Get().NotifyPlayerAmmo(m_handgun->GetRemainingAmmo());
 
-        // Miroが動いた後の座標を追う。構えている間は、エイム感度で回る
+        // 構えを通知する(値が変わった時だけ、UIに伝わる)。構えている間、レティクルは中央に集まる
+        InGameInfoHub::Get().NotifyPlayerAim(m_miro->IsAiming());
+
+        // Miroが動いた後の座標を追う。構えている間は、エイム感度で回り、カメラが近づく
         m_playerCamera->SetTargetPosition(m_miro->GetTransform().m_position);
         m_playerCamera->SetAiming(m_miro->IsAiming());
         m_playerCamera->Update();

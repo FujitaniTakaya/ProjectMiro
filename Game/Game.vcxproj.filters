@@ -145,6 +145,9 @@
     <Filter Include="Source\Score">
       <UniqueIdentifier>{9c0b253c-d36a-4328-88a6-166b89c20a72}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\UI\HUD\Reticle">
+      <UniqueIdentifier>{cf4e0713-6900-47e0-8578-a20a9ae6553e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -438,6 +441,9 @@
     </ClCompile>
     <ClCompile Include="Source\Score\GameResult.cpp">
       <Filter>Source\Score</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI\HUD\Reticle\ReticleMenu.cpp">
+      <Filter>Source\UI\HUD\Reticle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -807,6 +813,9 @@
     </ClInclude>
     <ClInclude Include="Source\Score\ScoreRule.h">
       <Filter>Source\Score</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\HUD\Reticle\ReticleMenu.h">
+      <Filter>Source\UI\HUD\Reticle</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

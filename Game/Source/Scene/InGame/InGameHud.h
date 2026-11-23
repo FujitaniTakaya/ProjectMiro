@@ -3,6 +3,7 @@
  * @brief インゲームのHUD
  * @details プレイヤーのHPバー・コアの耐久値バー・ハンドガンの残段数・レティクル・経過時間をまとめて持つ。
  *          HPバー・コアの耐久値バー・残段数は、InGameInfoHubに通知された値を表示する。(コンストラクタで登録し、デストラクタで解除する)
+ *          レティクルは、InGameInfoHubに通知された構え(集まる)と発砲(広がる)で動く。
  *          コアの耐久値バーは、コアの頭上の画面位置に出すので、世界座標だけは、シーンが SetCoreHpBarWorldPosition() で毎フレーム教える。
  *          例: InGameHud hud;                                          // アクターより先に作る
  *              hud.SetCoreHpBarWorldPosition(core.GetHpBarWorldPosition());  // カメラの更新後
@@ -21,6 +22,7 @@ namespace app
         class GameTimerMenu;
         class HPBarMenu;
         class HandgunAmmoMenu;
+        class ReticleMenu;
     } // namespace ui
 
 
@@ -77,8 +79,8 @@ namespace app
         ui::UIPacket<ui::HPBarMenu> m_hpBarPacket;
         /** ハンドガンの残段数UI。InGameInfoHubに通知された残弾数を表示する */
         ui::UIPacket<ui::HandgunAmmoMenu> m_ammoPacket;
-        /** レティクル。動かさないので、Menuは基底クラスのまま */
-        ui::UIPacket<ui::MenuBase> m_reticlePacket;
+        /** レティクル。InGameInfoHubに通知された構え・発砲で、広がったり集まったりする */
+        ui::UIPacket<ui::ReticleMenu> m_reticlePacket;
         /** コアの耐久値バー。InGameInfoHubに通知された耐久値を、コアの頭上の画面位置に表示する */
         ui::UIPacket<ui::CoreHPBarMenu> m_coreHpBarPacket;
         /** 経過時間のUI。SetElapsedTime() で教えられた経過時間を、右上に表示する */

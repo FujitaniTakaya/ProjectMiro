@@ -10,5 +10,7 @@
     "minToCameraDirY": -0.2,
     "maxToCameraDirY": 0.9,
     "nearClip": 1.0,
-    "farClip": 10000.0
+    "farClip": 10000.0,
+    "aimDistanceScale": 0.6,
+    "aimBlendSeconds": 0.2
 }
