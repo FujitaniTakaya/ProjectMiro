@@ -31,6 +31,7 @@ namespace app
          *          湧いたゾンビには、コアへ向かうControllerを付ける。
          *          HPが0以下になったゾンビは、Update() の頭で外して破棄する。外す時に、種類別の倒した数(GetKillCount())を数える。
          *          Update() は、シーンの Update() から毎フレーム呼ぶ。ポーズ中(Update()が呼ばれない間)は、湧かせるタイマーも止まる。
+         *          ロックオンしたゾンビ(アンガー値がしきい値に達した)は、周囲のゾンビへアンガー値をばらまく。(SpreadAnger())
          *          例: manager.SetCorePositionProvider(provider);
          *              manager.SetCoreAttackHandler(handler);
          *              manager.Preload();      // シーンのStart()
@@ -54,8 +55,9 @@ namespace app
 
 
             /**
-             * @brief コアの位置を教える関数を設定する
-             * @details 設定した後に湧いたゾンビへ渡される。湧いている最中のゾンビには渡されないので、湧かせ始める前に設定すること。
+             * @brief 向かう先の位置を教える関数を設定する
+             * @details ゾンビの位置と、ロックオンしているかを渡して、向かう先(コアかMiro)を返す関数。名前はコアのまま。
+             *          設定した後に湧いたゾンビへ渡される。湧いている最中のゾンビには渡されないので、湧かせ始める前に設定すること。
              * @note コアを破棄する前に、このクラスを破棄するか、nullptr を設定すること(関数が持っているポインタが残らないように)
              * @param provider コアの位置を教える関数。nullptr ならコアなし(ゾンビは動かない)
              */
@@ -132,6 +134,14 @@ namespace app
 
 
         private:
+            /**
+             * @brief ロックオンしたゾンビから、周囲のゾンビへアンガー値をばらまく
+             * @details ロックオンの通知が出ているゾンビごとに、半径(そのゾンビの angerSpreadRadius。XZ平面)以内の、まだロックオンしていない生きたゾンビへ、
+             *          そのゾンビの angerSpreadValue を加える。受け取ってロックオンしたゾンビも、続けて同じようにばらまく。(連鎖)
+             *          各ゾンビがロックオンするのは1回だけなので、必ず終わる。
+             */
+            void SpreadAnger();
+
             /**
              * @brief 指定した種類のゾンビを1体作る
              * @details 座標を設定して Start() まで行い、コアへ向かうControllerを付ける。Update() はまだ呼ばれていない。

@@ -17,6 +17,7 @@
 #include "Source/Core/Param/ParamHolder.h"
 #include "Source/MoveBehavior/ControllerSlot.h"
 #include "ZombieBase.h"
+#include "ZombieParameter.h"
 
 
 namespace app
@@ -45,6 +46,8 @@ namespace app
 
                 auto controller = std::make_unique<TController>(zombie->GetParameter());
                 controller->SetCorePositionProvider(provider);
+                // ロックオンしているかは、ゾンビに聞く。(Controllerはゾンビが持つので、ゾンビが生きている間、ポインタは有効)
+                controller->SetLockOnQuery([target = zombie.get()]() { return target->IsLockedOn(); });
                 zombie->GetControllerSlot().Attach(std::move(controller));
                 return zombie;
             }
@@ -94,6 +97,9 @@ namespace app
             // 死んだゾンビを外す。外す前に、種類別に倒した数を数える
             RemoveDeadZombies(m_zombies, [this](const ZombieBase& zombie) { ++m_killCounts[static_cast<size_t>(zombie.GetKind())]; });
 
+            // ロックオンしたゾンビから、周囲へアンガー値をばらまく
+            SpreadAnger();
+
             // 湧かせる時間で、数にも空きがあれば、1体作る
             if (const std::optional<ZombieSpawnRequest> request = m_spawner.Update(m_zombies.size()))
             {
@@ -104,6 +110,48 @@ namespace app
             for (const std::unique_ptr<ZombieBase>& zombie : m_zombies)
             {
                 zombie->UpdateWrapper();
+            }
+        }
+
+
+        void ZombieManager::SpreadAnger()
+        {
+            // ロックオンの通知が出ているゾンビを集める。連鎖でロックオンしたゾンビは、この後ろに足される
+            std::vector<ZombieBase*> sources;
+            for (const std::unique_ptr<ZombieBase>& zombie : m_zombies)
+            {
+                if (zombie->ConsumeLockOnEvent())
+                {
+                    sources.push_back(zombie.get());
+                }
+            }
+
+            for (size_t i = 0; i < sources.size(); ++i)
+            {
+                ZombieBase* source = sources[i];
+                const ZombieParameter& sourceParameter = source->GetParameter();
+                const float radiusSq = sourceParameter.angerSpreadRadius * sourceParameter.angerSpreadRadius;
+                const Vector3 origin = source->GetTransform().m_position;
+
+                for (const std::unique_ptr<ZombieBase>& other : m_zombies)
+                {
+                    ZombieBase* target = other.get();
+                    if (target == source || target->IsLockedOn() || target->GetHp() <= 0.0f)
+                    {
+                        continue;
+                    }
+                    const Vector3 toTarget = target->GetTransform().m_position - origin;
+                    if (toTarget.x * toTarget.x + toTarget.z * toTarget.z > radiusSq)
+                    {
+                        continue;
+                    }
+                    target->AddAnger(sourceParameter.angerSpreadValue);
+                    // 受け取ってロックオンしたら、続けてばらまく
+                    if (target->ConsumeLockOnEvent())
+                    {
+                        sources.push_back(target);
+                    }
+                }
             }
         }
 

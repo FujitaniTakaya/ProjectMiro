@@ -33,6 +33,7 @@ namespace app
             : m_parameter(parameter)
             , m_navParameter(ParamHolder::Get().GetParameter<nav::NavigationParameter>(EnParamID::Navigation))
             , m_corePositionProvider(nullptr)
+            , m_lockOnQuery(nullptr)
             , m_pathFollower()
             , m_repathCooldown(0.0f)
             , m_pathGoal(Vector3::Zero)
@@ -46,6 +47,12 @@ namespace app
         }
 
 
+        void ZombieCoreApproach::SetLockOnQuery(const LockOnQuery& query)
+        {
+            m_lockOnQuery = query;
+        }
+
+
         std::optional<ZombieCoreApproach::CoreApproachInfo> ZombieCoreApproach::CalcToCore(const ControllerContext& context) const
         {
             // コアがなければ求められない
@@ -53,7 +60,7 @@ namespace app
             {
                 return std::nullopt;
             }
-            const std::optional<Vector3> corePosition = m_corePositionProvider(context.position);
+            const std::optional<Vector3> corePosition = m_corePositionProvider(context.position, m_lockOnQuery && m_lockOnQuery());
             if (!corePosition)
             {
                 return std::nullopt;

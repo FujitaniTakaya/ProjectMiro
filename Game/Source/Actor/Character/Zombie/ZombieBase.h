@@ -40,7 +40,8 @@ namespace app
          *          - AttackEnd   : 攻撃判定の箱を消す
          *          箱が出ている間、毎フレーム、重なっている物を SetAttackHandler() の処理に渡す。
          *          処理が当たりとして扱ったら(true を返したら)、その振りではもう渡さない。(1振りで1回だけダメージが入る)
-         * @note アンガー値の加算・本格ロックオンへの移行・周囲への伝播は、まだ無い。
+         * @note アンガー値は、弾に撃たれた時(TakeShotDamage)と、周囲のゾンビからの伝播(AddAnger)で増える。
+         *       angerThreshold に達するとロックオンになり(IsLockedOn)、周囲へ伝播する。伝播は ZombieManager が行う。
          *       攻撃判定は右手だけ。(攻撃アニメで振り下ろされるのが右手のため)
          *       初期座標は、Start() の前に SetPosition() で設定しておくこと。(キャラクターコントローラーが現在の座標に作られる)
          */
@@ -90,6 +91,38 @@ namespace app
              * @param anger 累積アンガー値。0未満は0に丸められる
              */
             void SetAnger(const float anger);
+
+            /**
+             * @brief ロックオンしているか調べる
+             * @details 累積アンガー値が angerThreshold に達したことがあれば true。一度なったら戻らない。
+             *          ロックオンしたゾンビは、コアではなくMiroへ向かう。(向かう先は、持ち主の処理が選ぶ)
+             * @return ロックオンしていれば true
+             */
+            inline bool IsLockedOn() const
+            {
+                return m_isLockedOn;
+            }
+
+            /**
+             * @brief 累積アンガー値を加算する
+             * @details 初めて angerThreshold に達した時、ロックオンにして、周囲へアンガー値をばらまくための通知を1回だけ予約する。
+             * @param amount 加算する値。0以下なら何もしない
+             */
+            void AddAnger(const float amount);
+
+            /**
+             * @brief 弾に撃たれた時の処理
+             * @details HPを damage だけ減らし、damage × angerGainRate を累積アンガー値に加える。
+             * @param damage 弾のダメージ
+             */
+            void TakeShotDamage(const float damage);
+
+            /**
+             * @brief ロックオンした時の通知を取り出す
+             * @details 初めてロックオンした時に1回だけ予約される。取り出すと消える。周囲へアンガー値をばらまく側(ZombieManager)が使う。
+             * @return ロックオンして、まだ取り出していなければ true
+             */
+            bool ConsumeLockOnEvent();
 
             /**
              * @brief 攻撃判定が何かに重なった時の処理を設定
@@ -151,6 +184,10 @@ namespace app
             std::unique_ptr<ZombieStateMachine> m_stateMachine;
             /** 累積アンガー値 */
             float m_anger;
+            /** ロックオンしているか。一度なったら戻らない */
+            bool m_isLockedOn;
+            /** ロックオンした時の通知が、まだ取り出されていないか */
+            bool m_hasLockOnEvent;
             /** 攻撃判定の箱(AttackBegin から AttackEnd の間だけ、物理ワールドに登録される) */
             PhysicsGhostObject m_attackHitBox;
             /** 攻撃判定が重なった時の処理 */

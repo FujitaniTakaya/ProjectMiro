@@ -46,6 +46,8 @@ namespace app
             , m_modelData(modelData)
             , m_stateMachine(nullptr)
             , m_anger(0.0f)
+            , m_isLockedOn(false)
+            , m_hasLockOnEvent(false)
             , m_attackHitBox()
             , m_attackHandler(nullptr)
             , m_attackBone(nullptr)
@@ -77,6 +79,37 @@ namespace app
         }
 
 
+        void ZombieBase::AddAnger(const float amount)
+        {
+            if (amount <= 0.0f)
+            {
+                return;
+            }
+            SetAnger(m_anger + amount);
+            // 初めてしきい値に達した時だけ、ロックオンにして、伝播の通知を予約する
+            if (!m_isLockedOn && m_anger >= m_parameter.angerThreshold)
+            {
+                m_isLockedOn = true;
+                m_hasLockOnEvent = true;
+            }
+        }
+
+
+        void ZombieBase::TakeShotDamage(const float damage)
+        {
+            TakeDamage(damage);
+            AddAnger(damage * m_parameter.angerGainRate);
+        }
+
+
+        bool ZombieBase::ConsumeLockOnEvent()
+        {
+            const bool hasEvent = m_hasLockOnEvent;
+            m_hasLockOnEvent = false;
+            return hasEvent;
+        }
+
+
         void ZombieBase::SetAttackHandler(const ZombieAttackHandler& handler)
         {
             m_attackHandler = handler;
@@ -98,8 +131,11 @@ namespace app
             m_attackBone = m_modelRender.FindBone(ATTACK_BONE_NAME);
             m_modelRender.AddAnimationEventListener([this]([[maybe_unused]] const wchar_t* clipName, const wchar_t* eventName) { OnAnimationEvent(eventName); });
 
-            // 累積アンガー値は、初期アンガー値から始める
-            m_anger = m_parameter.initialAnger;
+            // 累積アンガー値は、初期アンガー値から始める。(初期値がしきい値以上なら、最初からロックオン)
+            m_anger = 0.0f;
+            m_isLockedOn = false;
+            m_hasLockOnEvent = false;
+            AddAnger(m_parameter.initialAnger);
         }
 
 

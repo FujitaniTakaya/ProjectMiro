@@ -44,6 +44,12 @@ namespace app
              */
             void SetCorePositionProvider(const PositionProvider& provider);
 
+            /**
+             * @brief ロックオンしているかを教える関数を設定する
+             * @param query ロックオンしているかを教える関数。nullptr ならロックオンしていない扱い
+             */
+            void SetLockOnQuery(const ZombieCoreApproach::LockOnQuery& query);
+
 
             /**
              * @brief 今フレームの入力を作る

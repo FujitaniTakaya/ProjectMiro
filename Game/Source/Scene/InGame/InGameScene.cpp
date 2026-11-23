@@ -66,8 +66,6 @@ namespace app
         constexpr float SKY_LUMINANCE = 1.0f;
         /** Miroの足元から胸までの高さ(cm)。壁に銃口が出ていないかを、胸から銃口までの球で調べる時の始点(Miroの全高は160) */
         constexpr float CHEST_HEIGHT = 120.0f;
-        /** ゾンビがMiroを追いかける距離(cm)。ゾンビからMiroまでがこれ以内なら、Miroへ向かう。それより遠ければ、コアへ向かう */
-        constexpr float MIRO_CHASE_RADIUS = 2000.0f;
     } // namespace
 
 
@@ -125,17 +123,12 @@ namespace app
         m_playerCamera->Start();
 
         // ゾンビのマネージャーに、向かう先の位置(地面の座標)を関数で教える。湧いたゾンビは、この位置へ向かう。
-        // Miroが生きていて、ゾンビから MIRO_CHASE_RADIUS 以内にいればMiroへ、そうでなければコアへ向かう。
+        // ロックオンしている(アンガー値がしきい値に達した)ゾンビは、Miroが生きている間、Miroへ向かう。それ以外は、コアへ向かう。
         // m_zombieManager は m_core・m_miro より先に破棄されるので、破棄の間にこの関数は呼ばれない。
-        m_zombieManager->SetCorePositionProvider([core = m_core.get(), miro = m_miro.get()](const Vector3& from) -> std::optional<Vector3> {
-            if (miro->GetHp() > 0.0f)
+        m_zombieManager->SetCorePositionProvider([core = m_core.get(), miro = m_miro.get()](const Vector3&, const bool isLockedOn) -> std::optional<Vector3> {
+            if (isLockedOn && miro->GetHp() > 0.0f)
             {
-                const Vector3 miroPosition = miro->GetTransform().m_position;
-                const Vector3 toMiro(miroPosition.x - from.x, 0.0f, miroPosition.z - from.z);
-                if (toMiro.LengthSq() <= MIRO_CHASE_RADIUS * MIRO_CHASE_RADIUS)
-                {
-                    return miroPosition;
-                }
+                return miro->GetTransform().m_position;
             }
             return core->GetTransform().m_position;
         });
@@ -181,7 +174,7 @@ namespace app
             }
             // ダメージは毎回パラメーターから読む。(jsonのホットリロードがすぐ反映される)
             const actor::BulletParameter& bulletParameter = ParamHolder::Get().GetParameter<actor::BulletParameter>(EnParamID::Bullet);
-            zombie->TakeDamage(bulletParameter.damage);
+            zombie->TakeShotDamage(bulletParameter.damage);
         });
 
         // ステージのフィールド。ワールド行列は、ここで確定する
