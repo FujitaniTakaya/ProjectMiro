@@ -83,6 +83,12 @@ namespace app
         }
 
 
+        bool ZombieBase::IsBody(const btCollisionObject& object)
+        {
+            return &object == m_characterController.GetRigidBody()->GetBody();
+        }
+
+
         void ZombieBase::Start()
         {
             // モデル・アニメーションクリップのロードと、キャラクターコントローラーの初期化(現在のHPも最大HPで始まる)

@@ -13,11 +13,13 @@
 
 #include "Source/Actor/Character/Miro/Miro.h"
 #include "Source/Actor/Character/Zombie/Spawn/ZombieSpawnParameter.h"
+#include "Source/Actor/Character/Zombie/ZombieBase.h"
 #include "Source/Actor/Character/Zombie/ZombieManager.h"
 #include "Source/Actor/Stage/Core.h"
 #include "Source/Actor/Stage/StageField.h"
 #include "Source/Actor/Weapon/Bullet/BulletManager.h"
 #include "Source/Actor/Weapon/Bullet/BulletParameter.h"
+#include "Source/Actor/Weapon/Bullet/BulletSweep.h"
 #include "Source/Actor/Weapon/Handgun/Handgun.h"
 #include "Source/Camera/PlayerCamera.h"
 #include "Source/Core/Param/ParamHolder.h"
@@ -60,6 +62,8 @@ namespace app
         constexpr const wchar_t* SKY_CUBE_PATH = L"Assets/modelData/preset/skyCubeMapOvercast.dds";
         /** 空の明るさ(キューブマップの色に掛ける倍率) */
         constexpr float SKY_LUMINANCE = 1.0f;
+        /** Miroの足元から胸までの高さ(cm)。壁に銃口が出ていないかを、胸から銃口までの球で調べる時の始点(Miroの全高は160) */
+        constexpr float CHEST_HEIGHT = 120.0f;
     } // namespace
 
 
@@ -146,6 +150,19 @@ namespace app
         weaponHandler.reload = [this]() { m_handgun->Reload(); };
         m_miro->SetWeaponHandler(std::move(weaponHandler));
 
+        // 弾が当たった時の処理。当たったのがゾンビならダメージを与える。(ステージ・コアに当たった時は、弾が止まるだけ)
+        // BulletManager::Clear() でこの処理は外れる。(シーンのデストラクタで呼ばれるので、this が無効になった後には呼ばれない)
+        actor::BulletManager::Get().SetHitHandler([this](const actor::BulletHit& hit) {
+            actor::ZombieBase* zombie = m_zombieManager->FindByBody(*hit.object);
+            if (zombie == nullptr)
+            {
+                return;
+            }
+            // ダメージは毎回パラメーターから読む。(jsonのホットリロードがすぐ反映される)
+            const actor::BulletParameter& bulletParameter = ParamHolder::Get().GetParameter<actor::BulletParameter>(EnParamID::Bullet);
+            zombie->TakeDamage(bulletParameter.damage);
+        });
+
         // ステージのフィールド。ワールド行列は、ここで確定する
         m_stageField->StartWrapper();
         m_core->StartWrapper();
@@ -227,14 +244,38 @@ namespace app
             return false;
         }
 
-        Vector3 position;
-        Quaternion rotation;
-        if (m_handgun->CalcMuzzle(position, rotation))
+        Vector3 muzzle;
+        Quaternion barrelRotation;
+        if (!m_handgun->CalcMuzzle(muzzle, barrelRotation))
         {
-            // 発射スピードは、毎回パラメーターから読む。(jsonのホットリロードがすぐ反映される)
-            const actor::BulletParameter& bulletParameter = ParamHolder::Get().GetParameter<actor::BulletParameter>(EnParamID::Bullet);
-            actor::BulletManager::Get().Shot(rotation, position, bulletParameter.shotSpeed);
+            return true;
         }
+
+        // パラメーターは、毎回読む。(jsonのホットリロードがすぐ反映される)
+        const actor::BulletParameter& bulletParameter = ParamHolder::Get().GetParameter<actor::BulletParameter>(EnParamID::Bullet);
+        // 弾が自分に当たらないように、Miroの体を無視する
+        const btCollisionObject* selfBody = m_miro->GetCharacterController()->GetRigidBody()->GetBody();
+
+        // 壁際で銃口が壁やゾンビの向こう側に出ていたら、弾を出さず、その場で着弾にする。(弾の最初の位置が壁の中だと、壁を抜けてしまう)
+        const Vector3 chest = m_miro->GetTransform().m_position + Vector3(0.0f, CHEST_HEIGHT, 0.0f);
+        actor::BulletHit blockedHit;
+        if (actor::SweepSphere(chest, muzzle, bulletParameter.hitRadius, selfBody, blockedHit))
+        {
+            actor::BulletManager::Get().NotifyHit(blockedHit);
+            return true;
+        }
+
+        // レティクル(カメラの視線)が指す点へ撃つ。視線の長さは、弾が飛べる距離(寿命 × 速さ)
+        const Quaternion rotation = actor::CalcAimRotation(
+            g_camera3D->GetPosition(),
+            g_camera3D->GetForward(),
+            muzzle,
+            bulletParameter.lifeTime * bulletParameter.shotSpeed,
+            bulletParameter.hitRadius,
+            selfBody,
+            barrelRotation
+        );
+        actor::BulletManager::Get().Shot(rotation, muzzle, bulletParameter.shotSpeed, selfBody);
         return true;
     }
 

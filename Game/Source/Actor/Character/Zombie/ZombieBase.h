@@ -90,6 +90,15 @@ namespace app
              */
             void SetAttackHandler(const ZombieAttackHandler& handler);
 
+            /**
+             * @brief 物理ワールドの判定が、このゾンビの体か調べる
+             * @details 弾が当たった物理オブジェクト(btCollisionObject)から、当たったゾンビを探す時に使う。(Core::IsHitBox() と同じ作り)
+             *          体は、キャラクターコントローラーのカプセル1つ。攻撃判定の箱は体ではない。
+             * @param object 調べる物理ワールドの判定
+             * @return このゾンビの体なら true
+             */
+            bool IsBody(const btCollisionObject& object);
+
 
         public:
             /** デストラクタ。ZombieManager が ZombieBase のポインタで持って破棄するので、公開している(直接作れないのはコンストラクタが protected なため) */

@@ -3,6 +3,7 @@
  * @brief 弾
  */
 #pragma once
+#include "BulletHit.h"
 #include "Source/Actor/Actor.h"
 
 
@@ -16,8 +17,10 @@ namespace app
         /**
          * @brief 弾
          * @details 発射された向きへ、一定の速さでまっすぐ進む。発射してから BulletParameter::lifeTime 秒たつと、IsExpired() が true になる。
+         *          毎フレーム、前の位置から今の位置まで、半径 BulletParameter::hitRadius の球を動かして当たりを調べる。(SweepSphere)
+         *          何かに当たったら、当たった所で止まって HasHit() が true になる。当たった相手に何をするかは、BulletManager の処理が行う。
          *          使い方は、Init() → StartWrapper() → 毎フレーム UpdateWrapper()・RenderWrapper()。BulletManager が行うので、外から直接作らない。
-         * @note 当たり判定はまだ無い。重力も無い。
+         * @note 重力は無い。
          */
         class Bullet : public Actor
         {
@@ -36,10 +39,48 @@ namespace app
             void Init(const Quaternion& rotation, const Vector3& position, const float speed);
 
             /**
+             * @brief 当たりを調べる時に無視する物理オブジェクトを設定する
+             * @details 発射した人の体を渡すと、自分に当たらなくなる。StartWrapper() の前でも後でもよい。
+             * @param ignore 無視する物理オブジェクト。無視しないなら nullptr
+             */
+            inline void SetIgnoreObject(const btCollisionObject* ignore)
+            {
+                m_ignore = ignore;
+            }
+
+            /**
              * @brief 寿命が尽きたか
              * @return 発射してからの経過時間が lifeTime 以上ならtrue
              */
             bool IsExpired() const;
+
+            /**
+             * @brief 何かに当たったか
+             * @return 当たって止まったら true
+             */
+            inline bool HasHit() const
+            {
+                return m_isHit;
+            }
+
+            /**
+             * @brief 当たった情報を取得
+             * @note HasHit() が true の時だけ意味がある。
+             * @return 当たった情報
+             */
+            inline const BulletHit& GetHit() const
+            {
+                return m_hit;
+            }
+
+            /**
+             * @brief 役目を終えたか
+             * @return 何かに当たったか、寿命が尽きたら true。BulletManager が、破棄するかの判定に使う
+             */
+            inline bool IsFinished() const
+            {
+                return m_isHit || IsExpired();
+            }
 
 
         protected:
@@ -64,6 +105,12 @@ namespace app
             float m_speed;
             /** 発射してからの経過時間(秒) */
             float m_elapsedTime;
+            /** 当たりを調べる時に無視する物理オブジェクト(発射した人の体)。無ければ nullptr */
+            const btCollisionObject* m_ignore;
+            /** 何かに当たって止まったか */
+            bool m_isHit;
+            /** 当たった情報(m_isHit が true の時だけ意味がある) */
+            BulletHit m_hit;
         };
     } // namespace actor
 } // namespace app

@@ -92,6 +92,14 @@ namespace app
             void Render(RenderContext& rc);
 
             /**
+             * @brief 物理ワールドの判定から、そのゾンビを探す
+             * @details 弾が当たった物理オブジェクトから、当たったゾンビを知るために使う。
+             * @param object 探す物理ワールドの判定(ゾンビの体)
+             * @return 見つかったゾンビ。どのゾンビの体でもなければ nullptr(ステージ・コアなど)。破棄されるまで(次の Update() まで)有効
+             */
+            ZombieBase* FindByBody(const btCollisionObject& object);
+
+            /**
              * @brief 生きているゾンビの数を取得
              * @return 今このクラスが持っているゾンビの数
              */

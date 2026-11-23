@@ -78,7 +78,8 @@ namespace app
 
         /**
          * @brief ハンドガンを1発撃つ
-         * @details ハンドガンが撃てたら、銃口(WeaponBase::CalcMuzzle)の位置と向きから、弾を1発出す。
+         * @details ハンドガンが撃てたら、銃口(WeaponBase::CalcMuzzle)の位置から、レティクル(カメラの視線)が指す点へ向けて、弾を1発出す。
+         *          胸から銃口までの間に壁・ゾンビがある時は、弾を出さず、その場で着弾にする。
          *          弾切れ・リロード中は撃てない。弾は BulletManager が持つ。
          * @return 撃てたらtrue(Miroの武器ハンドラの fire に返す)
          */

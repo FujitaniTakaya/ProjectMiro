@@ -7,6 +7,8 @@
     "params": [
         { "name": "lifeTime", "type": "float", "doc": "弾が消えるまでの時間(秒)。発射してからの経過時間" },
         { "name": "shotSpeed", "type": "float", "doc": "弾の発射スピード(cm/秒)。InGameScene で撃つ時に使う" },
+        { "name": "damage", "type": "float", "doc": "弾がゾンビに当たった時のダメージ" },
+        { "name": "hitRadius", "type": "float", "doc": "弾の当たり判定の球の半径(cm)。大きいと、縁をかすっても当たる" },
         { "name": "modelScale", "type": "float", "doc": "弾のモデルの拡大率(一様)。1.0で、tkmの大きさのまま" },
         { "name": "modelRotation", "type": "vector3", "doc": "弾のモデルの向きの補正。[rotX, rotY, rotZ](度)で、飛ぶ向きに対してモデルを回す。モデルが横を向いて見える時に、飛ぶ向きへ合わせる", "digits": 1 }
     ]

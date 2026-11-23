@@ -7,6 +7,7 @@
 #include "Bullet.h"
 
 #include "BulletParameter.h"
+#include "BulletSweep.h"
 #include "Source/Core/Param/ParamHolder.h"
 
 
@@ -29,6 +30,9 @@ namespace app
             : m_parameter(ParamHolder::Get().GetParameter<BulletParameter>(EnParamID::Bullet))
             , m_speed(0.0f)
             , m_elapsedTime(0.0f)
+            , m_ignore(nullptr)
+            , m_isHit(false)
+            , m_hit()
         {}
 
 
@@ -38,6 +42,7 @@ namespace app
             m_transform.m_position = position;
             m_speed = speed;
             m_elapsedTime = 0.0f;
+            m_isHit = false;
         }
 
 
@@ -66,10 +71,22 @@ namespace app
             const float deltaTime = g_gameTime->GetFrameDeltaTime();
             m_elapsedTime += deltaTime;
 
-            // 発射角度の向きへ進む
-            Vector3 forward = Vector3::Front;
-            m_transform.m_rotation.Apply(forward);
-            m_transform.m_position += forward * (m_speed * deltaTime);
+            // 発射角度の向きへ進む。当たった弾は、止まったまま(次に破棄される)
+            if (!m_isHit)
+            {
+                Vector3 forward = Vector3::Front;
+                m_transform.m_rotation.Apply(forward);
+                const Vector3 previous = m_transform.m_position;
+                m_transform.m_position += forward * (m_speed * deltaTime);
+
+                // 前の位置から今の位置まで球を動かして、何かに当たったら、当たった所で止める。
+                // (1フレームで数十cm進むので、位置だけを調べると、ゾンビや薄い物をすり抜ける)
+                if (SweepSphere(previous, m_transform.m_position, m_parameter.hitRadius, m_ignore, m_hit))
+                {
+                    m_transform.m_position = m_hit.position;
+                    m_isHit = true;
+                }
+            }
 
             // 拡大率はホットリロードを反映させるため、毎フレーム読む
             const float scale = m_parameter.modelScale;

@@ -107,6 +107,19 @@ namespace app
         }
 
 
+        ZombieBase* ZombieManager::FindByBody(const btCollisionObject& object)
+        {
+            for (const std::unique_ptr<ZombieBase>& zombie : m_zombies)
+            {
+                if (zombie->IsBody(object))
+                {
+                    return zombie.get();
+                }
+            }
+            return nullptr;
+        }
+
+
         void ZombieManager::Render(RenderContext& rc)
         {
             for (const std::unique_ptr<ZombieBase>& zombie : m_zombies)

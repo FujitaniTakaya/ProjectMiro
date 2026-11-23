@@ -430,6 +430,9 @@
     <ClCompile Include="Source\Actor\Weapon\Bullet\BulletParameter.cpp">
       <Filter>Source\Actor\Weapon\Bullet</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Actor\Weapon\Bullet\BulletSweep.cpp">
+      <Filter>Source\Actor\Weapon\Bullet</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -785,6 +788,12 @@
       <Filter>Source\Actor\Weapon\Bullet</Filter>
     </ClInclude>
     <ClInclude Include="Source\Actor\Weapon\Bullet\BulletParameter.h">
+      <Filter>Source\Actor\Weapon\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Weapon\Bullet\BulletHit.h">
+      <Filter>Source\Actor\Weapon\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Weapon\Bullet\BulletSweep.h">
       <Filter>Source\Actor\Weapon\Bullet</Filter>
     </ClInclude>
   </ItemGroup>

@@ -106,6 +106,8 @@ namespace app
 
             // 当たり判定の箱を、宝石の中心に置く。(物理ワールドに登録される。幅はXとZ、高さはY)
             m_hitBox.CreateBox(CalcCenter(), Quaternion::Identity, Vector3(m_parameter.hitBoxWidth, m_parameter.hitBoxHeight, m_parameter.hitBoxWidth));
+            // ユーザー属性を付けておくと、弾が止まる。(付けていないゴースト=ゾンビの攻撃判定の箱を、弾は素通りする)
+            m_hitBox.GetbtCollisionObject().setUserIndex(enCollisionAttr_User);
 
             // 現在の耐久値は、最大耐久値で始める。最初の耐久値を通知
             m_hp = GetMaxHp();

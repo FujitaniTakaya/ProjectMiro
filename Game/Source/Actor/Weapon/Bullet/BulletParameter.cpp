@@ -17,6 +17,8 @@ namespace app
         BulletParameter::BulletParameter()
             : lifeTime(3.0f)
             , shotSpeed(3000.0f)
+            , damage(20.0f)
+            , hitRadius(8.0f)
             , modelScale(1.0f)
             , modelRotation(0.0f, 90.0f, 0.0f)
         {
@@ -34,6 +36,8 @@ namespace app
             // [PARAM_GEN begin load] 自動生成(tools/param_gen.py)。手で編集しない
             param.lifeTime = ParamLoader::ToFloat(root, "lifeTime", param.lifeTime);
             param.shotSpeed = ParamLoader::ToFloat(root, "shotSpeed", param.shotSpeed);
+            param.damage = ParamLoader::ToFloat(root, "damage", param.damage);
+            param.hitRadius = ParamLoader::ToFloat(root, "hitRadius", param.hitRadius);
             param.modelScale = ParamLoader::ToFloat(root, "modelScale", param.modelScale);
             param.modelRotation = ParamLoader::ToVector3(root, "modelRotation", param.modelRotation);
             // [PARAM_GEN end load]
@@ -46,6 +50,8 @@ namespace app
             // [PARAM_GEN begin draw] 自動生成(tools/param_gen.py)。手で編集しない
             ImGui::Text("lifeTime: %.1f", param.lifeTime);
             ImGui::Text("shotSpeed: %.1f", param.shotSpeed);
+            ImGui::Text("damage: %.1f", param.damage);
+            ImGui::Text("hitRadius: %.1f", param.hitRadius);
             ImGui::Text("modelScale: %.1f", param.modelScale);
             ImGui::Text("modelRotation: (%.1f, %.1f, %.1f)", param.modelRotation.x, param.modelRotation.y, param.modelRotation.z);
             // [PARAM_GEN end draw]

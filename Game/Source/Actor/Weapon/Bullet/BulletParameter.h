@@ -25,6 +25,10 @@ namespace app
             float lifeTime;
             /** 弾の発射スピード(cm/秒)。InGameScene で撃つ時に使う */
             float shotSpeed;
+            /** 弾がゾンビに当たった時のダメージ */
+            float damage;
+            /** 弾の当たり判定の球の半径(cm)。大きいと、縁をかすっても当たる */
+            float hitRadius;
             /** 弾のモデルの拡大率(一様)。1.0で、tkmの大きさのまま */
             float modelScale;
             /** 弾のモデルの向きの補正。[rotX, rotY, rotZ](度)で、飛ぶ向きに対してモデルを回す。モデルが横を向いて見える時に、飛ぶ向きへ合わせる */
