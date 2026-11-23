@@ -46,9 +46,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	// ここからゲームループ。
 	while (DispatchWindowMessage())
 	{
-		if (g_pad[0]->IsTrigger(enButtonA) ){
-			g_pad[0]->SetVibration(/*durationSec=*/0.5f, /*normalizedPower=*/1.0f);
-		}
 		g_engine->BeginFrame();		// フレームの開始。
 		application->PreUpdate();	// ExecuteUpdateの前の更新。(サウンド・エフェクトの回収。必ず前に呼ぶ。)
 		g_engine->ExecuteUpdate();	// パッド・サウンド・エフェクトの更新。
