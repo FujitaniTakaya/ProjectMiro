@@ -9,9 +9,15 @@
         { "name": "gateSouth", "type": "vector3", "digits": 1, "doc": "南のゲート(スポーン地点)の足元のワールド座標。Yはゲートが乗っている地面の高さ" },
         { "name": "gateWest", "type": "vector3", "digits": 1, "doc": "西のゲート(スポーン地点)の足元のワールド座標。Yはゲートが乗っている地面の高さ" },
         { "name": "gateEast", "type": "vector3", "digits": 1, "doc": "東のゲート(スポーン地点)の足元のワールド座標。Yはゲートが乗っている地面の高さ" },
-        { "name": "spawnOrder", "type": "string", "doc": "湧く順番。N=通常のゾンビ(歩き)、R=走り続けるゾンビ。左から順に使い、最後まで来たら先頭に戻る。例: NNNR = 3体歩き→1体走りの繰り返し。空や知らない文字はNとして扱う" },
-        { "name": "spawnInterval", "type": "float", "digits": 1, "doc": "1体湧かせてから、次を湧かせるまでの時間(秒)" },
-        { "name": "maxAliveCount", "type": "int", "doc": "同時に生きていられるゾンビの数の上限。上限の間は湧かない" },
+        { "name": "groupMinCount", "type": "int", "doc": "1回で湧くグループの最小数" },
+        { "name": "groupMaxCount", "type": "int", "doc": "1回で湧くグループの最大数" },
+        { "name": "groupPeakCount", "type": "int", "doc": "グループの数で一番出やすい値。ここから離れるほど出にくくなる(山なりの重み)" },
+        { "name": "intervalMinSeconds", "type": "int", "doc": "グループ間のインターバルの最小(秒、整数)。最小〜最大を全部出し切るまで同じ値は出ない" },
+        { "name": "intervalMaxSeconds", "type": "int", "doc": "グループ間のインターバルの最大(秒、整数)" },
+        { "name": "runningPeriod", "type": "int", "doc": "走るゾンビの判定をする周期(湧いた総数がこの倍数のとき。0以下で判定なし)" },
+        { "name": "runningChancePercent", "type": "float", "digits": 1, "doc": "周期ごとの判定で、走るゾンビになる確率(%)" },
+        { "name": "runningGuaranteedPeriod", "type": "int", "doc": "必ず走るゾンビが湧く周期(湧いた総数がこの倍数のとき。0以下で無効)" },
+        { "name": "maxAliveCount", "type": "int", "doc": "同時に生きていられるゾンビの数の上限。生きている数がこれに達したら、グループの残りは湧かせず捨てる" },
         { "name": "dropHeight", "type": "float", "digits": 1, "doc": "ゲートの足元の座標から、どれだけ浮かせて湧かせるか(cm)。高台のゲートでも落ちて接地する" },
         { "name": "gateJitterRadius", "type": "float", "digits": 1, "doc": "ゲートの中心から、湧く位置をXZ平面でずらす半径(cm)。ゲートの開口(幅500)に収まる値にすること" }
     ]
