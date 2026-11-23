@@ -16,6 +16,7 @@
 #include "Source/Actor/Stage/CoreParameter.h"
 #include "Source/Actor/Weapon/Bullet/BulletParameter.h"
 #include "Source/Actor/Weapon/WeaponParameter.h"
+#include "Source/Camera/AimAssistParameter.h"
 #include "Source/Camera/PlayerCameraParameter.h"
 #include "Source/Core/Param/ParamHolder.h"
 #include "Source/Navigation/NavigationParameter.h"
@@ -35,6 +36,7 @@ namespace app
         holder.Register<actor::ZombieParameter>(EnParamID::RunningZombie, "Assets/parameter/actor/RunningZombie.json", &actor::LoadZombieParameter, &actor::DrawZombieParameter);
         holder.Register<nav::NavigationParameter>(EnParamID::Navigation, "Assets/parameter/navigation/Navigation.json", &nav::LoadNavigationParameter, &nav::DrawNavigationParameter);
         holder.Register<actor::BulletParameter>(EnParamID::Bullet, "Assets/parameter/actor/Bullet.json", &actor::LoadBulletParameter, &actor::DrawBulletParameter);
+        holder.Register<camera::AimAssistParameter>(EnParamID::AimAssist, "Assets/parameter/camera/AimAssist.json", &camera::LoadAimAssistParameter, &camera::DrawAimAssistParameter);
 
         // 例: holder.Register<MiniMapParameter>(EnParamID::MiniMap, "Assets/parameter/ui/MiniMap.json", &LoadMiniMap);
         // 値をデバッグ画面(ParamDebugUI)で見たい場合は、4つ目の引数に表示関数を渡す。

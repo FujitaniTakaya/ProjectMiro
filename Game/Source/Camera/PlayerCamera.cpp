@@ -8,7 +8,9 @@
 
 #include <algorithm>
 #include <cfloat>
+#include <cmath>
 
+#include "AimAssistParameter.h"
 #include "PlayerCameraParameter.h"
 #include "Source/Core/Param/ParamHolder.h"
 #include "Source/Core/Util/Curve.h"
@@ -19,6 +21,49 @@ namespace app
 {
     namespace camera
     {
+        namespace
+        {
+            /** 右スティックのデッドゾーン(エンジンのGamePadの INPUT_DEADZONE = 0.24 と同じ。生の値から倒し具合を求める時に引く) */
+            constexpr float STICK_DEADZONE = 0.24f;
+            /** XInputのスティックの値の最大(SHRT_MAX) */
+            constexpr float STICK_RAW_MAX = 32767.0f;
+
+
+            /**
+             * @brief 右スティックを、倒し具合つきで読む
+             * @details GamePad::GetRStickXF/YF は向きだけ(長さ1)なので、倒し具合は、生のXInputの値から求める。
+             *          デッドゾーンの外を0〜1に直して、exponent 乗する。生の値が無い(キーボードなど)時は、倒し具合を1(全力)として扱う。
+             * @param pad パッド
+             * @param exponent 倒し具合の曲線の指数。0以下なら倒し具合を使わず、全力(今までと同じ)。1で比例、大きいほど浅い倒しがゆっくりになる
+             * @return 右スティックの向き × 倒し具合
+             */
+            Vector2 ReadRightStick(GamePad& pad, const float exponent)
+            {
+                const float directionX = pad.GetRStickXF();
+                const float directionY = pad.GetRStickYF();
+                if (directionX == 0.0f && directionY == 0.0f)
+                {
+                    return Vector2(0.0f, 0.0f);
+                }
+
+                float amount = 1.0f;
+                if (exponent > 0.0f)
+                {
+                    const XINPUT_GAMEPAD& raw = pad.GetXInputState().Gamepad;
+                    const float rawX = static_cast<float>(raw.sThumbRX) / STICK_RAW_MAX;
+                    const float rawY = static_cast<float>(raw.sThumbRY) / STICK_RAW_MAX;
+                    const float length = std::sqrt(rawX * rawX + rawY * rawY);
+                    if (length > FLT_EPSILON)
+                    {
+                        amount = std::clamp((length - STICK_DEADZONE) / (1.0f - STICK_DEADZONE), 0.0f, 1.0f);
+                        amount = std::pow(amount, exponent);
+                    }
+                }
+                return Vector2(directionX * amount, directionY * amount);
+            }
+        } // namespace
+
+
         PlayerCamera::PlayerCamera(const int padIndex)
             : m_parameter(ParamHolder::Get().GetParameter<PlayerCameraParameter>(EnParamID::PlayerCamera))
             , m_padIndex(padIndex)
@@ -26,6 +71,8 @@ namespace app
             , m_targetPosition(Vector3::Zero)
             , m_isAiming(false)
             , m_aimRate(0.0f)
+            , m_aimAssist()
+            , m_aimTargets()
         {
         }
 
@@ -42,32 +89,55 @@ namespace app
 
         void PlayerCamera::Update()
         {
+            const float deltaTime = g_gameTime->GetFrameDeltaTime();
+
             // 右スティックの入力。パッド番号が範囲外、またはパッドがない場合は無入力
-            // エンジンのGamePadは、スティックの値を長さ1に正規化するので、入力があれば常に全力で回る。
-            float stickX = 0.0f;
-            float stickY = 0.0f;
+            // エンジンのGamePadは、スティックの値を長さ1に正規化するので、通常は入力があれば常に全力で回る。
+            // 構えている間だけ、倒し具合を使う。(狙いの微調整のため)
+            Vector2 stick(0.0f, 0.0f);
             if (m_padIndex >= 0 && m_padIndex < static_cast<int>(g_pad.size()) && g_pad[m_padIndex] != nullptr)
             {
-                stickX = g_pad[m_padIndex]->GetRStickXF();
-                stickY = g_pad[m_padIndex]->GetRStickYF();
+                stick = ReadRightStick(*g_pad[m_padIndex], m_isAiming ? m_parameter.aimStickExponent : 0.0f);
             }
+            const bool isStickMoved = stick.x != 0.0f || stick.y != 0.0f;
+
+            // エイムアシスト。構えている間だけ。
+            // 減速: 視線が狙う点に近いほど、回転速度の倍率が小さくなる。
+            // 引き寄せ: スティックを倒している間だけ、狙う点までの角度の一部を、スティックの回転に足す。(何も倒していなければ、勝手には動かさない)
+            float assistScale = 1.0f;
+            float pullYawDeg = 0.0f;
+            float pullPitchDeg = 0.0f;
+            if (m_isAiming)
+            {
+                const AimAssistResult assist = m_aimAssist.Evaluate(g_camera3D->GetPosition(), g_camera3D->GetForward(), m_aimTargets);
+                assistScale = assist.slowScale;
+                if (assist.hasTarget && isStickMoved)
+                {
+                    const AimAssistParameter& assistParameter = ParamHolder::Get().GetParameter<AimAssistParameter>(EnParamID::AimAssist);
+                    // 1フレームで詰める割合。1を超えると狙う点を行き過ぎるので、1で止める
+                    const float fraction = (std::min)(assist.weight * assistParameter.pullRate * deltaTime, 1.0f);
+                    pullYawDeg = assist.yawErrorDeg * fraction;
+                    pullPitchDeg = assist.pitchErrorDeg * fraction;
+                }
+            }
+
             // 通常はカメラ感度、構えている間はエイム感度。どちらも、基準の回転速度に掛ける倍率。
             const OptionSettings& settings = OptionSettings::Get();
             const float sensitivity = m_isAiming ? settings.GetAimSensitivity() : settings.GetCameraSensitivity();
-            const float rotateDeg = m_parameter.rotateSpeed * sensitivity * g_gameTime->GetFrameDeltaTime();
+            const float rotateDeg = m_parameter.rotateSpeed * sensitivity * assistScale * deltaTime;
 
-            // Y軸周りの回転(左右)
+            // Y軸周りの回転(左右)。スティックを右に倒すと、右を向く
             Quaternion qRot;
-            qRot.SetRotationDeg(Vector3::AxisY, rotateDeg * stickX);
+            qRot.SetRotationDeg(Vector3::AxisY, rotateDeg * stick.x + pullYawDeg);
             qRot.Apply(m_toCameraPos);
 
-            // X軸周りの回転(上下)
+            // X軸周りの回転(上下)。スティックを上に倒すと、上を向く
             // 制限を超えるときは、上下だけを取り消す。(左右の回転は残す)
             const Vector3 toCameraPosOld = m_toCameraPos;
             Vector3 axisX;
             axisX.Cross(Vector3::AxisY, m_toCameraPos);
             axisX.Normalize();
-            qRot.SetRotationDeg(axisX, rotateDeg * stickY);
+            qRot.SetRotationDeg(axisX, rotateDeg * stick.y + pullPitchDeg);
             qRot.Apply(m_toCameraPos);
 
             Vector3 toPosDir = m_toCameraPos;

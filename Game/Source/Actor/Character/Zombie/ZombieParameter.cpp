@@ -24,9 +24,9 @@ namespace app
             , angerThreshold(40.0f)
             , angerSpreadValue(20.0f)
             , angerSpreadRadius(500.0f)
-            , radius(25.0f)
+            , radius(35.0f)
             , height(110.0f)
-            , coreStopDistance(150.0f)
+            , coreStopDistance(110.0f)
             , attackBoxSize(60.0f)
         {
         }

@@ -22,6 +22,7 @@
 #include "Source/Actor/Weapon/Bullet/BulletParameter.h"
 #include "Source/Actor/Weapon/Bullet/BulletSweep.h"
 #include "Source/Actor/Weapon/Handgun/Handgun.h"
+#include "Source/Camera/AimAssistParameter.h"
 #include "Source/Camera/PlayerCamera.h"
 #include "Source/Core/Param/ParamHolder.h"
 #include "Source/Core/Param/ParamList.h"
@@ -82,6 +83,7 @@ namespace app
         , m_countdownPacket(nullptr)
         , m_gameSetPacket(nullptr)
         , m_playerController(nullptr)
+        , m_aimTargets()
     {
         m_finishTimer.SetTimeLimit(FINISH_WAIT_TIME);
         ui::InitUIPacket(m_countdownPacket, COUNTDOWN_JSON_PATH);
@@ -388,6 +390,13 @@ namespace app
         // 離した瞬間から、カメラも引き始める
         m_playerCamera->SetTargetPosition(m_miro->GetTransform().m_position);
         m_playerCamera->SetAiming(m_miro->IsAimHeld());
+        // エイムアシストの対象。構えている間だけ、生きているゾンビの胸の座標を渡す
+        if (m_miro->IsAimHeld())
+        {
+            const camera::AimAssistParameter& assistParameter = ParamHolder::Get().GetParameter<camera::AimAssistParameter>(EnParamID::AimAssist);
+            m_zombieManager->CollectAimTargets(m_aimTargets, assistParameter.targetHeight);
+            m_playerCamera->SetAimTargets(m_aimTargets);
+        }
         m_playerCamera->Update();
         // カメラが更新された後の視線で、レティクルがゾンビを指しているか調べる
         m_hud.SetReticleOnTarget(IsAimingAtZombie());

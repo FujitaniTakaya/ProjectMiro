@@ -45,6 +45,8 @@ namespace app
             float aimDistanceScale;
             /** 構えの切り替えで、カメラが近づく/戻る時間(秒) */
             float aimBlendSeconds;
+            /** 構え中の右スティックの、倒し具合の曲線の指数。0で倒し具合を使わない(常に全力)。1で比例、大きいほど浅い倒しがゆっくりになる */
+            float aimStickExponent;
             // [PARAM_GEN end members]
         };
 

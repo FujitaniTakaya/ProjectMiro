@@ -103,6 +103,14 @@ namespace app
             ZombieBase* FindByBody(const btCollisionObject& object);
 
             /**
+             * @brief 生きているゾンビの、狙う点(足元から height 上)を集める
+             * @details エイムアシストが、視線に近いゾンビを選ぶために使う。死亡アニメーション中のゾンビは含まない。
+             * @param[out] out 狙う点の座標。中身は、最初に空にされる
+             * @param height 足元からの高さ(cm)
+             */
+            void CollectAimTargets(std::vector<Vector3>& out, const float height) const;
+
+            /**
              * @brief 生きているゾンビの数を取得
              * @details 死亡アニメーション中のゾンビは含まない。湧かせる上限の判定にも使う。
              * @return HPが残っているゾンビの数

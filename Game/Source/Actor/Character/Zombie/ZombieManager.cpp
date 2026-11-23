@@ -177,6 +177,21 @@ namespace app
         }
 
 
+        void ZombieManager::CollectAimTargets(std::vector<Vector3>& out, const float height) const
+        {
+            out.clear();
+            for (const std::unique_ptr<ZombieBase>& zombie : m_zombies)
+            {
+                // 死亡アニメーション中のゾンビは、撃っても意味がないので狙わせない
+                if (zombie->IsDead())
+                {
+                    continue;
+                }
+                out.push_back(zombie->GetTransform().m_position + Vector3(0.0f, height, 0.0f));
+            }
+        }
+
+
         void ZombieManager::Render(RenderContext& rc)
         {
             for (const std::unique_ptr<ZombieBase>& zombie : m_zombies)

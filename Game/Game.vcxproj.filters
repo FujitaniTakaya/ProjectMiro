@@ -445,6 +445,12 @@
     <ClCompile Include="Source\UI\HUD\Reticle\ReticleMenu.cpp">
       <Filter>Source\UI\HUD\Reticle</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Camera\AimAssist.cpp">
+      <Filter>Source\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Camera\AimAssistParameter.cpp">
+      <Filter>Source\Camera</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -816,6 +822,12 @@
     </ClInclude>
     <ClInclude Include="Source\UI\HUD\Reticle\ReticleMenu.h">
       <Filter>Source\UI\HUD\Reticle</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Camera\AimAssist.h">
+      <Filter>Source\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Camera\AimAssistParameter.h">
+      <Filter>Source\Camera</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

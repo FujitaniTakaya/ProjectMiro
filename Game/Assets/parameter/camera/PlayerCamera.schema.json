@@ -14,6 +14,7 @@
         { "name": "nearClip", "type": "float", "doc": "ニアクリップ", "load": "custom" },
         { "name": "farClip", "type": "float", "doc": "ファークリップ", "load": "custom" },
         { "name": "aimDistanceScale", "type": "float", "doc": "構え中の、注視点から視点までの距離の倍率(1より小さいほど近づく)" },
-        { "name": "aimBlendSeconds", "type": "float", "doc": "構えの切り替えで、カメラが近づく/戻る時間(秒)" }
+        { "name": "aimBlendSeconds", "type": "float", "doc": "構えの切り替えで、カメラが近づく/戻る時間(秒)" },
+        { "name": "aimStickExponent", "type": "float", "doc": "構え中の右スティックの、倒し具合の曲線の指数。0で倒し具合を使わない(常に全力)。1で比例、大きいほど浅い倒しがゆっくりになる" }
     ]
 }
