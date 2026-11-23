@@ -57,6 +57,7 @@ namespace app
             , m_coreAttackHandler(nullptr)
             , m_spawner()
             , m_zombies()
+            , m_killCounts()
         {
         }
 
@@ -90,8 +91,8 @@ namespace app
 
         void ZombieManager::Update()
         {
-            // 死んだゾンビを外す
-            RemoveDeadZombies(m_zombies);
+            // 死んだゾンビを外す。外す前に、種類別に倒した数を数える
+            RemoveDeadZombies(m_zombies, [this](const ZombieBase& zombie) { ++m_killCounts[static_cast<size_t>(zombie.GetKind())]; });
 
             // 湧かせる時間で、数にも空きがあれば、1体作る
             if (const std::optional<ZombieSpawnRequest> request = m_spawner.Update(m_zombies.size()))

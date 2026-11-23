@@ -30,6 +30,7 @@
 #include "Source/Navigation/NavigationService.h"
 #include "Source/Scene/Fade.h"
 #include "Source/Scene/ResultScene.h"
+#include "Source/Score/GameResult.h"
 #include "Source/UI/HUD/Countdown/CountdownMenu.h"
 #include "Source/UI/HUD/GameSet/GameSetMenu.h"
 
@@ -226,6 +227,8 @@ namespace app
         }
 
         m_isGameOver = true;
+        // 結果をリザルトへ渡す。経過時間はここで止まるので、そのまま守衛継続時間になる
+        GameResult::Get().Set(GameResultData(m_elapsedTime, m_zombieManager->GetKillCount(actor::EnZombieKind::Normal), m_zombieManager->GetKillCount(actor::EnZombieKind::Running)));
         // Miroを操作できなくする。(カウントダウンの時と同じく、パッドのコントローラーを外す)
         m_playerController = m_miro->GetControllerSlot().Detach();
         // 「Finish」を出す

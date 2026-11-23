@@ -3,6 +3,7 @@
  * @brief ゾンビの生成・破棄・保持を行うクラス
  */
 #pragma once
+#include <array>
 #include <cstddef>
 #include <cstdint>
 #include <memory>
@@ -28,7 +29,7 @@ namespace app
          * @details 生きているゾンビを全部ここが持つ。作る・更新する・描画する・破棄するも、ここが行う。
          *          湧かせる判断(ゲート・間隔・種類)は、中の ZombieSpawner が行う。ここは、その結果(ZombieSpawnRequest)を受けて作るだけ。
          *          湧いたゾンビには、コアへ向かうControllerを付ける。
-         *          HPが0以下になったゾンビは、Update() の頭で外して破棄する。
+         *          HPが0以下になったゾンビは、Update() の頭で外して破棄する。外す時に、種類別の倒した数(GetKillCount())を数える。
          *          Update() は、シーンの Update() から毎フレーム呼ぶ。ポーズ中(Update()が呼ばれない間)は、湧かせるタイマーも止まる。
          *          例: manager.SetCorePositionProvider(provider);
          *              manager.SetCoreAttackHandler(handler);
@@ -117,6 +118,18 @@ namespace app
                 return m_spawner.GetSpawnedCount();
             }
 
+            /**
+             * @brief 倒した数を取得
+             * @details HPが0以下になって外したゾンビを、種類別に数えたもの。Miroに倒されたかどうかは区別しない。(今はHPを減らすのは弾だけ)
+             * @param kind ゾンビの種類
+             * @return その種類を倒した数。EnZombieKind::Max など範囲外の種類は0
+             */
+            inline uint32_t GetKillCount(const EnZombieKind kind) const
+            {
+                const size_t index = static_cast<size_t>(kind);
+                return index < m_killCounts.size() ? m_killCounts[index] : 0;
+            }
+
 
         private:
             /**
@@ -140,6 +153,8 @@ namespace app
             ZombieSpawner m_spawner;
             /** 生きているゾンビ */
             std::vector<std::unique_ptr<ZombieBase>> m_zombies;
+            /** 倒した数。EnZombieKind の順 */
+            std::array<uint32_t, static_cast<size_t>(EnZombieKind::Max)> m_killCounts;
         };
     } // namespace actor
 } // namespace app

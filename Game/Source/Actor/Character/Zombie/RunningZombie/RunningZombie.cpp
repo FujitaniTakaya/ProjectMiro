@@ -60,5 +60,11 @@ namespace app
 
 
         RunningZombie::~RunningZombie() = default;
+
+
+        EnZombieKind RunningZombie::GetKind() const
+        {
+            return EnZombieKind::Running;
+        }
     } // namespace actor
 } // namespace app

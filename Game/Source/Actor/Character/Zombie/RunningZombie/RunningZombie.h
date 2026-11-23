@@ -26,6 +26,12 @@ namespace app
         public:
             RunningZombie();
             virtual ~RunningZombie() override;
+
+            /**
+             * @brief ゾンビの種類を取得
+             * @return EnZombieKind::Running
+             */
+            virtual EnZombieKind GetKind() const override;
         };
     } // namespace actor
 } // namespace app

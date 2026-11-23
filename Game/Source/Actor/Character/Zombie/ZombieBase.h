@@ -6,6 +6,7 @@
 #include <memory>
 
 #include "Source/Actor/Character/CharacterBase.h"
+#include "Source/Actor/Character/Zombie/Spawn/ZombieSpawnRule.h"
 #include "ZombieAttackHandler.h"
 #include "physics/PhysicsGhostObject.h"
 
@@ -62,6 +63,13 @@ namespace app
             {
                 return m_parameter;
             }
+
+            /**
+             * @brief ゾンビの種類を取得
+             * @details 倒した数を種類別に数えるために使う。派生クラスが、自分の種類を返す。
+             * @return ゾンビの種類
+             */
+            virtual EnZombieKind GetKind() const = 0;
 
             /**
              * @brief 最大HPを取得

@@ -142,6 +142,9 @@
     <Filter Include="Source\Actor\Weapon\Bullet">
       <UniqueIdentifier>{37d821fb-fdd5-4af9-8b76-957cd34749f3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Score">
+      <UniqueIdentifier>{9c0b253c-d36a-4328-88a6-166b89c20a72}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -432,6 +435,9 @@
     </ClCompile>
     <ClCompile Include="Source\Actor\Weapon\Bullet\BulletSweep.cpp">
       <Filter>Source\Actor\Weapon\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Score\GameResult.cpp">
+      <Filter>Source\Score</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -795,6 +801,12 @@
     </ClInclude>
     <ClInclude Include="Source\Actor\Weapon\Bullet\BulletSweep.h">
       <Filter>Source\Actor\Weapon\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Score\GameResult.h">
+      <Filter>Source\Score</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Score\ScoreRule.h">
+      <Filter>Source\Score</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

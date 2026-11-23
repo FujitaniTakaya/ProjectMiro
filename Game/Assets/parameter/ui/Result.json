@@ -84,6 +84,314 @@
                     255,
                     255
                 ]
+            },
+            {
+                "type": "UIText",
+                "name": "TimeLabel",
+                "font": "RoundedMplus",
+                "text": "守衛時間",
+                "size": 48,
+                "pivot": [
+                    0,
+                    0.5
+                ],
+                "position": [
+                    -700,
+                    220,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                ]
+            },
+            {
+                "type": "UIText",
+                "name": "TimeValue",
+                "font": "RoundedMplus",
+                "text": "0:00",
+                "size": 48,
+                "pivot": [
+                    1,
+                    0.5
+                ],
+                "position": [
+                    -60,
+                    220,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                ]
+            },
+            {
+                "type": "UIText",
+                "name": "TimePoints",
+                "font": "RoundedMplus",
+                "text": "0点",
+                "size": 48,
+                "pivot": [
+                    1,
+                    0.5
+                ],
+                "position": [
+                    340,
+                    220,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                ]
+            },
+            {
+                "type": "UIText",
+                "name": "NormalLabel",
+                "font": "RoundedMplus",
+                "text": "ゾンビ",
+                "size": 48,
+                "pivot": [
+                    0,
+                    0.5
+                ],
+                "position": [
+                    -700,
+                    120,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                ]
+            },
+            {
+                "type": "UIText",
+                "name": "NormalValue",
+                "font": "RoundedMplus",
+                "text": "0体",
+                "size": 48,
+                "pivot": [
+                    1,
+                    0.5
+                ],
+                "position": [
+                    -60,
+                    120,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                ]
+            },
+            {
+                "type": "UIText",
+                "name": "NormalPoints",
+                "font": "RoundedMplus",
+                "text": "0点",
+                "size": 48,
+                "pivot": [
+                    1,
+                    0.5
+                ],
+                "position": [
+                    340,
+                    120,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                ]
+            },
+            {
+                "type": "UIText",
+                "name": "RunningLabel",
+                "font": "RoundedMplus",
+                "text": "ランニングゾンビ",
+                "size": 48,
+                "pivot": [
+                    0,
+                    0.5
+                ],
+                "position": [
+                    -700,
+                    20,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                ]
+            },
+            {
+                "type": "UIText",
+                "name": "RunningValue",
+                "font": "RoundedMplus",
+                "text": "0体",
+                "size": 48,
+                "pivot": [
+                    1,
+                    0.5
+                ],
+                "position": [
+                    -60,
+                    20,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                ]
+            },
+            {
+                "type": "UIText",
+                "name": "RunningPoints",
+                "font": "RoundedMplus",
+                "text": "0点",
+                "size": 48,
+                "pivot": [
+                    1,
+                    0.5
+                ],
+                "position": [
+                    340,
+                    20,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                ]
+            },
+            {
+                "type": "UIText",
+                "name": "TotalLabel",
+                "font": "RoundedMplus",
+                "text": "スコア",
+                "size": 72,
+                "pivot": [
+                    0,
+                    0.5
+                ],
+                "position": [
+                    -700,
+                    -130,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                ]
+            },
+            {
+                "type": "UIText",
+                "name": "TotalPoints",
+                "font": "RoundedMplus",
+                "text": "0点",
+                "size": 72,
+                "pivot": [
+                    1,
+                    0.5
+                ],
+                "position": [
+                    340,
+                    -130,
+                    0
+                ],
+                "scale": [
+                    1,
+                    1,
+                    1
+                ],
+                "rotation": 0,
+                "color": [
+                    255,
+                    255,
+                    255,
+                    255
+                ]
             }
         ]
     }

@@ -327,6 +327,7 @@
     <ClCompile Include="Source\Actor\Weapon\Bullet\BulletManager.cpp" />
     <ClCompile Include="Source\Actor\Weapon\Bullet\BulletParameter.cpp" />
     <ClCompile Include="Source\Actor\Weapon\Bullet\BulletSweep.cpp" />
+    <ClCompile Include="Source\Score\GameResult.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -452,6 +453,8 @@
     <ClInclude Include="Source\Actor\Weapon\Bullet\BulletParameter.h" />
     <ClInclude Include="Source\Actor\Weapon\Bullet\BulletHit.h" />
     <ClInclude Include="Source\Actor\Weapon\Bullet\BulletSweep.h" />
+    <ClInclude Include="Source\Score\GameResult.h" />
+    <ClInclude Include="Source\Score\ScoreRule.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BalloonEngine\BalloonEngine.vcxproj">

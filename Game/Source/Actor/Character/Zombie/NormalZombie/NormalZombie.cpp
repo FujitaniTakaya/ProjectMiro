@@ -60,5 +60,11 @@ namespace app
 
 
         NormalZombie::~NormalZombie() = default;
+
+
+        EnZombieKind NormalZombie::GetKind() const
+        {
+            return EnZombieKind::Normal;
+        }
     } // namespace actor
 } // namespace app

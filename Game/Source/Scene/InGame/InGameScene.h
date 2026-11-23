@@ -71,7 +71,7 @@ namespace app
 
         /**
          * @brief コアの耐久値かMiroのHPが0になったかを調べて、ゲームセットにする
-         * @details 0になったら m_isGameOver を立て、Miroからパッドのコントローラーを外し、「Finish」を出す。一度なったら、リザルトへ進むまでの待ち時間を進める。
+         * @details 0になったら m_isGameOver を立て、結果(守衛時間・倒した数)を GameResult に書き、Miroからパッドのコントローラーを外し、「Finish」を出す。一度なったら、リザルトへ進むまでの待ち時間を進める。
          *          待ち時間が過ぎると、RequestScene() がリザルトシーンへの遷移を要求する。
          */
         void UpdateGameOver();
