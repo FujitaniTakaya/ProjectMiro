@@ -213,6 +213,12 @@ namespace app
         }
 
 
+        bool MiroStateMachine::IsAimHeld() const
+        {
+            return IsEqualCurrentState(MiroAimState::ID());
+        }
+
+
         bool MiroStateMachine::IsFiring()
         {
             if (!IsEqualCurrentState(MiroAimState::ID()))

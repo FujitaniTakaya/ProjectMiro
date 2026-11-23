@@ -301,6 +301,44 @@ namespace app
     }
 
 
+    bool InGameScene::IsAimingAtZombie() const
+    {
+        // 撃てるのは、構えを保持している間だけ
+        if (!m_miro->IsAimHeld())
+        {
+            return false;
+        }
+
+        Vector3 muzzle;
+        Quaternion barrelRotation;
+        if (!m_handgun->CalcMuzzle(muzzle, barrelRotation))
+        {
+            return false;
+        }
+
+        // 弾が狙う点と同じ視線で調べる。(見た目と、弾の狙いを一致させる)
+        const actor::BulletParameter& bulletParameter = ParamHolder::Get().GetParameter<actor::BulletParameter>(EnParamID::Bullet);
+        const btCollisionObject* selfBody = m_miro->GetCharacterController()->GetRigidBody()->GetBody();
+        actor::BulletHit hit;
+        if (!actor::SweepAimRay(
+                g_camera3D->GetPosition(),
+                g_camera3D->GetForward(),
+                muzzle,
+                bulletParameter.lifeTime * bulletParameter.shotSpeed,
+                bulletParameter.hitRadius,
+                selfBody,
+                hit
+            ))
+        {
+            return false;
+        }
+
+        // 死んだゾンビ(死亡アニメーション中)は、撃っても意味がないので数えない
+        const actor::ZombieBase* zombie = m_zombieManager->FindByBody(*hit.object);
+        return zombie != nullptr && !zombie->IsDead();
+    }
+
+
     void InGameScene::Update()
     {
         UpdateCountdown();
@@ -342,13 +380,17 @@ namespace app
         // ハンドガンが更新された後の残弾数を通知する(値が変わった時だけ、UIに伝わる)
         InGameInfoHub::Get().NotifyPlayerAmmo(m_handgun->GetRemainingAmmo());
 
-        // 構えを通知する(値が変わった時だけ、UIに伝わる)。構えている間、レティクルは中央に集まる
-        InGameInfoHub::Get().NotifyPlayerAim(m_miro->IsAiming());
+        // 構えを通知する(値が変わった時だけ、UIに伝わる)。ZLを押している間だけ構え扱いで、レティクルは中央に集まる。
+        // 離した瞬間から広がり始める(構えを解く動きの終わりは待たない)
+        InGameInfoHub::Get().NotifyPlayerAim(m_miro->IsAimHeld());
 
-        // Miroが動いた後の座標を追う。構えている間は、エイム感度で回り、カメラが近づく
+        // Miroが動いた後の座標を追う。ZLを押している間は、エイム感度で回り、カメラが近づく。
+        // 離した瞬間から、カメラも引き始める
         m_playerCamera->SetTargetPosition(m_miro->GetTransform().m_position);
-        m_playerCamera->SetAiming(m_miro->IsAiming());
+        m_playerCamera->SetAiming(m_miro->IsAimHeld());
         m_playerCamera->Update();
+        // カメラが更新された後の視線で、レティクルがゾンビを指しているか調べる
+        m_hud.SetReticleOnTarget(IsAimingAtZombie());
 
         // 経路探索のデバッグ表示。カメラが更新された後に描く。始点は4つのゲート、終点はコア
 #ifdef BALLOON_IMGUI_ENABLED

@@ -85,6 +85,14 @@ namespace app
          */
         bool FireHandgun();
 
+        /**
+         * @brief 構えている時、レティクルが生きているゾンビを指しているか
+         * @details 弾が狙う点と同じ視線(actor::SweepAimRay)を伸ばして、最初に当たった物がゾンビの体かを調べる。
+         *          構えを保持していない間は、撃てないので false。死んだゾンビ(死亡アニメーション中)も false。
+         * @return 指しているなら true
+         */
+        bool IsAimingAtZombie() const;
+
 
     private:
         /**
