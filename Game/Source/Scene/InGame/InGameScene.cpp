@@ -8,6 +8,7 @@
 
 #include <cstdint>
 #include <memory>
+#include <optional>
 #include <utility>
 #include <vector>
 
@@ -65,6 +66,8 @@ namespace app
         constexpr float SKY_LUMINANCE = 1.0f;
         /** Miroの足元から胸までの高さ(cm)。壁に銃口が出ていないかを、胸から銃口までの球で調べる時の始点(Miroの全高は160) */
         constexpr float CHEST_HEIGHT = 120.0f;
+        /** ゾンビがMiroを追いかける距離(cm)。ゾンビからMiroまでがこれ以内なら、Miroへ向かう。それより遠ければ、コアへ向かう */
+        constexpr float MIRO_CHASE_RADIUS = 2000.0f;
     } // namespace
 
 
@@ -121,18 +124,35 @@ namespace app
         m_handgun->StartWrapper();
         m_playerCamera->Start();
 
-        // ゾンビのマネージャーに、コアの位置(地面の座標)を関数で教える。湧いたゾンビは、この位置へ向かう。
-        // m_zombieManager は m_core より先に破棄されるので、破棄の間にこの関数は呼ばれない。
-        m_zombieManager->SetCorePositionProvider([core = m_core.get()]() { return core->GetTransform().m_position; });
-        // ゾンビの攻撃判定がコアの箱に重なったら、コアにダメージを与える。(コア以外に重なった時は、何もしない)
-        // m_zombieManager は m_core より先に破棄されるので、破棄の間にこの関数は呼ばれない。
-        m_zombieManager->SetCoreAttackHandler([core = m_core.get()](const btCollisionObject& contact, const float damage) {
-            if (!core->IsHitBox(contact))
+        // ゾンビのマネージャーに、向かう先の位置(地面の座標)を関数で教える。湧いたゾンビは、この位置へ向かう。
+        // Miroが生きていて、ゾンビから MIRO_CHASE_RADIUS 以内にいればMiroへ、そうでなければコアへ向かう。
+        // m_zombieManager は m_core・m_miro より先に破棄されるので、破棄の間にこの関数は呼ばれない。
+        m_zombieManager->SetCorePositionProvider([core = m_core.get(), miro = m_miro.get()](const Vector3& from) -> std::optional<Vector3> {
+            if (miro->GetHp() > 0.0f)
             {
-                return false;
+                const Vector3 miroPosition = miro->GetTransform().m_position;
+                const Vector3 toMiro(miroPosition.x - from.x, 0.0f, miroPosition.z - from.z);
+                if (toMiro.LengthSq() <= MIRO_CHASE_RADIUS * MIRO_CHASE_RADIUS)
+                {
+                    return miroPosition;
+                }
             }
-            core->TakeDamage(damage);
-            return true;
+            return core->GetTransform().m_position;
+        });
+        // ゾンビの攻撃判定がコアの箱かMiroの体に重なったら、ダメージを与える。(それ以外に重なった時は、何もしない)
+        // m_zombieManager は m_core・m_miro より先に破棄されるので、破棄の間にこの関数は呼ばれない。
+        m_zombieManager->SetCoreAttackHandler([core = m_core.get(), miro = m_miro.get()](const btCollisionObject& contact, const float damage) {
+            if (core->IsHitBox(contact))
+            {
+                core->TakeDamage(damage);
+                return true;
+            }
+            if (miro->GetHp() > 0.0f && &contact == miro->GetCharacterController()->GetRigidBody()->GetBody())
+            {
+                miro->TakeDamage(damage);
+                return true;
+            }
+            return false;
         });
         // ゾンビのモデルなどを先に読み込んでおく。(最初に湧く時に、引っかからないように)
         m_zombieManager->Preload();

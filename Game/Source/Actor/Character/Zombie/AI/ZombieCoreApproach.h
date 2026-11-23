@@ -39,10 +39,13 @@ namespace app
         {
         public:
             /**
-             * @brief コアの位置を教える関数
-             * @return コアの足元(地面)のワールド座標。高さは使わない。コアがなければ std::nullopt
+             * @brief 向かう先の位置を教える関数
+             * @details 名前はコアのままだが、向かう先はコアとは限らない。持ち主(シーン)が、ゾンビの位置を見て、コアかMiroかを選んで返す。
+             *          毎フレーム呼ばれる。
+             * @param from 向かうゾンビの今の座標。近い方を選ぶ時などに使う
+             * @return 向かう先の足元(地面)のワールド座標。高さは使わない。向かう先がなければ std::nullopt
              */
-            using PositionProvider = std::function<std::optional<Vector3>()>;
+            using PositionProvider = std::function<std::optional<Vector3>(const Vector3& from)>;
 
 
         public:
@@ -127,6 +130,8 @@ namespace app
             nav::PathFollower m_pathFollower;
             /** 次に経路を探してよくなるまでの残り時間(秒) */
             float m_repathCooldown;
+            /** 今の経路を探した時の、向かう先の座標。向かう先が動いたかどうかを調べるのに使う */
+            Vector3 m_pathGoal;
         };
     } // namespace actor
 } // namespace app

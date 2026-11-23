@@ -24,6 +24,8 @@ namespace app
         {
             /** 方向ベクトルを正規化してよい長さの二乗のしきい値(ゼロ除算防止。AIControllerと同じ値) */
             constexpr float DIRECTION_NORMALIZE_SQ = 0.001f;
+            /** 経路を探した時の向かう先から、これ以上(cm)動いたら、経路を探し直す。(Miroのように動く相手を追うため) */
+            constexpr float GOAL_REPATH_DISTANCE = 200.0f;
         } // namespace
 
 
@@ -33,6 +35,7 @@ namespace app
             , m_corePositionProvider(nullptr)
             , m_pathFollower()
             , m_repathCooldown(0.0f)
+            , m_pathGoal(Vector3::Zero)
         {
         }
 
@@ -50,7 +53,7 @@ namespace app
             {
                 return std::nullopt;
             }
-            const std::optional<Vector3> corePosition = m_corePositionProvider();
+            const std::optional<Vector3> corePosition = m_corePositionProvider(context.position);
             if (!corePosition)
             {
                 return std::nullopt;
@@ -85,10 +88,13 @@ namespace app
             followSettings.stallDistance = m_navParameter.stallDistance;
             const nav::EnFollowStatus status = m_pathFollower.Update(context.position.x, context.position.z, context.deltaTime, followSettings);
 
-            // 経路が無い・終わった・外れた・進めなくなったら、探し直す。失敗しても、次に探すのは間隔を空ける
-            if (status != nav::EnFollowStatus::Following && m_repathCooldown <= 0.0f)
+            // 経路が無い・終わった・外れた・進めなくなった・向かう先が動いたら、探し直す。失敗しても、次に探すのは間隔を空ける
+            const Vector3 goalMoved(corePosition.x - m_pathGoal.x, 0.0f, corePosition.z - m_pathGoal.z);
+            const bool isGoalMoved = goalMoved.LengthSq() > GOAL_REPATH_DISTANCE * GOAL_REPATH_DISTANCE;
+            if ((status != nav::EnFollowStatus::Following || isGoalMoved) && m_repathCooldown <= 0.0f)
             {
                 m_repathCooldown = m_navParameter.repathInterval;
+                m_pathGoal = corePosition;
                 const std::optional<std::vector<nav::NavVec3>> path = navigation.FindPath(context.position, corePosition);
                 if (path)
                 {
