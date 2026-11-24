@@ -11,5 +11,6 @@
     "radius": 35.0,
     "height": 110.0,
     "coreStopDistance": 110.0,
-    "attackBoxSize": 60.0
+    "attackBoxSize": 100.0,
+    "attackAnimSpeed": 1.8
 }

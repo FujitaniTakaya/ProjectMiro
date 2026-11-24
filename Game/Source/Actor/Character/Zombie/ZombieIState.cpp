@@ -7,6 +7,7 @@
 #include "ZombieIState.h"
 
 #include "Source/Actor/Character/CharacterStateMachine.h"
+#include "ZombieStateMachine.h"
 
 
 namespace app
@@ -114,6 +115,8 @@ namespace app
             // 待機と同じく、コアに着いた勢いで滑らないよう、慣性を消してその場で止める
             m_owner->SetMoveSpeed(0.0f);
             m_owner->StopMoving();
+            // 構えながら歩くプレイヤーに当たるよう、攻撃の動きを少し早送りする(抜けるときに戻す)
+            m_owner->SetAnimationSpeed(static_cast<ZombieStateMachine*>(m_owner)->GetAttackAnimationSpeed());
             m_owner->PlayAnimation(EnZombieAnimationClipID::Attack);
         }
 
@@ -133,6 +136,7 @@ namespace app
 
         void ZombieAttackState::Exit()
         {
+            m_owner->SetAnimationSpeed(1.0f);
         }
 
 

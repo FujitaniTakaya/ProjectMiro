@@ -17,6 +17,7 @@
         { "name": "radius", "type": "float", "doc": "キャラクターコントローラーの半径" },
         { "name": "height", "type": "float", "doc": "キャラクターコントローラーの高さ" },
         { "name": "coreStopDistance", "type": "float", "doc": "コアに着いたとみなす距離。コアのXZ平面での距離がこの値以内になると、立ち止まる" },
-        { "name": "attackBoxSize", "type": "float", "doc": "攻撃判定の箱の一辺(cm)。振り下ろしの間、右手に付く。コアなどの当たり判定に重なるとダメージが入る" }
+        { "name": "attackBoxSize", "type": "float", "doc": "攻撃判定の箱の一辺(cm)。振り下ろしの間、右手に付く。コアなどの当たり判定に重なるとダメージが入る" },
+        { "name": "attackAnimSpeed", "type": "float", "digits": 2, "doc": "攻撃アニメーションの再生速度(1.0=通常)。上げるほど振り下ろしが早く、構えながら歩くプレイヤーに当てやすい" }
     ]
 }

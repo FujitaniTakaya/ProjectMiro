@@ -43,6 +43,12 @@ namespace app
         }
 
 
+        float ZombieStateMachine::GetAttackAnimationSpeed() const
+        {
+            return m_parameter.attackAnimSpeed;
+        }
+
+
         bool ZombieStateMachine::CanChangeAttackState() const
         {
             // 攻撃の動きが終わるまでは続ける(途中でボタンを離しても、動きは最後まで再生する)

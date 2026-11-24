@@ -40,6 +40,11 @@ namespace app
              * @return プレイヤーの走り速度 × ZombieParameter の走りの割合
              */
             virtual float GetRunSpeed() const override;
+            /**
+             * @brief 攻撃アニメーションの再生速度を取得する
+             * @return ZombieParameter の攻撃アニメ再生速度(1.0f=通常)
+             */
+            float GetAttackAnimationSpeed() const;
 
             /**
              * @brief 死亡の動きが終わったか
