@@ -36,9 +36,12 @@ namespace app
             , maxToCameraDirY(0.9f)
             , nearClip(1.0f)
             , farClip(10000.0f)
-            , aimDistanceScale(0.6f)
+            , aimDistanceScale(0.45f)
             , aimBlendSeconds(0.2f)
             , aimStickExponent(1.5f)
+            , collisionRadius(25.0f)
+            , collisionMinDistance(60.0f)
+            , collisionRecoverSpeed(600.0f)
         {
         }
         // [PARAM_GEN end ctor]
@@ -58,6 +61,9 @@ namespace app
             param.aimDistanceScale = ParamLoader::ToFloat(root, "aimDistanceScale", param.aimDistanceScale);
             param.aimBlendSeconds = ParamLoader::ToFloat(root, "aimBlendSeconds", param.aimBlendSeconds);
             param.aimStickExponent = ParamLoader::ToFloat(root, "aimStickExponent", param.aimStickExponent);
+            param.collisionRadius = ParamLoader::ToFloat(root, "collisionRadius", param.collisionRadius);
+            param.collisionMinDistance = ParamLoader::ToFloat(root, "collisionMinDistance", param.collisionMinDistance);
+            param.collisionRecoverSpeed = ParamLoader::ToFloat(root, "collisionRecoverSpeed", param.collisionRecoverSpeed);
             // [PARAM_GEN end load]
 
             // 注視点から視点までのベクトル。水平成分が0だと、カメラの右方向が決まらない。
@@ -114,6 +120,9 @@ namespace app
             ImGui::Text("aimDistanceScale: %.1f", param.aimDistanceScale);
             ImGui::Text("aimBlendSeconds: %.1f", param.aimBlendSeconds);
             ImGui::Text("aimStickExponent: %.1f", param.aimStickExponent);
+            ImGui::Text("collisionRadius: %.1f", param.collisionRadius);
+            ImGui::Text("collisionMinDistance: %.1f", param.collisionMinDistance);
+            ImGui::Text("collisionRecoverSpeed: %.1f", param.collisionRecoverSpeed);
             // [PARAM_GEN end draw]
 #endif // BALLOON_IMGUI_ENABLED
         }

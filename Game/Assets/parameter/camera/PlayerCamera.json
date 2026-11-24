@@ -11,7 +11,10 @@
     "maxToCameraDirY": 0.9,
     "nearClip": 1.0,
     "farClip": 10000.0,
-    "aimDistanceScale": 0.6,
+    "aimDistanceScale": 0.45,
     "aimBlendSeconds": 0.2,
-    "aimStickExponent": 1.5
+    "aimStickExponent": 1.5,
+    "collisionRadius": 25.0,
+    "collisionMinDistance": 60.0,
+    "collisionRecoverSpeed": 600.0
 }

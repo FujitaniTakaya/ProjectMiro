@@ -47,6 +47,12 @@ namespace app
             float aimBlendSeconds;
             /** 構え中の右スティックの、倒し具合の曲線の指数。0で倒し具合を使わない(常に全力)。1で比例、大きいほど浅い倒しがゆっくりになる */
             float aimStickExponent;
+            /** 壁との衝突を調べる球の半径(cm)。ニアクリップ面が壁に食い込まない大きさ */
+            float collisionRadius;
+            /** 壁に押された時でも、注視点から視点までこれより近づけない距離(cm) */
+            float collisionMinDistance;
+            /** 壁から離れた時、視点が元の距離へ戻る速さ(cm/秒) */
+            float collisionRecoverSpeed;
             // [PARAM_GEN end members]
         };
 

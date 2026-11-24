@@ -61,6 +61,57 @@ namespace app
                 }
                 return Vector2(directionX * amount, directionY * amount);
             }
+
+
+            /**
+             * @brief カメラの球のスイープの結果を受けるコールバック
+             * @details ステージ(静的な剛体)にだけ当たる。キャラクター・ゴースト(ゾンビの攻撃判定の箱・コアの箱)は素通りする。
+             */
+            struct CameraSweepCallback : public btCollisionWorld::ClosestConvexResultCallback
+            {
+                CameraSweepCallback(const btVector3& from, const btVector3& to)
+                    : ClosestConvexResultCallback(from, to)
+                {}
+
+
+                bool needsCollision(btBroadphaseProxy* proxy) const override
+                {
+                    const auto* object = static_cast<const btCollisionObject*>(proxy->m_clientObject);
+                    if (!object->isStaticObject())
+                    {
+                        return false;
+                    }
+                    return ClosestConvexResultCallback::needsCollision(proxy);
+                }
+            };
+
+
+            /**
+             * @brief 始点から理想の視点へ球を動かして、壁に当たる手前までの割合を求める
+             * @param from 球の始点(注視点側)
+             * @param to 球の終点(理想の視点)
+             * @param radius 球の半径(cm)
+             * @return 当たらなければ1。当たったら、当たる手前までの割合(0〜1)
+             */
+            float SweepCameraFraction(const Vector3& from, const Vector3& to, const float radius)
+            {
+                if ((to - from).Length() < FLT_EPSILON)
+                {
+                    return 1.0f;
+                }
+
+                btSphereShape shape(radius);
+                btTransform start;
+                start.setIdentity();
+                start.setOrigin(btVector3(from.x, from.y, from.z));
+                btTransform end;
+                end.setIdentity();
+                end.setOrigin(btVector3(to.x, to.y, to.z));
+
+                CameraSweepCallback callback(start.getOrigin(), end.getOrigin());
+                PhysicsWorld::GetInstance()->ConvexSweepTest(&shape, start, end, callback);
+                return callback.hasHit() ? callback.m_closestHitFraction : 1.0f;
+            }
         } // namespace
 
 
@@ -71,6 +122,7 @@ namespace app
             , m_targetPosition(Vector3::Zero)
             , m_isAiming(false)
             , m_aimRate(0.0f)
+            , m_allowedLength(FLT_MAX)
             , m_aimAssist()
             , m_aimTargets()
         {
@@ -169,7 +221,27 @@ namespace app
 
             // 視点を計算する。構え中は、回転後のベクトルは触らずに、距離だけ縮めたものを使う。
             const float distanceScale = 1.0f + (m_parameter.aimDistanceScale - 1.0f) * aimEased;
-            const Vector3 pos = target + m_toCameraPos * distanceScale;
+            const Vector3 toCamera = m_toCameraPos * distanceScale;
+            const float fullLength = toCamera.Length();
+
+            // 壁に当たる手前までの距離。始点は、横のずらしを含まない点(ターゲットの真上)にする。
+            // 肩の位置が壁の外に出てしまうと、球が最初から壁に重なって当たらなくなるため。
+            Vector3 pivot = m_targetPosition;
+            pivot.y += m_parameter.targetOffsetUp;
+            const float fraction = SweepCameraFraction(pivot, target + toCamera, m_parameter.collisionRadius);
+            const float hitLength = (std::max)(fullLength * fraction, (std::min)(m_parameter.collisionMinDistance, fullLength));
+
+            // 壁に近づく時は即座に縮め、離れた時だけ、ゆっくり元の距離へ戻す。
+            if (hitLength < m_allowedLength)
+            {
+                m_allowedLength = hitLength;
+            }
+            else
+            {
+                m_allowedLength = (std::min)(m_allowedLength + m_parameter.collisionRecoverSpeed * deltaTime, hitLength);
+            }
+            const float usedLength = (std::min)(fullLength, m_allowedLength);
+            const Vector3 pos = fullLength > FLT_EPSILON ? target + toCamera * (usedLength / fullLength) : target;
 
             // メインカメラに設定して更新する。
             g_camera3D->SetNear(m_parameter.nearClip);
