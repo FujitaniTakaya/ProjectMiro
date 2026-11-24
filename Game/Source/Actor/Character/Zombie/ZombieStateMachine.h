@@ -52,6 +52,22 @@ namespace app
              */
             bool IsDeathFinished() const;
 
+            /**
+             * @brief 怯みを予約する
+             * @details 次の Update() で、上半身(Upper レイヤー)に怯みのアニメーションを最初から重ねる。
+             *          ステートは変わらないので、歩き・走りの移動は止まらない。攻撃中・死亡中は無視する。
+             */
+            inline void RequestFlinch()
+            {
+                m_hasFlinchRequest = true;
+            }
+
+            /**
+             * @brief ステートマシンを更新する
+             * @details ステートの更新のあとで、怯み(上半身)を更新する。
+             */
+            virtual void Update() override;
+
 
         protected:
             /**
@@ -79,10 +95,17 @@ namespace app
 
 
         private:
+            /** 怯みの上半身アニメーションを、予約と今のステートに合わせて再生・解除する */
+            void UpdateFlinch();
+
+
+        private:
             /** パラメーター */
             const ZombieParameter& m_parameter;
             /** プレイヤー(Miro)のパラメーター。速度の基準 */
             const MiroParameter& m_playerParameter;
+            /** 怯みの予約があるか(Update() で消費する) */
+            bool m_hasFlinchRequest;
         };
     } // namespace actor
 } // namespace app

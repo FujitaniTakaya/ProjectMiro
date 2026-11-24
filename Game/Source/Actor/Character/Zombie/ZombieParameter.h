@@ -55,6 +55,10 @@ namespace app
             float attackBoxSize;
             /** 攻撃アニメーションの再生速度(1.0=通常)。上げるほど振り下ろしが早く、構えながら歩くプレイヤーに当てやすい */
             float attackAnimSpeed;
+            /** 怯みアニメーションの再生速度(1.0=通常)。素材が2.3秒と長いので、上げるほど短く済む */
+            float hitAnimSpeed;
+            /** 怯みの上半身が入る・抜けるときのブレンド時間(秒) */
+            float hitBlendTime;
             // [PARAM_GEN end members]
         };
 

@@ -21,6 +21,7 @@ namespace app
             : CharacterStateMachine(ownerCharacter)
             , m_parameter(parameter)
             , m_playerParameter(ParamHolder::Get().GetParameter<MiroParameter>(EnParamID::Miro))
+            , m_hasFlinchRequest(false)
         {
             // 待機(慣性を消すゾンビ用)・歩き・走り・攻撃・死亡を登録する
             AddState<ZombieIdleState>(this);
@@ -66,6 +67,40 @@ namespace app
         {
             // 死亡ステートに入っていて、死亡アニメーションの再生が終わった
             return IsEqualCurrentState(ZombieDeathState::ID()) && !IsPlayingAnimation();
+        }
+
+
+        void ZombieStateMachine::Update()
+        {
+            CharacterStateMachine::Update();
+            UpdateFlinch();
+        }
+
+
+        void ZombieStateMachine::UpdateFlinch()
+        {
+            // 攻撃(全身の動き)と死亡は、怯みを重ねない。重なっていたら外す
+            if (IsEqualCurrentState(ZombieAttackState::ID()) || IsEqualCurrentState(ZombieDeathState::ID()))
+            {
+                m_hasFlinchRequest = false;
+                StopLayerAnimation(EnAnimationLayer::Upper, m_parameter.hitBlendTime);
+                return;
+            }
+
+            if (m_hasFlinchRequest)
+            {
+                m_hasFlinchRequest = false;
+                // 再生中なら巻き戻して最初から(フェードしない)。休止中なら、ブレンドして入る
+                PlayLayerAnimation(EnAnimationLayer::Upper, EnZombieAnimationClipID::Hit, m_parameter.hitBlendTime, IsPlayingLayerAnimation(EnAnimationLayer::Upper));
+                SetLayerAnimationSpeed(EnAnimationLayer::Upper, m_parameter.hitAnimSpeed);
+                return;
+            }
+
+            // 終わったら外す。(ループしないクリップは、最後のポーズで重みが残るため。止まっているレイヤーに呼んでも何も起きない)
+            if (!IsPlayingLayerAnimation(EnAnimationLayer::Upper))
+            {
+                StopLayerAnimation(EnAnimationLayer::Upper, m_parameter.hitBlendTime);
+            }
         }
 
 

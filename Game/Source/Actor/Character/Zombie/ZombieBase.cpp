@@ -22,6 +22,8 @@ namespace app
         {
             /** 攻撃判定を付けるボーンの名前(右手。攻撃アニメで振り下ろされるのが右手) */
             constexpr const wchar_t* ATTACK_BONE_NAME = L"hand_r";
+            /** 上半身レイヤー(怯み)が効くボーンの根の名前。ここから先(背骨・両腕・首・頭)が怯みで動く。腰と脚は歩き・走りのまま */
+            constexpr const wchar_t* UPPER_BODY_ROOT_BONE_NAME = L"spine_01";
             /** 攻撃アニメのイベント名: 攻撃判定を出す(振り下ろしの始まり) */
             constexpr const wchar_t* ATTACK_BEGIN_EVENT = L"AttackBegin";
             /** 攻撃アニメのイベント名: 攻撃判定を消す(振り下ろしの終わり) */
@@ -100,6 +102,12 @@ namespace app
         {
             TakeDamage(damage);
             AddAnger(damage * m_parameter.angerGainRate);
+
+            // 倒れていなければ、上半身だけ怯ませる。(殺した弾は、死亡アニメーションを上書きしないよう怯ませない)
+            if (!IsDead())
+            {
+                m_stateMachine->RequestFlinch();
+            }
         }
 
 
@@ -137,6 +145,9 @@ namespace app
 
             // 攻撃判定を付ける右手のボーンと、攻撃アニメのイベントの受け取り。(this はこのゾンビが生きている間、有効)
             m_attackBone = m_modelRender.FindBone(ATTACK_BONE_NAME);
+
+            // 怯みを重ねる上半身の範囲
+            m_modelRender.SetLayerMask(EnAnimationLayer::Upper, UPPER_BODY_ROOT_BONE_NAME);
             m_modelRender.AddAnimationEventListener([this]([[maybe_unused]] const wchar_t* clipName, const wchar_t* eventName) { OnAnimationEvent(eventName); });
 
             // 累積アンガー値は、初期アンガー値から始める。(初期値がしきい値以上なら、最初からロックオン)
