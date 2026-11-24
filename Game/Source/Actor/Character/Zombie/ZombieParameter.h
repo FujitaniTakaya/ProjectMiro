@@ -53,6 +53,8 @@ namespace app
             float coreStopDistance;
             /** 攻撃判定の箱の一辺(cm)。振り下ろしの間、右手に付く。コアなどの当たり判定に重なるとダメージが入る */
             float attackBoxSize;
+            /** 攻撃アニメーションの再生速度(1.0=通常)。上げるほど振り下ろしが早く、構えながら歩くプレイヤーに当てやすい */
+            float attackAnimSpeed;
             // [PARAM_GEN end members]
         };
 

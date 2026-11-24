@@ -1,0 +1,14 @@
+{
+    "struct": "AimAssistParameter",
+    "namespace": "camera",
+    "json": "Assets/parameter/camera/AimAssist.json",
+    "h": "Source/Camera/AimAssistParameter.h",
+    "cpp": "Source/Camera/AimAssistParameter.cpp",
+    "params": [
+        { "name": "targetHeight", "type": "float", "doc": "狙う点の高さ(ゾンビの足元から。cm)。胸のあたり" },
+        { "name": "maxDistance", "type": "float", "doc": "カメラからこの距離(cm)より遠いゾンビは、アシストの対象にしない" },
+        { "name": "assistRadius", "type": "float", "doc": "視線から狙う点までの距離(cm)がこれ以内なら、アシストが効く。中心に近いほど強い" },
+        { "name": "slowScale", "type": "float", "doc": "視線が狙う点のど真ん中にある時の、回転速度の倍率(1でオフ。小さいほど遅い)", "digits": 2, "load": "custom" },
+        { "name": "pullRate", "type": "float", "doc": "引き寄せの強さ。スティックを倒している間、残りの角度のうち、1秒あたりこの割合を詰める(0でオフ)" }
+    ]
+}

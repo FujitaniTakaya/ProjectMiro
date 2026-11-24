@@ -39,6 +39,31 @@ namespace app
         Quaternion MakeRotationFromTo(const Vector3& from, const Vector3& to);
 
         /**
+         * @brief レティクル(カメラの視線)を伸ばして、最初に当たる物を調べる
+         * @details 視線の始点は、銃口と同じ奥行きの面に置く。(カメラが後ろにいても、銃口より手前の物には当たらない)
+         *          CalcAimRotation() の狙い点と、同じ視線。
+         * @param cameraPosition カメラの位置
+         * @param cameraForward カメラの前方向(大きさは問わない)
+         * @param muzzle 銃口の位置
+         * @param range 視線を伸ばす長さ(cm)。弾が飛べる距離にすること
+         * @param radius 視線を調べる球の半径(cm)。弾の当たり判定と同じにすること
+         * @param ignore 無視する物理オブジェクト(Miroの体)
+         * @param[out] hit 当たった情報。当たらなかった時は変更されない
+         * @param[out] endPoint 視線の終点(当たらなかった時の狙い点)。不要なら nullptr
+         * @return 当たったら true
+         */
+        bool SweepAimRay(
+            const Vector3& cameraPosition,
+            const Vector3& cameraForward,
+            const Vector3& muzzle,
+            float range,
+            float radius,
+            const btCollisionObject* ignore,
+            BulletHit& hit,
+            Vector3* endPoint = nullptr
+        );
+
+        /**
          * @brief レティクル(カメラの視線)が指す点へ向かう、銃口からの発射角度を求める
          * @details カメラの視線を、銃口と同じ奥行きの面から伸ばして、最初に当たる点を狙い点にする。
          *          (カメラと銃口の間、Miroの後ろにある物には当たらないようにするため)

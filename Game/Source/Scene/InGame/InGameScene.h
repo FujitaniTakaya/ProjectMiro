@@ -6,6 +6,7 @@
 #pragma once
 #include <cstdint>
 #include <memory>
+#include <vector>
 
 #include "InGameHud.h"
 #include "Source/Core/Timer/Timer.h"
@@ -85,6 +86,14 @@ namespace app
          */
         bool FireHandgun();
 
+        /**
+         * @brief 構えている時、レティクルが生きているゾンビを指しているか
+         * @details 弾が狙う点と同じ視線(actor::SweepAimRay)を伸ばして、最初に当たった物がゾンビの体かを調べる。
+         *          構えを保持していない間は、撃てないので false。死んだゾンビ(死亡アニメーション中)も false。
+         * @return 指しているなら true
+         */
+        bool IsAimingAtZombie() const;
+
 
     private:
         /**
@@ -118,5 +127,7 @@ namespace app
         ui::UIPacket<ui::GameSetMenu> m_gameSetPacket;
         /** カウントダウン中に、Miroから外しておいたパッドのコントローラー。0になったら、Miroへ付け直す。ゲームセットの時にも、外したものをここへ入れる */
         std::unique_ptr<IController> m_playerController;
+        /** エイムアシストの対象(生きているゾンビの胸の座標)。構え中に毎フレーム集める。メモリの確保を繰り返さないよう、使い回す */
+        std::vector<Vector3> m_aimTargets;
     };
 } // namespace app

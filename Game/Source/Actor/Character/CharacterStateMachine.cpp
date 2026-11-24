@@ -17,8 +17,6 @@ namespace app
         {
             /** 重力の値 */
             constexpr float GRAVITY = -9.8f * 150.0f;
-            /** 地面の高さ(床を作るまでの仮の値。この高さ以下では重力を受けない) */
-            constexpr float GROUND_HEIGHT = 0.0f;
             /** 加速度(目標速度への到達の早さ) */
             constexpr float ACCELERATION = 10.0f;
             /** 摩擦係数(入力がないときの減速の早さ) */
@@ -72,10 +70,10 @@ namespace app
             characterController->SetPosition(m_ownerActor->GetTransform().m_position);
 
             // 素のCharacterControllerには重力がないので、垂直方向の速度に重力を足して渡す。
-            // 床がまだないので、高さがGROUND_HEIGHT以下で落下中(または静止中)なら、地面にいるとみなして重力を受けない。
+            // 床の上(接地中)で落下中(または静止中)なら、重力を足さない。(床への吸着は Execute() がする)
             // (上向きの速度があるとき、つまりジャンプ中は、重力を受ける)
             float verticalVelocity = m_ownerCharacter->GetVerticalVelocity();
-            if (m_ownerActor->GetTransform().m_position.y <= GROUND_HEIGHT && verticalVelocity <= 0.0f)
+            if (characterController->IsOnGround() && verticalVelocity <= 0.0f)
             {
                 verticalVelocity = 0.0f;
             }

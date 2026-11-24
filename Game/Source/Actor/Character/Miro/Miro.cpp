@@ -118,9 +118,9 @@ namespace app
         }
 
 
-        bool Miro::IsAiming() const
+        bool Miro::IsAimHeld() const
         {
-            return m_stateMachine->IsAiming();
+            return m_stateMachine->IsAimHeld();
         }
 
 

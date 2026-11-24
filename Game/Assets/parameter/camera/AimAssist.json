@@ -1,0 +1,7 @@
+{
+    "targetHeight": 120.0,
+    "maxDistance": 3000.0,
+    "assistRadius": 80.0,
+    "slowScale": 0.4,
+    "pullRate": 2.0
+}

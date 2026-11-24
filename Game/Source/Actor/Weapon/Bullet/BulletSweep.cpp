@@ -124,6 +124,33 @@ namespace app
         }
 
 
+        bool SweepAimRay(
+            const Vector3& cameraPosition,
+            const Vector3& cameraForward,
+            const Vector3& muzzle,
+            const float range,
+            const float radius,
+            const btCollisionObject* ignore,
+            BulletHit& hit,
+            Vector3* endPoint
+        )
+        {
+            Vector3 forward = cameraForward;
+            forward.Normalize();
+
+            // 視線の始点は、銃口と同じ奥行きの面に置く。(カメラが後ろにいても、銃口より手前の物には当たらない)
+            const float depth = Dot(muzzle - cameraPosition, forward);
+            const Vector3 start = cameraPosition + forward * (depth > 0.0f ? depth : 0.0f);
+            const Vector3 end = start + forward * range;
+            if (endPoint != nullptr)
+            {
+                *endPoint = end;
+            }
+
+            return SweepSphere(start, end, radius, ignore, hit);
+        }
+
+
         Quaternion CalcAimRotation(
             const Vector3& cameraPosition,
             const Vector3& cameraForward,
@@ -134,16 +161,9 @@ namespace app
             const Quaternion& fallback
         )
         {
-            Vector3 forward = cameraForward;
-            forward.Normalize();
-
-            // 視線の始点は、銃口と同じ奥行きの面に置く。(カメラが後ろにいても、銃口より手前の物には当たらない)
-            const float depth = Dot(muzzle - cameraPosition, forward);
-            const Vector3 start = cameraPosition + forward * (depth > 0.0f ? depth : 0.0f);
-            const Vector3 end = start + forward * range;
-
             BulletHit hit;
-            const Vector3 aimPoint = SweepSphere(start, end, radius, ignore, hit) ? hit.position : end;
+            Vector3 end;
+            const Vector3 aimPoint = SweepAimRay(cameraPosition, cameraForward, muzzle, range, radius, ignore, hit, &end) ? hit.position : end;
 
             Vector3 direction = aimPoint - muzzle;
             if (direction.Length() < MIN_AIM_DISTANCE)

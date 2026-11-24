@@ -10,8 +10,13 @@
  *          回る速さは、PlayerCameraParameter の rotateSpeed に、オプションの感度(OptionSettings)を掛けたもの。
  *          通常はカメラ感度、ハンドガンを構えている間(SetAiming(true))はエイム感度を掛ける。
  *          構えている間は、視点が注視点に近づく。(距離の倍率と切り替えの時間は PlayerCameraParameter)
+ *          構えている間は、右スティックの倒し具合が回る速さに効く。(aimStickExponent。キーボードは常に全力)
+ *          さらに、SetAimTargets() で渡された狙う点が視線の近くにあると、回転が遅くなり、スティックを倒している間は視線が狙う点へ寄る。(エイムアシスト。AimAssist)
  */
 #pragma once
+#include <vector>
+
+#include "AimAssist.h"
 
 
 namespace app
@@ -69,6 +74,17 @@ namespace app
                 m_isAiming = isAiming;
             }
 
+            /**
+             * @brief エイムアシストの対象(狙う点)を設定
+             * @details 構えている間、視線に近い点へ減速・引き寄せがかかる。ゾンビの胸の座標などを渡す。
+             *          毎フレーム、Update() の前に設定すること。構えていない間は使わない。
+             * @param targets 狙う点。コピーして持つ
+             */
+            void SetAimTargets(const std::vector<Vector3>& targets)
+            {
+                m_aimTargets = targets;
+            }
+
 
         private:
             /** パラメーター(ParamHolderが持つもの。アプリが終わるまで使える) */
@@ -83,6 +99,10 @@ namespace app
             bool m_isAiming;
             /** 構えの度合い(0=通常、1=構え切った状態)。SetAiming() の向きへ、aimBlendSeconds かけて動く */
             float m_aimRate;
+            /** エイムアシストの判定 */
+            AimAssist m_aimAssist;
+            /** エイムアシストの対象(狙う点) */
+            std::vector<Vector3> m_aimTargets;
         };
     } // namespace camera
 } // namespace app

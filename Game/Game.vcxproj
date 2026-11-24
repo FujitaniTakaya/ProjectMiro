@@ -329,6 +329,8 @@
     <ClCompile Include="Source\Actor\Weapon\Bullet\BulletSweep.cpp" />
     <ClCompile Include="Source\Score\GameResult.cpp" />
     <ClCompile Include="Source\UI\HUD\Reticle\ReticleMenu.cpp" />
+    <ClCompile Include="Source\Camera\AimAssist.cpp" />
+    <ClCompile Include="Source\Camera\AimAssistParameter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -457,6 +459,8 @@
     <ClInclude Include="Source\Score\GameResult.h" />
     <ClInclude Include="Source\Score\ScoreRule.h" />
     <ClInclude Include="Source\UI\HUD\Reticle\ReticleMenu.h" />
+    <ClInclude Include="Source\Camera\AimAssist.h" />
+    <ClInclude Include="Source\Camera\AimAssistParameter.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BalloonEngine\BalloonEngine.vcxproj">

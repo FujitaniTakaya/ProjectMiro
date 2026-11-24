@@ -42,6 +42,8 @@ namespace app
         Navigation,
         /** 弾(生存時間・モデルの拡大率) */
         Bullet,
+        /** エイムアシスト(構え中の減速・引き寄せ) */
+        AimAssist,
 
         Max,
         None = Max

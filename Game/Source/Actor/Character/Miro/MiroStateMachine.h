@@ -53,6 +53,12 @@ namespace app
              * @return 構えステートか、構えを解くステートなら true
              */
             bool IsAiming() const;
+            /**
+             * @brief 構えを保持しているかどうか
+             * @details ZLを押して構えている間だけ true。構えを解く動き(MiroAimEndState)の間は false。
+             * @return 構えステートなら true
+             */
+            bool IsAimHeld() const;
 
             /**
              * @brief 武器の処理を設定する

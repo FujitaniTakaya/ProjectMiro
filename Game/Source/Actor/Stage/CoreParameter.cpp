@@ -17,8 +17,8 @@ namespace app
         CoreParameter::CoreParameter()
             : maxHp(1000.0f)
             , hpBarOffsetY(150.0f)
-            , hitBoxWidth(240.0f)
-            , hitBoxHeight(220.0f)
+            , hitBoxWidth(160.0f)
+            , hitBoxHeight(200.0f)
         {
         }
         // [PARAM_GEN end ctor]

@@ -7,6 +7,10 @@
 
 namespace nsK2EngineLow {
 	namespace {
+		//地面判定の調整値。
+		constexpr float GROUND_STEP_UP_MIN = 30.0f;		//地面を調べる始点の持ち上げ量の最小値。
+		constexpr float GROUND_STEP_UP_SLOPE = 1.4f;		//XZの移動量あたりの持ち上げ量(tan54度)。登り坂の食い込み分。
+		constexpr float GROUND_SNAP_DISTANCE = 100.0f;	//接地中に、下へ調べる距離。
 		void Vector3CopyFrom(Vector3& vDst, btVector3& vSrc)
 		{
 			vDst.x = vSrc.x();
@@ -21,7 +25,7 @@ namespace nsK2EngineLow {
 			Vector3 startPos;									//レイの始点。
 			Vector3 hitNormal;									//衝突点の法線。
 			btCollisionObject* me = nullptr;					//自分自身。自分自身との衝突を除外するためのメンバ。
-			float dist = FLT_MAX;								//衝突点までの距離。一番近い衝突点を求めるため。FLT_MAXは単精度の浮動小数点が取りうる最大の値。
+			float fraction = FLT_MAX;							//最初に触れた当たりの位置(0～1)。一番手前の当たりを選ぶため。
 
 																//衝突したときに呼ばれるコールバック関数。
 			virtual	btScalar	addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace)
@@ -43,16 +47,11 @@ namespace nsK2EngineLow {
 					) {
 					//衝突している。
 					isHit = true;
-					Vector3 hitPosTmp = *(Vector3*)&convexResult.m_hitPointLocal;
-					//衝突点の距離を求める。。
-					Vector3 vDist;
-					vDist.Subtract(hitPosTmp, startPos);
-					float distTmp = vDist.Length();
-					if (dist > distTmp) {
-						//この衝突点の方が近いので、最近傍の衝突点を更新する。
-						hitPos = hitPosTmp;
-						hitNormal = *(Vector3*)&convexResult.m_hitNormalLocal;
-						dist = distTmp;
+					//一番手前(sweepの進み具合が最小)の当たりだけ覚える。始点からの距離ではなく、最初に触れた面を選ぶ。
+					if (convexResult.m_hitFraction < fraction) {
+						fraction = convexResult.m_hitFraction;
+						Vector3CopyFrom(hitPos, convexResult.m_hitPointLocal);
+						Vector3CopyFrom(hitNormal, convexResult.m_hitNormalLocal);
 					}
 				}
 				return 0.0f;
@@ -131,6 +130,12 @@ namespace nsK2EngineLow {
 	}
 	const Vector3& CharacterController::Execute(Vector3& moveSpeed, float deltaTime)
 	{
+#ifdef _DEBUG
+		//TEMP: 坂のすり抜け・がくがくの原因確認用ログ。確認が終わったら消す。
+		const bool dbgWasOnGround = m_isOnGround;
+		const bool dbgIsRising = moveSpeed.y > 0.0f;
+		const float dbgBeforeY = m_position.y;
+#endif
 		if (moveSpeed.y > 0.0f) {
 			//吹っ飛び中にする。
 			m_isJump = true;
@@ -224,6 +229,10 @@ namespace nsK2EngineLow {
 			}
 		}
 		//XZの移動は確定。
+		//地面を調べる始点を持ち上げる量のために、XZの移動量を覚えておく。
+		const float xzMoveX = nextPosition.x - m_position.x;
+		const float xzMoveZ = nextPosition.z - m_position.z;
+		const float xzMoveLength = sqrtf(xzMoveX * xzMoveX + xzMoveZ * xzMoveZ);
 		m_position.x = nextPosition.x;
 		m_position.z = nextPosition.z;
 		//下方向を調べる。
@@ -236,13 +245,20 @@ namespace nsK2EngineLow {
 			btTransform start, end;
 			start.setIdentity();
 			end.setIdentity();
-			//始点はカプセルコライダーの中心。
-			start.setOrigin(btVector3(m_position.x, m_position.y + m_height * 0.5f + m_radius, m_position.z));
+			//始点はカプセルコライダーの中心を、持ち上げた位置にする。
+			//XZを先に動かしているので、登り坂ではカプセルの下端が坂に食い込んでいる。
+			//食い込んだ位置からのsweepは当たりを返さず、地面を見失ってすり抜けるので、食い込み分だけ上から調べる。
+			//上昇中(ジャンプ)は、天井を拾うので持ち上げない。
+			const float stepUpTmp = xzMoveLength * GROUND_STEP_UP_SLOPE;
+			const float stepUp = (m_isOnGround == false && addPos.y > 0.0f) ? 0.0f : (stepUpTmp > GROUND_STEP_UP_MIN ? stepUpTmp : GROUND_STEP_UP_MIN);
+			start.setOrigin(btVector3(m_position.x, m_position.y + m_height * 0.5f + m_radius + stepUp, m_position.z));
 			//終点は地面上にいない場合は1m下を見る。
 			//地面上にいなくてジャンプで上昇中の場合は上昇量の0.01倍下を見る。
 			//地面上にいなくて降下中の場合はそのまま落下先を調べる。
 			Vector3 endPos;
 			Vector3CopyFrom(endPos, start.getOrigin());
+			//終点は、持ち上げる前の中心を基準にする。
+			endPos.y -= stepUp;
 
 			if (m_isOnGround == false) {
 				if (addPos.y > 0.0f) {
@@ -257,7 +273,7 @@ namespace nsK2EngineLow {
 			}
 			else {
 				//地面上にいない場合は1m下を見る。
-				endPos.y -= 100.0f;
+				endPos.y -= GROUND_SNAP_DISTANCE;
 			}
 			end.setOrigin(btVector3(endPos.x, endPos.y, endPos.z));
 			SweepResultGround callback;
@@ -290,6 +306,15 @@ namespace nsK2EngineLow {
 		//剛体の位置を更新。
 		trans.setOrigin(btVector3(m_position.x, m_position.y + m_height * 0.5f + m_radius, m_position.z));
 		//@todo 未対応。 trans.setRotation(btQuaternion(rotation.x, rotation.y, rotation.z));
+#ifdef _DEBUG
+		//TEMP: 接地中だったのに地面を見失った時と、1フレームでYが大きく動いた時に出す。確認が終わったら消す。
+		if ((dbgWasOnGround && m_isOnGround == false && dbgIsRising == false) || fabsf(m_position.y - dbgBeforeY) > 15.0f) {
+			char dbgBuf[256];
+			sprintf_s(dbgBuf, "[CharCon] wasGround=%d isGround=%d y %.2f -> %.2f vy=%.1f xz=%.2f\n",
+				dbgWasOnGround ? 1 : 0, m_isOnGround ? 1 : 0, dbgBeforeY, m_position.y, moveSpeed.y, xzMoveLength);
+			OutputDebugStringA(dbgBuf);
+		}
+#endif
 		return m_position;
 	}
 	/*!

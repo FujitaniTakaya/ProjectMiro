@@ -52,11 +52,12 @@ namespace app
             const Bone* GetWeaponHandBone() const;
 
             /**
-             * @brief ハンドガンを構えているかどうか
-             * @details 構えている間と、構えを解く間(ZLを離してから構えを解き終わるまで)が対象。カメラが、エイム感度に切り替えるために使う。
-             * @return 構えているならtrue
+             * @brief ハンドガンの構えを保持しているかどうか
+             * @details ZLを押している間だけ。構えを解く動き(ZLを離してから解き終わるまで)の間は含まない。
+             *          カメラ・レティクルが、ZLを離した瞬間に戻り始めるために使う。
+             * @return 構えを保持しているならtrue
              */
-            bool IsAiming() const;
+            bool IsAimHeld() const;
 
             /**
              * @brief 武器の処理を設定する

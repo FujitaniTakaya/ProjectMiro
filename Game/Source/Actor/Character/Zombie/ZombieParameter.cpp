@@ -24,10 +24,11 @@ namespace app
             , angerThreshold(40.0f)
             , angerSpreadValue(20.0f)
             , angerSpreadRadius(500.0f)
-            , radius(25.0f)
+            , radius(35.0f)
             , height(110.0f)
-            , coreStopDistance(150.0f)
+            , coreStopDistance(110.0f)
             , attackBoxSize(60.0f)
+            , attackAnimSpeed(1.3f)
         {
         }
         // [PARAM_GEN end ctor]
@@ -54,6 +55,7 @@ namespace app
             param.height = ParamLoader::ToFloat(root, "height", param.height);
             param.coreStopDistance = ParamLoader::ToFloat(root, "coreStopDistance", param.coreStopDistance);
             param.attackBoxSize = ParamLoader::ToFloat(root, "attackBoxSize", param.attackBoxSize);
+            param.attackAnimSpeed = ParamLoader::ToFloat(root, "attackAnimSpeed", param.attackAnimSpeed);
             // [PARAM_GEN end load]
         }
 
@@ -75,6 +77,7 @@ namespace app
             ImGui::Text("height: %.1f", param.height);
             ImGui::Text("coreStopDistance: %.1f", param.coreStopDistance);
             ImGui::Text("attackBoxSize: %.1f", param.attackBoxSize);
+            ImGui::Text("attackAnimSpeed: %.2f", param.attackAnimSpeed);
             // [PARAM_GEN end draw]
 #endif // BALLOON_IMGUI_ENABLED
         }

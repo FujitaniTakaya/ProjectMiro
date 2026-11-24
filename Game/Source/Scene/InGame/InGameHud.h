@@ -61,6 +61,13 @@ namespace app
         void SetElapsedTime(const float seconds);
 
         /**
+         * @brief レティクルが、ゾンビを指しているかを教える
+         * @details 指している間、レティクルが赤くなる。値の持ち主はシーンなので、InGameInfoHubは通さない。毎フレーム呼んでよい。
+         * @param isOnTarget ゾンビを指しているなら true
+         */
+        void SetReticleOnTarget(const bool isOnTarget);
+
+        /**
          * @brief 更新処理
          * @details 全てのHUDを更新する。アクターが値を通知した後に呼ぶこと。
          */

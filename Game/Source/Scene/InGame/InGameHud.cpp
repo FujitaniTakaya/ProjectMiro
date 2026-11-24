@@ -99,6 +99,15 @@ namespace app
     }
 
 
+    void InGameHud::SetReticleOnTarget(const bool isOnTarget)
+    {
+        if (ui::ReticleMenu* reticleMenu = m_reticlePacket->GetMenu())
+        {
+            reticleMenu->SetOnTarget(isOnTarget);
+        }
+    }
+
+
     void InGameHud::Update()
     {
         m_hpBarPacket->Update();
