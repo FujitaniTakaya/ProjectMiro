@@ -331,6 +331,7 @@
     <ClCompile Include="Source\UI\HUD\Reticle\ReticleMenu.cpp" />
     <ClCompile Include="Source\Camera\AimAssist.cpp" />
     <ClCompile Include="Source\Camera\AimAssistParameter.cpp" />
+    <ClCompile Include="Source\Actor\Stage\StageBoundary.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -461,6 +462,7 @@
     <ClInclude Include="Source\UI\HUD\Reticle\ReticleMenu.h" />
     <ClInclude Include="Source\Camera\AimAssist.h" />
     <ClInclude Include="Source\Camera\AimAssistParameter.h" />
+    <ClInclude Include="Source\Actor\Stage\StageBoundary.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BalloonEngine\BalloonEngine.vcxproj">

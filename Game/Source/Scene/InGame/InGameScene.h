@@ -9,6 +9,7 @@
 #include <vector>
 
 #include "InGameHud.h"
+#include "Source/Actor/Stage/StageBoundary.h"
 #include "Source/Core/Timer/Timer.h"
 #include "Source/Scene/IScene.h"
 #include "Source/UI/Foundation/SystemPacket.h"
@@ -113,6 +114,8 @@ namespace app
         std::unique_ptr<actor::ZombieManager> m_zombieManager;
         /** 背景の当たり判定。m_stageFieldのモデルの形そのままのメッシュコライダー(キャラクターコントローラーが床や壁として扱う) */
         PhysicsStaticObject m_bgPhysicsStaticObject;
+        /** ステージの外周の見えない壁。ステージの外へ出られなくする(描画はしない) */
+        actor::StageBoundary m_stageBoundary;
         /** 開始前のカウントダウンの時間。0になるまでは、Miroを操作できず、ゾンビも湧かず、ポーズもできない */
         StartCountdown m_countdown;
         /** 経過時間(秒)。カウントダウンが終わってから進み、ゲームセットで止まる */

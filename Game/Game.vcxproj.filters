@@ -451,6 +451,9 @@
     <ClCompile Include="Source\Camera\AimAssistParameter.cpp">
       <Filter>Source\Camera</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Actor\Stage\StageBoundary.cpp">
+      <Filter>Source\Actor\Stage</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -828,6 +831,9 @@
     </ClInclude>
     <ClInclude Include="Source\Camera\AimAssistParameter.h">
       <Filter>Source\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Stage\StageBoundary.h">
+      <Filter>Source\Actor\Stage</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

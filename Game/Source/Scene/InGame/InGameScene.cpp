@@ -17,6 +17,7 @@
 #include "Source/Actor/Character/Zombie/ZombieBase.h"
 #include "Source/Actor/Character/Zombie/ZombieManager.h"
 #include "Source/Actor/Stage/Core.h"
+#include "Source/Actor/Stage/StageBoundary.h"
 #include "Source/Actor/Stage/StageField.h"
 #include "Source/Actor/Weapon/Bullet/BulletManager.h"
 #include "Source/Actor/Weapon/Bullet/BulletParameter.h"
@@ -187,6 +188,9 @@ namespace app
         // 背景の当たり判定。モデルの形をそのまま使うので、ワールド行列(Z-upの補正込み)が確定した後に作る
         ModelRender& stageModelRender = m_stageField->GetModelRender();
         m_bgPhysicsStaticObject.CreateFromModel(stageModelRender.GetModel(), stageModelRender.GetModel().GetWorldMatrix());
+
+        // ステージの外へ出られないように、外周に見えない壁を置く
+        m_stageBoundary.Build();
 
         // 経路探索の格子。同じくワールド行列が確定した後に作る。ゾンビが最初に歩き出すまでに必要
         nav::NavigationService::Get().Build(actor::StageField::GetModelPath(), stageModelRender.GetModel().GetWorldMatrix());
