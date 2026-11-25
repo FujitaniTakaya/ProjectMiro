@@ -28,9 +28,9 @@ namespace app
 
         // [PARAM_GEN begin ctor] 自動生成(tools/param_gen.py)。手で編集しない
         PlayerCameraParameter::PlayerCameraParameter()
-            : targetOffsetUp(180.0f)
+            : targetOffsetUp(150.0f)
             , targetOffsetRight(60.0f)
-            , toCameraPos(0.0f, 125.0f, -250.0f)
+            , toCameraPos(0.0f, 50.0f, -250.0f)
             , rotateSpeed(78.0f)
             , minToCameraDirY(-0.2f)
             , maxToCameraDirY(0.9f)
@@ -42,6 +42,10 @@ namespace app
             , collisionRadius(25.0f)
             , collisionMinDistance(60.0f)
             , collisionRecoverSpeed(600.0f)
+            , recoilKickDeg(1.5f)
+            , recoilMaxDeg(5.0f)
+            , recoilRiseRate(40.0f)
+            , recoilRecoverRate(8.0f)
         {
         }
         // [PARAM_GEN end ctor]
@@ -64,6 +68,10 @@ namespace app
             param.collisionRadius = ParamLoader::ToFloat(root, "collisionRadius", param.collisionRadius);
             param.collisionMinDistance = ParamLoader::ToFloat(root, "collisionMinDistance", param.collisionMinDistance);
             param.collisionRecoverSpeed = ParamLoader::ToFloat(root, "collisionRecoverSpeed", param.collisionRecoverSpeed);
+            param.recoilKickDeg = ParamLoader::ToFloat(root, "recoilKickDeg", param.recoilKickDeg);
+            param.recoilMaxDeg = ParamLoader::ToFloat(root, "recoilMaxDeg", param.recoilMaxDeg);
+            param.recoilRiseRate = ParamLoader::ToFloat(root, "recoilRiseRate", param.recoilRiseRate);
+            param.recoilRecoverRate = ParamLoader::ToFloat(root, "recoilRecoverRate", param.recoilRecoverRate);
             // [PARAM_GEN end load]
 
             // 注視点から視点までのベクトル。水平成分が0だと、カメラの右方向が決まらない。
@@ -123,6 +131,10 @@ namespace app
             ImGui::Text("collisionRadius: %.1f", param.collisionRadius);
             ImGui::Text("collisionMinDistance: %.1f", param.collisionMinDistance);
             ImGui::Text("collisionRecoverSpeed: %.1f", param.collisionRecoverSpeed);
+            ImGui::Text("recoilKickDeg: %.1f", param.recoilKickDeg);
+            ImGui::Text("recoilMaxDeg: %.1f", param.recoilMaxDeg);
+            ImGui::Text("recoilRiseRate: %.1f", param.recoilRiseRate);
+            ImGui::Text("recoilRecoverRate: %.1f", param.recoilRecoverRate);
             // [PARAM_GEN end draw]
 #endif // BALLOON_IMGUI_ENABLED
         }

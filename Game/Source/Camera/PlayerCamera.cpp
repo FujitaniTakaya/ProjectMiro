@@ -27,6 +27,8 @@ namespace app
             constexpr float STICK_DEADZONE = 0.24f;
             /** XInputのスティックの値の最大(SHRT_MAX) */
             constexpr float STICK_RAW_MAX = 32767.0f;
+            /** 反動の角度がこれより小さければ、0として扱う(度) */
+            constexpr float RECOIL_EPSILON_DEG = 0.001f;
 
 
             /**
@@ -125,6 +127,8 @@ namespace app
             , m_allowedLength(FLT_MAX)
             , m_aimAssist()
             , m_aimTargets()
+            , m_recoilTargetDeg(0.0f)
+            , m_recoilDeg(0.0f)
         {
         }
 
@@ -136,6 +140,9 @@ namespace app
         {
             // 注視点から視点までのベクトルを設定
             m_toCameraPos = m_parameter.toCameraPos;
+            // 反動はなし
+            m_recoilTargetDeg = 0.0f;
+            m_recoilDeg = 0.0f;
         }
 
 
@@ -243,10 +250,34 @@ namespace app
             const float usedLength = (std::min)(fullLength, m_allowedLength);
             const Vector3 pos = fullLength > FLT_EPSILON ? target + toCamera * (usedLength / fullLength) : target;
 
+            // 反動。目標は0へ戻り、実際の角度は目標を追う。(撃った瞬間に素早く跳ね、ゆっくり戻る)
+            m_recoilTargetDeg *= std::exp(-m_parameter.recoilRecoverRate * deltaTime);
+            m_recoilDeg += (m_recoilTargetDeg - m_recoilDeg) * (1.0f - std::exp(-m_parameter.recoilRiseRate * deltaTime));
+            if (m_recoilDeg < RECOIL_EPSILON_DEG && m_recoilTargetDeg < RECOIL_EPSILON_DEG)
+            {
+                m_recoilTargetDeg = 0.0f;
+                m_recoilDeg = 0.0f;
+            }
+
+            // 視点の位置は変えずに、視線だけを上へ回す。(スティックの回転と同じ軸。正の角度で上を向く)
+            // m_toCameraPos は水平成分が0でなく、上下の制限で真上・真下にもならないので、軸は必ず求まる。
+            Vector3 lookTarget = target;
+            if (m_recoilDeg > 0.0f)
+            {
+                Vector3 recoilAxis;
+                recoilAxis.Cross(Vector3::AxisY, m_toCameraPos);
+                recoilAxis.Normalize();
+                Quaternion recoilRot;
+                recoilRot.SetRotationDeg(recoilAxis, m_recoilDeg);
+                Vector3 view = target - pos;
+                recoilRot.Apply(view);
+                lookTarget = pos + view;
+            }
+
             // メインカメラに設定して更新する。
             g_camera3D->SetNear(m_parameter.nearClip);
             g_camera3D->SetFar(m_parameter.farClip);
-            g_camera3D->SetTarget(target);
+            g_camera3D->SetTarget(lookTarget);
             g_camera3D->SetPosition(pos);
             g_camera3D->Update();
         }
@@ -255,6 +286,12 @@ namespace app
         void PlayerCamera::SetTargetPosition(const Vector3& position)
         {
             m_targetPosition = position;
+        }
+
+
+        void PlayerCamera::AddRecoil()
+        {
+            m_recoilTargetDeg = (std::min)(m_recoilTargetDeg + m_parameter.recoilKickDeg, m_parameter.recoilMaxDeg);
         }
     } // namespace camera
 } // namespace app

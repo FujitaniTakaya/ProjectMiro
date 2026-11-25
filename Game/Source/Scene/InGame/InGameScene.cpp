@@ -266,8 +266,9 @@ namespace app
         {
             return false;
         }
-        // 撃った。レティクルが広がる
+        // 撃った。レティクルが広がり、カメラが跳ね上がる
         InGameInfoHub::Get().NotifyPlayerFired();
+        m_playerCamera->AddRecoil();
 
         Vector3 muzzle;
         Quaternion barrelRotation;

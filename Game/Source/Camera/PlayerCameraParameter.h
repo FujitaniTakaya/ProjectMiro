@@ -53,6 +53,14 @@ namespace app
             float collisionMinDistance;
             /** 壁から離れた時、視点が元の距離へ戻る速さ(cm/秒) */
             float collisionRecoverSpeed;
+            /** 1発撃つごとに、カメラが上へ跳ね上がる角度(度) */
+            float recoilKickDeg;
+            /** 反動の目標の上限(度)。連射しても、これより上へは溜まらない */
+            float recoilMaxDeg;
+            /** 反動の角度が目標へ追いつく速さ(1/秒)。大きいほど、跳ね上がりが一瞬になる */
+            float recoilRiseRate;
+            /** 反動の目標が0へ戻る速さ(1/秒)。大きいほど、早く元の向きへ戻る */
+            float recoilRecoverRate;
             // [PARAM_GEN end members]
         };
 

@@ -16,5 +16,9 @@
     "aimStickExponent": 1.5,
     "collisionRadius": 25.0,
     "collisionMinDistance": 60.0,
-    "collisionRecoverSpeed": 600.0
+    "collisionRecoverSpeed": 600.0,
+    "recoilKickDeg": 1.5,
+    "recoilMaxDeg": 5.0,
+    "recoilRiseRate": 40.0,
+    "recoilRecoverRate": 8.0
 }

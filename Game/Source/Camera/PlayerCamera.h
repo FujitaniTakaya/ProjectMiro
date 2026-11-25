@@ -13,6 +13,7 @@
  *          視点がステージの壁・地面にめり込む時は、注視点から視点へ球を動かして、当たる手前まで視点を引き寄せる。(戻る時だけゆっくり)
  *          構えている間は、右スティックの倒し具合が回る速さに効く。(aimStickExponent。キーボードは常に全力)
  *          さらに、SetAimTargets() で渡された狙う点が視線の近くにあると、回転が遅くなり、スティックを倒している間は視線が狙う点へ寄る。(エイムアシスト。AimAssist)
+ *          撃った時の反動(AddRecoil)で、視線が上へ跳ね、すぐ元へ戻る。
  */
 #pragma once
 #include <vector>
@@ -86,6 +87,13 @@ namespace app
                 m_aimTargets = targets;
             }
 
+            /**
+             * @brief 発砲の反動を足す
+             * @details カメラが上へ跳ね上がり、すぐ元の向きへ戻る。基準の向き(右スティックで回した向き)は変わらない。
+             *          連射すると recoilMaxDeg まで溜まる。撃った時に呼ぶ。
+             */
+            void AddRecoil();
+
 
         private:
             /** パラメーター(ParamHolderが持つもの。アプリが終わるまで使える) */
@@ -106,6 +114,10 @@ namespace app
             AimAssist m_aimAssist;
             /** エイムアシストの対象(狙う点) */
             std::vector<Vector3> m_aimTargets;
+            /** 反動の目標の角度(度)。撃つたびに増え、recoilRecoverRate で0へ戻る */
+            float m_recoilTargetDeg;
+            /** 実際に視線へ足している反動の角度(度)。目標へ recoilRiseRate で追う */
+            float m_recoilDeg;
         };
     } // namespace camera
 } // namespace app
