@@ -22,7 +22,7 @@ namespace app
      */
     enum class EnEffectKind : uint8_t
     {
-        /** マズルフラッシュ(銃口の発砲炎)。+Zが銃口の向き。単位はcm。(tools/make_muzzle_flash.py で作る) */
+        /** マズルフラッシュ(銃口の発砲炎)。+Zが銃口の向き。単位はcm。 */
         MuzzleFlash = 0,
         /** ゾンビがアンガー値に達した時の赤い爆発(光・水平のリング・上へ昇る火の粉)。原点=胸の位置、+Yが上。単位はcm。 */
         AngerBurst,
