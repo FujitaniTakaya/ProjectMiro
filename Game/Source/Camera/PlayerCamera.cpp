@@ -68,6 +68,8 @@ namespace app
             /**
              * @brief カメラの球のスイープの結果を受けるコールバック
              * @details ステージ(静的な剛体)にだけ当たる。キャラクター・ゴースト(ゾンビの攻撃判定の箱・コアの箱)は素通りする。
+             *          ゴーストは btGhostObject の初期フラグが CF_STATIC_OBJECT のままなので、isStaticObject() だけでは除けない。
+             *          種類(CO_RIGID_BODY)でも絞る。
              */
             struct CameraSweepCallback : public btCollisionWorld::ClosestConvexResultCallback
             {
@@ -79,7 +81,8 @@ namespace app
                 bool needsCollision(btBroadphaseProxy* proxy) const override
                 {
                     const auto* object = static_cast<const btCollisionObject*>(proxy->m_clientObject);
-                    if (!object->isStaticObject())
+                    // ステージの静的な剛体だけ。ゴースト(攻撃判定・コアの箱)は素通りする
+                    if (!object->isStaticObject() || object->getInternalType() != btCollisionObject::CO_RIGID_BODY)
                     {
                         return false;
                     }
