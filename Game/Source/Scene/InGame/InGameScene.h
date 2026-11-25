@@ -118,6 +118,8 @@ namespace app
         actor::StageBoundary m_stageBoundary;
         /** 開始前のカウントダウンの時間。0になるまでは、Miroを操作できず、ゾンビも湧かず、ポーズもできない */
         StartCountdown m_countdown;
+        /** 前のフレームに出していたカウントダウンの数字。数字が切り替わった時に、SEを鳴らすために覚えておく。まだ出していなければ0 */
+        int32_t m_lastCountdownNumber;
         /** 経過時間(秒)。カウントダウンが終わってから進み、ゲームセットで止まる */
         float m_elapsedTime;
         /** ゲームセットになったか。立つと、経過時間・ゾンビの更新が止まり、Miroは操作できなくなる */

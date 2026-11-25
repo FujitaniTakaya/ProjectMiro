@@ -28,6 +28,18 @@ namespace app
         BgmInGame,
         /** リザルトのBGM */
         BgmResult,
+        /** 項目を動かした時のSE */
+        SeUiMove,
+        /** 決定した時のSE */
+        SeUiGo,
+        /** キャンセルした時のSE */
+        SeUiBack,
+        /** カウントダウンで、数字が出る時のSE */
+        SeCountdown,
+        /** カウントダウンが終わって、ゲームが始まる時のSE */
+        SeGameStart,
+        /** ゲームセットになった時のSE */
+        SeGameFinish,
         Max,
         None = Max
     };
@@ -57,7 +69,13 @@ namespace app
     inline constexpr SoundInformation SOUND_LIST[] = {
         SoundInformation(EnSoundID::BgmTitle, "Assets/soundData/bgm/title.wav"),
         SoundInformation(EnSoundID::BgmInGame, "Assets/soundData/bgm/ingame.wav"),
-        SoundInformation(EnSoundID::BgmResult, "Assets/soundData/bgm/result.wav")
+        SoundInformation(EnSoundID::BgmResult, "Assets/soundData/bgm/result.wav"),
+        SoundInformation(EnSoundID::SeUiMove, "Assets/soundData/se/ui_move.wav"),
+        SoundInformation(EnSoundID::SeUiGo, "Assets/soundData/se/ui_go.wav"),
+        SoundInformation(EnSoundID::SeUiBack, "Assets/soundData/se/ui_back.wav"),
+        SoundInformation(EnSoundID::SeCountdown, "Assets/soundData/se/countdown.wav"),
+        SoundInformation(EnSoundID::SeGameStart, "Assets/soundData/se/game_start.wav"),
+        SoundInformation(EnSoundID::SeGameFinish, "Assets/soundData/se/game_finish.wav")
     };
 
 

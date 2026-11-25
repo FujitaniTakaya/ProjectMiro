@@ -142,10 +142,12 @@ namespace app
             if (move != 0)
             {
                 menu->MoveSelection(move);
+                SoundManager::Get().GetSE().Play(EnSoundID::SeUiMove);
             }
 
             if (pad->IsTrigger(enButtonA) || pad->IsTrigger(enButtonStart))
             {
+                SoundManager::Get().GetSE().Play(EnSoundID::SeUiGo);
                 Decide(menu->GetSelectedItem());
             }
         }

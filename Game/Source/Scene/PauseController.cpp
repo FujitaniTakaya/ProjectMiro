@@ -8,6 +8,7 @@
 
 #include <algorithm>
 
+#include "Source/Sound/SoundManager.h"
 #include "Source/UI/Screen/Option/OptionMenu.h"
 #include "Source/UI/Screen/Pause/PauseMenu.h"
 
@@ -163,14 +164,17 @@ namespace app
         if (move != 0)
         {
             menu->MoveSelection(move);
+            SoundManager::Get().GetSE().Play(EnSoundID::SeUiMove);
         }
 
         if (pad->IsTrigger(enButtonB) || pad->IsTrigger(enButtonStart))
         {
+            SoundManager::Get().GetSE().Play(EnSoundID::SeUiBack);
             m_state = PauseState::Closing;
         }
         else if (pad->IsTrigger(enButtonA))
         {
+            SoundManager::Get().GetSE().Play(EnSoundID::SeUiGo);
             Decide(menu->GetSelectedItem());
         }
     }

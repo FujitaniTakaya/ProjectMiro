@@ -81,6 +81,7 @@ namespace app
         , m_playerCamera(nullptr)
         , m_handgun(nullptr)
         , m_countdown(COUNTDOWN_START_DELAY, COUNTDOWN_COUNT, COUNTDOWN_INTERVAL)
+        , m_lastCountdownNumber(0)
         , m_elapsedTime(0.0f)
         , m_isGameOver(false)
         , m_finishTimer()
@@ -226,11 +227,18 @@ namespace app
             {
                 countdownMenu->ShowStart();
             }
+            SoundManager::Get().GetSE().Play(EnSoundID::SeGameStart);
             // 「Start」を出すのと同時に、インゲームBGMを始める。(カウントダウンの間は無音)ポーズ中も鳴らし続ける
             SoundManager::Get().GetBGM().Play(EnSoundID::BgmInGame, DEFAULT_VOLUME_MAGNIFICATION, BGM_FADE_IN_SECONDS);
         }
         else if (countdownMenu && m_countdown.IsCounting())
         {
+            // 数字が切り替わった時に、1回だけ鳴らす
+            if (m_countdown.GetNumber() != m_lastCountdownNumber)
+            {
+                m_lastCountdownNumber = m_countdown.GetNumber();
+                SoundManager::Get().GetSE().Play(EnSoundID::SeCountdown);
+            }
             countdownMenu->Show(m_countdown.GetNumber(), m_countdown.GetNumberElapsed());
         }
     }
@@ -262,6 +270,7 @@ namespace app
         if (ui::GameSetMenu* gameSetMenu = m_gameSetPacket->GetMenu())
         {
             gameSetMenu->Show();
+            SoundManager::Get().GetSE().Play(EnSoundID::SeGameFinish);
         }
     }
 
