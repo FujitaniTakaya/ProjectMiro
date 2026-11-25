@@ -2,7 +2,7 @@
  * @file ResultMenu.h
  * @brief リザルト画面のUIを動かすMenu
  * @details jsonに、次の名前のUIText(フォントの文字)を書く。(Assets/parameter/ui/Result.json)
- *          - "ItemTitle" / "ItemQuit" : 項目の文字。EnResultItem の順に、上から並べる。
+ *          - "ItemTitle" / "ItemRetry" : 項目の文字。EnResultItem の順に、上から並べる。
  *            jsonの色が、選んでいる時の色。選んでいない項目は、薄灰色に変わる(SelectionTint)
  *          - "Cursor" : 選択カーソルの矢印。x座標はjsonの値を中心に左右に揺らし(AttachCursorSway)、y座標を選んでいる項目に合わせる
  *          スコアの表示は、次の名前のUIText。数字の文字は SetResult() で書き込む。基点を右(x=1)にすると、右端が座標に揃う。
@@ -31,7 +31,7 @@ namespace app
         enum class EnResultItem : uint8_t
         {
             Title, //!< タイトルへ
-            Quit,  //!< ゲームをやめる
+            Retry, //!< もういちど
             Max
         };
 

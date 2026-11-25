@@ -25,7 +25,7 @@ namespace app
             /** 項目の文字のUIの名前(ハッシュ値)。EnResultItem の順 */
             constexpr uint32_t ITEM_KEYS[ITEM_NUM] = {
                 Hash32("ItemTitle"),
-                Hash32("ItemQuit"),
+                Hash32("ItemRetry"),
             };
             /** 選択カーソルの矢印のUIの名前(ハッシュ値) */
             constexpr uint32_t CURSOR_KEY = Hash32("Cursor");

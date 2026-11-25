@@ -31,9 +31,9 @@
             },
             {
                 "type": "UIText",
-                "name": "ItemQuit",
+                "name": "ItemRetry",
                 "font": "HinaMincho",
-                "text": "ゲームをやめる",
+                "text": "もういちど",
                 "size": 48,
                 "pivot": [
                     0,
