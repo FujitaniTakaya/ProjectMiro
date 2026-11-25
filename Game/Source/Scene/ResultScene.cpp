@@ -11,6 +11,7 @@
 #include "Source/Score/ScoreRule.h"
 #include "Source/Sound/SoundManager.h"
 #include "Source/UI/Screen/Result/ResultMenu.h"
+#include "Source/Scene/InGame/InGameScene.h"
 #include "TitleScene.h"
 
 
@@ -22,19 +23,18 @@ namespace app
         constexpr const char* RESULT_JSON_PATH = "Assets/parameter/ui/Result.json";
         /** 入力を受け付けるパッドの番号 */
         constexpr int PAD_INDEX = 0;
-        /** 「タイトルへ」を決めた後の、暗転・明転にかける時間(秒)。タイトルからインゲームへ進む時と同じ */
+        /** 「タイトルへ」「もういちど」を決めた後の、暗転・明転にかける時間(秒)。タイトルからインゲームへ進む時と同じ */
         constexpr float FADE_DURATION = 1.0f;
         /** リザルトBGMのフェードインにかける時間(秒)。インゲームからの明転と同じ */
         constexpr float BGM_FADE_IN_SECONDS = 1.0f;
-        /** 次のシーン。「タイトルへ」を決めたら、タイトルシーンに進む */
-        constexpr uint32_t NEXT_SCENE_ID = TitleScene::ID();
     } // namespace
 
 
     ResultScene::ResultScene()
         : m_resultPacket(nullptr)
         , m_menuInput()
-        , m_isTitleRequested(false)
+        , m_isSceneRequested(false)
+        , m_nextSceneId(0)
     {
         ui::InitUIPacket(m_resultPacket, RESULT_JSON_PATH);
     }
@@ -64,8 +64,8 @@ namespace app
         const GamePad* pad = ui::MenuInput::FindPad(PAD_INDEX);
         ui::ResultMenu* menu = m_resultPacket->GetMenu();
 
-        // フェード中(インゲームから切り替わった直後など)と、「タイトルへ」が決まった後は、項目を動かさない。
-        if (pad && menu && !m_isTitleRequested && !Fade::Get().IsFading())
+        // フェード中(インゲームから切り替わった直後など)と、次のシーンが決まった後は、項目を動かさない。
+        if (pad && menu && !m_isSceneRequested && !Fade::Get().IsFading())
         {
             m_menuInput.Update(*pad, g_gameTime->GetFrameDeltaTime());
 
@@ -82,13 +82,16 @@ namespace app
                 switch (menu->GetSelectedItem())
                 {
                 case ui::EnResultItem::Title:
-                    m_isTitleRequested = true;
+                    m_isSceneRequested = true;
+                    m_nextSceneId = TitleScene::ID();
                     // 暗転と同じ時間でBGMを消す。タイトルBGMは、TitleScene::Start()でフェードインする
                     SoundManager::Get().GetBGM().FadeOutAll(FADE_DURATION);
                     break;
-                case ui::EnResultItem::Quit:
-                    // WM_QUITを送って、ゲームループを抜けさせる。(ウィンドウの×ボタンで閉じた時と同じ後始末になる。)
-                    PostQuitMessage(0);
+                case ui::EnResultItem::Retry:
+                    m_isSceneRequested = true;
+                    m_nextSceneId = InGameScene::ID();
+                    // 暗転と同じ時間でBGMを消す。インゲームBGMは、InGameScene側でフェードインする
+                    SoundManager::Get().GetBGM().FadeOutAll(FADE_DURATION);
                     break;
                 default:
                     break;
@@ -102,7 +105,7 @@ namespace app
 
     void ResultScene::PauseUpdate()
     {
-        // 暗転している間も、UIの更新を続ける。(暗転に入るのは、「タイトルへ」を決めた時だけ)
+        // 暗転している間も、UIの更新を続ける。(暗転に入るのは、次のシーンを決めた時だけ)
         m_resultPacket->Update();
     }
 
@@ -119,12 +122,12 @@ namespace app
 
     bool ResultScene::RequestScene(uint32_t& id, float& waitTime)
     {
-        if (!m_isTitleRequested)
+        if (!m_isSceneRequested)
         {
             return false;
         }
 
-        id = NEXT_SCENE_ID;
+        id = m_nextSceneId;
         waitTime = FADE_DURATION;
         return true;
     }

@@ -457,6 +457,9 @@
     <ClCompile Include="Source\UI\Screen\Title\TitleSlideshow.cpp">
       <Filter>Source\UI\Screen\Title</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Camera\FreeCamera.cpp">
+      <Filter>Source\Camera</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -840,6 +843,9 @@
     </ClInclude>
     <ClInclude Include="Source\UI\Screen\Title\TitleSlideshow.h">
       <Filter>Source\UI\Screen\Title</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Camera\FreeCamera.h">
+      <Filter>Source\Camera</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

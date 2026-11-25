@@ -62,8 +62,9 @@ namespace app
     } // namespace
 
 
-    PlayerController::PlayerController(const int padIndex)
+    PlayerController::PlayerController(const int padIndex, const EnLookMode lookMode)
         : m_padIndex(padIndex)
+        , m_lookMode(lookMode)
     {
     }
 
@@ -93,8 +94,12 @@ namespace app
             }
         }
 
-        // 向きたい方向(カメラの向き)。移動方向と別の向きを持つキャラクターだけが読む
-        input.SetLook(cameraForward);
+        // 向きたい方向(カメラの向き)。移動方向と別の向きを持つキャラクターだけが読む。
+        // Never の時は、設定しない。(設定しなければ、キャラクターは移動方向を向く)
+        if (m_lookMode == EnLookMode::Always)
+        {
+            input.SetLook(cameraForward);
+        }
 
 
         // -------------------------------------------------------------

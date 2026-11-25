@@ -2,10 +2,10 @@
  * @file ResultScene.h
  * @brief リザルトシーン
  * @details インゲームの結果を表示するシーン。左に、守衛時間・倒したゾンビの数・スコアの内訳(ScoreRule.h)を出す。
- *          結果は、インゲームが GameResult に書いたものを、Start() で読む。右下に、「タイトルへ・ゲームをやめる」の二択がある。
+ *          結果は、インゲームが GameResult に書いたものを、Start() で読む。右下に、「タイトルへ・もういちど」の二択がある。
  *          上下(十字キー・左スティック・W/S)で選び、Aボタン(J)かスタートボタン(Enter)で決める。
  *          - タイトルへ : タイトルシーンへ進む
- *          - ゲームをやめる : ゲームを終了する
+ *          - もういちど : もういちどインゲームシーンを遊ぶ
  *          フェード中は、選ぶことも決めることもできない。
  */
 #pragma once
@@ -50,7 +50,9 @@ namespace app
         ui::UIPacket<ui::ResultMenu> m_resultPacket;
         /** 項目を選ぶ方向入力 */
         ui::MenuInput m_menuInput;
-        /** 「タイトルへ」が決まって、タイトルシーンへの遷移を要求するかどうか */
-        bool m_isTitleRequested;
+        /** 「タイトルへ」か「もういちど」が決まって、次のシーンへの遷移を要求するかどうか */
+        bool m_isSceneRequested;
+        /** 遷移を要求する次のシーン。m_isSceneRequested が true の時だけ意味がある */
+        uint32_t m_nextSceneId;
     };
 } // namespace app
