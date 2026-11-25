@@ -40,6 +40,10 @@ namespace app
         SeGameStart,
         /** ゲームセットになった時のSE */
         SeGameFinish,
+        /** ハンドガンを撃った時のSE */
+        SePistolShot,
+        /** 弾切れで、引き金を引いた時のSE(弾は出ない) */
+        SePistolDryShot,
         Max,
         None = Max
     };
@@ -75,7 +79,9 @@ namespace app
         SoundInformation(EnSoundID::SeUiBack, "Assets/soundData/se/ui_back.wav"),
         SoundInformation(EnSoundID::SeCountdown, "Assets/soundData/se/countdown.wav"),
         SoundInformation(EnSoundID::SeGameStart, "Assets/soundData/se/game_start.wav"),
-        SoundInformation(EnSoundID::SeGameFinish, "Assets/soundData/se/game_finish.wav")
+        SoundInformation(EnSoundID::SeGameFinish, "Assets/soundData/se/game_finish.wav"),
+        SoundInformation(EnSoundID::SePistolShot, "Assets/soundData/se/pistol_shot.wav"),
+        SoundInformation(EnSoundID::SePistolDryShot, "Assets/soundData/se/pistol_dry_shot.wav")
     };
 
 

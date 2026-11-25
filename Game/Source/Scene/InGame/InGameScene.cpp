@@ -280,8 +280,14 @@ namespace app
         // 弾切れ・リロード中は撃てない
         if (!m_handgun->Fire())
         {
+            // 弾切れで引き金を引いた時だけ、空撃ちの音を鳴らす。(リロード中は鳴らさない)
+            if (m_handgun->GetRemainingAmmo() == 0 && !m_handgun->IsReloading())
+            {
+                SoundManager::Get().GetSE().Play(EnSoundID::SePistolDryShot);
+            }
             return false;
         }
+        SoundManager::Get().GetSE().Play(EnSoundID::SePistolShot);
         // 撃った。レティクルが広がり、カメラが跳ね上がる
         InGameInfoHub::Get().NotifyPlayerFired();
         m_playerCamera->AddRecoil();
