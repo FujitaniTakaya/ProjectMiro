@@ -6,11 +6,21 @@
 
 #include "DebugScene.h"
 
-#include <algorithm>
-#include <cmath>
+#include <memory>
+#include <utility>
 
+#include "Source/Actor/Character/Miro/Miro.h"
+#include "Source/Actor/Stage/StageField.h"
 #include "Source/Actor/Weapon/Bullet/BulletManager.h"
+#include "Source/Actor/Weapon/Bullet/BulletParameter.h"
+#include "Source/Actor/Weapon/Bullet/BulletSweep.h"
 #include "Source/Actor/Weapon/Handgun/Handgun.h"
+#include "Source/Camera/FreeCamera.h"
+#include "Source/Controller/PlayerController.h"
+#include "Source/Core/Param/ParamHolder.h"
+#include "Source/Core/Param/ParamList.h"
+#include "Source/Effect/EffectManager.h"
+#include "Source/MoveBehavior/ControllerSlot.h"
 
 
 namespace app
@@ -21,45 +31,35 @@ namespace app
         constexpr const wchar_t* SKY_CUBE_PATH = L"Assets/modelData/preset/skyCubeMapOvercast.dds";
         /** 空の明るさ(キューブマップの色に掛ける倍率) */
         constexpr float SKY_LUMINANCE = 1.0f;
-        /** ハンドガンを置く座標(Y-up。床は無い) */
-        const Vector3 HANDGUN_POSITION(0.0f, 150.0f, 0.0f);
-        /** 弾の発射スピードの初期値(cm/秒)。発射位置と向きを目で確認できるよう、実際のゲームより遅くしてある */
-        constexpr float DEFAULT_BULLET_SPEED = 300.0f;
-        /** ImGuiのスライダーで選べる弾のスピード(cm/秒) */
-        constexpr float MIN_BULLET_SPEED = 10.0f;
-        constexpr float MAX_BULLET_SPEED = 10000.0f;
-        /** カメラの左右の角度の初期値(度) */
-        constexpr float DEFAULT_CAMERA_YAW_DEG = 30.0f;
-        /** カメラの上下の角度の初期値(度) */
-        constexpr float DEFAULT_CAMERA_PITCH_DEG = 15.0f;
-        /** カメラからハンドガンまでの距離の初期値(cm) */
-        constexpr float DEFAULT_CAMERA_DISTANCE = 80.0f;
-        /** 右スティックを倒し切った時の、カメラの回る速さ(度/秒) */
-        constexpr float CAMERA_ROTATE_SPEED_DEG = 90.0f;
-        /** カメラの上下の角度の限界(度)。真上・真下では、左右の向きが決まらなくなる */
-        constexpr float CAMERA_PITCH_LIMIT_DEG = 80.0f;
-        /** カメラの近クリップ距離(cm)。ハンドガンに寄れるように、小さくする */
-        constexpr float CAMERA_NEAR = 1.0f;
-        /** カメラの遠クリップ距離(cm)。飛んでいく弾が見えなくなるまで */
-        constexpr float CAMERA_FAR = 20000.0f;
-        /** パッドの番号 */
+        /** Miroの初期座標。InGameScene と同じ */
+        const Vector3 MIRO_POSITION(100.0f, 100.0f, 0.0f);
+        /** Miroの足元から胸までの高さ(cm)。壁に銃口が出ていないかを、胸から銃口までの球で調べる時の始点(Miroの全高は160)。InGameScene と同じ */
+        constexpr float CHEST_HEIGHT = 120.0f;
+        /** 入力を読み取るパッドの番号 */
         constexpr int PAD_INDEX = 0;
     } // namespace
 
 
     DebugScene::DebugScene()
-        : m_handgun(std::make_unique<actor::Handgun>())
-        , m_bulletSpeed(DEFAULT_BULLET_SPEED)
-        , m_cameraYawDeg(DEFAULT_CAMERA_YAW_DEG)
-        , m_cameraPitchDeg(DEFAULT_CAMERA_PITCH_DEG)
-        , m_cameraDistance(DEFAULT_CAMERA_DISTANCE)
-    {}
+        : m_stageField(std::make_unique<actor::StageField>())
+        , m_miro(std::make_unique<actor::Miro>())
+        , m_handgun(std::make_unique<actor::Handgun>())
+        , m_freeCamera(std::make_unique<camera::FreeCamera>(PAD_INDEX))
+        , m_bgPhysicsStaticObject()
+        , m_stageBoundary()
+    {
+        m_miro->SetPosition(MIRO_POSITION);
+    }
 
 
     DebugScene::~DebugScene()
     {
         // 弾はエンジンの資源(モデル)を持つので、シーンの終了時に片付ける
         actor::BulletManager::Get().Clear();
+
+        // ロールで傾けたカメラの上方向を戻す。(次のシーンのカメラに残さない)
+        camera::FreeCamera::RestoreUp();
+
         // 空はエンジンが持っているので、このシーンのものを描かなくする
         RenderingEngine::Get().ClearSkyCube();
     }
@@ -69,66 +69,52 @@ namespace app
     {
         RenderingEngine::Get().SetSkyCube(SKY_CUBE_PATH, SKY_LUMINANCE);
 
-        m_handgun->SetPosition(HANDGUN_POSITION);
-        m_handgun->StartWrapper();
+        m_miro->StartWrapper();
+        // カメラを自由に回しても、構えている間も、Miroがカメラの向きを向かないようにする。(その場で構えるだけ)
+        // (Miroが付けたコントローラーを、差し替える)
+        m_miro->GetControllerSlot().Attach(std::make_unique<PlayerController>(PAD_INDEX, PlayerController::EnLookMode::Never));
 
-        UpdateCamera();
+        m_handgun->StartWrapper();
+        // ハンドガンをMiroの手に持たせる。ボーンはMiroのStart()でモデルをロードした後に取れる
+        m_handgun->AttachToBone(m_miro->GetWeaponHandBone());
+
+        // Miroの武器の処理を、ハンドガンに結びつける。(InGameScene::Start と同じ)
+        // fire: 構えてZRを押した時。撃てたかどうか(弾切れ・リロード中は撃てない)をMiroに返す
+        // canReload・isEmpty: リロードステートに入るかの判定。Xを押した時と、マガジンが空になった時に使う
+        // reload: リロードステートに入った時
+        actor::MiroWeaponHandler weaponHandler;
+        weaponHandler.fire = [this]() { return FireHandgun(); };
+        weaponHandler.canReload = [this]() { return m_handgun->CanReload(); };
+        weaponHandler.isEmpty = [this]() { return m_handgun->GetRemainingAmmo() == 0; };
+        weaponHandler.reload = [this]() { m_handgun->Reload(); };
+        m_miro->SetWeaponHandler(std::move(weaponHandler));
+
+        m_freeCamera->Start();
+
+        // ステージのフィールド。ワールド行列は、ここで確定する
+        m_stageField->StartWrapper();
+
+        // 背景の当たり判定。モデルの形をそのまま使うので、ワールド行列(Z-upの補正込み)が確定した後に作る
+        ModelRender& stageModelRender = m_stageField->GetModelRender();
+        m_bgPhysicsStaticObject.CreateFromModel(stageModelRender.GetModel(), stageModelRender.GetModel().GetWorldMatrix());
+
+        // ステージの外へ出られないように、外周に見えない壁を置く
+        m_stageBoundary.Build();
         return true;
     }
 
 
     void DebugScene::Update()
     {
-        // 取り付けは無いので、置いた座標のまま。モデルとボーンのワールド行列、アニメーションが更新される
+        m_stageField->UpdateWrapper();
+        m_miro->UpdateWrapper();
         m_handgun->UpdateWrapper();
-
-        // 操作: ZR=撃つ、X=リロード、右スティック=カメラを回す
-        if (PAD_INDEX < static_cast<int>(g_pad.size()) && g_pad[PAD_INDEX] != nullptr)
-        {
-            GamePad& pad = *g_pad[PAD_INDEX];
-            if (pad.IsTrigger(enButtonRB2))
-            {
-                Fire();
-            }
-            if (pad.IsTrigger(enButtonX))
-            {
-                m_handgun->Reload();
-            }
-            const float rotate = CAMERA_ROTATE_SPEED_DEG * g_gameTime->GetFrameDeltaTime();
-            m_cameraYawDeg += pad.GetRStickXF() * rotate;
-            m_cameraPitchDeg += pad.GetRStickYF() * rotate;
-        }
-
+        // 弾を進める。(ポーズ中は Update() が呼ばれないので、弾も止まる)
         actor::BulletManager::Get().Update();
 
-#ifdef BALLOON_IMGUI_ENABLED
-        if (ImGui::Begin("Handgun / Bullet (DEBUG)"))
-        {
-            ImGui::Text(
-                "ammo: %u / %u%s  bullets: %zu",
-                m_handgun->GetRemainingAmmo(),
-                m_handgun->GetMagazineSize(),
-                m_handgun->IsReloading() ? " (reloading)" : "",
-                actor::BulletManager::Get().GetBulletCount()
-            );
-            if (ImGui::Button("Fire"))
-            {
-                Fire();
-            }
-            ImGui::SameLine();
-            if (ImGui::Button("Reload"))
-            {
-                m_handgun->Reload();
-            }
-            ImGui::SliderFloat("bullet speed", &m_bulletSpeed, MIN_BULLET_SPEED, MAX_BULLET_SPEED);
-            ImGui::SliderFloat("camera yaw", &m_cameraYawDeg, -180.0f, 180.0f);
-            ImGui::SliderFloat("camera pitch", &m_cameraPitchDeg, -CAMERA_PITCH_LIMIT_DEG, CAMERA_PITCH_LIMIT_DEG);
-            ImGui::SliderFloat("camera distance", &m_cameraDistance, 20.0f, 400.0f);
-        }
-        ImGui::End();
-#endif // BALLOON_IMGUI_ENABLED
-
-        UpdateCamera();
+        // Miroが動いた後の座標を追う
+        m_freeCamera->SetTargetPosition(m_miro->GetTransform().m_position);
+        m_freeCamera->Update();
     }
 
 
@@ -138,6 +124,8 @@ namespace app
 
     void DebugScene::Render(RenderContext& rc)
     {
+        m_stageField->RenderWrapper(rc);
+        m_miro->RenderWrapper(rc);
         m_handgun->RenderWrapper(rc);
         actor::BulletManager::Get().Render(rc);
     }
@@ -155,36 +143,39 @@ namespace app
     }
 
 
-    void DebugScene::Fire()
+    bool DebugScene::FireHandgun()
     {
         // 弾切れ・リロード中は撃てない
         if (!m_handgun->Fire())
         {
-            return;
+            return false;
         }
 
-        Vector3 position;
-        Quaternion rotation;
-        if (m_handgun->CalcMuzzle(position, rotation))
+        Vector3 muzzle;
+        Quaternion barrelRotation;
+        if (!m_handgun->CalcMuzzle(muzzle, barrelRotation))
         {
-            actor::BulletManager::Get().Shot(rotation, position, m_bulletSpeed);
+            return true;
         }
-    }
 
+        // パラメーターは、毎回読む。(jsonのホットリロードがすぐ反映される)
+        const actor::BulletParameter& bulletParameter = ParamHolder::Get().GetParameter<actor::BulletParameter>(EnParamID::Bullet);
+        // 弾が自分に当たらないように、Miroの体を無視する
+        const btCollisionObject* selfBody = m_miro->GetCharacterController()->GetRigidBody()->GetBody();
 
-    void DebugScene::UpdateCamera()
-    {
-        m_cameraPitchDeg = std::clamp(m_cameraPitchDeg, -CAMERA_PITCH_LIMIT_DEG, CAMERA_PITCH_LIMIT_DEG);
+        // 壁際で銃口が壁の向こう側に出ていたら、弾を出さず、その場で着弾にする。(弾の最初の位置が壁の中だと、壁を抜けてしまう)
+        const Vector3 chest = m_miro->GetTransform().m_position + Vector3(0.0f, CHEST_HEIGHT, 0.0f);
+        actor::BulletHit blockedHit;
+        if (actor::SweepSphere(chest, muzzle, bulletParameter.hitRadius, selfBody, blockedHit))
+        {
+            actor::BulletManager::Get().NotifyHit(blockedHit);
+            return true;
+        }
 
-        // ハンドガンを注視して周回する(Y-up)
-        const float yaw = Math::DegToRad(m_cameraYawDeg);
-        const float pitch = Math::DegToRad(m_cameraPitchDeg);
-        const Vector3 toCamera(std::sin(yaw) * std::cos(pitch), std::sin(pitch), std::cos(yaw) * std::cos(pitch));
-
-        g_camera3D->SetNear(CAMERA_NEAR);
-        g_camera3D->SetFar(CAMERA_FAR);
-        g_camera3D->SetTarget(HANDGUN_POSITION);
-        g_camera3D->SetPosition(HANDGUN_POSITION + toCamera * m_cameraDistance);
-        g_camera3D->Update();
+        // 銃の向きそのままに撃つ。(InGameScene と違って、カメラの視線が指す点へは寄せない)
+        actor::BulletManager::Get().Shot(barrelRotation, muzzle, bulletParameter.shotSpeed, selfBody);
+        // 銃口の発砲炎。弾と同じ向きに出す。(エフェクトの+Zが向き)
+        EffectManager::Get().PlayEffect(EnEffectKind::MuzzleFlash, muzzle, barrelRotation, Vector3::One);
+        return true;
     }
 } // namespace app
