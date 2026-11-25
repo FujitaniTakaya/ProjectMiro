@@ -1,9 +1,9 @@
 {
-    "targetOffsetUp": 180.0,
+    "targetOffsetUp": 150.0,
     "targetOffsetRight": 60.0,
     "toCameraPos": [
         0.0,
-        125.0,
+        50.0,
         -250.0
     ],
     "rotateSpeed": 78.0,
