@@ -16,6 +16,7 @@
 #include "Source/Actor/Character/Zombie/RunningZombie/RunningZombieController.h"
 #include "Source/Actor/Character/Zombie/Spawn/ZombieSpawnParameter.h"
 #include "Source/Core/Param/ParamHolder.h"
+#include "Source/Effect/EffectManager.h"
 #include "Source/MoveBehavior/ControllerSlot.h"
 #include "ZombieBase.h"
 #include "ZombieParameter.h"
@@ -51,6 +52,22 @@ namespace app
                 controller->SetLockOnQuery([target = zombie.get()]() { return target->IsLockedOn(); });
                 zombie->GetControllerSlot().Attach(std::move(controller));
                 return zombie;
+            }
+
+
+            /** 怒りのエフェクトを出す高さ(ゾンビの身長に対する割合)。胸のあたり */
+            constexpr float ANGER_EFFECT_HEIGHT_RATIO = 0.6f;
+
+
+            /**
+             * @brief ゾンビがアンガー値に達した時の赤いエフェクトを、胸の位置で1回再生する
+             * @param zombie 達したゾンビ
+             */
+            void PlayAngerEffect(const ZombieBase& zombie)
+            {
+                Vector3 position = zombie.GetTransform().m_position;
+                position.y += zombie.GetParameter().height * ANGER_EFFECT_HEIGHT_RATIO;
+                EffectManager::Get().PlayEffect(EnEffectKind::AngerBurst, position, Quaternion::Identity, Vector3::One);
             }
         } // namespace
 
@@ -130,6 +147,8 @@ namespace app
             for (size_t i = 0; i < sources.size(); ++i)
             {
                 ZombieBase* source = sources[i];
+                // ロックオンした(アンガー値に達した)ゾンビごとに、1回だけ赤いエフェクトを出す。連鎖で達したゾンビも、この後ろに足されて通る
+                PlayAngerEffect(*source);
                 const ZombieParameter& sourceParameter = source->GetParameter();
                 const float radiusSq = sourceParameter.angerSpreadRadius * sourceParameter.angerSpreadRadius;
                 const Vector3 origin = source->GetTransform().m_position;
