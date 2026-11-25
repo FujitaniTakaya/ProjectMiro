@@ -28,7 +28,7 @@
             {
                 "type": "UIText",
                 "name": "Logo",
-                "font": "RoundedMplus",
+                "font": "HinaMincho",
                 "text": "ミロ・エコー",
                 "size": 128,
                 "pivot": [
@@ -56,7 +56,7 @@
             {
                 "type": "UIText",
                 "name": "ItemStart",
-                "font": "RoundedMplus",
+                "font": "HinaMincho",
                 "text": "はじめる",
                 "size": 48,
                 "pivot": [
@@ -84,7 +84,7 @@
             {
                 "type": "UIText",
                 "name": "ItemOption",
-                "font": "RoundedMplus",
+                "font": "HinaMincho",
                 "text": "オプション",
                 "size": 48,
                 "pivot": [
@@ -112,7 +112,7 @@
             {
                 "type": "UIText",
                 "name": "ItemQuit",
-                "font": "RoundedMplus",
+                "font": "HinaMincho",
                 "text": "おわる",
                 "size": 48,
                 "pivot": [
@@ -140,7 +140,7 @@
             {
                 "type": "UIText",
                 "name": "Cursor",
-                "font": "RoundedMplus",
+                "font": "HinaMincho",
                 "text": "→",
                 "size": 24,
                 "pivot": [

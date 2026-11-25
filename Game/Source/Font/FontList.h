@@ -36,7 +36,7 @@ namespace app
 
 
     inline constexpr FontInformation FONT_LIST[] = {
-        FontInformation("RoundedMplus", "Assets/font/rounded-mplus-1c-heavy.png", "Assets/font/rounded-mplus-1c-heavy.json")
+        FontInformation("HinaMincho", "Assets/font/HinaMincho-Regular.png", "Assets/font/HinaMincho-Regular.json")
     };
 
 

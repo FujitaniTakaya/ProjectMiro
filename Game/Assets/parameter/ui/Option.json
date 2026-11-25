@@ -28,7 +28,7 @@
             {
                 "type": "UIText",
                 "name": "Heading",
-                "font": "RoundedMplus",
+                "font": "HinaMincho",
                 "text": "オプション",
                 "size": 112,
                 "pivot": [
@@ -56,7 +56,7 @@
             {
                 "type": "UIText",
                 "name": "ItemSound",
-                "font": "RoundedMplus",
+                "font": "HinaMincho",
                 "text": "サウンド",
                 "size": 48,
                 "pivot": [
@@ -84,7 +84,7 @@
             {
                 "type": "UIText",
                 "name": "ItemSensitivity",
-                "font": "RoundedMplus",
+                "font": "HinaMincho",
                 "text": "感度",
                 "size": 48,
                 "pivot": [
@@ -112,7 +112,7 @@
             {
                 "type": "UIText",
                 "name": "Cursor",
-                "font": "RoundedMplus",
+                "font": "HinaMincho",
                 "text": "→",
                 "size": 24,
                 "pivot": [
@@ -164,7 +164,7 @@
             {
                 "type": "UIText",
                 "name": "PanelTitle",
-                "font": "RoundedMplus",
+                "font": "HinaMincho",
                 "text": "サウンド",
                 "size": 64,
                 "pivot": [
@@ -192,7 +192,7 @@
             {
                 "type": "UIText",
                 "name": "Row0Label",
-                "font": "RoundedMplus",
+                "font": "HinaMincho",
                 "text": "全体",
                 "size": 44,
                 "pivot": [
@@ -276,7 +276,7 @@
             {
                 "type": "UIText",
                 "name": "Row0Value",
-                "font": "RoundedMplus",
+                "font": "HinaMincho",
                 "text": "100",
                 "size": 44,
                 "pivot": [
@@ -304,7 +304,7 @@
             {
                 "type": "UIText",
                 "name": "Row1Label",
-                "font": "RoundedMplus",
+                "font": "HinaMincho",
                 "text": "BGM",
                 "size": 44,
                 "pivot": [
@@ -388,7 +388,7 @@
             {
                 "type": "UIText",
                 "name": "Row1Value",
-                "font": "RoundedMplus",
+                "font": "HinaMincho",
                 "text": "100",
                 "size": 44,
                 "pivot": [
@@ -416,7 +416,7 @@
             {
                 "type": "UIText",
                 "name": "Row2Label",
-                "font": "RoundedMplus",
+                "font": "HinaMincho",
                 "text": "SE",
                 "size": 44,
                 "pivot": [
@@ -500,7 +500,7 @@
             {
                 "type": "UIText",
                 "name": "Row2Value",
-                "font": "RoundedMplus",
+                "font": "HinaMincho",
                 "text": "100",
                 "size": 44,
                 "pivot": [
@@ -528,7 +528,7 @@
             {
                 "type": "UIText",
                 "name": "RowCursor",
-                "font": "RoundedMplus",
+                "font": "HinaMincho",
                 "text": "→",
                 "size": 22,
                 "pivot": [
