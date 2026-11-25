@@ -32,7 +32,7 @@ if not "%~1"=="" (
 )
 
 rem コミットしているフォントは、ここに足す。
-call :generate "Game\Assets\font\rounded-mplus-1c-heavy.ttf" "Game\Assets\font"
+call :generate "Game\Assets\font\HinaMincho-Regular.ttf" "Game\Assets\font"
 
 :done
 echo.

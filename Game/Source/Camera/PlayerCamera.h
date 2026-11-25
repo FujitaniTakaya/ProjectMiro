@@ -10,8 +10,10 @@
  *          回る速さは、PlayerCameraParameter の rotateSpeed に、オプションの感度(OptionSettings)を掛けたもの。
  *          通常はカメラ感度、ハンドガンを構えている間(SetAiming(true))はエイム感度を掛ける。
  *          構えている間は、視点が注視点に近づく。(距離の倍率と切り替えの時間は PlayerCameraParameter)
+ *          視点がステージの壁・地面にめり込む時は、注視点から視点へ球を動かして、当たる手前まで視点を引き寄せる。(戻る時だけゆっくり)
  *          構えている間は、右スティックの倒し具合が回る速さに効く。(aimStickExponent。キーボードは常に全力)
  *          さらに、SetAimTargets() で渡された狙う点が視線の近くにあると、回転が遅くなり、スティックを倒している間は視線が狙う点へ寄る。(エイムアシスト。AimAssist)
+ *          撃った時の反動(AddRecoil)で、視線が上へ跳ね、すぐ元へ戻る。
  */
 #pragma once
 #include <vector>
@@ -85,6 +87,13 @@ namespace app
                 m_aimTargets = targets;
             }
 
+            /**
+             * @brief 発砲の反動を足す
+             * @details カメラが上へ跳ね上がり、すぐ元の向きへ戻る。基準の向き(右スティックで回した向き)は変わらない。
+             *          連射すると recoilMaxDeg まで溜まる。撃った時に呼ぶ。
+             */
+            void AddRecoil();
+
 
         private:
             /** パラメーター(ParamHolderが持つもの。アプリが終わるまで使える) */
@@ -99,10 +108,16 @@ namespace app
             bool m_isAiming;
             /** 構えの度合い(0=通常、1=構え切った状態)。SetAiming() の向きへ、aimBlendSeconds かけて動く */
             float m_aimRate;
+            /** 壁を避けた後の、注視点から視点までの長さ(cm)。壁に近づく時は即座に縮み、離れた時は collisionRecoverSpeed で伸びる */
+            float m_allowedLength;
             /** エイムアシストの判定 */
             AimAssist m_aimAssist;
             /** エイムアシストの対象(狙う点) */
             std::vector<Vector3> m_aimTargets;
+            /** 反動の目標の角度(度)。撃つたびに増え、recoilRecoverRate で0へ戻る */
+            float m_recoilTargetDeg;
+            /** 実際に視線へ足している反動の角度(度)。目標へ recoilRiseRate で追う */
+            float m_recoilDeg;
         };
     } // namespace camera
 } // namespace app

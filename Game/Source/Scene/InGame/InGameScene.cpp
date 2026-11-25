@@ -17,6 +17,7 @@
 #include "Source/Actor/Character/Zombie/ZombieBase.h"
 #include "Source/Actor/Character/Zombie/ZombieManager.h"
 #include "Source/Actor/Stage/Core.h"
+#include "Source/Actor/Stage/StageBoundary.h"
 #include "Source/Actor/Stage/StageField.h"
 #include "Source/Actor/Weapon/Bullet/BulletManager.h"
 #include "Source/Actor/Weapon/Bullet/BulletParameter.h"
@@ -34,6 +35,7 @@
 #include "Source/Scene/Fade.h"
 #include "Source/Scene/ResultScene.h"
 #include "Source/Score/GameResult.h"
+#include "Source/Sound/SoundManager.h"
 #include "Source/UI/HUD/Countdown/CountdownMenu.h"
 #include "Source/UI/HUD/GameSet/GameSetMenu.h"
 
@@ -56,6 +58,8 @@ namespace app
         constexpr float FINISH_WAIT_TIME = 3.0f;
         /** リザルトへ進む時の、暗転・明転にかける時間(秒)。タイトルからインゲームへ進む時と同じ */
         constexpr float RESULT_FADE_DURATION = 1.0f;
+        /** インゲームBGMのフェードインにかける時間(秒)。「Start」を出した時から */
+        constexpr float BGM_FADE_IN_SECONDS = 1.0f;
         /** 次のシーン。ゲームセットになったら、リザルトシーンに進む */
         constexpr uint32_t RESULT_SCENE_ID = ResultScene::ID();
         /** コアを置く座標。コアの真下の地面(y=0)の座標を渡す。浮かせる高さはCore側で足す */
@@ -77,6 +81,7 @@ namespace app
         , m_playerCamera(nullptr)
         , m_handgun(nullptr)
         , m_countdown(COUNTDOWN_START_DELAY, COUNTDOWN_COUNT, COUNTDOWN_INTERVAL)
+        , m_lastCountdownNumber(0)
         , m_elapsedTime(0.0f)
         , m_isGameOver(false)
         , m_finishTimer()
@@ -188,6 +193,9 @@ namespace app
         ModelRender& stageModelRender = m_stageField->GetModelRender();
         m_bgPhysicsStaticObject.CreateFromModel(stageModelRender.GetModel(), stageModelRender.GetModel().GetWorldMatrix());
 
+        // ステージの外へ出られないように、外周に見えない壁を置く
+        m_stageBoundary.Build();
+
         // 経路探索の格子。同じくワールド行列が確定した後に作る。ゾンビが最初に歩き出すまでに必要
         nav::NavigationService::Get().Build(actor::StageField::GetModelPath(), stageModelRender.GetModel().GetWorldMatrix());
 
@@ -219,9 +227,18 @@ namespace app
             {
                 countdownMenu->ShowStart();
             }
+            SoundManager::Get().GetSE().Play(EnSoundID::SeGameStart);
+            // 「Start」を出すのと同時に、インゲームBGMを始める。(カウントダウンの間は無音)ポーズ中も鳴らし続ける
+            SoundManager::Get().GetBGM().Play(EnSoundID::BgmInGame, DEFAULT_VOLUME_MAGNIFICATION, BGM_FADE_IN_SECONDS);
         }
         else if (countdownMenu && m_countdown.IsCounting())
         {
+            // 数字が切り替わった時に、1回だけ鳴らす
+            if (m_countdown.GetNumber() != m_lastCountdownNumber)
+            {
+                m_lastCountdownNumber = m_countdown.GetNumber();
+                SoundManager::Get().GetSE().Play(EnSoundID::SeCountdown);
+            }
             countdownMenu->Show(m_countdown.GetNumber(), m_countdown.GetNumberElapsed());
         }
     }
@@ -243,6 +260,8 @@ namespace app
         }
 
         m_isGameOver = true;
+        // リザルトへ進むまでの待ち時間をかけて、BGMを消す。リザルトBGMは、ResultScene::Start()でフェードインする
+        SoundManager::Get().GetBGM().FadeOutAll(FINISH_WAIT_TIME);
         // 結果をリザルトへ渡す。経過時間はここで止まるので、そのまま守衛継続時間になる
         GameResult::Get().Set(GameResultData(m_elapsedTime, m_zombieManager->GetKillCount(actor::EnZombieKind::Normal), m_zombieManager->GetKillCount(actor::EnZombieKind::Running)));
         // Miroを操作できなくする。(カウントダウンの時と同じく、パッドのコントローラーを外す)
@@ -251,6 +270,7 @@ namespace app
         if (ui::GameSetMenu* gameSetMenu = m_gameSetPacket->GetMenu())
         {
             gameSetMenu->Show();
+            SoundManager::Get().GetSE().Play(EnSoundID::SeGameFinish);
         }
     }
 
@@ -260,10 +280,17 @@ namespace app
         // 弾切れ・リロード中は撃てない
         if (!m_handgun->Fire())
         {
+            // 弾切れで引き金を引いた時だけ、空撃ちの音を鳴らす。(リロード中は鳴らさない)
+            if (m_handgun->GetRemainingAmmo() == 0 && !m_handgun->IsReloading())
+            {
+                SoundManager::Get().GetSE().Play(EnSoundID::SePistolDryShot);
+            }
             return false;
         }
-        // 撃った。レティクルが広がる
+        SoundManager::Get().GetSE().Play(EnSoundID::SePistolShot);
+        // 撃った。レティクルが広がり、カメラが跳ね上がる
         InGameInfoHub::Get().NotifyPlayerFired();
+        m_playerCamera->AddRecoil();
 
         Vector3 muzzle;
         Quaternion barrelRotation;

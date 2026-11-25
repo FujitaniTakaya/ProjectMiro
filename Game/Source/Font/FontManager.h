@@ -3,7 +3,7 @@
  * @brief フォントの管理をするクラス
  * @details FONT_LIST のフォントを、起動時に全て BalloonEngine の SDFFontEngine に登録する。シングルトン。
  *          名前からフォントのID(FontId)を探して、FontRender::SetFont() などに渡す。
- *          例: FontRender::SetFont(FontManager::Get().Find("RoundedMplus"));
+ *          例: FontRender::SetFont(FontManager::Get().Find("HinaMincho"));
  */
 #pragma once
 #include <vector>

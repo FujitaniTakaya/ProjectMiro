@@ -12,5 +12,7 @@
     "height": 110.0,
     "coreStopDistance": 110.0,
     "attackBoxSize": 100.0,
-    "attackAnimSpeed": 1.8
+    "attackAnimSpeed": 1.8,
+    "hitAnimSpeed": 1.5,
+    "hitBlendTime": 0.1
 }

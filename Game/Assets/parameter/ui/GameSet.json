@@ -4,7 +4,7 @@
             {
                 "type": "UIText",
                 "name": "GameSetText",
-                "font": "RoundedMplus",
+                "font": "HinaMincho",
                 "text": "Finish",
                 "size": 160,
                 "pivot": [

@@ -47,6 +47,20 @@ namespace app
             float aimBlendSeconds;
             /** 構え中の右スティックの、倒し具合の曲線の指数。0で倒し具合を使わない(常に全力)。1で比例、大きいほど浅い倒しがゆっくりになる */
             float aimStickExponent;
+            /** 壁との衝突を調べる球の半径(cm)。ニアクリップ面が壁に食い込まない大きさ */
+            float collisionRadius;
+            /** 壁に押された時でも、注視点から視点までこれより近づけない距離(cm) */
+            float collisionMinDistance;
+            /** 壁から離れた時、視点が元の距離へ戻る速さ(cm/秒) */
+            float collisionRecoverSpeed;
+            /** 1発撃つごとに、カメラが上へ跳ね上がる角度(度) */
+            float recoilKickDeg;
+            /** 反動の目標の上限(度)。連射しても、これより上へは溜まらない */
+            float recoilMaxDeg;
+            /** 反動の角度が目標へ追いつく速さ(1/秒)。大きいほど、跳ね上がりが一瞬になる */
+            float recoilRiseRate;
+            /** 反動の目標が0へ戻る速さ(1/秒)。大きいほど、早く元の向きへ戻る */
+            float recoilRecoverRate;
             // [PARAM_GEN end members]
         };
 

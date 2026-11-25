@@ -23,7 +23,7 @@
  *              "lineSpacing" : 行間の倍率(省略は1.2)。
  *              "shadowOffset" : 影のずれ(ピクセル)。省略か0なら影なし。"shadowColor"は影の色(0〜255、省略は黒)。
  *              "pivot"    : 基点。(0, 0)が左下、(1, 1)が右上。省略は(0.5, 0.5)。"position"が基点の位置になる。
- *          例: { "type": "UIText", "name": "Infinity", "font": "RoundedMplus", "text": "∞", "size": 64, "position": [620, -460, 0] }
+ *          例: { "type": "UIText", "name": "Infinity", "font": "HinaMincho", "text": "∞", "size": 64, "position": [620, -460, 0] }
  */
 #pragma once
 #include <memory>

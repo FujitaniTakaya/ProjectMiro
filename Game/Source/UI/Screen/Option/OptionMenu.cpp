@@ -380,14 +380,17 @@ namespace app
                 if (moveY != 0)
                 {
                     MoveItem(moveY);
+                    SoundManager::Get().GetSE().Play(EnSoundID::SeUiMove);
                 }
 
                 if (pad.IsTrigger(enButtonA) || pad.IsTrigger(enButtonStart))
                 {
+                    SoundManager::Get().GetSE().Play(EnSoundID::SeUiGo);
                     OpenPanel();
                 }
                 else if (pad.IsTrigger(enButtonB))
                 {
+                    SoundManager::Get().GetSE().Play(EnSoundID::SeUiBack);
                     m_isClosed = true;
                 }
                 return;
@@ -396,6 +399,7 @@ namespace app
             if (moveY != 0)
             {
                 MoveRow(moveY);
+                SoundManager::Get().GetSE().Play(EnSoundID::SeUiMove);
             }
             if (moveX != 0)
             {
@@ -404,6 +408,8 @@ namespace app
 
             if (pad.IsTrigger(enButtonA) || pad.IsTrigger(enButtonB))
             {
+                // Aは決定、Bはキャンセル
+                SoundManager::Get().GetSE().Play(pad.IsTrigger(enButtonB) ? EnSoundID::SeUiBack : EnSoundID::SeUiGo);
                 ClosePanel();
             }
         }

@@ -1,9 +1,9 @@
 {
-    "targetOffsetUp": 180.0,
+    "targetOffsetUp": 150.0,
     "targetOffsetRight": 60.0,
     "toCameraPos": [
         0.0,
-        125.0,
+        50.0,
         -250.0
     ],
     "rotateSpeed": 78.0,
@@ -11,7 +11,14 @@
     "maxToCameraDirY": 0.9,
     "nearClip": 1.0,
     "farClip": 10000.0,
-    "aimDistanceScale": 0.6,
+    "aimDistanceScale": 0.45,
     "aimBlendSeconds": 0.2,
-    "aimStickExponent": 1.5
+    "aimStickExponent": 1.5,
+    "collisionRadius": 25.0,
+    "collisionMinDistance": 60.0,
+    "collisionRecoverSpeed": 600.0,
+    "recoilKickDeg": 1.5,
+    "recoilMaxDeg": 5.0,
+    "recoilRiseRate": 40.0,
+    "recoilRecoverRate": 8.0
 }

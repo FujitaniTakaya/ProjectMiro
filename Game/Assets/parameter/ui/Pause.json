@@ -28,7 +28,7 @@
             {
                 "type": "UIText",
                 "name": "Heading",
-                "font": "RoundedMplus",
+                "font": "HinaMincho",
                 "text": "ポーズ",
                 "size": 112,
                 "pivot": [
@@ -56,7 +56,7 @@
             {
                 "type": "UIText",
                 "name": "ItemOption",
-                "font": "RoundedMplus",
+                "font": "HinaMincho",
                 "text": "オプション",
                 "size": 48,
                 "pivot": [
@@ -84,7 +84,7 @@
             {
                 "type": "UIText",
                 "name": "ItemTitle",
-                "font": "RoundedMplus",
+                "font": "HinaMincho",
                 "text": "タイトルへ",
                 "size": 48,
                 "pivot": [
@@ -112,7 +112,7 @@
             {
                 "type": "UIText",
                 "name": "Cursor",
-                "font": "RoundedMplus",
+                "font": "HinaMincho",
                 "text": "→",
                 "size": 24,
                 "pivot": [

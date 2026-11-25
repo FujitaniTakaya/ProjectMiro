@@ -16,7 +16,7 @@ namespace app
         // [PARAM_GEN begin ctor] 自動生成(tools/param_gen.py)。手で編集しない
         ZombieParameter::ZombieParameter()
             : maxHp(50.0f)
-            , walkSpeed(0.3f)
+            , walkSpeed(0.35f)
             , runSpeed(0.9f)
             , attackPower(10.0f)
             , initialAnger(0.0f)
@@ -27,8 +27,10 @@ namespace app
             , radius(35.0f)
             , height(110.0f)
             , coreStopDistance(110.0f)
-            , attackBoxSize(60.0f)
-            , attackAnimSpeed(1.3f)
+            , attackBoxSize(100.0f)
+            , attackAnimSpeed(1.8f)
+            , hitAnimSpeed(1.5f)
+            , hitBlendTime(0.1f)
         {
         }
         // [PARAM_GEN end ctor]
@@ -56,6 +58,8 @@ namespace app
             param.coreStopDistance = ParamLoader::ToFloat(root, "coreStopDistance", param.coreStopDistance);
             param.attackBoxSize = ParamLoader::ToFloat(root, "attackBoxSize", param.attackBoxSize);
             param.attackAnimSpeed = ParamLoader::ToFloat(root, "attackAnimSpeed", param.attackAnimSpeed);
+            param.hitAnimSpeed = ParamLoader::ToFloat(root, "hitAnimSpeed", param.hitAnimSpeed);
+            param.hitBlendTime = ParamLoader::ToFloat(root, "hitBlendTime", param.hitBlendTime);
             // [PARAM_GEN end load]
         }
 
@@ -78,6 +82,8 @@ namespace app
             ImGui::Text("coreStopDistance: %.1f", param.coreStopDistance);
             ImGui::Text("attackBoxSize: %.1f", param.attackBoxSize);
             ImGui::Text("attackAnimSpeed: %.2f", param.attackAnimSpeed);
+            ImGui::Text("hitAnimSpeed: %.2f", param.hitAnimSpeed);
+            ImGui::Text("hitBlendTime: %.2f", param.hitBlendTime);
             // [PARAM_GEN end draw]
 #endif // BALLOON_IMGUI_ENABLED
         }

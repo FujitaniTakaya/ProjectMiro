@@ -34,6 +34,8 @@ namespace app
             Death,
             /** 攻撃(ループしない) */
             Attack,
+            /** 怯み(ループしない。上半身(Upper レイヤー)だけで重ねて再生する) */
+            Hit,
 
             Max
         };

@@ -9,12 +9,22 @@
 
 namespace app
 {
+    namespace
+    {
+        /** BGMとSEの音量の初期値(0.0〜1.0)。オプション画面では50と表示される。Master(全体)は1.0のまま */
+        constexpr float DEFAULT_BGM_SE_VOLUME = 0.5f;
+    } // namespace
+
+
     SoundManager::SoundManager()
         : m_master(/*parent=*/nullptr)
         , m_bgm(&m_master)
         , m_se(&m_master)
         , m_voice(&m_master)
     {
+        m_bgm.SetVolume(DEFAULT_BGM_SE_VOLUME);
+        m_se.SetVolume(DEFAULT_BGM_SE_VOLUME);
+
         // 表の全ての音を、サウンドエンジンに登録する。(波形データは、この時点でメモリに全て読み込まれる。)
         for (const SoundInformation& info : SOUND_LIST)
         {

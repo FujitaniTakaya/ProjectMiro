@@ -28,7 +28,7 @@
             {
                 "type": "UIText",
                 "name": "AmmoNumber",
-                "font": "RoundedMplus",
+                "font": "HinaMincho",
                 "text": "0",
                 "size": 72,
                 "pivot": [
@@ -56,7 +56,7 @@
             {
                 "type": "UIText",
                 "name": "Slash",
-                "font": "RoundedMplus",
+                "font": "HinaMincho",
                 "text": "/",
                 "size": 72,
                 "pivot": [
@@ -84,7 +84,7 @@
             {
                 "type": "UIText",
                 "name": "Infinity",
-                "font": "RoundedMplus",
+                "font": "HinaMincho",
                 "text": "∞",
                 "size": 72,
                 "pivot": [

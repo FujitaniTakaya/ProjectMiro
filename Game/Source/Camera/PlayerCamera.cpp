@@ -27,6 +27,8 @@ namespace app
             constexpr float STICK_DEADZONE = 0.24f;
             /** XInputのスティックの値の最大(SHRT_MAX) */
             constexpr float STICK_RAW_MAX = 32767.0f;
+            /** 反動の角度がこれより小さければ、0として扱う(度) */
+            constexpr float RECOIL_EPSILON_DEG = 0.001f;
 
 
             /**
@@ -61,6 +63,57 @@ namespace app
                 }
                 return Vector2(directionX * amount, directionY * amount);
             }
+
+
+            /**
+             * @brief カメラの球のスイープの結果を受けるコールバック
+             * @details ステージ(静的な剛体)にだけ当たる。キャラクター・ゴースト(ゾンビの攻撃判定の箱・コアの箱)は素通りする。
+             */
+            struct CameraSweepCallback : public btCollisionWorld::ClosestConvexResultCallback
+            {
+                CameraSweepCallback(const btVector3& from, const btVector3& to)
+                    : ClosestConvexResultCallback(from, to)
+                {}
+
+
+                bool needsCollision(btBroadphaseProxy* proxy) const override
+                {
+                    const auto* object = static_cast<const btCollisionObject*>(proxy->m_clientObject);
+                    if (!object->isStaticObject())
+                    {
+                        return false;
+                    }
+                    return ClosestConvexResultCallback::needsCollision(proxy);
+                }
+            };
+
+
+            /**
+             * @brief 始点から理想の視点へ球を動かして、壁に当たる手前までの割合を求める
+             * @param from 球の始点(注視点側)
+             * @param to 球の終点(理想の視点)
+             * @param radius 球の半径(cm)
+             * @return 当たらなければ1。当たったら、当たる手前までの割合(0〜1)
+             */
+            float SweepCameraFraction(const Vector3& from, const Vector3& to, const float radius)
+            {
+                if ((to - from).Length() < FLT_EPSILON)
+                {
+                    return 1.0f;
+                }
+
+                btSphereShape shape(radius);
+                btTransform start;
+                start.setIdentity();
+                start.setOrigin(btVector3(from.x, from.y, from.z));
+                btTransform end;
+                end.setIdentity();
+                end.setOrigin(btVector3(to.x, to.y, to.z));
+
+                CameraSweepCallback callback(start.getOrigin(), end.getOrigin());
+                PhysicsWorld::GetInstance()->ConvexSweepTest(&shape, start, end, callback);
+                return callback.hasHit() ? callback.m_closestHitFraction : 1.0f;
+            }
         } // namespace
 
 
@@ -71,8 +124,11 @@ namespace app
             , m_targetPosition(Vector3::Zero)
             , m_isAiming(false)
             , m_aimRate(0.0f)
+            , m_allowedLength(FLT_MAX)
             , m_aimAssist()
             , m_aimTargets()
+            , m_recoilTargetDeg(0.0f)
+            , m_recoilDeg(0.0f)
         {
         }
 
@@ -84,6 +140,9 @@ namespace app
         {
             // 注視点から視点までのベクトルを設定
             m_toCameraPos = m_parameter.toCameraPos;
+            // 反動はなし
+            m_recoilTargetDeg = 0.0f;
+            m_recoilDeg = 0.0f;
         }
 
 
@@ -169,12 +228,56 @@ namespace app
 
             // 視点を計算する。構え中は、回転後のベクトルは触らずに、距離だけ縮めたものを使う。
             const float distanceScale = 1.0f + (m_parameter.aimDistanceScale - 1.0f) * aimEased;
-            const Vector3 pos = target + m_toCameraPos * distanceScale;
+            const Vector3 toCamera = m_toCameraPos * distanceScale;
+            const float fullLength = toCamera.Length();
+
+            // 壁に当たる手前までの距離。始点は、横のずらしを含まない点(ターゲットの真上)にする。
+            // 肩の位置が壁の外に出てしまうと、球が最初から壁に重なって当たらなくなるため。
+            Vector3 pivot = m_targetPosition;
+            pivot.y += m_parameter.targetOffsetUp;
+            const float fraction = SweepCameraFraction(pivot, target + toCamera, m_parameter.collisionRadius);
+            const float hitLength = (std::max)(fullLength * fraction, (std::min)(m_parameter.collisionMinDistance, fullLength));
+
+            // 壁に近づく時は即座に縮め、離れた時だけ、ゆっくり元の距離へ戻す。
+            if (hitLength < m_allowedLength)
+            {
+                m_allowedLength = hitLength;
+            }
+            else
+            {
+                m_allowedLength = (std::min)(m_allowedLength + m_parameter.collisionRecoverSpeed * deltaTime, hitLength);
+            }
+            const float usedLength = (std::min)(fullLength, m_allowedLength);
+            const Vector3 pos = fullLength > FLT_EPSILON ? target + toCamera * (usedLength / fullLength) : target;
+
+            // 反動。目標は0へ戻り、実際の角度は目標を追う。(撃った瞬間に素早く跳ね、ゆっくり戻る)
+            m_recoilTargetDeg *= std::exp(-m_parameter.recoilRecoverRate * deltaTime);
+            m_recoilDeg += (m_recoilTargetDeg - m_recoilDeg) * (1.0f - std::exp(-m_parameter.recoilRiseRate * deltaTime));
+            if (m_recoilDeg < RECOIL_EPSILON_DEG && m_recoilTargetDeg < RECOIL_EPSILON_DEG)
+            {
+                m_recoilTargetDeg = 0.0f;
+                m_recoilDeg = 0.0f;
+            }
+
+            // 視点の位置は変えずに、視線だけを上へ回す。(スティックの回転と同じ軸。正の角度で上を向く)
+            // m_toCameraPos は水平成分が0でなく、上下の制限で真上・真下にもならないので、軸は必ず求まる。
+            Vector3 lookTarget = target;
+            if (m_recoilDeg > 0.0f)
+            {
+                Vector3 recoilAxis;
+                recoilAxis.Cross(Vector3::AxisY, m_toCameraPos);
+                recoilAxis.Normalize();
+                Quaternion recoilRot;
+                recoilRot.SetRotationDeg(recoilAxis, m_recoilDeg);
+                Vector3 view = target - pos;
+                recoilRot.Apply(view);
+                lookTarget = pos + view;
+            }
 
             // メインカメラに設定して更新する。
             g_camera3D->SetNear(m_parameter.nearClip);
             g_camera3D->SetFar(m_parameter.farClip);
-            g_camera3D->SetTarget(target);
+            g_camera3D->SetTarget(lookTarget);
             g_camera3D->SetPosition(pos);
             g_camera3D->Update();
         }
@@ -183,6 +286,12 @@ namespace app
         void PlayerCamera::SetTargetPosition(const Vector3& position)
         {
             m_targetPosition = position;
+        }
+
+
+        void PlayerCamera::AddRecoil()
+        {
+            m_recoilTargetDeg = (std::min)(m_recoilTargetDeg + m_parameter.recoilKickDeg, m_parameter.recoilMaxDeg);
         }
     } // namespace camera
 } // namespace app

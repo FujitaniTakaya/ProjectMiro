@@ -9,6 +9,7 @@
 #include "Fade.h"
 #include "Source/Score/GameResult.h"
 #include "Source/Score/ScoreRule.h"
+#include "Source/Sound/SoundManager.h"
 #include "Source/UI/Screen/Result/ResultMenu.h"
 #include "TitleScene.h"
 
@@ -23,6 +24,8 @@ namespace app
         constexpr int PAD_INDEX = 0;
         /** 「タイトルへ」を決めた後の、暗転・明転にかける時間(秒)。タイトルからインゲームへ進む時と同じ */
         constexpr float FADE_DURATION = 1.0f;
+        /** リザルトBGMのフェードインにかける時間(秒)。インゲームからの明転と同じ */
+        constexpr float BGM_FADE_IN_SECONDS = 1.0f;
         /** 次のシーン。「タイトルへ」を決めたら、タイトルシーンに進む */
         constexpr uint32_t NEXT_SCENE_ID = TitleScene::ID();
     } // namespace
@@ -43,6 +46,9 @@ namespace app
 
     bool ResultScene::Start()
     {
+        // Start()は暗転中に呼ばれるので、フェードインが明転にそのまま重なる。インゲームBGMは、InGameScene側で消え終わっている
+        SoundManager::Get().GetBGM().Play(EnSoundID::BgmResult, DEFAULT_VOLUME_MAGNIFICATION, BGM_FADE_IN_SECONDS);
+
         // インゲームが書いた結果から、スコアを計算して表示する
         const GameResultData& data = GameResult::Get().Data();
         if (ui::ResultMenu* menu = m_resultPacket->GetMenu())
@@ -67,14 +73,18 @@ namespace app
             if (move != 0)
             {
                 menu->MoveSelection(move);
+                SoundManager::Get().GetSE().Play(EnSoundID::SeUiMove);
             }
 
             if (pad->IsTrigger(enButtonA) || pad->IsTrigger(enButtonStart))
             {
+                SoundManager::Get().GetSE().Play(EnSoundID::SeUiGo);
                 switch (menu->GetSelectedItem())
                 {
                 case ui::EnResultItem::Title:
                     m_isTitleRequested = true;
+                    // 暗転と同じ時間でBGMを消す。タイトルBGMは、TitleScene::Start()でフェードインする
+                    SoundManager::Get().GetBGM().FadeOutAll(FADE_DURATION);
                     break;
                 case ui::EnResultItem::Quit:
                     // WM_QUITを送って、ゲームループを抜けさせる。(ウィンドウの×ボタンで閉じた時と同じ後始末になる。)

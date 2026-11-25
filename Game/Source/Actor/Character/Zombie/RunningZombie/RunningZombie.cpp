@@ -40,6 +40,8 @@ namespace app
                 { "Assets/animData/character/zombie/Zombie_Death.tka", false },
                 // 攻撃
                 { "Assets/animData/character/zombie/Zombie_Attack.tka", false },
+                // 怯み(上半身だけで重ねる)
+                { "Assets/animData/character/zombie/Zombie_Hit.tka", false },
             };
             static_assert(std::size(ANIMATION_DATA) == static_cast<size_t>(EnZombieAnimationClipID::Max), "アニメーションデータの数をIDと合わせること");
 

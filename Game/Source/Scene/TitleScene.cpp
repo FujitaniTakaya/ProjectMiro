@@ -7,6 +7,7 @@
 #include "TitleScene.h"
 
 #include "Source/Scene/InGame/InGameScene.h"
+#include "Source/Sound/SoundManager.h"
 #include "Source/UI/Screen/Option/OptionMenu.h"
 #include "Source/UI/Screen/Title/TitleMenu.h"
 
@@ -23,13 +24,16 @@ namespace app
         constexpr int PAD_INDEX = 0;
         /** スタートを押した後の、暗転・明転にかける時間(秒) */
         constexpr float FADE_DURATION = 1.0f;
+        /** タイトルBGMのフェードインにかける時間(秒)。ポーズ画面やリザルトから戻った時に、前のBGMとクロスフェードする */
+        constexpr float BGM_FADE_IN_SECONDS = 1.0f;
         /** 次のシーン。スタートを決めたら、インゲームシーンに進む */
         constexpr uint32_t NEXT_SCENE_ID = InGameScene::ID();
     } // namespace
 
 
     TitleScene::TitleScene()
-        : m_titlePacket(nullptr)
+        : m_slideshow()
+        , m_titlePacket(nullptr)
         , m_optionPacket(nullptr)
         , m_menuInput()
         , m_backdrop()
@@ -48,12 +52,16 @@ namespace app
 
     bool TitleScene::Start()
     {
+        // 再生中のBGM(ポーズ画面から戻った時のインゲームBGMなど)があれば、BGMGroupが同じ時間でフェードアウトさせて置き換える
+        SoundManager::Get().GetBGM().Play(EnSoundID::BgmTitle, DEFAULT_VOLUME_MAGNIFICATION, BGM_FADE_IN_SECONDS);
         return true;
     }
 
 
     void TitleScene::Update()
     {
+        m_slideshow.Update(g_gameTime->GetFrameDeltaTime());
+
         switch (m_state)
         {
         case TitleState::Title:
@@ -70,7 +78,8 @@ namespace app
 
     void TitleScene::PauseUpdate()
     {
-        // 暗転している間も、UIの更新を続ける。(暗転に入るのは、タイトル画面で「はじめる」を決めた時だけ)
+        // 暗転している間も、背景とUIの更新を続ける。(暗転に入るのは、タイトル画面で「はじめる」を決めた時だけ)
+        m_slideshow.Update(g_gameTime->GetFrameDeltaTime());
         m_titlePacket->Update();
     }
 
@@ -84,13 +93,17 @@ namespace app
         switch (m_state)
         {
         case TitleState::Title:
+            m_slideshow.Render(rc);
             m_titlePacket->Render(rc);
             break;
         case TitleState::Option:
-            // 決めたフレームの描画で、直前のタイトル画面を取り込んでぼかす。(フェードは、この後にApplicationが描くので映らない)
+            // 決めたフレームの描画で、直前のタイトル画面(背景の画像ごと)を取り込んでぼかす。(フェードは、この後にApplicationが描くので映らない)
             if (m_isCapturePending)
             {
-                m_backdrop.Capture(rc, [this](RenderContext& context) { m_titlePacket->Render(context); });
+                m_backdrop.Capture(rc, [this](RenderContext& context) {
+                    m_slideshow.Render(context);
+                    m_titlePacket->Render(context);
+                });
                 m_isCapturePending = false;
             }
             m_backdrop.Render(rc);
@@ -129,10 +142,12 @@ namespace app
             if (move != 0)
             {
                 menu->MoveSelection(move);
+                SoundManager::Get().GetSE().Play(EnSoundID::SeUiMove);
             }
 
             if (pad->IsTrigger(enButtonA) || pad->IsTrigger(enButtonStart))
             {
+                SoundManager::Get().GetSE().Play(EnSoundID::SeUiGo);
                 Decide(menu->GetSelectedItem());
             }
         }
@@ -161,6 +176,8 @@ namespace app
         {
         case ui::EnTitleItem::Start:
             m_isStartRequested = true;
+            // 暗転と同じ時間でBGMを消す。インゲームBGMは、カウントダウンが終わって「Start」を出す時に始める
+            SoundManager::Get().GetBGM().FadeOutAll(FADE_DURATION);
             break;
         case ui::EnTitleItem::Option:
             m_state = TitleState::Option;
