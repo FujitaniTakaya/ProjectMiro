@@ -162,6 +162,26 @@ namespace app
 
 
         /**
+         * @brief ずらし量が壁の側を向いていたら、内側へ折り返す
+         * @details 内側の向き(inward)との内積が負なら、その成分を反転する。内側を向いていれば何もしない。
+         *          円の中で一様なずらし量は、内側の半円の中で一様になる。
+         * @param[in,out] offsetX ずらし量のX
+         * @param[in,out] offsetZ ずらし量のZ
+         * @param inwardX ゲートからステージの内側へ向かう単位ベクトルのX
+         * @param inwardZ 同じくZ
+         */
+        inline void FoldOffsetInward(float& offsetX, float& offsetZ, const float inwardX, const float inwardZ)
+        {
+            const float along = offsetX * inwardX + offsetZ * inwardZ;
+            if (along < 0.0f)
+            {
+                offsetX -= 2.0f * along * inwardX;
+                offsetZ -= 2.0f * along * inwardZ;
+            }
+        }
+
+
+        /**
          * @brief 死亡の動きが終わったゾンビを外す
          * @details 外れたゾンビは破棄される。他のゾンビの順番は変わらない。HPが0になっても、死亡アニメーションが終わるまでは残る。
          *          外す前に、外すゾンビ1体ごとに onRemove を呼ぶ。(倒した数を種類別に数えるなど。外した後は破棄されて触れない)
