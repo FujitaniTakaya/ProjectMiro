@@ -2,6 +2,7 @@
  * @file TitleScene.h
  * @brief タイトルシーン
  * @details ゲームの最初に表示するシーン。仮のタイトル画面で、右上のタイトルの下に「はじめる・オプション・おわる」が並ぶ。
+ *          背景は、インゲームのスクリーンショット(Assets/spriteData/UI/Title/ の dds)のスライドショー。
  *          上下(十字キー・左スティック・W/S)で選び、Aボタン(J)かスタートボタン(Enter)で決める。
  *          - はじめる : インゲームシーンへ進む
  *          - オプション : オプション画面(OptionMenu)を開く。背景は、直前のタイトル画面を少しぼかしたもの。Bボタン(K)で閉じて、タイトル画面に戻る
@@ -15,6 +16,7 @@
 #include "Source/UI/Common/BlurredBackdrop.h"
 #include "Source/UI/Common/MenuInput.h"
 #include "Source/UI/Foundation/SystemPacket.h"
+#include "Source/UI/Screen/Title/TitleSlideshow.h"
 
 
 namespace app
@@ -74,7 +76,9 @@ namespace app
 
 
     private:
-        /** タイトル画面のUI(背景・ロゴ・項目・選択カーソル) */
+        /** タイトル画面の背景。インゲームのスクリーンショットを順に流す。UIの下に描く */
+        ui::TitleSlideshow m_slideshow;
+        /** タイトル画面のUI(暗幕・ロゴ・項目・選択カーソル) */
         ui::UIPacket<ui::TitleMenu> m_titlePacket;
         /** オプション画面のUI(背景・見出し・項目・設定画面) */
         ui::UIPacket<ui::OptionMenu> m_optionPacket;

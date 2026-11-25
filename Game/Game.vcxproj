@@ -332,6 +332,7 @@
     <ClCompile Include="Source\Camera\AimAssist.cpp" />
     <ClCompile Include="Source\Camera\AimAssistParameter.cpp" />
     <ClCompile Include="Source\Actor\Stage\StageBoundary.cpp" />
+    <ClCompile Include="Source\UI\Screen\Title\TitleSlideshow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -463,6 +464,7 @@
     <ClInclude Include="Source\Camera\AimAssist.h" />
     <ClInclude Include="Source\Camera\AimAssistParameter.h" />
     <ClInclude Include="Source\Actor\Stage\StageBoundary.h" />
+    <ClInclude Include="Source\UI\Screen\Title\TitleSlideshow.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BalloonEngine\BalloonEngine.vcxproj">

@@ -454,6 +454,9 @@
     <ClCompile Include="Source\Actor\Stage\StageBoundary.cpp">
       <Filter>Source\Actor\Stage</Filter>
     </ClCompile>
+    <ClCompile Include="Source\UI\Screen\Title\TitleSlideshow.cpp">
+      <Filter>Source\UI\Screen\Title</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -834,6 +837,9 @@
     </ClInclude>
     <ClInclude Include="Source\Actor\Stage\StageBoundary.h">
       <Filter>Source\Actor\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\Screen\Title\TitleSlideshow.h">
+      <Filter>Source\UI\Screen\Title</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
