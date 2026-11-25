@@ -19,16 +19,15 @@ namespace app
     /**
      * @brief サウンドの種類
      * @details 鳴らす音ごとの項目。SOUND_LISTに、このIDとサウンドファイルのパスを1行で登録する。
-     *          NOTE: 今あるBGM / SE / Voiceは、音を足すまでの仮の項目(グループ名ではない)。音を足したら置き換えること。
      */
     enum class EnSoundID : uint8_t
     {
-        /** BGM */
-        BGM = 0,
-        /** SE */
-        SE,
-        /** Voice */
-        Voice,
+        /** タイトルのBGM */
+        BgmTitle = 0,
+        /** インゲームのBGM */
+        BgmInGame,
+        /** リザルトのBGM */
+        BgmResult,
         Max,
         None = Max
     };
@@ -56,9 +55,9 @@ namespace app
 
 
     inline constexpr SoundInformation SOUND_LIST[] = {
-        SoundInformation(EnSoundID::BGM, ""),
-        SoundInformation(EnSoundID::SE, ""),
-        SoundInformation(EnSoundID::Voice, "")
+        SoundInformation(EnSoundID::BgmTitle, "Assets/soundData/bgm/title.wav"),
+        SoundInformation(EnSoundID::BgmInGame, "Assets/soundData/bgm/ingame.wav"),
+        SoundInformation(EnSoundID::BgmResult, "Assets/soundData/bgm/result.wav")
     };
 
 

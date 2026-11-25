@@ -7,6 +7,7 @@
 #include "TitleScene.h"
 
 #include "Source/Scene/InGame/InGameScene.h"
+#include "Source/Sound/SoundManager.h"
 #include "Source/UI/Screen/Option/OptionMenu.h"
 #include "Source/UI/Screen/Title/TitleMenu.h"
 
@@ -23,6 +24,8 @@ namespace app
         constexpr int PAD_INDEX = 0;
         /** スタートを押した後の、暗転・明転にかける時間(秒) */
         constexpr float FADE_DURATION = 1.0f;
+        /** タイトルBGMのフェードインにかける時間(秒)。ポーズ画面やリザルトから戻った時に、前のBGMとクロスフェードする */
+        constexpr float BGM_FADE_IN_SECONDS = 1.0f;
         /** 次のシーン。スタートを決めたら、インゲームシーンに進む */
         constexpr uint32_t NEXT_SCENE_ID = InGameScene::ID();
     } // namespace
@@ -49,6 +52,8 @@ namespace app
     bool TitleScene::Start()
     {
         return true;
+        // 再生中のBGM(ポーズ画面から戻った時のインゲームBGMなど)があれば、BGMGroupが同じ時間でフェードアウトさせて置き換える
+        SoundManager::Get().GetBGM().Play(EnSoundID::BgmTitle, DEFAULT_VOLUME_MAGNIFICATION, BGM_FADE_IN_SECONDS);
     }
 
 
@@ -169,6 +174,8 @@ namespace app
             if (ui::OptionMenu* menu = m_optionPacket->GetMenu())
             {
                 menu->Open();
+            // 暗転と同じ時間でBGMを消す。インゲームBGMは、カウントダウンが終わって「Start」を出す時に始める
+            SoundManager::Get().GetBGM().FadeOutAll(FADE_DURATION);
             }
             break;
         case ui::EnTitleItem::Quit:

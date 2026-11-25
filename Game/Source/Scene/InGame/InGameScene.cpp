@@ -35,6 +35,7 @@
 #include "Source/Scene/Fade.h"
 #include "Source/Scene/ResultScene.h"
 #include "Source/Score/GameResult.h"
+#include "Source/Sound/SoundManager.h"
 #include "Source/UI/HUD/Countdown/CountdownMenu.h"
 #include "Source/UI/HUD/GameSet/GameSetMenu.h"
 
@@ -57,6 +58,8 @@ namespace app
         constexpr float FINISH_WAIT_TIME = 3.0f;
         /** リザルトへ進む時の、暗転・明転にかける時間(秒)。タイトルからインゲームへ進む時と同じ */
         constexpr float RESULT_FADE_DURATION = 1.0f;
+        /** インゲームBGMのフェードインにかける時間(秒)。「Start」を出した時から */
+        constexpr float BGM_FADE_IN_SECONDS = 1.0f;
         /** 次のシーン。ゲームセットになったら、リザルトシーンに進む */
         constexpr uint32_t RESULT_SCENE_ID = ResultScene::ID();
         /** コアを置く座標。コアの真下の地面(y=0)の座標を渡す。浮かせる高さはCore側で足す */
@@ -223,6 +226,8 @@ namespace app
             {
                 countdownMenu->ShowStart();
             }
+            // 「Start」を出すのと同時に、インゲームBGMを始める。(カウントダウンの間は無音)ポーズ中も鳴らし続ける
+            SoundManager::Get().GetBGM().Play(EnSoundID::BgmInGame, DEFAULT_VOLUME_MAGNIFICATION, BGM_FADE_IN_SECONDS);
         }
         else if (countdownMenu && m_countdown.IsCounting())
         {
@@ -247,6 +252,8 @@ namespace app
         }
 
         m_isGameOver = true;
+        // リザルトへ進むまでの待ち時間をかけて、BGMを消す。リザルトBGMは、ResultScene::Start()でフェードインする
+        SoundManager::Get().GetBGM().FadeOutAll(FINISH_WAIT_TIME);
         // 結果をリザルトへ渡す。経過時間はここで止まるので、そのまま守衛継続時間になる
         GameResult::Get().Set(GameResultData(m_elapsedTime, m_zombieManager->GetKillCount(actor::EnZombieKind::Normal), m_zombieManager->GetKillCount(actor::EnZombieKind::Running)));
         // Miroを操作できなくする。(カウントダウンの時と同じく、パッドのコントローラーを外す)
