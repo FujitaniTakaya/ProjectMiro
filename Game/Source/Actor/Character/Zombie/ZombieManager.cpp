@@ -44,6 +44,8 @@ namespace app
                 auto zombie = std::make_unique<TZombie>();
                 zombie->SetPosition(position);
                 zombie->StartWrapper();
+                // 浮かせて置いた座標から、足元の地面へ落とす。(湧いた後に、空中から落ちていく姿を見せない)
+                zombie->SnapToGround();
                 zombie->SetAttackHandler(attackHandler);
 
                 auto controller = std::make_unique<TController>(zombie->GetParameter());

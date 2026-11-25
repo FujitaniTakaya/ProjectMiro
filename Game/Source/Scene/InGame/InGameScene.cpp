@@ -193,6 +193,9 @@ namespace app
         ModelRender& stageModelRender = m_stageField->GetModelRender();
         m_bgPhysicsStaticObject.CreateFromModel(stageModelRender.GetModel(), stageModelRender.GetModel().GetWorldMatrix());
 
+        // Miroは、当たり判定ができる前に Start() している。浮かせて置いた座標から、足元の地面へ落とす
+        m_miro->SnapToGround();
+
         // ステージの外へ出られないように、外周に見えない壁を置く
         m_stageBoundary.Build();
 
