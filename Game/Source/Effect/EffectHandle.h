@@ -24,8 +24,8 @@ namespace app
     {
         /** マズルフラッシュ(銃口の発砲炎)。+Zが銃口の向き。単位はcm。 */
         MuzzleFlash = 0,
-        /** ゾンビがアンガー値に達した時の赤い爆発(光・水平のリング・上へ昇る火の粉)。原点=胸の位置、+Yが上。単位はcm。 */
-        AngerBurst,
+        /** ゾンビがアンガー値に達した時に、地面から広がる赤いもや。原点=足元の地面、+Yが上。半径500cm(angerSpreadRadiusの既定値)に広がるよう作ってある。単位はcm。 */
+        AngerMist,
         Max,
         None = Max
     };
@@ -51,7 +51,7 @@ namespace app
 
     inline constexpr EffectInformation EFFECT_LIST[] = {
         EffectInformation(u"Assets/effect/MuzzleFlash/MuzzleFlash.efkefc"),
-        EffectInformation(u"Assets/effect/AngerBurst/AngerBurst.efkefc")
+        EffectInformation(u"Assets/effect/AngerMist/AngerMist.efkefc")
     };
 
     static_assert(

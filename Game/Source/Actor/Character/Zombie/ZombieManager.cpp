@@ -55,19 +55,23 @@ namespace app
             }
 
 
-            /** 怒りのエフェクトを出す高さ(ゾンビの身長に対する割合)。胸のあたり */
-            constexpr float ANGER_EFFECT_HEIGHT_RATIO = 0.6f;
+            /** AngerMistを作った時の広がりの半径(cm)。再生時のスケール = angerSpreadRadius / この値 */
+            constexpr float ANGER_MIST_REFERENCE_RADIUS = 500.0f;
+            /** 地面のめり込み(ちらつき)を避けるための、足元からの持ち上げ量(cm) */
+            constexpr float ANGER_MIST_LIFT = 5.0f;
 
 
             /**
-             * @brief ゾンビがアンガー値に達した時の赤いエフェクトを、胸の位置で1回再生する
+             * @brief ゾンビがアンガー値に達した時の赤いもやを、足元から1回再生する
+             * @details 広がりの半径は、ばらまく範囲(angerSpreadRadius)に合わせる。
              * @param zombie 達したゾンビ
              */
             void PlayAngerEffect(const ZombieBase& zombie)
             {
                 Vector3 position = zombie.GetTransform().m_position;
-                position.y += zombie.GetParameter().height * ANGER_EFFECT_HEIGHT_RATIO;
-                EffectManager::Get().PlayEffect(EnEffectKind::AngerBurst, position, Quaternion::Identity, Vector3::One);
+                position.y += ANGER_MIST_LIFT;
+                const float scale = zombie.GetParameter().angerSpreadRadius / ANGER_MIST_REFERENCE_RADIUS;
+                EffectManager::Get().PlayEffect(EnEffectKind::AngerMist, position, Quaternion::Identity, Vector3(scale, scale, scale));
             }
         } // namespace
 
