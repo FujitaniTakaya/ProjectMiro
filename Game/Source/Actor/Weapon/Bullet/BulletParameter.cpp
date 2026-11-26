@@ -15,8 +15,8 @@ namespace app
     {
         // [PARAM_GEN begin ctor] 自動生成(tools/param_gen.py)。手で編集しない
         BulletParameter::BulletParameter()
-            : lifeTime(3.0f)
-            , shotSpeed(3000.0f)
+            : lifeTime(1.0f)
+            , shotSpeed(20000.0f)
             , damage(20.0f)
             , hitRadius(8.0f)
             , modelScale(1.0f)
