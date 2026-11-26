@@ -45,6 +45,22 @@ namespace app
              * @return ZombieParameter の攻撃アニメ再生速度(1.0f=通常)
              */
             float GetAttackAnimationSpeed() const;
+            /**
+             * @brief この個体の再生速度の倍率を取得する
+             * @details 1 ± ZombieParameter の animSpeedRange。個体ごとに生まれたときに抽選した値で決まる。
+             *          歩き・走りの移動速度にも同じ倍率をかけるので、足が滑らない。
+             * @return 倍率(1.0f=通常)
+             */
+            float GetAnimationSpeedScale() const;
+            /**
+             * @brief この個体の開始位相を取得する
+             * @details 歩き・走り・待機を始めるときに、このクリップの位置から始める。同じところから湧いたゾンビの足並みがそろわないようにする。
+             * @return 位相(0〜1)。個体ごとに生まれたときに抽選した値
+             */
+            inline float GetPhaseOffset() const
+            {
+                return m_phaseOffset;
+            }
 
             /**
              * @brief 死亡の動きが終わったか
@@ -106,6 +122,10 @@ namespace app
             const MiroParameter& m_playerParameter;
             /** 怯みの予約があるか(Update() で消費する) */
             bool m_hasFlinchRequest;
+            /** 再生速度の個体差の抽選値(-1〜1)。倍率はパラメーターから毎回出すので、ホットリロードに追従する */
+            float m_speedVariation;
+            /** 開始位相の個体差の抽選値(0〜1) */
+            float m_phaseOffset;
         };
     } // namespace actor
 } // namespace app

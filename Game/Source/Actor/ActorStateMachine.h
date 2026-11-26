@@ -114,6 +114,16 @@ namespace app
                 m_ownerActor->GetModelRender().SetLayerAnimationSpeed(layer, speed);
             }
             /**
+             * @brief レイヤーで再生中のアニメーションを、位相の位置へ移す
+             * @details PlayAnimation() / PlayLayerAnimation() の直後に呼ぶと、同じクリップを個体ごとにずらして始められる。ループするクリップだけに効く。
+             * @param layer 対象のレイヤー
+             * @param phase 位相(0〜1)
+             */
+            inline void SetLayerAnimationPhase(const EnAnimationLayer layer, const float phase)
+            {
+                m_ownerActor->GetModelRender().SetLayerAnimationPhase(layer, phase);
+            }
+            /**
              * @brief レイヤーが動いている間、Base のボーンを、そのレイヤーのクリップへ近づける割合を設定する
              * @details 近づけるボーンは、ModelRender::SetLayerFollowBone() で決めておく。
              * @param layer 設定するレイヤー

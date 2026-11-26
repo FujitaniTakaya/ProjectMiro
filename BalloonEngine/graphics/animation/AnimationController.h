@@ -143,6 +143,15 @@ namespace nsBalloonEngine
 
 
         /**
+         * @brief レイヤーで再生中のクリップを、位相の位置へ移す
+         * @details Play() の直後に呼ぶと、同じクリップを個体ごとにずらして始められる。ループするクリップだけに効く。
+         * @param layer 対象のレイヤー
+         * @param phase 位相(0〜1)。範囲外は丸められる
+         */
+        void SetLayerPhase(const EnAnimationLayer layer, const float phase);
+
+
+        /**
          * @brief アニメーションイベントのリスナーを登録する
          * @details 全レイヤーのイベントが、登録した全てのリスナーに通知される。
          * @param listener リスナー。引数はクリップ名とイベント名

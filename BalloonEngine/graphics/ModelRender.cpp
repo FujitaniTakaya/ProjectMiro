@@ -258,6 +258,15 @@ namespace nsBalloonEngine
     }
 
 
+    void ModelRender::SetLayerAnimationPhase(const EnAnimationLayer layer, const float phase)
+    {
+        if (m_isAnimated)
+        {
+            m_animationController.SetLayerPhase(layer, phase);
+        }
+    }
+
+
     bool ModelRender::SetLayerFollowBone(const EnAnimationLayer layer, const wchar_t* boneName)
     {
         return m_isAnimated && m_animationController.SetLayerFollowBone(layer, boneName);

@@ -215,6 +215,16 @@ namespace nsBalloonEngine
 
 
         /**
+         * @brief レイヤーで再生中のアニメーションを、位相の位置へ移す
+         * @details PlayAnimation() / PlayLayerAnimation() の直後に呼ぶと、同じクリップを個体ごとにずらして始められる。
+         *          ループするクリップだけに効く。
+         * @param layer 対象のレイヤー
+         * @param phase 位相(0〜1)。範囲外は丸められる
+         */
+        void SetLayerAnimationPhase(const EnAnimationLayer layer, const float phase);
+
+
+        /**
          * @brief レイヤーが動いている間、Base のボーンの回転を、そのレイヤーのクリップへ近づけるボーンを設定する
          * @details 例: 構え中、斜め歩きでねじれる骨盤(Miro は "Base HumanPelvis")を、構えたポーズの向きへ近づける。割合は SetLayerFollowRatio()。
          *          ボーンの子で、レイヤーのマスクの外のもの(脚)は、モデル空間の向きを保つ。

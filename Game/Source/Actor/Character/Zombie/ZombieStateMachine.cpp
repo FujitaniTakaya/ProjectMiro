@@ -9,6 +9,7 @@
 #include "Source/Actor/Character/CharacterIState.h"
 #include "Source/Actor/Character/Miro/MiroParameter.h"
 #include "Source/Core/Param/ParamHolder.h"
+#include "Source/Core/Util/RandomDevice.h"
 #include "ZombieIState.h"
 #include "ZombieParameter.h"
 
@@ -22,6 +23,8 @@ namespace app
             , m_parameter(parameter)
             , m_playerParameter(ParamHolder::Get().GetParameter<MiroParameter>(EnParamID::Miro))
             , m_hasFlinchRequest(false)
+            , m_speedVariation(util::RandomDevice::Random(-1.0f, 1.0f))
+            , m_phaseOffset(util::RandomDevice::Random(0.0f, 1.0f))
         {
             // 待機(慣性を消すゾンビ用)・歩き・走り・攻撃・死亡を登録する
             AddState<ZombieIdleState>(this);
@@ -34,19 +37,25 @@ namespace app
 
         float ZombieStateMachine::GetWalkSpeed() const
         {
-            return m_playerParameter.runSpeed * m_parameter.walkSpeed;
+            return m_playerParameter.runSpeed * m_parameter.walkSpeed * GetAnimationSpeedScale();
         }
 
 
         float ZombieStateMachine::GetRunSpeed() const
         {
-            return m_playerParameter.runSpeed * m_parameter.runSpeed;
+            return m_playerParameter.runSpeed * m_parameter.runSpeed * GetAnimationSpeedScale();
         }
 
 
         float ZombieStateMachine::GetAttackAnimationSpeed() const
         {
             return m_parameter.attackAnimSpeed;
+        }
+
+
+        float ZombieStateMachine::GetAnimationSpeedScale() const
+        {
+            return 1.0f + m_speedVariation * m_parameter.animSpeedRange;
         }
 
 
@@ -72,6 +81,8 @@ namespace app
 
         void ZombieStateMachine::Update()
         {
+            // 下半身(Base)の再生速度は個体ごとに違う。レイヤーの速度は持続するので、ホットリロードにも追従するよう毎フレーム入れる(上半身の怯みは別レイヤー)
+            SetLayerAnimationSpeed(EnAnimationLayer::Base, GetAnimationSpeedScale());
             CharacterStateMachine::Update();
             UpdateFlinch();
         }

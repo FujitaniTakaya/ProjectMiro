@@ -100,6 +100,14 @@ namespace nsBalloonEngine
 
 
         /**
+         * @brief 再生中のクリップを、位相の位置へ移す
+         * @details ループするクリップだけに効く。クロスフェードはそのまま(移したクリップの出力へ向かう)。
+         * @param phase 位相(0〜1)。範囲外は丸められる
+         */
+        void SetPhase(const float phase);
+
+
+        /**
          * @brief Base のボーンを、このレイヤーのクリップへ近づける設定
          * @details レイヤーが動いている間、Base のそのボーンの回転を、このレイヤーのクリップの回転へ近づける。(AnimationController が使う)
          * @param bone ボーン番号。無効にするなら -1

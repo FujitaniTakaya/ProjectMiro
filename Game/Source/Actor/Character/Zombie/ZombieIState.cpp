@@ -14,11 +14,33 @@ namespace app
 {
     namespace actor
     {
+        namespace
+        {
+            /**
+             * @brief 下半身(Base)のクリップが切り替わったときだけ、個体ごとの開始位相から始める
+             * @details 同じクリップを再生中に呼んでも、シークしない(動きが跳ばない)。
+             * @param owner ゾンビのステートマシン
+             * @param clipBefore 切り替える前に再生していたクリップの番号(GetPlayingClip() で取っておく)
+             * @param clip 今再生しているクリップ
+             */
+            void ApplyPhaseOffset(CharacterStateMachine* owner, const int clipBefore, const EnZombieAnimationClipID clip)
+            {
+                if (clipBefore != static_cast<int>(clip))
+                {
+                    owner->SetLayerAnimationPhase(EnAnimationLayer::Base, static_cast<ZombieStateMachine*>(owner)->GetPhaseOffset());
+                }
+            }
+        } // namespace
+
+
         void ZombieIdleState::Enter()
         {
+            const int clipBefore = m_owner->GetPlayingClip(EnAnimationLayer::Base);
+
             // 共通の待機(移動速度0・待機のアニメーション)に入ってから、慣性を消してその場で止める
             CharacterIdleState::Enter();
             m_owner->StopMoving();
+            ApplyPhaseOffset(m_owner, clipBefore, EnZombieAnimationClipID::Idle);
         }
 
 
@@ -36,7 +58,11 @@ namespace app
         void ZombieMoveState::Enter()
         {
             m_owner->SetMoveSpeed(GetMoveSpeed());
+
+            // 同じところから同時に湧いても足並みがそろわないよう、個体ごとの位相から始める
+            const int clipBefore = m_owner->GetPlayingClip(EnAnimationLayer::Base);
             m_owner->PlayAnimation(GetClip());
+            ApplyPhaseOffset(m_owner, clipBefore, GetClip());
         }
 
 
