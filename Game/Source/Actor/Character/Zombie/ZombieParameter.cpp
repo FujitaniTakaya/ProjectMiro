@@ -31,6 +31,9 @@ namespace app
             , attackAnimSpeed(1.8f)
             , hitAnimSpeed(1.5f)
             , hitBlendTime(0.1f)
+            , animSpeedRange(0.08f)
+            , headRadius(11.0f)
+            , headOffsetY(10.0f)
         {
         }
         // [PARAM_GEN end ctor]
@@ -60,6 +63,9 @@ namespace app
             param.attackAnimSpeed = ParamLoader::ToFloat(root, "attackAnimSpeed", param.attackAnimSpeed);
             param.hitAnimSpeed = ParamLoader::ToFloat(root, "hitAnimSpeed", param.hitAnimSpeed);
             param.hitBlendTime = ParamLoader::ToFloat(root, "hitBlendTime", param.hitBlendTime);
+            param.animSpeedRange = ParamLoader::ToFloat(root, "animSpeedRange", param.animSpeedRange);
+            param.headRadius = ParamLoader::ToFloat(root, "headRadius", param.headRadius);
+            param.headOffsetY = ParamLoader::ToFloat(root, "headOffsetY", param.headOffsetY);
             // [PARAM_GEN end load]
         }
 
@@ -84,6 +90,9 @@ namespace app
             ImGui::Text("attackAnimSpeed: %.2f", param.attackAnimSpeed);
             ImGui::Text("hitAnimSpeed: %.2f", param.hitAnimSpeed);
             ImGui::Text("hitBlendTime: %.2f", param.hitBlendTime);
+            ImGui::Text("animSpeedRange: %.2f", param.animSpeedRange);
+            ImGui::Text("headRadius: %.1f", param.headRadius);
+            ImGui::Text("headOffsetY: %.1f", param.headOffsetY);
             // [PARAM_GEN end draw]
 #endif // BALLOON_IMGUI_ENABLED
         }

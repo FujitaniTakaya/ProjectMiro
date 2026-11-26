@@ -84,10 +84,15 @@ namespace app
             Vector3 position = GetGatePosition(m_parameter, m_groupGate);
 
             // ゲートの中心から、円の中でずらす。(同じ点に湧くとゾンビ同士がぶつかって詰まる。半径の平方根をとって、円の中で一様にばらけさせる)
+            // ただし壁の側へはずらさず、内側へ折り返す。(壁に食い込んで湧くと、動けなくなる)
             const float angle = util::RandomDevice::Random(0.0f, Math::PI2);
             const float radius = m_parameter.gateJitterRadius * std::sqrt(util::RandomDevice::Random(0.0f, 1.0f));
-            position.x += std::cos(angle) * radius;
-            position.z += std::sin(angle) * radius;
+            float offsetX = std::cos(angle) * radius;
+            float offsetZ = std::sin(angle) * radius;
+            const Vector3 inward = GetGateInward(m_groupGate);
+            FoldOffsetInward(offsetX, offsetZ, inward.x, inward.z);
+            position.x += offsetX;
+            position.z += offsetZ;
 
             // 浮かせて湧かせる。高台のゲートでも、落ちて接地する
             position.y += m_parameter.dropHeight;

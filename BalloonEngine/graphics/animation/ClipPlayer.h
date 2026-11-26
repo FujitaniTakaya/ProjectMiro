@@ -52,6 +52,15 @@ namespace nsBalloonEngine
 
 
         /**
+         * @brief 再生中のクリップを、位相の位置へ移す
+         * @details ループするクリップの、時刻 = 位相 × 長さ にする。移した時刻より前のイベントは発火済みにして、通知しない。
+         *          ループしないクリップ・長さが0のクリップ・割り当てが無い場合は、何もしない。
+         * @param phase 位相(0〜1)。範囲外は丸められる
+         */
+        void SeekPhase(const float phase);
+
+
+        /**
          * @brief クリップの割り当てを外す
          */
         void Clear();
@@ -114,6 +123,8 @@ namespace nsBalloonEngine
     private:
         /** イベントの発火済みフラグを全て下ろす */
         void RearmEvents();
+        /** 今の時刻より前のイベントを、発火済みにする */
+        void MarkPassedEvents();
         /** 時刻を過ぎたイベントを通知する */
         void InvokeEvents(const ClipSampler& sampler, const std::vector<AnimationEventListener>& listeners);
 

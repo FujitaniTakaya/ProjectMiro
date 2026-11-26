@@ -62,6 +62,28 @@ namespace app
         }
 
 
+        Vector3 GetGateInward(const EnZombieGate gate)
+        {
+            switch (gate)
+            {
+            case EnZombieGate::North:
+                return Vector3(0.0f, 0.0f, 1.0f);
+            case EnZombieGate::South:
+                return Vector3(0.0f, 0.0f, -1.0f);
+            case EnZombieGate::West:
+                return Vector3(1.0f, 0.0f, 0.0f);
+            case EnZombieGate::East:
+                return Vector3(-1.0f, 0.0f, 0.0f);
+            default:
+                break;
+            }
+
+            // Max など、ゲートではない値。北の向きを返して続行する
+            K2_ASSERT(false, "ゲートではない値が渡されました。\n");
+            return Vector3(0.0f, 0.0f, 1.0f);
+        }
+
+
         void LoadZombieSpawnParameter(const JsonView& root, ZombieSpawnParameter& param)
         {
             // [PARAM_GEN begin load] 自動生成(tools/param_gen.py)。手で編集しない

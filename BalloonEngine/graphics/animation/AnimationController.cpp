@@ -231,6 +231,16 @@ namespace nsBalloonEngine
     }
 
 
+    void AnimationController::SetLayerPhase(const EnAnimationLayer layer, const float phase)
+    {
+        if (!m_isInited || layer >= EnAnimationLayer::Max)
+        {
+            return;
+        }
+        m_layers[static_cast<size_t>(layer)].SetPhase(phase);
+    }
+
+
     void AnimationController::AddEventListener(const AnimationEventListener& listener)
     {
         m_listeners.push_back(listener);

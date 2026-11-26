@@ -29,6 +29,8 @@ namespace app
             float damage;
             /** 弾の当たり判定の球の半径(cm)。大きいと、縁をかすっても当たる */
             float hitRadius;
+            /** 頭に当たった時のダメージ倍率。damage にこの値を掛けて、ゾンビに与える */
+            float headshotMultiplier;
             /** 弾のモデルの拡大率(一様)。1.0で、tkmの大きさのまま */
             float modelScale;
             /** 弾のモデルの向きの補正。[rotX, rotY, rotZ](度)で、飛ぶ向きに対してモデルを回す。モデルが横を向いて見える時に、飛ぶ向きへ合わせる */

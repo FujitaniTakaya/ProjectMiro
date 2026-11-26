@@ -40,13 +40,25 @@ namespace nsBalloonEngine
         m_time = (std::max)(startTime, 0.0f);
         m_isPlaying = true;
         RearmEvents();
+        MarkPassedEvents();
+    }
 
-        // 開始より前のイベントは鳴らさない。(Update() は m_time > 発火時刻 で通知するので、同じ比較で発火済みにする)
-        const auto& events = (*m_samplers)[m_clipIndex].GetEvents();
-        for (size_t i = 0; i < events.size(); ++i)
+
+    void ClipPlayer::SeekPhase(const float phase)
+    {
+        if (m_clipIndex < 0)
         {
-            m_eventInvoked[i] = (m_time > events[i].m_invokeTime) ? 1 : 0;
+            return;
         }
+        const ClipSampler& sampler = (*m_samplers)[m_clipIndex];
+        const float duration = sampler.GetDuration();
+        if (!sampler.IsLoop() || duration <= 0.0f)
+        {
+            return;
+        }
+        m_time = std::clamp(phase, 0.0f, 1.0f) * duration;
+        RearmEvents();
+        MarkPassedEvents();
     }
 
 
@@ -151,6 +163,17 @@ namespace nsBalloonEngine
             return;
         }
         m_eventInvoked.assign((*m_samplers)[m_clipIndex].GetEvents().size(), 0);
+    }
+
+
+    void ClipPlayer::MarkPassedEvents()
+    {
+        // 開始より前のイベントは鳴らさない。(Update() は m_time > 発火時刻 で通知するので、同じ比較で発火済みにする)
+        const auto& events = (*m_samplers)[m_clipIndex].GetEvents();
+        for (size_t i = 0; i < events.size(); ++i)
+        {
+            m_eventInvoked[i] = (m_time > events[i].m_invokeTime) ? 1 : 0;
+        }
     }
 
 

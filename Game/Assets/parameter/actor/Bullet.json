@@ -1,8 +1,9 @@
 {
-    "lifeTime": 3.0,
-    "shotSpeed": 3000.0,
+    "lifeTime": 1.0,
+    "shotSpeed": 20000.0,
     "damage": 20.0,
     "hitRadius": 8.0,
+    "headshotMultiplier": 2.5,
     "modelScale": 1.0,
     "modelRotation": [
         0.0,

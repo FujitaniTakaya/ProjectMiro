@@ -181,8 +181,10 @@ namespace app
                 return;
             }
             // ダメージは毎回パラメーターから読む。(jsonのホットリロードがすぐ反映される)
+            // 頭に当たった時(ヘッドショット)は、倍率を掛ける
             const actor::BulletParameter& bulletParameter = ParamHolder::Get().GetParameter<actor::BulletParameter>(EnParamID::Bullet);
-            zombie->TakeShotDamage(bulletParameter.damage);
+            const float damage = hit.isHead ? bulletParameter.damage * bulletParameter.headshotMultiplier : bulletParameter.damage;
+            zombie->TakeShotDamage(damage);
         });
 
         // ステージのフィールド。ワールド行列は、ここで確定する
@@ -192,6 +194,9 @@ namespace app
         // 背景の当たり判定。モデルの形をそのまま使うので、ワールド行列(Z-upの補正込み)が確定した後に作る
         ModelRender& stageModelRender = m_stageField->GetModelRender();
         m_bgPhysicsStaticObject.CreateFromModel(stageModelRender.GetModel(), stageModelRender.GetModel().GetWorldMatrix());
+
+        // Miroは、当たり判定ができる前に Start() している。浮かせて置いた座標から、足元の地面へ落とす
+        m_miro->SnapToGround();
 
         // ステージの外へ出られないように、外周に見えない壁を置く
         m_stageBoundary.Build();

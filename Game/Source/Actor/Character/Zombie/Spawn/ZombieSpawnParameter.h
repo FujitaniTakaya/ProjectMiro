@@ -77,7 +77,7 @@ namespace app
             int maxAliveCount;
             /** ゲートの足元の座標から、どれだけ浮かせて湧かせるか(cm)。高台のゲートでも落ちて接地する */
             float dropHeight;
-            /** ゲートの中心から、湧く位置をXZ平面でずらす半径(cm)。ゲートの開口(幅500)に収まる値にすること */
+            /** ゲートの中心から、湧く位置をXZ平面でずらす半径(cm)。ゲートの開口(幅500)に収まる値にすること。壁の側へずれる分は内側へ折り返す(ゲート中心から壁までの距離100は、カプセル半径25以上を保つこと) */
             float gateJitterRadius;
             // [PARAM_GEN end members]
         };
@@ -95,6 +95,14 @@ namespace app
          * @return ゲートの足元の中心のワールド座標
          */
         const Vector3& GetGatePosition(const ZombieSpawnParameter& param, const EnZombieGate gate);
+
+        /**
+         * @brief ゲートから、ステージの内側(壁から離れる向き)へのXZの単位ベクトルを取得
+         * @details ゲートは壁(x=±3750 / z=±3000)の手前にあるので、東西は±X、南北は±Z。ステージ専用の値
+         * @param gate ゲート。Max は渡さないこと
+         * @return 内側へ向かう単位ベクトル(Yは0)
+         */
+        Vector3 GetGateInward(const EnZombieGate gate);
 
         /**
          * @brief jsonからZombieSpawnのパラメーターを読み込む

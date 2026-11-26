@@ -183,6 +183,12 @@ namespace nsBalloonEngine
     }
 
 
+    void AnimationLayer::SetPhase(const float phase)
+    {
+        m_player.SeekPhase(phase);
+    }
+
+
     bool AnimationLayer::IsActive() const
     {
         return m_player.HasClip();

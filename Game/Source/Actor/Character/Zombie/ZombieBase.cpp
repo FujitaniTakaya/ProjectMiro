@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <cwchar>
 
+#include "Source/Actor/Weapon/Bullet/BulletHit.h"
 #include "Source/MoveBehavior/ControllerSlot.h"
 #include "ZombieParameter.h"
 #include "ZombieStateMachine.h"
@@ -22,6 +23,8 @@ namespace app
         {
             /** 攻撃判定を付けるボーンの名前(右手。攻撃アニメで振り下ろされるのが右手) */
             constexpr const wchar_t* ATTACK_BONE_NAME = L"hand_r";
+            /** 頭の被弾判定を付けるボーンの名前(あごの付け根。頭の中心は、ここから上へずらす) */
+            constexpr const wchar_t* HEAD_BONE_NAME = L"head";
             /** 上半身レイヤー(怯み)が効くボーンの根の名前。ここから先(背骨・両腕・首・頭)が怯みで動く。腰と脚は歩き・走りのまま */
             constexpr const wchar_t* UPPER_BODY_ROOT_BONE_NAME = L"spine_01";
             /** 攻撃アニメのイベント名: 攻撃判定を出す(振り下ろしの始まり) */
@@ -52,6 +55,8 @@ namespace app
             , m_hasLockOnEvent(false)
             , m_attackHitBox()
             , m_attackHandler(nullptr)
+            , m_headHitBox()
+            , m_headBone(nullptr)
             , m_attackBone(nullptr)
             , m_isAttackActive(false)
             , m_hasAttackHit(false)
@@ -127,7 +132,8 @@ namespace app
 
         bool ZombieBase::IsBody(const btCollisionObject& object)
         {
-            return &object == m_characterController.GetRigidBody()->GetBody();
+            // 頭に最初に当たった時も、このゾンビの体として扱う
+            return &object == m_characterController.GetRigidBody()->GetBody() || &object == &m_headHitBox.GetbtCollisionObject();
         }
 
 
@@ -142,6 +148,20 @@ namespace app
         {
             // モデル・アニメーションクリップのロードと、キャラクターコントローラーの初期化(現在のHPも最大HPで始まる)
             Init(m_modelData, m_parameter.radius, m_parameter.height);
+
+            // 弾に当たった判定の持ち主。体のカプセルと頭の球に同じ持ち主を付けて、弾のスイープが「体に当たった後、その持ち主の頭を探す」のに使う
+            m_characterController.GetRigidBody()->GetBody()->setUserPointer(this);
+
+            // 頭の被弾判定(球のゴースト)。位置はボーンのワールド行列が確定する Update() で合わせる。
+            // それまでは仮の位置(ゾンビの頭の高さあたり)に置く
+            m_headBone = m_modelRender.FindBone(HEAD_BONE_NAME);
+            if (m_headBone != nullptr)
+            {
+                m_headHitBox.CreateSphere(m_transform.m_position + Vector3(0.0f, m_parameter.height, 0.0f), Quaternion::Identity, m_parameter.headRadius);
+                btCollisionObject& head = m_headHitBox.GetbtCollisionObject();
+                head.setUserIndex(HEAD_COLLISION_ATTR);
+                head.setUserPointer(this);
+            }
 
             // 攻撃判定を付ける右手のボーンと、攻撃アニメのイベントの受け取り。(this はこのゾンビが生きている間、有効)
             m_attackBone = m_modelRender.FindBone(ATTACK_BONE_NAME);
@@ -174,6 +194,9 @@ namespace app
 
             // 確定した右手の位置に攻撃判定を合わせて、重なった物を渡す
             UpdateAttackHitBox();
+
+            // 頭の球を、確定した頭のボーンに合わせる
+            UpdateHeadHitBox();
         }
 
 
@@ -190,8 +213,28 @@ namespace app
             m_attackHitBox.Release();
             m_isAttackActive = false;
 
+            // 死体の頭に弾は当たらない
+            m_headHitBox.Release();
+
             // デストラクタの RemoveRigidBoby() で二重に外れるが、bullet 側では無害
             m_characterController.RemoveRigidBoby();
+        }
+
+
+        Vector3 ZombieBase::CalcHeadPosition() const
+        {
+            return GetBonePosition(*m_headBone) + Vector3(0.0f, m_parameter.headOffsetY, 0.0f);
+        }
+
+
+        void ZombieBase::UpdateHeadHitBox()
+        {
+            // 死亡後は、OnDead() で消した球を動かさない
+            if (m_headBone == nullptr || m_isDead)
+            {
+                return;
+            }
+            m_headHitBox.SetPosition(CalcHeadPosition());
         }
 
 
