@@ -20,17 +20,21 @@ namespace app
             constexpr float MIN_AIM_DISTANCE = 50.0f;
             /** 向きがほぼ同じ・ほぼ逆と見なす内積の境目。Quaternion::SetRotation(from, to) の 0.998 より、ずっときつくしてある */
             constexpr float PARALLEL_DOT = 0.999999f;
+            /** 体に当たった後、その持ち主の頭を探す距離(cm)。頭は体のカプセル(直径70cm)の中にあるので、これで届く */
+            constexpr float HEAD_REACH = 100.0f;
 
 
             /**
              * @brief 球のスイープの結果を受けるコールバック
              * @details 最も近い当たりを1つだけ持つ。当たる相手は SweepSphere() の説明の通り。
+             *          headOwner を渡した時は、その持ち主の頭のゴースト以外には当たらない。(体に当たった後、頭を探す時に使う)
              */
             struct BulletSweepCallback : public btCollisionWorld::ClosestConvexResultCallback
             {
-                BulletSweepCallback(const btVector3& from, const btVector3& to, const btCollisionObject* ignore)
+                BulletSweepCallback(const btVector3& from, const btVector3& to, const btCollisionObject* ignore, const void* headOwner = nullptr)
                     : ClosestConvexResultCallback(from, to)
                     , m_ignore(ignore)
+                    , m_headOwner(headOwner)
                 {}
 
 
@@ -41,8 +45,13 @@ namespace app
                     {
                         return false;
                     }
-                    // ゴーストは、ユーザー属性を付けたもの(コアの箱)にだけ当たる。ゾンビの攻撃判定の箱などは素通りする
-                    if (object->getInternalType() == btCollisionObject::CO_GHOST_OBJECT && object->getUserIndex() != enCollisionAttr_User)
+                    // 頭だけを探す時は、持ち主の頭のゴースト以外には当たらない
+                    if (m_headOwner != nullptr)
+                    {
+                        return object->getUserIndex() == HEAD_COLLISION_ATTR && object->getUserPointer() == m_headOwner && ClosestConvexResultCallback::needsCollision(proxy);
+                    }
+                    // ゴーストは、ユーザー属性を付けたもの(コアの箱)と、頭の属性を付けたもの(ゾンビの頭)にだけ当たる。ゾンビの攻撃判定の箱などは素通りする
+                    if (object->getInternalType() == btCollisionObject::CO_GHOST_OBJECT && object->getUserIndex() != enCollisionAttr_User && object->getUserIndex() != HEAD_COLLISION_ATTR)
                     {
                         return false;
                     }
@@ -52,6 +61,8 @@ namespace app
 
                 /** 無視する物理オブジェクト */
                 const btCollisionObject* m_ignore;
+                /** 頭だけを探す時の、頭の持ち主。nullptr なら、頭だけを探すのではない */
+                const void* m_headOwner;
             };
         } // namespace
 
@@ -84,6 +95,25 @@ namespace app
             hit.position = from + move * callback.m_closestHitFraction;
             hit.point = Vector3(callback.m_hitPointWorld.x(), callback.m_hitPointWorld.y(), callback.m_hitPointWorld.z());
             hit.normal = Vector3(callback.m_hitNormalWorld.x(), callback.m_hitNormalWorld.y(), callback.m_hitNormalWorld.z());
+
+            // 頭に当たったか。頭の球に最初に当たったなら、そのまま頭
+            hit.isHead = (callback.m_hitCollisionObject->getUserIndex() == HEAD_COLLISION_ATTR);
+            const void* owner = callback.m_hitCollisionObject->getUserPointer();
+            if (!hit.isHead && owner != nullptr)
+            {
+                // 体(カプセル)に当たった。頭は体の中にあるので、当たり位置の先まで、持ち主の頭だけを調べる
+                // (別のゾンビの頭や、壁の向こうの頭には当たらない)
+                Vector3 direction = move;
+                direction.Normalize();
+                const Vector3 reach = hit.position + direction * HEAD_REACH;
+                btTransform reachEnd;
+                reachEnd.setIdentity();
+                reachEnd.setOrigin(btVector3(reach.x, reach.y, reach.z));
+
+                BulletSweepCallback headCallback(start.getOrigin(), reachEnd.getOrigin(), ignore, owner);
+                PhysicsWorld::GetInstance()->ConvexSweepTest(&shape, start, reachEnd, headCallback);
+                hit.isHead = headCallback.hasHit();
+            }
             return true;
         }
 

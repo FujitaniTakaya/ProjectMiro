@@ -134,7 +134,7 @@ namespace app
             /**
              * @brief 物理ワールドの判定が、このゾンビの体か調べる
              * @details 弾が当たった物理オブジェクト(btCollisionObject)から、当たったゾンビを探す時に使う。(Core::IsHitBox() と同じ作り)
-             *          体は、キャラクターコントローラーのカプセル1つ。攻撃判定の箱は体ではない。
+             *          体は、キャラクターコントローラーのカプセルと、頭の球(ゴースト)。攻撃判定の箱は体ではない。
              * @param object 調べる物理ワールドの判定
              * @return このゾンビの体なら true
              */
@@ -181,11 +181,21 @@ namespace app
             /** 攻撃判定の箱を右手に合わせて、重なった物を攻撃の処理に渡す(箱が出ている間だけ) */
             void UpdateAttackHitBox();
 
+            /** 頭の球を、頭のボーンに合わせる(死亡後は何もしない) */
+            void UpdateHeadHitBox();
+
+            /**
+             * @brief 頭の球の中心を求める
+             * @details 頭のボーン(あごの付け根)のワールド座標から、上へ headOffsetY だけ上げた点。
+             * @return 頭の中心のワールド座標
+             */
+            Vector3 CalcHeadPosition() const;
+
             /**
              * @brief 死亡した瞬間の後始末(1度だけ)
              * @details 攻撃判定の箱を消して、体を物理ワールドから外す。
              *          振りの途中で死んでも AttackEnd のイベントは来ないので、ここで箱を消す。(死にかけでコアを殴らせない)
-             *          体を外すので、死体に弾は当たらない。
+             *          頭の球も消す。体を外すので、死体に弾は当たらない。
              */
             void OnDead();
 
@@ -207,6 +217,10 @@ namespace app
             PhysicsGhostObject m_attackHitBox;
             /** 攻撃判定が重なった時の処理 */
             ZombieAttackHandler m_attackHandler;
+            /** 頭の被弾判定(球のゴースト)。頭のボーンに追従する。弾のスイープだけが当たり、死亡で消す */
+            PhysicsGhostObject m_headHitBox;
+            /** 頭のボーン(Start() の後に取る。見つからなければ nullptr で、頭の判定は付かない) */
+            const Bone* m_headBone;
             /** 攻撃判定を付ける右手のボーン(Start() の後に取る。見つからなければ nullptr で、攻撃判定は出ない) */
             const Bone* m_attackBone;
             /** 攻撃判定の箱が出ているか */

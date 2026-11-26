@@ -181,8 +181,10 @@ namespace app
                 return;
             }
             // ダメージは毎回パラメーターから読む。(jsonのホットリロードがすぐ反映される)
+            // 頭に当たった時(ヘッドショット)は、倍率を掛ける
             const actor::BulletParameter& bulletParameter = ParamHolder::Get().GetParameter<actor::BulletParameter>(EnParamID::Bullet);
-            zombie->TakeShotDamage(bulletParameter.damage);
+            const float damage = hit.isHead ? bulletParameter.damage * bulletParameter.headshotMultiplier : bulletParameter.damage;
+            zombie->TakeShotDamage(damage);
         });
 
         // ステージのフィールド。ワールド行列は、ここで確定する

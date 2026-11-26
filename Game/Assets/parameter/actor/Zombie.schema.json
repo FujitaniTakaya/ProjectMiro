@@ -20,6 +20,8 @@
         { "name": "attackBoxSize", "type": "float", "doc": "攻撃判定の箱の一辺(cm)。振り下ろしの間、右手に付く。コアなどの当たり判定に重なるとダメージが入る" },
         { "name": "attackAnimSpeed", "type": "float", "digits": 2, "doc": "攻撃アニメーションの再生速度(1.0=通常)。上げるほど振り下ろしが早く、構えながら歩くプレイヤーに当てやすい" },
         { "name": "hitAnimSpeed", "type": "float", "digits": 2, "doc": "怯みアニメーションの再生速度(1.0=通常)。素材が2.3秒と長いので、上げるほど短く済む" },
-        { "name": "hitBlendTime", "type": "float", "digits": 2, "doc": "怯みの上半身が入る・抜けるときのブレンド時間(秒)" }
+        { "name": "hitBlendTime", "type": "float", "digits": 2, "doc": "怯みの上半身が入る・抜けるときのブレンド時間(秒)" },
+        { "name": "headRadius", "type": "float", "doc": "頭の被弾判定の球の半径(cm)。Start() で一度だけ使う。弾の当たり判定の半径(Bullet の hitRadius)は、これとは別に足される" },
+        { "name": "headOffsetY", "type": "float", "doc": "頭ボーン(あごの付け根)から、頭の中心までの高さ(cm)。ワールドの上向き" }
     ]
 }

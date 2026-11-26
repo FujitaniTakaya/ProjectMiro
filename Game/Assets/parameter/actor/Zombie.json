@@ -14,5 +14,7 @@
     "attackBoxSize": 100.0,
     "attackAnimSpeed": 1.8,
     "hitAnimSpeed": 1.5,
-    "hitBlendTime": 0.1
+    "hitBlendTime": 0.1,
+    "headRadius": 11.0,
+    "headOffsetY": 10.0
 }

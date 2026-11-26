@@ -59,6 +59,10 @@ namespace app
             float hitAnimSpeed;
             /** 怯みの上半身が入る・抜けるときのブレンド時間(秒) */
             float hitBlendTime;
+            /** 頭の被弾判定の球の半径(cm)。Start() で一度だけ使う。弾の当たり判定の半径(Bullet の hitRadius)は、これとは別に足される */
+            float headRadius;
+            /** 頭ボーン(あごの付け根)から、頭の中心までの高さ(cm)。ワールドの上向き */
+            float headOffsetY;
             // [PARAM_GEN end members]
         };
 
