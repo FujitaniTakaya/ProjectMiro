@@ -21,6 +21,7 @@
 namespace app
 {
     Application::Application()
+        : m_isDrawCollision(false)
     {
         SoundManager::CreateInstance();
         EffectManager::CreateInstance();
@@ -65,6 +66,7 @@ namespace app
 
         m_soundDebugUI->Draw();
         m_paramDebugUI->Draw();
+        UpdateCollisionDraw();
     }
 
 
@@ -76,8 +78,37 @@ namespace app
 
     void Application::RenderUI(RenderContext& rc)
     {
+#ifdef K2_DEBUG
+        // 当たり判定の線を描く。ポストプロセスがフレームバッファーを上書きした後でないと見えないので、ここで描く。
+        // NOTE: 3Dの深度はG-Bufferにあり、フレームバッファーの深度は空なので、線は壁やモデルの奥でも手前に見える。
+        //       UIやフェードの下に敷くため、それらより先に描く。有効にしていない時や、_DEBUGでない時は、エンジン側で何もしない。
+        g_engine->DebubDrawWorld();
+#endif // K2_DEBUG
+
         // シーンのUIを描いてから、フェードを描く。フェードは最前面に出したいので、一番最後。
         SceneManager::Get().RenderUI(rc);
         Fade::Get().Render(rc);
+    }
+
+
+    void Application::UpdateCollisionDraw()
+    {
+#ifdef BALLOON_IMGUI_ENABLED
+        // F4キーで表示・非表示を切り替える。(F2はサウンド、F3はパラメーター)
+        if (ImGui::IsKeyPressed(ImGuiKey_F4, false))
+        {
+            m_isDrawCollision = !m_isDrawCollision;
+
+            PhysicsWorld* physicsWorld = PhysicsWorld::GetInstance();
+            if (m_isDrawCollision)
+            {
+                physicsWorld->EnableDrawDebugWireFrame();
+            }
+            else
+            {
+                physicsWorld->DisableDrawDebugWireFrame();
+            }
+        }
+#endif // BALLOON_IMGUI_ENABLED
     }
 } // namespace app

@@ -62,6 +62,17 @@ namespace app
 
 
     private:
+        /**
+         * @brief 当たり判定(物理ワールド)の可視化の切り替えを行う
+         * @details F4キーで表示・非表示を切り替える。描画するのはk2EngineLowの_DEBUGビルドのみ。
+         *          他の構成(Preview・Release)では、切り替えても何も描かれない。
+         */
+        void UpdateCollisionDraw();
+
+
+        /** 当たり判定を可視化しているか */
+        bool m_isDrawCollision;
+
         /** サウンドの音量調整用UI */
         std::unique_ptr<SoundDebugUI> m_soundDebugUI;
 
